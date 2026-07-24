@@ -1,0 +1,234 @@
+{
+  "schemaVersion": "visual-spec-layout-1.0",
+  "projectId": "visual-spec-demo",
+  "projectTitle": "미지의 경매장",
+  "assets": [
+    {
+      "id": "asset-감정소-ui",
+      "name": "감정소 UI.png",
+      "path": "assets/asset-감정소-ui.png",
+      "mimeType": "image/png"
+    },
+    {
+      "id": "asset-거래-히스토리",
+      "name": "거래 히스토리.png",
+      "path": "assets/asset-거래-히스토리.png",
+      "mimeType": "image/png"
+    },
+    {
+      "id": "asset-거래소",
+      "name": "거래소.png",
+      "path": "assets/asset-거래소.png",
+      "mimeType": "image/png"
+    },
+    {
+      "id": "asset-로드-페이지",
+      "name": "로드 페이지.png",
+      "path": "assets/asset-로드-페이지.png",
+      "mimeType": "image/png"
+    },
+    {
+      "id": "asset-사전-페이즈2",
+      "name": "사전 페이즈2.png",
+      "path": "assets/asset-사전-페이즈2.png",
+      "mimeType": "image/png"
+    },
+    {
+      "id": "asset-사전",
+      "name": "사전.png",
+      "path": "assets/asset-사전.png",
+      "mimeType": "image/png"
+    },
+    {
+      "id": "asset-상회-업그레이드",
+      "name": "상회 업그레이드.png",
+      "path": "assets/asset-상회-업그레이드.png",
+      "mimeType": "image/png"
+    },
+    {
+      "id": "asset-설정",
+      "name": "설정.png",
+      "path": "assets/asset-설정.png",
+      "mimeType": "image/png"
+    },
+    {
+      "id": "asset-술집",
+      "name": "술집.png",
+      "path": "assets/asset-술집.png",
+      "mimeType": "image/png"
+    },
+    {
+      "id": "asset-엔딩",
+      "name": "엔딩.png",
+      "path": "assets/asset-엔딩.png",
+      "mimeType": "image/png"
+    },
+    {
+      "id": "asset-유물-경매장-컬렉션",
+      "name": "유물 경매장(컬렉션).png",
+      "path": "assets/asset-유물-경매장-컬렉션.png",
+      "mimeType": "image/png"
+    },
+    {
+      "id": "asset-유물-전시고나",
+      "name": "유물 전시고나.png",
+      "path": "assets/asset-유물-전시고나.png",
+      "mimeType": "image/png"
+    },
+    {
+      "id": "asset-일반-경매장",
+      "name": "일반 경매장.png",
+      "path": "assets/asset-일반-경매장.png",
+      "mimeType": "image/png"
+    },
+    {
+      "id": "asset-중개인-조합",
+      "name": "중개인 조합.png",
+      "path": "assets/asset-중개인-조합.png",
+      "mimeType": "image/png"
+    },
+    {
+      "id": "asset-타이틀",
+      "name": "타이틀.png",
+      "path": "assets/asset-타이틀.png",
+      "mimeType": "image/png"
+    },
+    {
+      "id": "asset-하루-결산",
+      "name": "하루 결산.png",
+      "path": "assets/asset-하루-결산.png",
+      "mimeType": "image/png"
+    }
+  ],
+  "components": [],
+  "scenes": [
+    {
+      "sceneId": "scene-village",
+      "canvas": {
+        "width": 1920,
+        "height": 1080
+      },
+      "elements": []
+    },
+    {
+      "sceneId": "scene-1784792114019-8ad18",
+      "canvas": {
+        "width": 1920,
+        "height": 1080
+      },
+      "elements": []
+    },
+    {
+      "sceneId": "scene-1784792526331-03043",
+      "canvas": {
+        "width": 1920,
+        "height": 1080
+      },
+      "elements": []
+    },
+    {
+      "sceneId": "scene-1784792527340-ebe0e",
+      "canvas": {
+        "width": 1920,
+        "height": 1080
+      },
+      "elements": []
+    },
+    {
+      "sceneId": "scene-1784792712955-4ed31",
+      "canvas": {
+        "width": 1920,
+        "height": 1080
+      },
+      "elements": []
+    },
+    {
+      "sceneId": "scene-1784792713578-488da",
+      "canvas": {
+        "width": 1920,
+        "height": 1080
+      },
+      "elements": []
+    },
+    {
+      "sceneId": "scene-1784792713802-19cfc",
+      "canvas": {
+        "width": 1920,
+        "height": 1080
+      },
+      "elements": []
+    },
+    {
+      "sceneId": "scene-1784792714019-6cde4",
+      "canvas": {
+        "width": 1920,
+        "height": 1080
+      },
+      "elements": []
+    },
+    {
+      "sceneId": "scene-1784792714475-1affd",
+      "canvas": {
+        "width": 1920,
+        "height": 1080
+      },
+      "elements": []
+    },
+    {
+      "sceneId": "scene-1784793053938-eef23",
+      "canvas": {
+        "width": 1920,
+        "height": 1080
+      },
+      "elements": []
+    },
+    {
+      "sceneId": "scene-1784793118843-2f544",
+      "canvas": {
+        "width": 1920,
+        "height": 1080
+      },
+      "elements": []
+    },
+    {
+      "sceneId": "scene-1784793149371-f382b",
+      "canvas": {
+        "width": 1920,
+        "height": 1080
+      },
+      "elements": []
+    },
+    {
+      "sceneId": "scene-1784795023250-d6b96",
+      "canvas": {
+        "width": 1920,
+        "height": 1080
+      },
+      "elements": []
+    },
+    {
+      "sceneId": "scene-1784795296930-80a17",
+      "canvas": {
+        "width": 1920,
+        "height": 1080
+      },
+      "elements": []
+    },
+    {
+      "sceneId": "scene-1784795505386-c2274",
+      "canvas": {
+        "width": 1920,
+        "height": 1080
+      },
+      "elements": []
+    },
+    {
+      "sceneId": "scene-1784795675507-85b35",
+      "canvas": {
+        "width": 1920,
+        "height": 1080
+      },
+      "elements": []
+    }
+  ]
+}
