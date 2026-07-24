@@ -1,0 +1,532 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>미지의 경매장 — 세라핀 도시 지도 3일 런</title>
+<style>
+:root{
+  --bg:#120d08;--bg2:#1a120c;--panel:#281d13;--panel2:#332517;--line:#5b452d;
+  --gold:#b98b3d;--gold2:#e2bd65;--paper:#eadcbc;--dim:#b9aa8e;--good:#8fbd7e;
+  --danger:#d16f59;--blue:#80a9bd;--shadow:0 18px 60px rgba(0,0,0,.38);
+  --serif:"Noto Serif KR","Batang",serif;--sans:system-ui,-apple-system,"Noto Sans KR",sans-serif;
+}
+*{box-sizing:border-box}html,body{min-height:100%}body{margin:0;color:var(--paper);font-family:var(--sans);background:
+radial-gradient(circle at 50% -10%,rgba(185,139,61,.16),transparent 38%),linear-gradient(180deg,#18100a,#0e0a07);}
+button,input,select{font:inherit}.hidden{display:none!important}.scene{display:none}.scene.on{display:block}
+button{cursor:pointer}.app{max-width:1440px;margin:0 auto;padding:20px}.topbar{display:flex;justify-content:space-between;align-items:center;gap:16px;border-bottom:1px solid var(--line);padding-bottom:13px;margin-bottom:16px}.brand{display:flex;align-items:center;gap:12px}.seal{width:48px;height:48px;border:1px solid var(--gold);border-radius:50%;display:grid;place-items:center;font-size:24px;background:#2a1d0f;box-shadow:inset 0 0 18px rgba(226,189,101,.14)}
+h1,h2,h3{font-family:var(--serif)}h1{font-size:26px;margin:0;color:var(--gold2)}h2{margin:0 0 10px;color:var(--gold2)}h3{margin:0 0 7px}.sub{font-size:12px;color:var(--dim);margin-top:2px}.stats{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}.stat{border:1px solid var(--line);border-radius:8px;background:rgba(39,28,19,.85);padding:7px 10px;font-size:11px;color:var(--dim)}.stat b{color:var(--gold2);font-size:15px;margin-left:5px}
+.panel{border:1px solid var(--line);border-radius:12px;background:linear-gradient(145deg,rgba(51,37,23,.96),rgba(35,25,17,.98));box-shadow:var(--shadow)}.panel-head{padding:13px 15px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:10px}.panel-head h2{font-size:16px;margin:0}.panel-body{padding:16px}.muted{color:var(--dim)}.small{font-size:12px}.center{text-align:center}.divider{height:1px;background:var(--line);margin:14px 0}.notice{border:1px solid rgba(185,139,61,.45);border-radius:10px;background:#24190f;padding:11px 14px;color:var(--dim);font-size:13px;line-height:1.55;margin-bottom:16px}.notice strong{color:var(--paper)}
+.btn{border:1px solid var(--line);border-radius:8px;background:#302217;color:var(--paper);padding:9px 13px}.btn:hover:not(:disabled){border-color:var(--gold);background:#3a2919}.btn.primary{background:linear-gradient(#c19445,#806027);border-color:#d8b45e;color:#160e08;font-weight:800}.btn.good{border-color:#6e9463;color:#b9dfae}.btn.danger{border-color:#9c5847;color:#efa18e}.btn.ghost{background:transparent}.btn:disabled{opacity:.38;cursor:not-allowed}.btn-row{display:flex;gap:8px;flex-wrap:wrap}.btn.wide{width:100%}
+.hero{min-height:calc(100vh - 40px);display:grid;place-items:center}.hero-card{width:min(880px,96vw);padding:34px;border:1px solid var(--line);border-radius:18px;background:linear-gradient(145deg,rgba(52,37,22,.98),rgba(27,19,13,.98));box-shadow:0 30px 100px rgba(0,0,0,.55)}.hero-mark{width:84px;height:84px;border:1px solid var(--gold);border-radius:50%;display:grid;place-items:center;margin:0 auto 18px;font-size:42px;background:#281a0e}.hero h1{font-size:42px;text-align:center}.hero .lead{text-align:center;color:var(--dim);line-height:1.7;margin:10px auto 24px;max-width:650px}.hero-actions{display:flex;justify-content:center;gap:10px;flex-wrap:wrap}.dev-box{margin:22px auto 0;max-width:520px;border-top:1px solid var(--line);padding-top:16px}.dev-row{display:grid;grid-template-columns:1fr auto;gap:8px}.text-input,.number-input,.select{width:100%;border:1px solid var(--line);border-radius:8px;background:#17100b;color:var(--paper);padding:9px 10px}.text-input:focus,.number-input:focus,.select:focus{outline:1px solid var(--gold)}
+.choice-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.choice-card{border:1px solid var(--line);border-radius:12px;background:#281d13;padding:17px;transition:.15s}.choice-card:hover{transform:translateY(-2px);border-color:var(--gold)}.choice-card.selected{border-color:var(--good);box-shadow:inset 0 0 0 1px rgba(143,189,126,.28)}.choice-icon{font-size:38px}.choice-card h3{color:var(--gold2);font-size:19px;margin-top:10px}.perk{color:var(--good);font-size:12px;line-height:1.55}.choice-card p{color:var(--dim);font-size:13px;line-height:1.6}.scene-shell{max-width:1180px;margin:35px auto}.scene-title{font-size:31px}.goal-grid{display:grid;grid-template-columns:1.3fr .7fr;gap:15px}.goal-card{padding:22px}.goal-list{display:grid;gap:10px}.goal-row{display:flex;justify-content:space-between;gap:15px;border:1px solid var(--line);border-radius:9px;background:#21170f;padding:11px 13px}.goal-row strong{color:var(--gold2)}
+.hub-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:16px}.dashboard{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-bottom:14px}.kpi{border:1px solid var(--line);border-radius:9px;background:#20160f;padding:11px}.kpi span{display:block;font-size:10px;color:var(--dim)}.kpi b{display:block;margin-top:4px;font-size:17px;color:var(--gold2)}.progress{height:9px;background:#120d08;border:1px solid var(--line);border-radius:999px;overflow:hidden}.progress i{display:block;height:100%;background:linear-gradient(90deg,var(--gold),var(--gold2));width:0}.hub-actions{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.action-card{border:1px solid var(--line);border-radius:10px;background:#281d13;padding:14px}.action-card h3{color:var(--gold2);font-size:16px}.action-card p{font-size:12px;color:var(--dim);line-height:1.55;min-height:40px}
+.quest-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.quest-card{border:1px solid var(--line);border-radius:11px;background:#281d13;padding:15px;display:flex;flex-direction:column}.quest-card.selected{border-color:var(--good)}.npc{display:flex;gap:10px;align-items:center}.portrait{width:50px;height:56px;border:1px solid var(--gold);border-radius:9px;background:#1a120c;display:grid;place-items:center;font-size:28px}.quest-card h3{font-size:16px;color:var(--gold2);margin:11px 0 5px}.quest-card p{font-size:12px;color:var(--dim);line-height:1.55;flex:1}.tags{display:flex;gap:5px;flex-wrap:wrap;margin:9px 0}.tag{border:1px solid var(--line);border-radius:999px;padding:3px 7px;font-size:10px;color:var(--dim);background:#1c140d}.tag.good{border-color:#64865a;color:#aadd9b}.tag.warn{border-color:#936c3b;color:#e5b975}.reward{color:var(--good);font-weight:700;font-size:12px}
+.catalog-toolbar{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:12px}.catalog-summary{display:flex;gap:7px;flex-wrap:wrap}.catalog-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:11px}.catalog-card{display:grid;grid-template-columns:65px minmax(0,1fr);gap:11px;border:1px solid var(--line);border-radius:11px;background:#251a11;padding:12px}.catalog-card.target{border-color:#719365}.catalog-card.watch{border-color:#8d6c38}.catalog-icon{height:65px;border:1px solid #4a3824;border-radius:9px;background:#16100b;display:grid;place-items:center;font-size:36px}.catalog-name{font-family:var(--serif);font-size:16px}.catalog-desc{font-size:11px;color:var(--dim);line-height:1.55;margin:5px 0}.catalog-meta{display:flex;gap:7px;flex-wrap:wrap;font-size:10px;color:var(--dim)}.catalog-plan{display:grid;grid-template-columns:1fr 110px;gap:7px;margin-top:8px}.catalog-card button{padding:6px 8px;font-size:10px}
+.auction-layout{display:grid;grid-template-columns:285px minmax(0,1fr) 320px;gap:15px}.side-stack{display:grid;gap:13px}.role-box{display:grid;grid-template-columns:48px 1fr;gap:10px;align-items:center}.role-icon{width:48px;height:48px;border:1px solid var(--gold);border-radius:9px;display:grid;place-items:center;font-size:26px;background:#1b120c}.role-name{font-family:var(--serif);font-size:17px;color:var(--gold2)}.lot-card{overflow:hidden}.lot-image{height:245px;background:radial-gradient(circle at 50% 40%,rgba(226,189,101,.18),transparent 34%),linear-gradient(160deg,#3b2a18,#18110b);display:grid;place-items:center;font-size:108px;position:relative}.lot-no{position:absolute;left:12px;top:11px;border:1px solid var(--gold);border-radius:5px;background:rgba(18,13,8,.88);padding:4px 8px;font-size:11px;color:var(--gold2)}.lot-body{padding:17px 19px}.lot-title{font-size:25px;margin:0 0 6px}.lot-desc{font-size:13px;color:var(--dim);line-height:1.6}.clues{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:13px}.clue{border:1px solid var(--line);border-radius:8px;background:#21170f;padding:9px;font-size:11px;color:var(--dim)}.clue b{display:block;color:var(--gold);margin-bottom:3px}.auction-box{border-top:1px solid var(--line);background:#20160f;padding:14px}.price-row{display:grid;grid-template-columns:1fr 190px 1fr;gap:12px;align-items:end}.price{font-size:39px;font-weight:900;color:var(--gold2);line-height:1}.timer{border:1px solid var(--line);border-radius:10px;background:#120d08;text-align:center;padding:8px}.timer.danger{border-color:var(--danger);box-shadow:0 0 0 2px rgba(209,111,89,.12)}.timer b{font-size:29px;color:var(--gold2);font-variant-numeric:tabular-nums}.timer-track{height:6px;border:1px solid #44321f;border-radius:999px;background:#0c0806;overflow:hidden;margin-top:6px}.timer-track i{display:block;height:100%;background:linear-gradient(90deg,var(--gold),var(--gold2));width:100%}.leader{text-align:right;font-size:12px;color:var(--dim)}.bid-actions{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-top:11px}.log{height:96px;overflow:auto;border:1px solid var(--line);border-radius:8px;background:#120d08;padding:8px 10px;margin-top:10px;color:var(--dim);font-size:11px}.log div{margin:3px 0}.log strong{color:var(--paper)}
+.plan-card,.holding{border:1px solid var(--line);border-radius:9px;background:#21170f;padding:10px;margin-bottom:8px}.plan-card b,.holding b{color:var(--gold2)}.holding-row{display:grid;grid-template-columns:42px 1fr;gap:9px}.holding-icon{height:42px;border-radius:7px;background:#120d08;display:grid;place-items:center;font-size:24px}.holding-name{font-family:var(--serif);font-size:14px}.holding-meta{font-size:10px;color:var(--dim);margin-top:3px}.empty{text-align:center;color:var(--dim);padding:30px 10px;font-family:var(--serif)}
+.processing-grid{display:grid;grid-template-columns:1fr 360px;gap:15px}.inventory-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.inventory-card{border:1px solid var(--line);border-radius:10px;background:#261b11;padding:12px}.inventory-top{display:grid;grid-template-columns:54px 1fr;gap:10px}.inventory-icon{height:54px;border-radius:8px;background:#140e09;display:grid;place-items:center;font-size:31px}.inventory-card h3{font-size:15px;color:var(--gold2)}.inventory-card p{font-size:11px;color:var(--dim);line-height:1.5}.inventory-actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px}.inventory-actions .btn{padding:6px 8px;font-size:10px}.status-line{font-size:11px;margin-top:7px;color:var(--dim)}.status-line.good{color:var(--good)}.status-line.danger{color:var(--danger)}
+.settlement-grid{display:grid;grid-template-columns:1fr 1fr;gap:15px}.ledger{display:grid;gap:7px}.ledger-row{display:flex;justify-content:space-between;border-bottom:1px dashed #59432c;padding:8px 0;color:var(--dim)}.ledger-row b{color:var(--paper)}.ledger-row.total{font-size:18px;border-top:1px solid var(--gold);border-bottom:0;margin-top:8px;color:var(--gold2)}.summary-cards{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}.summary-card{border:1px solid var(--line);border-radius:9px;background:#21170f;padding:12px}.summary-card span{font-size:10px;color:var(--dim)}.summary-card b{display:block;margin-top:4px;font-size:16px;color:var(--gold2)}
+.event-card{max-width:760px;margin:50px auto;padding:27px}.event-visual{font-size:68px;text-align:center}.event-card p{color:var(--dim);line-height:1.7}.event-options{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:18px}.event-option{border:1px solid var(--line);border-radius:10px;background:#24190f;padding:14px}.event-option h3{color:var(--gold2)}.event-option p{font-size:12px;min-height:56px}.final-banner{border:1px solid var(--gold);border-radius:12px;background:linear-gradient(135deg,#3b2815,#21150c);padding:20px;text-align:center;margin-bottom:15px}.final-banner h2{font-size:28px}.final-target{border:1px solid #7b925d;background:#1d2819;border-radius:9px;padding:10px;color:#bce0ad;margin-top:9px}.ending-choices{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.ending-choice{border:1px solid var(--line);border-radius:11px;background:#271b11;padding:15px}.ending-choice h3{color:var(--gold2)}.ending-choice p{font-size:12px;color:var(--dim);line-height:1.55;min-height:75px}.result-grade{font-size:70px;color:var(--gold2);font-family:var(--serif)}
+.overlay{position:fixed;inset:0;background:rgba(7,5,3,.82);display:grid;place-items:center;z-index:30;padding:20px}.modal{width:min(850px,96vw);max-height:88vh;overflow:auto;border:1px solid var(--line);border-radius:14px;background:#251a11;box-shadow:0 30px 100px rgba(0,0,0,.65);padding:22px}.history-card{border:1px solid var(--line);border-radius:10px;background:#1b120c;padding:12px;margin-bottom:9px}.history-head{display:flex;justify-content:space-between;gap:10px}.history-title{font-family:var(--serif);color:var(--gold2)}.history-meta{font-size:10px;color:var(--dim);margin-top:3px}.history-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-top:8px}.history-kpi{border:1px solid #493622;border-radius:7px;padding:7px}.history-kpi span{display:block;font-size:9px;color:var(--dim)}.history-kpi b{display:block;margin-top:3px;font-size:13px}
+
+.market-layout{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:15px}.market-inventory{display:grid;gap:11px}.market-item{border:1px solid var(--line);border-radius:11px;background:#251a11;padding:13px}.market-item-head{display:grid;grid-template-columns:56px minmax(0,1fr) auto;gap:10px;align-items:center}.market-item-icon{width:56px;height:56px;border:1px solid #4a3824;border-radius:9px;background:#16100b;display:grid;place-items:center;font-size:32px}.market-item-name{font-family:var(--serif);font-size:16px;color:var(--gold2)}.market-item-meta{font-size:11px;color:var(--dim);line-height:1.5;margin-top:3px}.offer-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:11px}.offer-btn{min-height:66px;padding:8px!important;text-align:left}.offer-btn span{display:block;font-size:9px;color:var(--dim)}.offer-btn b{display:block;margin-top:3px;color:var(--gold2);font-size:15px}.offer-btn em{display:block;margin-top:2px;font-style:normal;font-size:9px;color:var(--good)}.buyer-list{display:grid;gap:9px}.buyer-card{border:1px solid var(--line);border-radius:10px;background:#21170f;padding:12px}.buyer-card.active{border-color:var(--good)}.buyer-head{display:flex;align-items:center;gap:9px}.buyer-icon{width:40px;height:40px;border:1px solid var(--gold);border-radius:50%;display:grid;place-items:center;background:#17100b;font-size:22px}.buyer-card h3{font-size:14px;color:var(--gold2);margin:0}.buyer-card p{font-size:11px;color:var(--dim);line-height:1.5;margin:6px 0 0}.sale-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}.sale-kpi{border:1px solid var(--line);border-radius:9px;background:#20160f;padding:10px}.sale-kpi span{display:block;font-size:9px;color:var(--dim)}.sale-kpi b{display:block;margin-top:3px;color:var(--gold2);font-size:16px}.hold-btn{margin-top:7px}.profit.good{color:var(--good)}.profit.danger{color:var(--danger)}
+@media(max-width:1050px){.auction-layout,.hub-grid,.goal-grid,.processing-grid,.settlement-grid,.market-layout{grid-template-columns:1fr}.choice-grid,.quest-grid{grid-template-columns:1fr}.catalog-grid,.inventory-grid,.offer-grid{grid-template-columns:1fr}.auction-layout>.side-stack:first-child{order:2}.auction-layout>.side-stack:last-child{order:3}.price-row{grid-template-columns:1fr 155px 1fr}.dashboard{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:650px){.app{padding:10px}.topbar{align-items:flex-start}.stats{display:none}.hero-card{padding:22px}.hero h1{font-size:32px}.choice-grid,.ending-choices,.event-options{grid-template-columns:1fr}.clues{grid-template-columns:1fr}.bid-actions{grid-template-columns:repeat(2,1fr)}.catalog-plan{grid-template-columns:1fr}.history-kpis{grid-template-columns:repeat(2,1fr)}}
+
+/* 도시 지도형 거점 */
+.map-shell{display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:16px;align-items:stretch}
+.city-map{position:relative;min-height:650px;border:1px solid var(--line);border-radius:16px;overflow:hidden;background:
+ radial-gradient(circle at 15% 20%,rgba(226,189,101,.11),transparent 20%),
+ radial-gradient(circle at 80% 78%,rgba(128,169,189,.12),transparent 25%),
+ linear-gradient(145deg,#342516 0 18%,#21170f 18% 46%,#2a1d12 46% 73%,#172027 73% 100%);box-shadow:var(--shadow)}
+.city-map:before{content:"";position:absolute;inset:0;background:
+ linear-gradient(32deg,transparent 0 39%,rgba(213,187,132,.15) 40% 42%,transparent 43% 100%),
+ linear-gradient(145deg,transparent 0 47%,rgba(213,187,132,.13) 48% 50%,transparent 51% 100%),
+ linear-gradient(92deg,transparent 0 59%,rgba(213,187,132,.1) 60% 62%,transparent 63% 100%);pointer-events:none}
+.map-caption{position:absolute;left:18px;top:16px;z-index:2;padding:9px 12px;border:1px solid rgba(226,189,101,.35);border-radius:10px;background:rgba(20,13,8,.8);backdrop-filter:blur(4px)}
+.map-caption b{display:block;color:var(--gold2);font-family:var(--serif)}.map-caption span{font-size:11px;color:var(--dim)}
+.map-water{position:absolute;right:-7%;bottom:-16%;width:48%;height:42%;border-radius:50% 0 0 0;background:repeating-linear-gradient(170deg,rgba(128,169,189,.2) 0 3px,rgba(26,48,58,.22) 3px 10px);border-left:1px solid rgba(128,169,189,.35);transform:rotate(-4deg)}
+.map-place{position:absolute;width:170px;min-height:112px;border:1px solid #745a37;border-radius:13px;padding:12px;text-align:left;color:var(--paper);background:linear-gradient(145deg,rgba(61,44,27,.97),rgba(35,24,15,.98));box-shadow:0 12px 28px rgba(0,0,0,.34);transition:.16s;z-index:3}
+.map-place:hover{transform:translateY(-4px);border-color:var(--gold2);box-shadow:0 18px 35px rgba(0,0,0,.45)}
+.map-place.locked{opacity:.55}.map-place .building{font-size:30px}.map-place strong{display:block;color:var(--gold2);font-family:var(--serif);font-size:16px;margin:5px 0 2px}.map-place small{display:block;color:var(--dim);line-height:1.4}
+.place-badge{position:absolute;right:8px;top:8px;max-width:94px;padding:4px 7px;border-radius:999px;background:#17100b;border:1px solid var(--line);font-size:9px;color:var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.place-badge.hot{border-color:#8fbd7e;color:#b9dfae}.place-badge.warn{border-color:#b98b3d;color:#e2bd65}
+.place-guild{left:8%;top:18%}.place-auction{left:40%;top:10%}.place-appraiser{right:7%;top:20%}.place-shop{left:10%;bottom:14%}.place-tavern{left:42%;bottom:12%}.place-exchange{right:6%;bottom:21%}
+.map-side{display:grid;gap:13px;align-content:start}.map-objective{padding:15px}.map-objective h3{color:var(--gold2);font-size:16px}.objective-line{display:flex;justify-content:space-between;gap:10px;border-bottom:1px solid rgba(91,69,45,.55);padding:8px 0;font-size:12px}.objective-line:last-child{border-bottom:0}.objective-line b{color:var(--paper)}
+.day-route{display:grid;gap:7px}.route-step{display:flex;gap:9px;align-items:center;padding:8px;border:1px solid var(--line);border-radius:8px;background:#20160f;color:var(--dim);font-size:11px}.route-step.done{border-color:#56744e;color:#b9dfae}.route-step.now{border-color:var(--gold);color:var(--gold2)}.route-dot{width:20px;height:20px;border-radius:50%;display:grid;place-items:center;border:1px solid currentColor;font-size:10px;flex:0 0 auto}
+.location-head{display:flex;align-items:center;gap:12px;margin-bottom:16px}.location-icon{width:58px;height:58px;display:grid;place-items:center;font-size:31px;border:1px solid var(--line);border-radius:12px;background:#1b120c}.location-head h2{margin:0}.location-actions{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.location-action{border:1px solid var(--line);border-radius:10px;background:#1e150e;padding:13px}.location-action h3{font-size:15px;color:var(--gold2)}.location-action p{min-height:42px;font-size:12px;color:var(--dim);line-height:1.55}.location-list{display:grid;gap:9px}.location-item{border:1px solid var(--line);border-radius:9px;background:#1d140d;padding:11px}.location-item-head{display:flex;justify-content:space-between;gap:10px;align-items:center}.location-item b{color:var(--paper)}
+.map-tip{padding:11px;border:1px dashed #6e5536;border-radius:9px;color:var(--dim);font-size:11px;line-height:1.55;background:rgba(25,17,11,.75)}
+@media(max-width:1000px){.map-shell{grid-template-columns:1fr}.city-map{min-height:760px}.map-place{width:155px}.place-guild{left:5%;top:17%}.place-auction{left:38%;top:8%}.place-appraiser{right:4%;top:21%}.place-shop{left:5%;bottom:19%}.place-tavern{left:38%;bottom:9%}.place-exchange{right:4%;bottom:22%}}
+@media(max-width:680px){.city-map{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:82px 12px 16px;min-height:auto}.city-map:before,.map-water{display:none}.map-place{position:relative!important;inset:auto!important;width:auto;min-height:118px}.map-caption{left:12px;right:12px}.location-actions{grid-template-columns:1fr}}
+
+</style>
+</head>
+<body>
+<div id="setupScenes">
+  <section id="scene-title" class="scene on hero">
+    <div class="hero-card">
+      <div class="hero-mark">⚖️</div>
+      <h1>미지의 경매장</h1>
+      <p class="lead">의뢰와 거래로 돈과 평판을 모아 특별 경매에 진입하고,<br><strong>상회를 다시 일으킬 마지막 유물</strong>을 확보하세요.</p>
+      <div class="hero-actions">
+        <button class="btn primary" onclick="beginNewRun()">새로운 3일 런</button>
+        <button class="btn" onclick="openHistory()">플레이 기록</button>
+      </div>
+      <details class="dev-box">
+        <summary class="muted small">개발용 시드</summary>
+        <div class="dev-row" style="margin-top:10px">
+          <input id="seedInput" class="text-input" placeholder="예: AUCTION-TEST-01">
+          <button class="btn" onclick="randomizeSeed()">무작위</button>
+        </div>
+        <div class="small muted" style="margin-top:7px">같은 시드는 출품 순서·가치 변동·봇 행동을 재현합니다.</div>
+      </details>
+    </div>
+  </section>
+
+  <section id="scene-role" class="scene">
+    <div class="scene-shell">
+      <div class="notice"><strong>역할 선택</strong> — 이번 런 동안 고정됩니다. 숫자 보너스보다 어떤 정보를 얻고 어떻게 현금화할지가 달라집니다.</div>
+      <h2 class="scene-title">당신은 어떤 중개인입니까?</h2>
+      <div id="roleChoices" class="choice-grid"></div>
+      <div class="btn-row" style="justify-content:flex-end;margin-top:15px"><button id="roleNextBtn" class="btn primary" disabled onclick="confirmRole()">이 역할로 시작</button></div>
+    </div>
+  </section>
+
+  <section id="scene-goal" class="scene">
+    <div class="scene-shell">
+      <div class="goal-grid">
+        <div class="panel goal-card">
+          <div class="muted small">AI 생성 지역 브리핑</div>
+          <h2 class="scene-title" style="margin-top:6px">항구 도시 세라핀</h2>
+          <p class="muted" style="line-height:1.7">몰락한 별무리 상회의 장부에는 단 하나의 미수품이 남아 있습니다. 이틀 뒤 열리는 왕립 비공개 경매에 <strong style="color:var(--paper)">‘침몰한 별의 항해일지’</strong>가 출품된다는 소문입니다.</p>
+          <div class="goal-list">
+            <div class="goal-row"><span>특별 경매 참가 조건</span><strong>현금 120G · 평판 4</strong></div>
+            <div class="goal-row"><span>최종 목표</span><strong>항해일지 확보</strong></div>
+            <div class="goal-row"><span>남은 시간</span><strong>3일</strong></div>
+            <div class="goal-row"><span>일일 유지비</span><strong>15G</strong></div>
+          </div>
+        </div>
+        <div class="panel goal-card">
+          <h2>런의 구조</h2>
+          <p class="muted small" style="line-height:1.7">1·2일차에는 의뢰와 차익 거래로 자격을 갖춥니다. 3일차에는 지금까지 확보한 돈·평판·정보를 모두 걸고 특별 경매에 참가합니다.</p>
+          <div class="divider"></div>
+          <div class="goal-list">
+            <div class="goal-row"><span>1일차</span><strong>첫 의뢰</strong></div>
+            <div class="goal-row"><span>2일차</span><strong>시장 사건</strong></div>
+            <div class="goal-row"><span>3일차</span><strong>특별 경매</strong></div>
+          </div>
+          <button class="btn primary wide" style="margin-top:16px" onclick="enterHub()">상회 문을 연다</button>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<div id="gameShell" class="app hidden">
+  <header class="topbar">
+    <div class="brand"><div class="seal">⚖️</div><div><h1>별무리 유물 중개소</h1><div class="sub" id="phaseLabel">3일 런</div></div></div>
+    <div class="stats">
+      <div class="stat">날짜 <b id="dayStat">1 / 3</b></div>
+      <div class="stat">현금 <b id="cashStat">200G</b></div>
+      <div class="stat">평판 <b id="repStat">0</b></div>
+      <div class="stat">순자산 <b id="netStat">200G</b></div>
+      <div class="stat">시간 <b id="timeStat">00:00</b></div>
+    </div>
+  </header>
+
+  <main>
+
+    <section id="scene-hub" class="scene">
+      <div class="notice" id="hubNotice"></div>
+      <div class="map-shell">
+        <div class="city-map">
+          <div class="map-caption"><b id="hubDayTitle">1일차 · 세라핀</b><span>건물을 선택해 오늘의 준비와 거래를 진행하세요.</span></div>
+          <div class="map-water"></div>
+          <button class="map-place place-guild" onclick="visitLocation('guild')"><span id="badgeGuild" class="place-badge hot">새 의뢰</span><span class="building">🏛️</span><strong>중개인 조합</strong><small>의뢰인과 계약하고 오늘의 목표를 정합니다.</small></button>
+          <button class="map-place place-auction" onclick="visitLocation('auction')"><span id="badgeAuction" class="place-badge">의뢰 필요</span><span class="building">⚖️</span><strong>세라핀 경매장</strong><small>카탈로그를 검토하고 공개 호가에 참가합니다.</small></button>
+          <button class="map-place place-appraiser" onclick="visitLocation('appraiser')"><span id="badgeAppraiser" class="place-badge">감정 가능</span><span class="building">🔎</span><strong>감정소</strong><small>보유품의 가치와 태그를 확인합니다.</small></button>
+          <button class="map-place place-shop" onclick="visitLocation('shop')"><span id="badgeShop" class="place-badge">본거지</span><span class="building">🏚️</span><strong>별무리 상회</strong><small>창고와 재정을 관리하고 하루를 마감합니다.</small></button>
+          <button class="map-place place-tavern" onclick="visitLocation('tavern')"><span id="badgeTavern" class="place-badge warn">새 소문</span><span class="building">🍺</span><strong>닻 내린 달 술집</strong><small>시장 소문과 경쟁자의 움직임을 확인합니다.</small></button>
+          <button class="map-place place-exchange" onclick="visitLocation('exchange')"><span id="badgeExchange" class="place-badge">판매품 없음</span><span class="building">🏪</span><strong>항구 거래소</strong><small>구매자별 제안을 비교하고 물건을 판매합니다.</small></button>
+        </div>
+        <aside class="map-side">
+          <div class="panel map-objective">
+            <h3>특별 경매 참가 조건</h3>
+            <div class="objective-line"><span>현금</span><b id="cashGoalKpi">0 / 120G</b></div>
+            <div class="progress"><i id="cashGoalBar"></i></div>
+            <div class="objective-line"><span>평판</span><b id="repGoalKpi">0 / 4</b></div>
+            <div class="progress"><i id="repGoalBar"></i></div>
+            <div class="objective-line"><span>보유 물건</span><b id="holdingKpi">0점</b></div>
+            <div class="objective-line"><span>역할</span><b id="roleKpi">-</b></div>
+          </div>
+          <div class="panel map-objective">
+            <h3>오늘의 동선</h3>
+            <div id="dayRoute" class="day-route"></div>
+          </div>
+          <div class="panel map-objective">
+            <h3>도시 소식</h3>
+            <div id="marketNews" class="muted small" style="line-height:1.7"></div>
+            <div class="divider"></div>
+            <div id="finalProgressText" class="muted small" style="line-height:1.65"></div>
+          </div>
+          <div class="map-tip">지도 이동은 무료입니다. 감정·정보 구매·입찰처럼 실제 행동을 선택할 때만 돈이나 기회가 소비됩니다.</div>
+        </aside>
+      </div>
+    </section>
+
+    <section id="scene-quest" class="scene">
+      <div class="notice"><strong>오늘의 주 의뢰를 하나 선택하세요.</strong> 의뢰는 평판을 빠르게 올리지만, 조건을 잘못 판단하면 물건에 자금이 묶입니다.</div>
+      <div id="questChoices" class="quest-grid"></div>
+      <div class="btn-row" style="justify-content:space-between;margin-top:14px"><button class="btn" onclick="returnToMap()">도시 지도로</button><button id="questNextBtn" class="btn primary" disabled onclick="confirmQuest()">이 의뢰를 수락</button></div>
+    </section>
+
+    <section id="scene-catalog" class="scene">
+      <div class="notice"><strong>경매 계획 단계</strong> — 전체 출품 순서를 확인하고 각 물건의 목표와 최대 입찰가를 정하세요. 경매가 시작되면 전체 카탈로그는 다시 열리지 않습니다.</div>
+      <div class="catalog-toolbar">
+        <div><h2 style="margin:0">오늘의 출품 카탈로그</h2><div class="small muted" id="catalogQuestSummary"></div></div>
+        <div class="catalog-summary"><span class="tag" id="plannedBudgetTag">계획 예산 0G</span><span class="tag" id="roleUsesTag">역할 능력</span></div>
+      </div>
+      <div id="catalogGrid" class="catalog-grid"></div>
+      <div class="btn-row" style="justify-content:space-between;margin-top:14px"><button class="btn" onclick="showScene('scene-quest')">의뢰 다시 보기</button><button class="btn primary" onclick="startAuctionDay()">계획 확정 · 경매 시작</button></div>
+    </section>
+
+    <section id="scene-auction" class="scene">
+      <div class="auction-layout">
+        <div class="side-stack">
+          <div class="panel"><div class="panel-head"><h2>역할과 능력</h2><span id="roleUsesAuction" class="tag good"></span></div><div class="panel-body"><div class="role-box"><div id="auctionRoleIcon" class="role-icon"></div><div><div id="auctionRoleName" class="role-name"></div><div id="auctionRoleDesc" class="small muted"></div></div></div><div class="divider"></div><button id="roleActionBtn" class="btn good wide" onclick="useRoleAction()"></button></div></div>
+          <div class="panel"><div class="panel-head"><h2>주 의뢰</h2></div><div class="panel-body" id="auctionQuestBox"></div></div>
+          <div class="panel"><div class="panel-head"><h2>내 계획</h2></div><div class="panel-body" id="currentPlanBox"></div></div>
+        </div>
+        <div class="panel lot-card">
+          <div id="lotImage" class="lot-image"><span id="lotNo" class="lot-no"></span><span id="lotIcon"></span></div>
+          <div class="lot-body"><h2 id="lotTitle" class="lot-title"></h2><div id="lotDesc" class="lot-desc"></div><div id="clueGrid" class="clues"></div></div>
+          <div class="auction-box">
+            <div class="price-row">
+              <div><div class="small muted">현재 최고가</div><div id="currentPrice" class="price">10G</div></div>
+              <div id="timerBox" class="timer"><div class="small muted">남은 시간</div><b id="timerValue">15.0</b><div class="timer-track"><i id="timerBar"></i></div></div>
+              <div class="leader">최고 입찰자<br><b id="leaderName">없음</b></div>
+            </div>
+            <div class="bid-actions"><button class="btn primary" onclick="playerBid(2)">+2G</button><button class="btn primary" onclick="playerBid(5)">+5G</button><button class="btn primary" onclick="playerBid(10)">+10G</button><button class="btn danger" onclick="playerPass()">패스</button></div>
+            <div id="auctionLog" class="log"></div>
+          </div>
+        </div>
+        <div class="side-stack">
+          <div class="panel"><div class="panel-head"><h2>보유 현황</h2><span id="auctionCashTag" class="tag"></span></div><div id="auctionHoldings" class="panel-body"></div></div>
+          <div class="panel"><div class="panel-head"><h2>경쟁자</h2></div><div id="botList" class="panel-body"></div></div>
+          <div class="panel"><div class="panel-head"><h2>경매 진행</h2></div><div class="panel-body"><div class="progress"><i id="lotProgressBar"></i></div><div id="lotProgressText" class="small muted" style="margin-top:7px"></div></div></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="scene-processing" class="scene">
+      <div class="notice"><strong>낙찰품 분류</strong> — 의뢰품은 제출하고, 거래할 물건은 시장으로 보내세요. 미감정품도 거래할 수 있지만 구매자의 제안만 보고 가치를 판단해야 합니다.</div>
+      <div class="processing-grid">
+        <div class="panel"><div class="panel-head"><h2>오늘의 낙찰품</h2><span id="processingCount" class="tag"></span></div><div id="processingInventory" class="panel-body inventory-grid"></div></div>
+        <aside class="panel"><div class="panel-head"><h2>의뢰 진행</h2></div><div class="panel-body" id="processingQuestSummary"></div></aside>
+      </div>
+      <div class="btn-row" style="justify-content:flex-end;margin-top:14px"><button class="btn primary" onclick="finishProcessing()">분류 완료 · 판매 시장으로</button></div>
+    </section>
+
+
+    <section id="scene-market" class="scene">
+      <div class="notice"><strong>세라핀 저녁 시장</strong> — 구매자마다 원하는 물건과 제안가가 다릅니다. 지금 현금화하거나 다음 날 더 좋은 기회를 위해 보관할 수 있습니다.</div>
+      <div class="sale-summary">
+        <div class="sale-kpi"><span>오늘 판매 수입</span><b id="marketIncomeKpi">0G</b></div>
+        <div class="sale-kpi"><span>오늘 실현 손익</span><b id="marketProfitKpi">0G</b></div>
+        <div class="sale-kpi"><span>판매 가능 물건</span><b id="marketCountKpi">0점</b></div>
+      </div>
+      <div class="market-layout">
+        <div class="panel"><div class="panel-head"><h2>판매할 물건</h2><span id="marketCashTag" class="tag"></span></div><div id="marketInventory" class="panel-body market-inventory"></div></div>
+        <aside class="panel"><div class="panel-head"><h2>오늘의 구매자</h2></div><div class="panel-body"><div id="marketBuyers" class="buyer-list"></div><div class="notice" style="margin-top:12px;margin-bottom:0"><strong>거래 팁</strong><br>의뢰에 필요하지 않은 물건도 특정 구매자의 취향과 맞으면 감정가보다 비싸게 팔 수 있습니다. 보관품은 다음 날 시장에도 다시 등장합니다.</div></div></aside>
+      </div>
+      <div class="btn-row" style="justify-content:flex-end;margin-top:14px"><button class="btn primary" onclick="finishMarket()">거래 마치고 도시로</button></div>
+    </section>
+
+    <section id="scene-settlement" class="scene">
+      <div class="settlement-grid">
+        <div class="panel"><div class="panel-head"><h2 id="settlementTitle">하루 정산</h2></div><div id="settlementLedger" class="panel-body ledger"></div></div>
+        <div class="panel"><div class="panel-head"><h2>오늘의 결과</h2></div><div class="panel-body"><div id="settlementSummary" class="summary-cards"></div><div id="settlementComment" class="notice" style="margin-top:12px;margin-bottom:0"></div></div></div>
+      </div>
+      <div class="btn-row" style="justify-content:flex-end;margin-top:14px"><button id="settlementNextBtn" class="btn primary" onclick="continueAfterSettlement()">다음으로</button></div>
+    </section>
+
+    <section id="scene-event" class="scene">
+      <div class="panel event-card"><div class="event-visual">📰</div><div class="small muted center">2일차 아침 사건</div><h2 class="center">침몰선의 새로운 기록</h2><p>항구 기록관에서 원정 당시의 화물 목록 일부가 발견됐습니다. 정보상은 사본을 팔겠다고 제안했고, 시장에서는 해양 유물에 대한 관심이 급격히 높아지고 있습니다.</p><div class="event-options"><div class="event-option"><h3>기록 사본 구매</h3><p>12G를 지불합니다. 2일차 카탈로그에서 해양 관련 물건 하나의 숨은 태그를 공개합니다.</p><button class="btn primary wide" onclick="chooseEvent('info')">12G 지불</button></div><div class="event-option"><h3>시장 소문 활용</h3><p>정보 구매를 포기합니다. 오늘 해양 태그 물건의 즉시 판매가가 20% 상승합니다.</p><button class="btn wide" onclick="chooseEvent('market')">소문을 따른다</button></div></div></div>
+    </section>
+
+    <section id="scene-finalprep" class="scene">
+      <div class="final-banner"><div class="small muted">3일차 · 왕립 비공개 경매</div><h2>특별 경매 참가 심사</h2><p class="muted">현금과 평판은 점수가 아니라 이 문을 여는 자격입니다.</p></div>
+      <div class="goal-grid">
+        <div class="panel goal-card"><h2>현재 자격</h2><div class="goal-list"><div class="goal-row"><span>현금</span><strong id="finalCashCheck"></strong></div><div class="goal-row"><span>평판</span><strong id="finalRepCheck"></strong></div><div class="goal-row"><span>보유 자산</span><strong id="finalAssetCheck"></strong></div></div><div id="qualificationMessage" class="notice" style="margin-top:14px;margin-bottom:0"></div></div>
+        <div class="panel goal-card"><h2>마지막 준비</h2><p class="small muted" style="line-height:1.65">자격이 부족하면 상회 명의로 긴급 대출을 받을 수 있습니다. 대출은 최종 등급을 낮추지만 런이 즉시 끝나지는 않습니다.</p><div id="finalPrepActions" class="btn-row" style="margin-top:14px"></div></div>
+      </div>
+    </section>
+
+    <section id="scene-finalchoice" class="scene">
+      <div class="scene-shell"><div class="final-banner"><h2>항해일지의 행방</h2><p class="muted">핵심 유물을 확보했습니다. 이제 상회를 어떤 방식으로 재건할지 결정하세요.</p></div><div class="ending-choices"><div class="ending-choice"><h3>🏛️ 박물관에 기증</h3><p>금전적 이익은 작지만 역사적 진실을 공개하고 높은 평판을 얻습니다.</p><button class="btn wide" onclick="chooseEnding('museum')">기증한다</button></div><div class="ending-choice"><h3>💰 개인 수집가에게 판매</h3><p>상회를 즉시 되살릴 막대한 현금을 얻지만 일부 평판을 잃습니다.</p><button class="btn primary wide" onclick="chooseEnding('sell')">판매한다</button></div><div class="ending-choice"><h3>🗄️ 상회에 전시</h3><p>유물을 보유한 채 상회의 상징으로 삼습니다. 돈과 평판을 균형 있게 얻습니다.</p><button class="btn wide" onclick="chooseEnding('keep')">전시한다</button></div></div></div>
+    </section>
+
+    <section id="scene-result" class="scene">
+      <div class="scene-shell"><div class="panel goal-card center"><div class="small muted">런 완료</div><div id="resultGrade" class="result-grade">A</div><h2 id="resultTitle"></h2><p id="resultDescription" class="muted" style="line-height:1.7"></p><div id="resultKpis" class="summary-cards" style="margin:18px auto;max-width:720px"></div><div class="btn-row" style="justify-content:center"><button class="btn primary" onclick="location.reload()">새 런 시작</button><button class="btn" onclick="openHistory()">히스토리</button></div></div></div>
+    </section>
+  </main>
+</div>
+
+
+<div id="locationOverlay" class="overlay hidden"><div class="modal"><div class="panel-head" style="padding:0 0 13px"><h2 id="locationTitle">장소</h2><button class="btn" onclick="closeLocation()">지도 복귀</button></div><div id="locationBody"></div></div></div>
+
+<div id="warehouseOverlay" class="overlay hidden"><div class="modal"><div class="panel-head" style="padding:0 0 13px"><h2>보유품 창고</h2><button class="btn" onclick="closeWarehouse()">닫기</button></div><div id="warehouseList"></div></div></div>
+<div id="historyOverlay" class="overlay hidden"><div class="modal"><div class="panel-head" style="padding:0 0 13px"><h2>최근 플레이 기록</h2><button class="btn" onclick="closeHistory()">닫기</button></div><div id="historyList"></div><button class="btn danger" onclick="clearHistory()">기록 전체 삭제</button></div></div>
+
+<script>
+const ROLE_DATA=[
+ {id:'appraiser',icon:'🔍',name:'감정사',desc:'가치 범위를 좁히고 위조 위험을 빠르게 확인합니다.',perk:'매일 무료 정밀 감정 2회 · 공개 가치 오차 감소'},
+ {id:'broker',icon:'🤝',name:'중개상',desc:'낙찰품을 빠르게 현금화하고 시장 제안을 더 유리하게 만듭니다.',perk:'모든 구매자 제안 +15% · 저평가품 현금화에 유리'},
+ {id:'investigator',icon:'📜',name:'출처 조사관',desc:'기록의 연결과 모순을 찾아 의뢰품 후보를 판별합니다.',perk:'매일 카탈로그 숨은 태그 조사 1회 · 의뢰 실패 평판 손실 감소'}
+
+];
+const BUYER_DATA=[
+ {id:'museum',icon:'🏛️',name:'세라핀 박물관',desc:'출처가 분명한 해양·문서·진품을 선호합니다.',likes:['해양','문서','진품'],base:.82,bonus:.14},
+ {id:'noble',icon:'🎩',name:'귀족 수집가',desc:'왕실·은제·오래된 물건에 프리미엄을 지급합니다.',likes:['왕실','은제','19세기 이전'],base:.86,bonus:.13},
+ {id:'trader',icon:'⚓',name:'항구 무역상',desc:'종류를 가리지 않고 빠르게 사지만 기본 제안은 낮습니다.',likes:['기념품','복제품','해양'],base:.76,bonus:.11}
+];
+const QUEST_TEMPLATES={
+ maritime:{npc:'마레인 관장',portrait:'👩‍🏫',org:'북부 해양 박물관',title:'원정선의 실제 유물',tags:['해양','원정 사용'],count:2,reward:86,rep:3,brief:'원정 당시 실제로 사용된 해양 유물 두 점을 확보해 주세요. 기념품과 복제품은 인정하지 않습니다.'},
+ royal:{npc:'에드릭 벨라르',portrait:'🧔🏻‍♂️',org:'벨라르 가문',title:'왕실의 진품 회수',tags:['왕실','진품'],count:2,reward:98,rep:4,brief:'왕실과 직접 연결된 진품 두 점을 비공개로 회수하려 합니다. 재현품은 제외됩니다.'},
+ silver:{npc:'세린 모로',portrait:'👩🏻‍💼',org:'모로 수집회',title:'오래된 은제 세공품',tags:['은제','19세기 이전'],count:2,reward:78,rep:2,brief:'19세기 이전에 만들어진 은제 물품 두 점을 찾습니다. 용도보다 재료와 연대가 중요합니다.'},
+ document:{npc:'오르반 서기관',portrait:'🧑‍💼',org:'세라핀 기록원',title:'진본 기록 회수',tags:['문서','진품'],count:1,reward:64,rep:3,brief:'위조되지 않은 역사 문서 한 점을 확보해 기록원에 전달해 주세요.'},
+ ceremonial:{npc:'리사 대리인',portrait:'👩🏻‍⚖️',org:'왕립 전시위원회',title:'대관식의 흔적',tags:['왕실','19세기 이전'],count:1,reward:70,rep:3,brief:'왕실 의식과 관련된 오래된 물건 한 점을 확보해 주세요.'}
+};
+const DAY_ITEMS={
+ 1:[
+  {id:'compass',icon:'🧭',name:'염분에 잠긴 은제 나침반',desc:'바늘 아래 별 모양의 흠집이 남아 있다. 북해 원정선의 항해실에서 발견됐다는 기록이 붙었다.',clues:['은빛 합금','원정선 잔해','바늘축 심한 부식'],tags:['해양','원정 사용','은제','19세기 이전','진품'],value:42,start:10},
+  {id:'coin',icon:'🪙',name:'이렌 원정 기념 주화',desc:'항해사 이렌의 초상이 선명하다. 가장자리에는 원정 20주년 기념 문구가 있다.',clues:['은빛 도금','20주년 문구','대량 주조 흔적'],tags:['해양','기념품','은제'],value:14,start:10},
+  {id:'seal',icon:'🔏',name:'벨라르의 쌍돛 인장',desc:'왕실 문서와 유사한 문장이 새겨져 있다. 손잡이 안에는 오래된 밀랍이 굳어 있다.',clues:['왕실 문서와 유사','내부 밀랍','가문 장부 기재'],tags:['왕실','진품','19세기 이전'],value:39,start:10},
+  {id:'chalice',icon:'🏆',name:'붉은 밀랍의 왕실 성배',desc:'굽 아래 왕실 세공소 각인이 있으며 한쪽에는 후대의 장식이 덧붙었다.',clues:['왕실 세공소 각인','은제 몸체','후대 장식'],tags:['왕실','진품','은제','19세기 이전'],value:50,start:10},
+  {id:'ledger',icon:'📕',name:'북해 보급 장부',desc:'출항 직전 식량과 장비 목록이 기록돼 있다. 마지막 장에는 나침반 수리 비용이 남았다.',clues:['출항 직전 날짜','항해실 장비 기록','습기로 번진 잉크'],tags:['해양','원정 사용','문서','19세기 이전','진품'],value:34,start:10}
+ ],
+ 2:[
+  {id:'brooch',icon:'💎',name:'은제 파도 브로치',desc:'귀족 부인의 초상화에도 비슷한 장신구가 보인다. 제작소 표식은 마모됐다.',clues:['은제 세공','옛 초상화와 유사','표식 마모'],tags:['은제','19세기 이전','진품'],value:29,start:10},
+  {id:'map',icon:'🗺️',name:'별의 항로 전시 지도',desc:'항로 표시는 정교하지만 가장자리에 박물관 관리 번호가 적혀 있다.',clues:['정확한 항로','관리 번호','종이 상태 양호'],tags:['해양','복제품','문서'],value:18,start:10},
+  {id:'crown',icon:'👑',name:'대관식 재현용 소관',desc:'보석은 화려하지만 내부에 공연단의 대여 번호가 새겨져 있다.',clues:['왕실 양식','공연단 번호','근대 접착제'],tags:['왕실','복제품','기념품'],value:16,start:10},
+  {id:'astrolabe',icon:'⚙️',name:'청동 고리의 은제 천구의',desc:'원정선 천문관의 이름과 별자리 좌표가 미세하게 새겨져 있다.',clues:['은제 눈금판','천문관 서명','오래된 염분 자국'],tags:['해양','은제','19세기 이전','진품'],value:46,start:12},
+  {id:'letter',icon:'✉️',name:'왕실 봉인의 비밀 서신',desc:'봉인은 일부 깨졌지만 왕실 서기관의 필체와 배송 기록이 남아 있다.',clues:['왕실 봉인','배송 장부 일치','낡은 양피지'],tags:['왕실','문서','19세기 이전','진품'],value:41,start:10}
+ ],
+ final:[
+  {id:'journal',icon:'📓',name:'침몰한 별의 항해일지',desc:'별무리 상회의 마지막 원정 기록. 젖은 가죽 표지 안쪽에 상회 창립자의 서명이 남아 있다.',clues:['상회 창립자 서명','침몰 당일 마지막 기록','염분에 굳은 가죽'],tags:['해양','원정 사용','문서','19세기 이전','진품','핵심 유물'],value:88,start:25,target:true},
+  {id:'replicaJournal',icon:'📘',name:'항해일지 기념 복각본',desc:'원본과 같은 문양을 썼지만 인쇄 상태가 지나치게 균일하다.',clues:['동일한 표지 문양','현대 인쇄 흔적','기념 전시 라벨'],tags:['해양','문서','복제품','기념품'],value:22,start:18},
+  {id:'royalGem',icon:'💠',name:'왕립 등대의 푸른 보석',desc:'등대 개관식에 쓰였다는 전승이 있으나 소유 기록은 분명하지 않다.',clues:['왕실 양식','희귀한 청색 보석','소유 기록 공백'],tags:['왕실','은제','진품'],value:67,start:25}
+ ]
+};
+const HISTORY_KEY='unknownAuctionRoguelikeHistoryV1';
+function hashString(text){let h=2166136261>>>0;for(const ch of String(text)){h^=ch.charCodeAt(0);h=Math.imul(h,16777619)}return h>>>0}
+function mulberry32(seed){return function(){let t=seed+=0x6D2B79F5;t=Math.imul(t^t>>>15,t|1);t^=t+Math.imul(t^t>>>7,t|61);return((t^t>>>14)>>>0)/4294967296}}
+function normalizeSeed(v){return String(v||'').trim().toUpperCase().replace(/[^A-Z0-9_-]/g,'').slice(0,24)||Math.random().toString(36).slice(2,9).toUpperCase()}
+function esc(s){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+function fmtMoney(n){return `${Math.round(n)}G`}
+function fmtTime(ms){let s=Math.floor(ms/1000),m=Math.floor(s/60);return `${String(m).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`}
+const state={seed:'',rng:null,role:null,roleCandidate:null,day:1,cash:200,rep:0,holdings:[],selectedQuest:null,quest:null,questDelivered:[],questFailed:0,plans:{},catalogReveals:{},roleUses:0,event:null,marketBonusTag:null,auctionItems:[],lotIndex:0,currentLot:null,currentPrice:0,leader:null,playerPassed:false,timer:15,timerHandle:null,botHandle:null,bots:[],logs:[],dayIncome:0,dayExpense:0,dayQuestReward:0,dayRepChange:0,marketOffers:{},marketIncome:0,marketProfit:0,marketSales:0,lastSettlement:null,loanTaken:false,finalWon:false,ending:null,startedAt:0,elapsedBefore:0,clockHandle:null,finished:false,dayPhase:'prep',marketVisited:false,tavernUsedDay:0,tavernRumor:'',currentLocation:null};
+function showSetup(id){document.querySelectorAll('#setupScenes .scene').forEach(x=>x.classList.remove('on'));document.getElementById(id).classList.add('on')}
+function showScene(id){document.querySelectorAll('#gameShell .scene').forEach(x=>x.classList.remove('on'));document.getElementById(id).classList.add('on');updateHeader()}
+function beginNewRun(){state.seed=normalizeSeed(document.getElementById('seedInput').value);state.rng=mulberry32(hashString(state.seed));state.startedAt=Date.now();startClock();renderRoles();showSetup('scene-role')}
+function randomizeSeed(){document.getElementById('seedInput').value=normalizeSeed('')}
+function renderRoles(){document.getElementById('roleChoices').innerHTML=ROLE_DATA.map(r=>`<article class="choice-card ${state.roleCandidate===r.id?'selected':''}" onclick="selectRole('${r.id}')"><div class="choice-icon">${r.icon}</div><h3>${r.name}</h3><p>${r.desc}</p><div class="perk">${r.perk}</div></article>`).join('')}
+function selectRole(id){state.roleCandidate=id;renderRoles();document.getElementById('roleNextBtn').disabled=false}
+function confirmRole(){state.role=ROLE_DATA.find(r=>r.id===state.roleCandidate);showSetup('scene-goal')}
+function enterHub(){document.getElementById('setupScenes').classList.add('hidden');document.getElementById('gameShell').classList.remove('hidden');state.dayPhase='prep';resetDailyRoleUses();renderHub();showScene('scene-hub')}
+function startClock(){if(state.clockHandle)return;state.clockHandle=setInterval(()=>{if(!state.finished)document.getElementById('timeStat')&&(document.getElementById('timeStat').textContent=fmtTime(Date.now()-state.startedAt))},500)}
+function elapsed(){return state.startedAt?Date.now()-state.startedAt:0}
+function netWorth(){return state.cash+state.holdings.reduce((s,h)=>s+h.item.value,0)}
+function updateHeader(){if(document.getElementById('dayStat')){document.getElementById('dayStat').textContent=`${state.day} / 3`;document.getElementById('cashStat').textContent=fmtMoney(state.cash);document.getElementById('repStat').textContent=state.rep;document.getElementById('netStat').textContent=fmtMoney(netWorth());document.getElementById('phaseLabel').textContent=state.day<3?`${state.day}일차 일반 경매`:'3일차 왕립 특별 경매'}}
+function resetDailyRoleUses(){state.roleUses=state.role.id==='appraiser'?2:1}
+function renderHub(){
+ updateHeader();
+ const phase=state.dayPhase||'prep';
+ document.getElementById('hubDayTitle').textContent=`${state.day}일차 · 세라핀`;
+ document.getElementById('hubNotice').innerHTML=state.day===1?'<strong>첫날.</strong> 도시를 돌아다니며 의뢰와 정보를 모은 뒤 경매에 참가하세요.':'<strong>둘째 날.</strong> 오늘이 특별 경매 참가 조건을 갖출 마지막 기회입니다.';
+ document.getElementById('cashGoalKpi').textContent=`${state.cash} / 120G`;
+ document.getElementById('repGoalKpi').textContent=`${state.rep} / 4`;
+ document.getElementById('cashGoalBar').style.width=`${Math.min(100,state.cash/120*100)}%`;
+ document.getElementById('repGoalBar').style.width=`${Math.min(100,state.rep/4*100)}%`;
+ document.getElementById('holdingKpi').textContent=`${state.holdings.filter(h=>!['sold','delivered'].includes(h.action)).length}점`;
+ document.getElementById('roleKpi').textContent=state.role.name;
+ const sellable=state.holdings.filter(h=>h.action==='market'||h.action==='hold').length;
+ const unappraised=state.holdings.filter(h=>!h.appraised&&!['sold','delivered'].includes(h.action)).length;
+ const phaseOrder={prep:0,questAccepted:1,auctionDone:2,marketDone:3};
+ const p=phaseOrder[phase]??0;
+ const route=[['의뢰 계약',state.quest?1:0,p===0&&!state.quest],['카탈로그·경매',p>=2?1:0,state.quest&&p<2],['판매·감정',p>=3?1:0,p===2],['상회 정산',0,p>=2]];
+ document.getElementById('dayRoute').innerHTML=route.map(([name,done,now],i)=>`<div class="route-step ${done?'done':now?'now':''}"><span class="route-dot">${done?'✓':i+1}</span><span>${name}</span></div>`).join('');
+ const setBadge=(id,text,cls='')=>{let e=document.getElementById(id);e.textContent=text;e.className=`place-badge ${cls}`};
+ setBadge('badgeGuild',state.quest?'계약 완료':'새 의뢰',state.quest?'':'hot');
+ setBadge('badgeAuction',!state.quest?'의뢰 필요':p<2?'카탈로그 공개':'오늘 종료',state.quest&&p<2?'hot':'');
+ setBadge('badgeExchange',sellable?`${sellable}점 판매 가능`:'판매품 없음',sellable?'hot':'');
+ setBadge('badgeAppraiser',unappraised?`미감정 ${unappraised}점`:'감정 완료',unappraised?'warn':'');
+ setBadge('badgeTavern',state.tavernUsedDay===state.day?'소문 확인':'새 소문',state.tavernUsedDay===state.day?'':'warn');
+ setBadge('badgeShop',p>=2?'정산 가능':'본거지',p>=2?'hot':'');
+ document.getElementById('marketNews').innerHTML=state.day===1?'원정선과 왕실 창고에서 나온 물건이 함께 출품됩니다.<br><br>기념품과 재현품이 섞였다는 소문이 있습니다.':'어제의 낙찰 결과로 시장이 움직였습니다.<br><br>'+(state.marketBonusTag==='해양'?'<strong style="color:var(--good)">해양 유물 구매 제안이 20% 상승했습니다.</strong>':'화물 기록 사본 덕분에 해양 관련 단서를 하나 더 확인할 수 있습니다.');
+ document.getElementById('finalProgressText').innerHTML=`현금 조건: <strong>${state.cash>=120?'충족':'미충족'}</strong><br>평판 조건: <strong>${state.rep>=4?'충족':'미충족'}</strong><br><br>${state.day===2?'오늘을 마치면 참가 심사가 진행됩니다.':'일반 경매를 거쳐 상회를 성장시키세요.'}`;
+}
+function goQuestScene(){state.selectedQuest=null;renderQuests();showScene('scene-quest')}
+function questKeysForDay(){return state.day===1?['maritime','royal','silver']:['silver','document','ceremonial']}
+function renderQuests(){document.getElementById('questChoices').innerHTML=questKeysForDay().map(key=>{let q=QUEST_TEMPLATES[key];return `<article class="quest-card ${state.selectedQuest===key?'selected':''}" onclick="selectQuest('${key}')"><div class="npc"><div class="portrait">${q.portrait}</div><div><strong>${q.npc}</strong><div class="small muted">${q.org}</div></div></div><h3>${q.title}</h3><p>${q.brief}</p><div class="tags">${q.tags.map(t=>`<span class="tag">${t}</span>`).join('')}<span class="tag warn">${q.count}점</span></div><div class="reward">보상 ${q.reward}G · 평판 +${q.rep}</div></article>`}).join('');document.getElementById('questNextBtn').disabled=!state.selectedQuest}
+function selectQuest(key){state.selectedQuest=key;renderQuests()}
+function confirmQuest(){state.quest={...QUEST_TEMPLATES[state.selectedQuest],key:state.selectedQuest,delivered:0};state.questDelivered=[];state.questFailed=0;state.plans={};state.catalogReveals={};state.dayPhase='questAccepted';renderCatalog();renderHub();showScene('scene-hub')}
+function buildDayItems(day){let list=DAY_ITEMS[day].map(x=>({...x,tags:[...x.tags],clues:[...x.clues],value:Math.max(x.start+5,x.value+Math.floor(state.rng()*9)-4)}));for(let i=list.length-1;i>0;i--){let j=Math.floor(state.rng()*(i+1));[list[i],list[j]]=[list[j],list[i]]}return list}
+function publicEstimate(item){let spread=state.role.id==='appraiser'?5:11;let bias=Math.floor(state.rng()*7)-3;let mid=item.value+bias;return [Math.max(item.start,mid-spread),mid+spread]}
+function renderCatalog(){state.auctionItems=buildDayItems(state.day);document.getElementById('catalogQuestSummary').textContent=`${state.quest.title} · ${state.quest.tags.join(' + ')} · ${state.quest.count}점 필요`;state.auctionItems.forEach(item=>{if(!state.plans[item.id])state.plans[item.id]={priority:'watch',maxBid:Math.min(state.cash,Math.round(item.start+15)),estimate:publicEstimate(item)}});if(state.day===2&&state.event==='info'){let sea=state.auctionItems.find(x=>x.tags.includes('해양'));if(sea)state.catalogReveals[sea.id]=sea.tags[0]}
+ document.getElementById('catalogGrid').innerHTML=state.auctionItems.map((item,idx)=>catalogCard(item,idx)).join('');updateCatalogBudget();updateRoleUsesTags()}
+function catalogCard(item,idx){let p=state.plans[item.id],reveal=state.catalogReveals[item.id];return `<article class="catalog-card ${p.priority}"><div class="catalog-icon">${item.icon}</div><div><div class="catalog-name">${idx+1}. ${item.name}</div><div class="catalog-desc">${item.desc}</div><div class="catalog-meta"><span>추정 ${p.estimate[0]}~${p.estimate[1]}G</span><span>시작가 ${item.start}G</span>${reveal?`<span class="tag good">조사: ${reveal}</span>`:''}</div><div class="catalog-plan"><select class="select" onchange="setPlanPriority('${item.id}',this.value)"><option value="target" ${p.priority==='target'?'selected':''}>최우선 목표</option><option value="watch" ${p.priority==='watch'?'selected':''}>관망 후보</option><option value="ignore" ${p.priority==='ignore'?'selected':''}>무시</option></select><input class="number-input" type="number" min="0" max="${state.cash}" value="${p.maxBid}" onchange="setMaxBid('${item.id}',this.value)"></div>${state.role.id==='investigator'?`<button class="btn ${reveal?'hidden':''}" onclick="investigateCatalog('${item.id}')" ${state.roleUses<=0?'disabled':''}>출처 조사</button>`:''}</div></article>`}
+function setPlanPriority(id,v){state.plans[id].priority=v;renderCatalog()}
+function setMaxBid(id,v){state.plans[id].maxBid=Math.max(0,Math.min(state.cash,Number(v)||0));updateCatalogBudget()}
+function investigateCatalog(id){if(state.role.id!=='investigator'||state.roleUses<=0)return;let item=state.auctionItems.find(x=>x.id===id);state.catalogReveals[id]=item.tags[Math.floor(state.rng()*item.tags.length)];state.roleUses--;renderCatalog()}
+function updateCatalogBudget(){let total=Object.values(state.plans).filter(p=>p.priority!=='ignore').reduce((s,p)=>s+p.maxBid,0);document.getElementById('plannedBudgetTag').textContent=`계획 예산 ${total}G / 현금 ${state.cash}G`}
+function updateRoleUsesTags(){let text=state.role.id==='appraiser'?`무료 감정 ${state.roleUses}회`:state.role.id==='broker'?`구매 제안 ${state.roleUses}회`:`출처 조사 ${state.roleUses}회`;document.getElementById('roleUsesTag').textContent=text;document.getElementById('roleUsesAuction').textContent=text}
+function startAuctionDay(){state.dayPhase='auctionRunning';state.lotIndex=0;state.bots=[{name:'로렌 수집가',cash:200},{name:'베른 상인',cash:200},{name:'회색 장갑',cash:200}];state.logs=[];showScene('scene-auction');startLot()}
+function startLot(){clearAuctionTimers();if(state.lotIndex>=state.auctionItems.length){showProcessing();return}state.currentLot=state.auctionItems[state.lotIndex];state.currentPrice=state.currentLot.start;state.leader=null;state.playerPassed=false;state.timer=15;renderAuction();logAuction(`${state.currentLot.name}의 경매가 시작되었습니다.`);state.timerHandle=setInterval(tickAuction,100);scheduleBotAction()}
+function renderAuction(){updateHeader();let item=state.currentLot,p=state.plans[item.id];document.getElementById('auctionRoleIcon').textContent=state.role.icon;document.getElementById('auctionRoleName').textContent=state.role.name;document.getElementById('auctionRoleDesc').textContent=state.role.desc;document.getElementById('roleActionBtn').textContent=state.role.id==='appraiser'?'정밀 감정':state.role.id==='broker'?'구매 제안 확인':'기록 비교';document.getElementById('roleActionBtn').disabled=state.roleUses<=0;updateRoleUsesTags();document.getElementById('auctionQuestBox').innerHTML=`<strong style="color:var(--gold2)">${state.quest.title}</strong><p class="small muted">${state.quest.tags.join(' + ')} 조건 ${state.quest.count}점</p><div class="small">제출 ${state.quest.delivered||0} / ${state.quest.count}</div>`;document.getElementById('currentPlanBox').innerHTML=`<div class="plan-card"><b>${p.priority==='target'?'최우선 목표':p.priority==='watch'?'관망 후보':'무시'}</b><div class="small muted">계획 상한 ${p.maxBid}G</div><div class="small muted">추정 가치 ${p.estimate[0]}~${p.estimate[1]}G</div>${state.catalogReveals[item.id]?`<div class="tag good" style="margin-top:6px">조사 태그: ${state.catalogReveals[item.id]}</div>`:''}</div>`;document.getElementById('lotImage').style.opacity=1;document.getElementById('lotNo').textContent=`LOT ${state.lotIndex+1} / ${state.auctionItems.length}`;document.getElementById('lotIcon').textContent=item.icon;document.getElementById('lotTitle').textContent=item.name;document.getElementById('lotDesc').textContent=item.desc;document.getElementById('clueGrid').innerHTML=item.clues.map((c,i)=>`<div class="clue"><b>관찰 ${i+1}</b>${c}</div>`).join('');document.getElementById('currentPrice').textContent=fmtMoney(state.currentPrice);document.getElementById('leaderName').textContent=state.leader||'없음';document.getElementById('auctionCashTag').textContent=`현금 ${state.cash}G`;document.getElementById('auctionHoldings').innerHTML=state.holdings.length?state.holdings.map(h=>`<div class="holding"><div class="holding-row"><div class="holding-icon">${h.item.icon}</div><div><div class="holding-name">${h.item.name}</div><div class="holding-meta">매입 ${h.buyPrice}G · ${h.appraised?'감정 완료':'미감정'}</div></div></div></div>`).join(''):'<div class="empty">보유 물건 없음</div>';document.getElementById('botList').innerHTML=state.bots.map(b=>`<div class="plan-card"><b>${b.name}</b><div class="small muted">잔액 ${b.cash}G</div></div>`).join('');document.getElementById('lotProgressBar').style.width=`${state.lotIndex/state.auctionItems.length*100}%`;document.getElementById('lotProgressText').textContent=`${state.lotIndex+1}번째 출품 · 남은 ${state.auctionItems.length-state.lotIndex-1}점`;document.getElementById('auctionLog').innerHTML=state.logs.slice(-8).map(x=>`<div>${x}</div>`).join('');renderTimer()}
+function logAuction(msg){state.logs.push(msg);let el=document.getElementById('auctionLog');if(el){el.innerHTML=state.logs.slice(-8).map(x=>`<div>${x}</div>`).join('');el.scrollTop=el.scrollHeight}}
+function tickAuction(){state.timer-=.1;if(state.timer<=0){state.timer=0;renderTimer();finalizeLot();return}renderTimer()}
+function renderTimer(){let v=document.getElementById('timerValue');if(!v)return;v.textContent=state.timer.toFixed(1);document.getElementById('timerBar').style.width=`${state.timer/15*100}%`;document.getElementById('timerBox').classList.toggle('danger',state.timer<=5)}
+function maxBotBid(bot,item){let preference=(bot.name==='로렌 수집가'&&item.tags.includes('왕실'))||(bot.name==='베른 상인'&&item.value>35)||(bot.name==='회색 장갑'&&item.tags.includes('해양'));let noise=Math.floor(state.rng()*13)-6;return Math.max(item.start,item.value+(preference?12:0)+noise)}
+function scheduleBotAction(){clearTimeout(state.botHandle);state.botHandle=setTimeout(()=>{if(!state.currentLot)return;let candidates=state.bots.filter(b=>b.cash>state.currentPrice+2&&state.currentPrice+2<=maxBotBid(b,state.currentLot));if(candidates.length){let bot=candidates[Math.floor(state.rng()*candidates.length)],inc=state.rng()>.7?5:2,newPrice=state.currentPrice+inc;if(newPrice<=bot.cash&&newPrice<=maxBotBid(bot,state.currentLot)){state.currentPrice=newPrice;state.leader=bot.name;state.timer=Math.max(state.timer,7);logAuction(`<strong>${bot.name}</strong> ${inc}G 인상`);renderAuction()}}scheduleBotAction()},900+state.rng()*1300)}
+function playerBid(inc){if(state.playerPassed||!state.currentLot)return;let next=state.currentPrice+inc;if(next>state.cash){logAuction('현금이 부족합니다.');return}let plan=state.plans[state.currentLot.id];if(next>plan.maxBid&&!confirm(`계획 상한 ${plan.maxBid}G를 넘겨 ${next}G에 입찰할까요?`))return;state.currentPrice=next;state.leader='플레이어';state.timer=Math.max(state.timer,8);logAuction(`<strong>플레이어</strong> ${inc}G 인상`);renderAuction()}
+function playerPass(){
+ if(state.playerPassed||!state.currentLot)return;
+ state.playerPassed=true;
+ logAuction('플레이어가 패스했습니다. 남은 입찰을 즉시 정산합니다.');
+ resolvePassedLot();
+}
+function resolvePassedLot(){
+ clearAuctionTimers();
+ const item=state.currentLot;
+ let price=state.currentPrice;
+ let leader=state.leader;
+ const limits=new Map(state.bots.map(bot=>{
+  let limit=Math.min(bot.cash,maxBotBid(bot,item));
+  if(bot.name===leader)limit=Math.max(limit,price);
+  return [bot.name,limit];
+ }));
+ let rounds=0;
+ while(rounds<100){
+  const candidates=state.bots
+   .filter(bot=>bot.name!==leader&&bot.cash>=price+2&&(limits.get(bot.name)||0)>=price+2)
+   .sort((a,b)=>(limits.get(b.name)||0)-(limits.get(a.name)||0));
+  if(!candidates.length)break;
+  const bestLimit=limits.get(candidates[0].name)||0;
+  const tied=candidates.filter(bot=>(limits.get(bot.name)||0)===bestLimit);
+  const bot=tied[Math.floor(state.rng()*tied.length)];
+  const limit=limits.get(bot.name)||0;
+  const inc=limit>=price+5&&state.rng()>.7?5:2;
+  price=Math.min(limit,price+inc);
+  leader=bot.name;
+  rounds++;
+ }
+ const changed=price!==state.currentPrice||leader!==state.leader;
+ state.currentPrice=price;
+ state.leader=leader;
+ if(changed)logAuction(leader?`남은 경쟁 결과: <strong>${leader}</strong> ${price}G`:'추가 입찰 없이 유찰되었습니다.');
+ else logAuction(leader?`추가 입찰 없이 <strong>${leader}</strong>이 선두를 유지했습니다.`:'추가 입찰 없이 유찰되었습니다.');
+ renderAuction();
+ setTimeout(finalizeLot,300);
+}
+function useRoleAction(){if(state.roleUses<=0||!state.currentLot)return;let item=state.currentLot;if(state.role.id==='appraiser'){let exact=[Math.max(item.start,item.value-3),item.value+3];state.plans[item.id].estimate=exact;logAuction(`정밀 감정: 가치 범위가 ${exact[0]}~${exact[1]}G로 좁혀졌습니다.`)}else if(state.role.id==='broker'){let offer=Math.round(item.value*1.05);logAuction(`구매 제안: 낙찰 시 항구 상인이 약 ${offer}G에 즉시 매입할 의향이 있습니다.`);state.plans[item.id].brokerOffer=offer}else{let revealed=item.tags[Math.floor(state.rng()*item.tags.length)];state.catalogReveals[item.id]=revealed;logAuction(`기록 비교: '${revealed}' 태그를 확인했습니다.`)}state.roleUses--;renderAuction()}
+function clearAuctionTimers(){if(state.timerHandle){clearInterval(state.timerHandle);state.timerHandle=null}if(state.botHandle){clearTimeout(state.botHandle);state.botHandle=null}}
+function finalizeLot(){clearAuctionTimers();let item=state.currentLot;if(state.leader==='플레이어'){state.cash-=state.currentPrice;state.holdings.push({item,buyPrice:state.currentPrice,day:state.day,appraised:false,processed:false,action:'hold'});state.dayExpense+=state.currentPrice;logAuction(`${item.name}을 ${state.currentPrice}G에 낙찰받았습니다.`)}else if(state.leader){let bot=state.bots.find(b=>b.name===state.leader);bot.cash-=state.currentPrice;logAuction(`${state.leader}이 ${state.currentPrice}G에 낙찰받았습니다.`)}else logAuction('유찰되었습니다.');state.lotIndex++;setTimeout(startLot,750)}
+function showProcessing(){clearAuctionTimers();renderProcessing();showScene('scene-processing')}
+function todayHoldings(){return state.holdings.filter(h=>h.day===state.day&&!h.processed)}
+function renderProcessing(){let list=todayHoldings();document.getElementById('processingCount').textContent=`${list.length}점`;document.getElementById('processingInventory').innerHTML=list.length?list.map((h,idx)=>inventoryCard(h,idx)).join(''):'<div class="empty">오늘 낙찰받은 물건이 없습니다.</div>';document.getElementById('processingQuestSummary').innerHTML=`<h3 style="color:var(--gold2)">${state.quest.title}</h3><p class="small muted">${state.quest.brief}</p><div class="goal-list"><div class="goal-row"><span>필요 조건</span><strong>${state.quest.tags.join(' + ')}</strong></div><div class="goal-row"><span>제출 진행</span><strong>${state.quest.delivered||0} / ${state.quest.count}</strong></div><div class="goal-row"><span>완료 보상</span><strong>${state.quest.reward}G · 평판 +${state.quest.rep}</strong></div></div><div class="notice" style="margin-top:12px;margin-bottom:0">미감정품도 제출할 수 있지만 조건이 맞지 않으면 평판을 잃습니다.</div>`}
+function inventoryCard(h){let i=h.item,match=state.quest.tags.every(t=>i.tags.includes(t));return `<article class="inventory-card"><div class="inventory-top"><div class="inventory-icon">${i.icon}</div><div><h3>${i.name}</h3><p>매입 ${h.buyPrice}G · ${h.appraised?`감정가 ${i.value}G`:'가치 미확인'}</p></div></div>${h.appraised?`<div class="tags">${i.tags.map(t=>`<span class="tag ${state.quest.tags.includes(t)?'good':''}">${t}</span>`).join('')}</div>`:''}<div class="status-line ${h.appraised?(match?'good':'danger'):''}">${h.appraised?(match?'의뢰 조건 일치':'의뢰 조건 불일치'):'감정 전에는 의뢰 적합성을 확정할 수 없습니다.'}</div><div class="inventory-actions"><button class="btn" onclick="appraiseHolding('${i.id}')" ${h.appraised?'disabled':''}>감정 ${appraisalCost()}G</button><button class="btn good" onclick="submitQuest('${i.id}')" ${state.quest.delivered>=state.quest.count?'disabled':''}>의뢰 제출</button><button class="btn" onclick="sendToMarket('${i.id}')">판매 시장</button><button class="btn" onclick="keepHolding('${i.id}')">창고 보관</button></div></article>`}
+function appraisalCost(){return state.role.id==='appraiser'?0:6}
+function appraiseHolding(id){let h=state.holdings.find(x=>x.item.id===id&&!x.processed);if(!h||h.appraised)return;let cost=appraisalCost();if(state.cash<cost)return alert('현금이 부족합니다.');state.cash-=cost;state.dayExpense+=cost;h.appraised=true;renderProcessing();updateHeader()}
+function quickSalePrice(item){let rate=state.role.id==='broker'?1.0:.82;if(state.marketBonusTag&&item.tags.includes(state.marketBonusTag))rate+=.15;return Math.round(item.value*rate)}
+function submitQuest(id){let h=state.holdings.find(x=>x.item.id===id&&!x.processed);if(!h)return;let match=state.quest.tags.every(t=>h.item.tags.includes(t));h.processed=true;if(match){state.quest.delivered=(state.quest.delivered||0)+1;h.action='delivered';state.questDelivered.push(h)}else{h.action='rejected';state.questFailed++;let loss=state.role.id==='investigator'?0:1;state.rep=Math.max(0,state.rep-loss);state.dayRepChange-=loss;alert(`의뢰 조건과 맞지 않았습니다.${loss?' 평판 -1':''}`)}renderProcessing();updateHeader()}
+function sendToMarket(id){let h=state.holdings.find(x=>x.item.id===id&&!x.processed);if(!h)return;h.processed=true;h.action='market';renderProcessing()}
+function keepHolding(id){let h=state.holdings.find(x=>x.item.id===id&&!x.processed);if(!h)return;h.processed=true;h.action='hold';renderProcessing()}
+function marketableHoldings(){return state.holdings.filter(h=>h.action==='market'||(h.action==='hold'&&h.day<state.day))}
+function offerKey(h,buyer){return `${state.day}:${h.item.id}:${buyer.id}`}
+function buyerOffer(h,buyer){let key=offerKey(h,buyer);if(state.marketOffers[key]!=null)return state.marketOffers[key];let matches=buyer.likes.filter(t=>h.item.tags.includes(t)).length;let rate=buyer.base+buyer.bonus*Math.min(2,matches);if(state.role.id==='broker')rate+=.15;if(state.marketBonusTag&&h.item.tags.includes(state.marketBonusTag))rate+=.2;let jitter=.94+state.rng()*.13;let price=Math.max(1,Math.round(h.item.value*rate*jitter));state.marketOffers[key]=price;return price}
+function renderMarket(){let list=marketableHoldings();document.getElementById('marketCashTag').textContent=`현금 ${state.cash}G`;document.getElementById('marketIncomeKpi').textContent=`${state.marketIncome}G`;let profitEl=document.getElementById('marketProfitKpi');profitEl.textContent=`${state.marketProfit>=0?'+':''}${state.marketProfit}G`;profitEl.className=state.marketProfit>=0?'good':'danger';document.getElementById('marketCountKpi').textContent=`${list.length}점`;document.getElementById('marketBuyers').innerHTML=BUYER_DATA.map(b=>`<article class="buyer-card"><div class="buyer-head"><div class="buyer-icon">${b.icon}</div><div><h3>${b.name}</h3><div class="tags">${b.likes.map(t=>`<span class="tag">${t}</span>`).join('')}</div></div></div><p>${b.desc}</p></article>`).join('');document.getElementById('marketInventory').innerHTML=list.length?list.map(marketItemCard).join(''):'<div class="empty">판매 가능한 물건이 없습니다. 시장을 종료해 정산으로 이동하세요.</div>';updateHeader()}
+function marketItemCard(h){let i=h.item;let offers=BUYER_DATA.map(b=>{let price=buyerOffer(h,b),profit=price-h.buyPrice,matches=b.likes.filter(t=>i.tags.includes(t)).length;return `<button class="btn offer-btn" onclick="sellToBuyer('${i.id}','${b.id}')"><span>${b.icon} ${b.name}</span><b>${price}G</b><em class="profit ${profit>=0?'good':'danger'}">매입가 대비 ${profit>=0?'+':''}${profit}G${matches?` · 취향 ${matches}개`:''}</em></button>`}).join('');return `<article class="market-item"><div class="market-item-head"><div class="market-item-icon">${i.icon}</div><div><div class="market-item-name">${i.name}</div><div class="market-item-meta">매입 ${h.buyPrice}G · ${h.appraised?`감정가 ${i.value}G`:'미감정'} · ${h.day<state.day?`${h.day}일차 보관품`:'오늘 낙찰품'}</div></div><span class="tag ${h.appraised?'good':'warn'}">${h.appraised?'감정 완료':'미감정'}</span></div><div class="offer-grid">${offers}</div><button class="btn ghost wide hold-btn" onclick="holdFromMarket('${i.id}')">다음 날까지 보관</button></article>`}
+function sellToBuyer(id,buyerId){let h=state.holdings.find(x=>x.item.id===id&&(x.action==='market'||x.action==='hold'));let buyer=BUYER_DATA.find(b=>b.id===buyerId);if(!h||!buyer)return;let price=buyerOffer(h,buyer),profit=price-h.buyPrice;state.cash+=price;state.dayIncome+=price;state.marketIncome+=price;state.marketProfit+=profit;state.marketSales++;h.action='sold';h.soldTo=buyer.name;h.sellPrice=price;renderMarket()}
+function holdFromMarket(id){let h=state.holdings.find(x=>x.item.id===id&&(x.action==='market'||x.action==='hold'));if(!h)return;h.action='hold';renderMarket()}
+function finishProcessing(){todayHoldings().forEach(h=>{if(!h.processed){h.processed=true;h.action='market'}});state.marketOffers={};state.marketIncome=0;state.marketProfit=0;state.marketSales=0;state.dayPhase='auctionDone';state.marketVisited=false;renderHub();showScene('scene-hub')}
+function finishMarket(){state.holdings.filter(h=>h.action==='market').forEach(h=>h.action='hold');state.marketVisited=true;state.dayPhase='marketDone';renderHub();showScene('scene-hub')}
+function renderSettlement(){let s=state.lastSettlement;document.getElementById('settlementTitle').textContent=`${state.day}일차 정산`;document.getElementById('settlementLedger').innerHTML=`<div class="ledger-row"><span>시장 판매 수입</span><b>+${s.marketIncome||0}G</b></div><div class="ledger-row"><span>의뢰 및 기타 수입</span><b>+${Math.max(0,s.income-(s.marketIncome||0))}G</b></div><div class="ledger-row"><span>시장 실현 손익</span><b>${(s.marketProfit||0)>=0?'+':''}${s.marketProfit||0}G</b></div><div class="ledger-row"><span>낙찰·감정 지출</span><b>-${s.expense-s.upkeep}G</b></div><div class="ledger-row"><span>상회 유지비</span><b>-${s.upkeep}G</b></div><div class="ledger-row"><span>평판 변화</span><b>${s.repChange>=0?'+':''}${s.repChange}</b></div><div class="ledger-row total"><span>현재 현금</span><b>${state.cash}G</b></div>`;let best=state.holdings.filter(h=>h.day===state.day).sort((a,b)=>(b.item.value-b.buyPrice)-(a.item.value-a.buyPrice))[0];document.getElementById('settlementSummary').innerHTML=`<div class="summary-card"><span>의뢰 결과</span><b>${s.completed?'완료':'미완료'}</b></div><div class="summary-card"><span>현재 평판</span><b>${state.rep}</b></div><div class="summary-card"><span>보유 자산</span><b>${fmtMoney(state.holdings.filter(h=>h.action==='hold').reduce((x,h)=>x+h.item.value,0))}</b></div><div class="summary-card"><span>시장 판매</span><b>${s.marketSales||0}점</b></div>`;document.getElementById('settlementComment').innerHTML=s.completed?'<strong>의뢰 성공.</strong> 평판은 특별 경매의 입장권이 되었습니다.':'<strong>의뢰 미완료.</strong> 차익 거래로 현금을 지켰더라도 평판 조건을 다시 계산해야 합니다.';document.getElementById('settlementNextBtn').textContent=state.day===1?'2일차 사건으로':state.day===2?'특별 경매 심사로':'결과 확인'}
+function continueAfterSettlement(){if(state.day===1){state.day=2;state.quest=null;state.selectedQuest=null;state.dayIncome=state.dayExpense=state.dayQuestReward=state.dayRepChange=0;state.marketIncome=state.marketProfit=state.marketSales=0;state.marketOffers={};state.dayPhase='prep';state.marketVisited=false;state.tavernUsedDay=0;state.tavernRumor='';resetDailyRoleUses();showScene('scene-event')}else if(state.day===2){state.day=3;renderFinalPrep();showScene('scene-finalprep')}else finishRun(false)}
+function chooseEvent(type){state.event=type;if(type==='info'){if(state.cash>=12){state.cash-=12;state.dayExpense+=12}else state.cash=0}else state.marketBonusTag='해양';state.dayPhase='prep';renderHub();showScene('scene-hub')}
+function renderFinalPrep(){updateHeader();document.getElementById('finalCashCheck').textContent=`${state.cash}G / 120G ${state.cash>=120?'✓':''}`;document.getElementById('finalRepCheck').textContent=`${state.rep} / 4 ${state.rep>=4?'✓':''}`;document.getElementById('finalAssetCheck').textContent=fmtMoney(state.holdings.filter(h=>h.action==='hold').reduce((s,h)=>s+h.item.value,0));let qualified=state.cash>=120&&state.rep>=4;document.getElementById('qualificationMessage').innerHTML=qualified?'<strong>참가 자격 충족.</strong> 돈과 평판이 최종 경매의 문을 열었습니다.':'<strong>참가 조건 미달.</strong> 긴급 대출로 보증금을 마련할 수 있지만 최종 등급에 불이익이 있습니다.';document.getElementById('finalPrepActions').innerHTML=qualified?'<button class="btn primary wide" onclick="startFinalAuction()">왕립 경매장 입장</button>':`<button class="btn danger wide" onclick="takeEmergencyLoan()">긴급 대출 120G 받고 입장</button><button class="btn wide" onclick="finishRun(false)">런 포기</button>`}
+function takeEmergencyLoan(){state.loanTaken=true;state.cash+=120;startFinalAuction()}
+function startFinalAuction(){state.auctionItems=buildDayItems('final');state.quest={title:'상회의 마지막 유물',tags:['핵심 유물'],count:1,reward:0,rep:0,delivered:0,brief:'침몰한 별의 항해일지를 확보해야 합니다.'};state.plans={};state.auctionItems.forEach(i=>state.plans[i.id]={priority:i.target?'target':'watch',maxBid:i.target?state.cash:Math.min(55,state.cash),estimate:publicEstimate(i)});state.roleUses=1;state.lotIndex=0;state.bots=[{name:'왕립 박물관',cash:240},{name:'붉은 장갑',cash:210},{name:'벨라르 후손',cash:190}];state.logs=[];showScene('scene-auction');startLot()}
+function showFinalChoiceOrResult(){let journal=state.holdings.find(h=>h.item.id==='journal');state.finalWon=Boolean(journal);if(state.finalWon)showScene('scene-finalchoice');else finishRun(false)}
+const originalShowProcessing=showProcessing;showProcessing=function(){if(state.day===3){clearAuctionTimers();showFinalChoiceOrResult()}else originalShowProcessing()}
+function chooseEnding(type){state.ending=type;if(type==='museum'){state.rep+=7;state.cash+=20}else if(type==='sell'){state.cash+=150;state.rep=Math.max(0,state.rep-2)}else{state.cash+=65;state.rep+=4}finishRun(true)}
+function finishRun(success){state.finished=true;clearAuctionTimers();if(state.clockHandle){clearInterval(state.clockHandle);state.clockHandle=null}let score=state.cash+state.rep*15+(success?100:0)-(state.loanTaken?45:0),grade=success?(score>=500?'S':score>=380?'A':'B'):(score>=260?'C':'D');document.getElementById('resultGrade').textContent=grade;document.getElementById('resultTitle').textContent=success?'별무리 상회가 다시 문을 열었습니다':'특별 경매의 문턱에서 멈췄습니다';document.getElementById('resultDescription').textContent=success?(state.ending==='museum'?'항해일지를 공개 기록으로 남겨 세라핀 최고의 신뢰를 얻었습니다.':state.ending==='sell'?'항해일지를 거액에 판매해 상회의 재건 자금을 마련했습니다.':'항해일지를 상회의 상징으로 전시해 돈과 명성을 함께 얻었습니다.'):'항해일지를 확보하지 못했지만, 이번 런에서 얻은 거래 기록은 다음 시도의 기준이 됩니다.';document.getElementById('resultKpis').innerHTML=`<div class="summary-card"><span>최종 현금</span><b>${fmtMoney(state.cash)}</b></div><div class="summary-card"><span>최종 평판</span><b>${state.rep}</b></div><div class="summary-card"><span>플레이 시간</span><b>${fmtTime(elapsed())}</b></div><div class="summary-card"><span>긴급 대출</span><b>${state.loanTaken?'사용':'미사용'}</b></div>`;saveHistory(success,grade);showScene('scene-result')}
+
+function returnToMap(){renderHub();showScene('scene-hub')}
+function openLocation(title,html){state.currentLocation=title;document.getElementById('locationTitle').textContent=title;document.getElementById('locationBody').innerHTML=html;document.getElementById('locationOverlay').classList.remove('hidden')}
+function closeLocation(){document.getElementById('locationOverlay').classList.add('hidden');state.currentLocation=null;renderHub()}
+function visitLocation(id){
+ if(id==='guild'){
+   if(state.dayPhase==='auctionDone'||state.dayPhase==='marketDone')return openLocation('중개인 조합',`<div class="location-head"><div class="location-icon">🏛️</div><div><h2>오늘의 계약은 마감되었습니다</h2><div class="muted small">내일 새로운 의뢰인이 조합을 찾습니다.</div></div></div>${state.quest?questLocationSummary():''}`);
+   if(state.quest)return openLocation('중개인 조합',`<div class="location-head"><div class="location-icon">🏛️</div><div><h2>${state.quest.npc}</h2><div class="muted small">${state.quest.org}</div></div></div>${questLocationSummary()}<div class="btn-row"><button class="btn" onclick="closeLocation();goQuestScene()">계약 다시 선택</button></div>`);
+   closeLocation();goQuestScene();return;
+ }
+ if(id==='auction'){
+   if(state.dayPhase==='auctionDone'||state.dayPhase==='marketDone')return openLocation('세라핀 경매장','<div class="location-head"><div class="location-icon">⚖️</div><div><h2>오늘의 경매는 종료되었습니다</h2><div class="muted small">낙찰품은 감정소와 거래소에서 처리할 수 있습니다.</div></div></div>');
+   if(!state.quest)return openLocation('세라핀 경매장','<div class="location-head"><div class="location-icon">⚖️</div><div><h2>참가 등록이 필요합니다</h2><div class="muted small">중개인 조합에서 오늘의 의뢰를 선택한 뒤 카탈로그를 받을 수 있습니다.</div></div></div><button class="btn primary" onclick="closeLocation();goQuestScene()">조합으로 이동</button>');
+   closeLocation();renderCatalog();showScene('scene-catalog');return;
+ }
+ if(id==='exchange'){
+   const list=state.holdings.filter(h=>h.action==='market'||h.action==='hold');
+   if(!list.length)return openLocation('항구 거래소','<div class="location-head"><div class="location-icon">🏪</div><div><h2>내놓을 물건이 없습니다</h2><div class="muted small">경매에서 물건을 확보하거나 창고의 보유품을 가져오세요.</div></div></div>');
+   closeLocation();state.holdings.filter(h=>h.action==='hold').forEach(h=>h.action='market');renderMarket();showScene('scene-market');return;
+ }
+ if(id==='appraiser'){renderAppraiserLocation();return}
+ if(id==='tavern'){renderTavernLocation();return}
+ if(id==='shop'){renderShopLocation();return}
+}
+function questLocationSummary(){return `<div class="notice"><strong>${state.quest.title}</strong><br>${state.quest.brief}<br><br>조건: ${state.quest.tags.join(' + ')} · ${state.quest.count}점<br>보상: ${state.quest.reward}G · 평판 +${state.quest.rep}</div>`}
+function renderShopLocation(){
+ const held=state.holdings.filter(h=>h.action==='hold'||h.action==='market').length;
+ const canEnd=state.dayPhase==='auctionDone'||state.dayPhase==='marketDone';
+ openLocation('별무리 상회',`<div class="location-head"><div class="location-icon">🏚️</div><div><h2>별무리 상회</h2><div class="muted small">낡았지만 당신의 거래 기록이 쌓이는 본거지입니다.</div></div></div><div class="location-actions"><div class="location-action"><h3>📦 창고</h3><p>보관 중인 물건 ${held}점을 확인하고 긴급 매각합니다.</p><button class="btn wide" onclick="closeLocation();openWarehouse()">창고 열기</button></div><div class="location-action"><h3>🎯 최종 목표</h3><p>현금 120G와 평판 4를 모아 왕립 특별 경매에 입장합니다.</p><button class="btn wide" onclick="showGoalReminder()">목표 확인</button></div><div class="location-action"><h3>📚 거래 기록</h3><p>완료한 런의 결과와 개발 재현용 시드를 확인합니다.</p><button class="btn wide" onclick="closeLocation();openHistory()">히스토리</button></div><div class="location-action"><h3>🌙 하루 마감</h3><p>${canEnd?'의뢰 보상과 유지비를 정산하고 다음 날로 넘어갑니다.':'오늘의 경매를 마친 뒤 정산할 수 있습니다.'}</p><button class="btn primary wide" ${canEnd?'':'disabled'} onclick="endDayAtShop()">하루 정산</button></div></div>`)
+}
+function renderAppraiserLocation(){
+ const list=state.holdings.filter(h=>!h.appraised&&!['sold','delivered'].includes(h.action));
+ let body=`<div class="location-head"><div class="location-icon">🔎</div><div><h2>세라핀 감정소</h2><div class="muted small">감정은 실제 가치와 태그를 확정합니다. 감정사 역할은 비용이 없습니다.</div></div></div>`;
+ body+=list.length?`<div class="location-list">${list.map(h=>`<div class="location-item"><div class="location-item-head"><div><b>${h.item.icon} ${h.item.name}</b><div class="small muted">매입 ${h.buyPrice}G · 가치 미확인</div></div><button class="btn" onclick="appraiseStored('${h.item.id}')">감정 ${appraisalCost()}G</button></div></div>`).join('')}</div>`:'<div class="empty">감정할 물건이 없습니다.</div>';
+ openLocation('세라핀 감정소',body)
+}
+function appraiseStored(id){let h=state.holdings.find(x=>x.item.id===id&&!x.appraised&&!['sold','delivered'].includes(x.action));if(!h)return;let cost=appraisalCost();if(state.cash<cost)return alert('현금이 부족합니다.');state.cash-=cost;state.dayExpense+=cost;h.appraised=true;updateHeader();renderAppraiserLocation()}
+function renderTavernLocation(){
+ const used=state.tavernUsedDay===state.day;
+ const rumor=state.tavernRumor||'오늘 경매장에는 진품과 기념품이 같은 이름으로 불리고 있다는 이야기가 돌고 있습니다.';
+ openLocation('닻 내린 달 술집',`<div class="location-head"><div class="location-icon">🍺</div><div><h2>닻 내린 달 술집</h2><div class="muted small">확실하지 않은 정보가 오가지만, 경쟁자의 관심을 읽을 수 있습니다.</div></div></div><div class="notice"><strong>오늘의 소문</strong><br>${rumor}</div><div class="location-actions"><div class="location-action"><h3>👂 주변 이야기 듣기</h3><p>하루 한 번, 오늘 출품품 중 하나에 관한 단서를 확보합니다.</p><button class="btn wide" ${used?'disabled':''} onclick="hearTavernRumor()">${used?'이미 확인함':'소문 듣기'}</button></div><div class="location-action"><h3>🪙 정보상과 거래</h3><p>5G를 지불해 오늘 의뢰 태그와 관련된 후보 하나를 알아냅니다.</p><button class="btn wide" ${!state.quest||used?'disabled':''} onclick="buyTavernTip()">5G 지불</button></div></div>`)
+}
+function ensureCatalogBuilt(){if(state.quest&&(!state.auctionItems.length||!state.plans||!Object.keys(state.plans).length))renderCatalog()}
+function hearTavernRumor(){ensureCatalogBuilt();let candidates=state.auctionItems||[];if(!candidates.length)return;let item=candidates[Math.floor(state.rng()*candidates.length)];state.tavernUsedDay=state.day;state.tavernRumor=`${item.name}을 본 하역꾼은 “${item.clues[Math.floor(state.rng()*item.clues.length)]}”라고 말했다.`;renderTavernLocation();renderHub()}
+function buyTavernTip(){if(state.cash<5)return alert('현금이 부족합니다.');ensureCatalogBuilt();let candidates=state.auctionItems.filter(i=>state.quest.tags.some(t=>i.tags.includes(t)));if(!candidates.length)return;let item=candidates[Math.floor(state.rng()*candidates.length)],tag=state.quest.tags.find(t=>item.tags.includes(t));state.cash-=5;state.dayExpense+=5;state.catalogReveals[item.id]=tag;state.tavernUsedDay=state.day;state.tavernRumor=`정보상은 ${item.name}이(가) ‘${tag}’ 조건과 관련 있다고 귀띔했다.`;updateHeader();renderTavernLocation();renderHub()}
+function endDayAtShop(){
+ closeLocation();
+ state.holdings.filter(h=>h.action==='market').forEach(h=>h.action='hold');
+ let completed=(state.quest.delivered||0)>=state.quest.count;
+ if(completed){state.cash+=state.quest.reward;state.rep+=state.quest.rep;state.dayIncome+=state.quest.reward;state.dayQuestReward=state.quest.reward;state.dayRepChange+=state.quest.rep}
+ let upkeep=15;state.cash-=upkeep;state.dayExpense+=upkeep;
+ state.lastSettlement={completed,upkeep,income:state.dayIncome,expense:state.dayExpense,repChange:state.dayRepChange,questReward:state.dayQuestReward,marketIncome:state.marketIncome,marketProfit:state.marketProfit,marketSales:state.marketSales};
+ renderSettlement();showScene('scene-settlement')
+}
+
+function openWarehouse(){renderWarehouse();document.getElementById('warehouseOverlay').classList.remove('hidden')}
+function closeWarehouse(){document.getElementById('warehouseOverlay').classList.add('hidden');renderHub();showScene('scene-hub')}
+function renderWarehouse(){let list=state.holdings.filter(h=>h.action==='hold');document.getElementById('warehouseList').innerHTML=list.length?list.map(h=>`<div class="holding"><div class="holding-row"><div class="holding-icon">${h.item.icon}</div><div><div class="holding-name">${h.item.name}</div><div class="holding-meta">매입 ${h.buyPrice}G · 추정 가치 ${h.appraised?h.item.value+'G':'미감정'}</div></div></div><div class="btn-row" style="margin-top:8px"><button class="btn" onclick="warehouseSell('${h.item.id}')">긴급 매각 ${Math.round(quickSalePrice(h.item)*.85)}G</button></div></div>`).join(''):'<div class="empty">보관 중인 물건이 없습니다.</div>'}
+function warehouseSell(id){let h=state.holdings.find(x=>x.item.id===id&&x.action==='hold');if(!h)return;state.cash+=Math.round(quickSalePrice(h.item)*.85);h.action='sold';renderWarehouse();updateHeader()}
+function showGoalReminder(){alert('3일차 특별 경매 참가 조건\n현금 120G 이상 · 평판 4 이상\n최종 목표: 침몰한 별의 항해일지 확보')}
+function readHistory(){try{return JSON.parse(localStorage.getItem(HISTORY_KEY)||'[]')}catch{return []}}
+function saveHistory(success,grade){let entry={date:new Date().toISOString(),seed:state.seed,role:state.role.name,success,grade,cash:state.cash,rep:state.rep,duration:elapsed(),loan:state.loanTaken};let list=readHistory();try{localStorage.setItem(HISTORY_KEY,JSON.stringify([entry,...list].slice(0,10)))}catch{}}
+function openHistory(){let list=readHistory();document.getElementById('historyList').innerHTML=list.length?list.map(h=>`<div class="history-card"><div class="history-head"><div><div class="history-title">${h.grade}등급 · ${esc(h.role)}</div><div class="history-meta">${new Date(h.date).toLocaleString('ko-KR')} · 시드 ${esc(h.seed)}</div></div><span class="tag ${h.success?'good':'warn'}">${h.success?'목표 성공':'목표 실패'}</span></div><div class="history-kpis"><div class="history-kpi"><span>시간</span><b>${fmtTime(h.duration)}</b></div><div class="history-kpi"><span>현금</span><b>${fmtMoney(h.cash)}</b></div><div class="history-kpi"><span>평판</span><b>${h.rep}</b></div><div class="history-kpi"><span>대출</span><b>${h.loan?'사용':'없음'}</b></div></div></div>`).join(''):'<div class="empty">아직 완료한 런이 없습니다.</div>';document.getElementById('historyOverlay').classList.remove('hidden')}
+function closeHistory(){document.getElementById('historyOverlay').classList.add('hidden')}
+function clearHistory(){if(confirm('모든 플레이 기록을 삭제할까요?')){localStorage.removeItem(HISTORY_KEY);openHistory()}}
+window.addEventListener('beforeunload',clearAuctionTimers);
+</script>
+</body>
+</html>
