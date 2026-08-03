@@ -192,7 +192,7 @@ body {
   text-align: center;
 }
 [data-scene="save"][data-mode="continue"] .save-slot.slot-1 { background-image: url("./assets/ui/save-slots/slot-1.png"); }
-[data-scene="save"][data-mode="continue"] .save-slot.is-empty { background-image: url("./assets/ui/save-slots/empty-slot.png"); }
+[data-scene="save"][data-mode="continue"] .save-slot.is-empty { background-image: url("./assets/ui/save-slots/slot-3.png"); }
 [data-scene="save"][data-mode="continue"] .save-slot.is-selected,
 [data-scene="save"][data-mode="continue"] .save-slot:hover {
   filter: saturate(1.06) brightness(1.05) drop-shadow(0 0 7px #d99a2d88);
@@ -1134,7 +1134,7 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
   filter: saturate(.82) brightness(.94); text-align: center;
 }
 [data-scene="save"][data-mode="new"] .save-slot.slot-1 { background-image: url("./assets/ui/save-slots/slot-1.png") !important; }
-[data-scene="save"][data-mode="new"] .save-slot.is-empty { background-image: url("./assets/ui/save-slots/empty-slot.png") !important; }
+[data-scene="save"][data-mode="new"] .save-slot.is-empty { background-image: url("./assets/ui/save-slots/slot-3.png") !important; }
 [data-scene="save"][data-mode="new"] .save-slot.is-selected,
 [data-scene="save"][data-mode="new"] .save-slot:hover { filter: saturate(1.06) brightness(1.05) drop-shadow(0 0 7px #d99a2d88); }
 [data-scene="save"][data-mode="new"] .slot-number {
@@ -1180,11 +1180,15 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
   background: #0b0906e8; background-clip: padding-box;
 }
 
-/* The finished empty-slot art already includes its copy; only its slot number is dynamic. */
+/* Empty-slot copy stays live HTML so spelling and localization never depend on baked artwork. */
 [data-scene="save"] .save-slot.is-empty .empty-slot-copy {
-  position: absolute; width: 1px; height: 1px; overflow: hidden;
-  clip: rect(0 0 0 0); white-space: nowrap;
+  position: relative; grid-column: 2 / 6;
+  display: grid; align-content: center; justify-items: start; gap: 7px;
+  width: auto; height: auto; overflow: visible; clip: auto; white-space: normal;
+  padding-left: 8%; color: #2c2116; text-align: left;
 }
+[data-scene="save"] .save-slot.is-empty .empty-slot-copy strong { font-size: clamp(16px,1.65vw,27px); }
+[data-scene="save"] .save-slot.is-empty .empty-slot-copy small { color: #554633; font-size: clamp(9px,.85vw,14px); }
 [data-scene="save"] .save-slot.is-empty .slot-number {
   left: 3.8%; top: 8%; z-index: 3;
   display: grid; place-items: center;
