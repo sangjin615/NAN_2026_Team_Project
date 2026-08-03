@@ -446,3 +446,145 @@ button.secondary:disabled { background-image: url("./assets/ui/skin-v1/button-se
   .inventory-list { max-height: 45vh; }
   .quest-grid { margin-top: 3%; }
 }
+
+/* Final visual audit: preserve button corners at every width with true 9-slice borders. */
+button:not(#open-slots):not(.save-slot):not(.place-grid button):not(.info-actions button):not(#return-title) {
+  min-height: 44px;
+  border: 12px solid transparent;
+  border-image: url("./assets/ui/skin-v1/button-primary.png") 24 34 fill / 12px 17px / 0 stretch;
+  background: #17140f;
+  padding: 2px 16px;
+}
+button:not(#open-slots):not(.save-slot):not(.place-grid button):not(.info-actions button):not(#return-title):hover:not(:disabled) {
+  border-image-source: url("./assets/ui/skin-v1/button-primary-hover.png");
+  background: #211b12;
+}
+button.secondary:not(.save-slot) {
+  border-image-source: url("./assets/ui/skin-v1/button-secondary.png");
+  background: #151515;
+}
+button.secondary:not(.save-slot):hover:not(:disabled) { border-image-source: url("./assets/ui/skin-v1/button-secondary-hover.png"); }
+button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/ui/skin-v1/button-secondary-disabled.png"); }
+
+/* Quest office: all three offers remain visible without colliding with the footer. */
+[data-scene="quests"] .office-layout > section { padding: 42px 9px 9px; border-width: 14px; border-image-width: 14px; }
+[data-scene="quests"] .office-layout > section > h3 { top: 8px; left: 20px; }
+[data-scene="quests"] .office-layout .quest-grid { gap: 6px; }
+[data-scene="quests"] .quest-grid article {
+  gap: 2px;
+  padding: 5px 10px;
+  border-width: 7px;
+  border-image-width: 7px;
+  font-size: clamp(10px, .82vw, 13px);
+}
+[data-scene="quests"] .quest-grid article h4,
+[data-scene="quests"] .quest-grid article p { margin: 2px 0; }
+[data-scene="quests"] .quest-grid article button { min-height: 30px; height: 30px; border-width: 8px; border-image-width: 8px; padding: 0 12px; }
+
+/* Museum: the painted display cases are the card frames; do not cover them with another panel. */
+[data-scene="museum"] { padding: 0; }
+[data-scene="museum"] > .eyebrow,
+[data-scene="museum"] > h2 { display: none; }
+[data-scene="museum"] .relic-list {
+  position: absolute; left: 31.2%; top: 25%; width: 35.5%; height: 58%;
+  display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(3, 1fr);
+  gap: 3% 7%; margin: 0; padding: 0;
+  border: 0; background: transparent; box-shadow: none;
+}
+[data-scene="museum"] .relic-list article {
+  display: grid; place-content: end center; gap: 1px;
+  min-height: 0; padding: 5px 2px 10%;
+  border: 0; background: transparent; color: #2b2015; text-align: center;
+}
+[data-scene="museum"] .relic-list article small { font-size: 9px; text-transform: uppercase; }
+[data-scene="museum"] .relic-list article span { font-size: 9px; }
+[data-scene="museum"] > [data-place="city"] { position: absolute; left: 6.5%; bottom: 4%; width: 28%; }
+
+/* Catalog: two complete rows and the start control must fit inside one 16:9 frame. */
+[data-scene="catalog"] { padding: 0; }
+[data-scene="catalog"] > header {
+  position: absolute; left: 2.2%; right: 2.2%; top: 3%; height: 15%;
+  margin: 0; padding: 8px 18px;
+}
+[data-scene="catalog"] > header h2 { margin: 2px 0; font-size: clamp(22px, 2vw, 32px); }
+[data-scene="catalog"] .catalog-grid {
+  position: absolute; left: 2.2%; right: 2.2%; top: 20%; bottom: 10%;
+  display: grid; grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(2, minmax(0, 1fr));
+  gap: 8px; margin: 0; padding: 8px; overflow: hidden;
+}
+[data-scene="catalog"] .lot-card { min-height: 0; padding: 7px; border-width: 8px; border-image-width: 8px; overflow: hidden; }
+[data-scene="catalog"] .lot-card h3 { margin: 3px 0; font-size: clamp(13px, 1.1vw, 17px); }
+[data-scene="catalog"] .lot-card p { margin: 3px 0; font-size: clamp(9px, .72vw, 11px); line-height: 1.25; }
+[data-scene="catalog"] .catalog-grid .mini-sprite { height: min(10vh, 82px); }
+[data-scene="catalog"] .catalog-grid .mini-sprite img { width: min(9vh, 76px); height: min(9vh, 76px); }
+[data-scene="catalog"] #start-auction { position: absolute; left: 50%; bottom: 2%; transform: translateX(-50%); min-width: 230px; }
+
+/* Live auction: keep the title compact and reserve the center for the item card. */
+[data-scene="auction"] { padding: 0; }
+[data-scene="auction"] > header {
+  position: absolute; left: 2.2%; right: 2.2%; top: 3%; height: 15%;
+  margin: 0; padding: 8px 18px;
+}
+[data-scene="auction"] > header h2 { margin: 2px 0; font-size: clamp(22px, 2vw, 32px); }
+[data-scene="auction"] .auction-layout {
+  position: absolute; left: 21%; top: 22%; width: 58%; height: 57%;
+  margin: 0; padding: 12px; overflow: hidden;
+}
+[data-scene="auction"] .sprite-stage { min-height: 0; height: 100%; }
+[data-scene="auction"] .sprite-stage img { max-width: 86%; max-height: 86%; object-fit: contain; }
+[data-scene="auction"] > .actions { position: absolute; left: 50%; bottom: 2%; transform: translateX(-50%); margin: 0; white-space: nowrap; }
+
+/* Settlement: write into the existing parchment cells instead of stacking panels over them. */
+[data-scene="settlement"] { display: block; padding: 0; text-align: left; }
+[data-scene="settlement"] > .eyebrow,
+[data-scene="settlement"] > h2 { display: none; }
+[data-scene="settlement"] > p {
+  position: absolute; left: 35.2%; top: 27%; width: 29.5%;
+  margin: 0; color: #2b2015; text-align: center;
+}
+[data-scene="settlement"] #settlement-summary {
+  position: absolute; left: 35.2%; top: 51%; width: 29.5%; height: 12%;
+  display: grid; place-content: center; margin: 0; padding: 10px;
+  border: 0; background: transparent; box-shadow: none; color: #2b2015; text-align: center;
+}
+[data-scene="settlement"] #next-day {
+  position: absolute; left: 42%; bottom: 19%; width: 16%; min-width: 0;
+}
+
+/* Relic auction: use the center parchment and bottom command bar painted in the scene. */
+[data-scene="relic"] { display: block; padding: 0; text-align: center; }
+[data-scene="relic"] > .eyebrow { display: none; }
+[data-scene="relic"] #relic-card {
+  position: absolute; left: 43.7%; top: 45%; width: 14.5%; height: 33%;
+  display: grid; align-content: center; gap: 6px; margin: 0; padding: 12px;
+  border: 0; background: transparent; box-shadow: none; color: #2b2015;
+}
+[data-scene="relic"] #relic-card h2,
+[data-scene="relic"] #relic-card p { margin: 2px 0; font-size: clamp(10px, 1vw, 15px); }
+[data-scene="relic"] > .actions {
+  position: absolute; left: 20%; bottom: 4%; width: 60%; height: 13%;
+  display: flex; align-items: center; justify-content: center; margin: 0; padding: 10px;
+  border: 0; background: transparent;
+}
+
+/* Results: place the success popup below the painted title and use failure's native panels. */
+[data-scene="result"] { display: block; padding: 0; text-align: center; }
+[data-scene="result"] > .eyebrow { display: none; }
+[data-scene="result"] > h2 {
+  position: absolute; left: 50%; top: 29%; transform: translateX(-50%);
+  width: 42%; margin: 0; z-index: 3; color: #efe4cf;
+}
+[data-scene="result"] #run-summary {
+  position: absolute; left: 24%; top: 27%; width: 52%; height: 48%; min-height: 0;
+  display: grid; place-content: center; margin: 0; padding: 70px 60px 40px;
+}
+[data-scene="result"] #return-title {
+  position: absolute; left: 50%; bottom: 9%; transform: translateX(-50%);
+  width: min(280px, 24vw); height: min(76px, 6vw); margin: 0;
+}
+[data-scene="result"].is-failure > h2 { display: none; }
+[data-scene="result"].is-failure #run-summary {
+  left: 36%; top: 38%; width: 47%; height: 20%;
+  display: block; padding: 8px 20px; background: transparent; text-align: left;
+}
+[data-scene="result"].is-failure #return-title { bottom: 12%; }

@@ -286,6 +286,7 @@ function finishRelic(bid) {
 
 function renderResult() {
   state.completed = true; state.phase = 'result'; adapter.showScene('result');
+  document.querySelector('[data-scene="result"]').classList.toggle('is-failure', Boolean(state.failure));
   const unsold = ownedItems().reduce((sum, item) => sum + item.trueValue, 0);
   const relics = [...new Set([...state.metaRelics, ...(state.relicChoices || [])])]; localStorage.setItem('unknown-auction:relics', JSON.stringify(relics));
   document.querySelector('#result-title').textContent = state.failure ? '여정 실패' : '12일 여정 완료';
