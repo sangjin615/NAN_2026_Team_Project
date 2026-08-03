@@ -296,12 +296,14 @@ function renderResult() {
 const placeRenderers = { city: renderHub, quests: renderQuestOffice, exchange: renderExchange, shop: renderShop, guild: renderGuild, museum: renderMuseum, catalog: renderCatalog };
 
 document.querySelector('#new-run').onclick = () => newRun(document.querySelector('#seed').value.trim() || Date.now());
+document.querySelector('#open-slots').onclick = () => { adapter.showScene('save'); renderSaveSlots(); };
+document.querySelector('#back-title').onclick = () => adapter.showScene('title');
 document.querySelector('#continue-run').onclick = () => { state = store.load(selectedSlot); if (!state) return status('유효한 저장 데이터가 없습니다.'); ({ auction: renderAuction, settlement: renderSettlement, relic: renderRelic, quests: renderQuestOffice, exchange: renderExchange, shop: renderShop, guild: renderGuild, museum: renderMuseum, catalog: renderCatalog }[state.phase] || renderHub)(); };
 document.querySelector('#start-auction').onclick = renderAuction;
 document.querySelectorAll('[data-raise]').forEach((button) => button.onclick = () => finishLot('bid', Number(button.dataset.raise)));
 document.querySelector('#pass').onclick = () => finishLot('pass'); document.querySelector('#next-day').onclick = nextDay;
 document.querySelector('#buy-relic').onclick = () => finishRelic(true); document.querySelector('#skip-relic').onclick = () => finishRelic(false);
-document.querySelector('#return-title').onclick = () => { adapter.showScene('title'); renderSaveSlots(); };
+document.querySelector('#return-title').onclick = () => adapter.showScene('title');
 document.querySelectorAll('[data-place]').forEach((button) => button.onclick = () => { audio.playSfx('navigate'); placeRenderers[button.dataset.place]?.(); });
 document.querySelector('#appraise-selected').onclick = () => { const ids = [...document.querySelectorAll('[data-item-select]:checked')].map((input) => input.dataset.itemSelect); let count = 0; ids.forEach((id) => { if (appraiseItem(state, balance, id)) count += 1; }); renderExchange(`${count}개를 감정했습니다.`); };
 document.querySelector('#sell-selected').onclick = () => { const ids = [...document.querySelectorAll('[data-item-select]:checked')].map((input) => input.dataset.itemSelect); renderExchange(`${money(sellItems(state, balance, ids))}에 처분했습니다.`); };

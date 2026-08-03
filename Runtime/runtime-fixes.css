@@ -79,42 +79,60 @@ body {
   height: 0;
   margin: 0;
 }
-[data-scene="title"] #new-run,
-[data-scene="title"] #continue-run {
+[data-scene="title"] #open-slots {
+  position: absolute;
+  left: 50%;
+  bottom: 10%;
+  transform: translateX(-50%);
   width: min(500px, 36vw);
   height: min(116px, 8.2vw);
   color: transparent;
   text-shadow: none;
+  background-image: url("./assets/ui/vsl-v6.4/buttons/new-game.png");
 }
-[data-scene="title"] #new-run { background-image: url("./assets/ui/vsl-v6.4/buttons/new-game.png"); }
-[data-scene="title"] #continue-run { background-image: url("./assets/ui/vsl-v6.4/buttons/continue.png"); }
-[data-scene="title"] #new-run:hover:not(:disabled),
-[data-scene="title"] #continue-run:hover:not(:disabled) { filter: brightness(1.15); }
+[data-scene="title"] #open-slots:hover:not(:disabled) { filter: brightness(1.15); transform: translateX(-50%); }
+[data-scene="title"] #boot-status { position: absolute; left: 50%; bottom: 4%; transform: translateX(-50%); }
 
-[data-scene="title"] .save-slots {
+[data-scene="save"] {
+  background: url("./assets/scene-backgrounds/title.png") center / cover no-repeat;
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-content: center;
+  justify-items: center;
+  gap: 10px;
+}
+[data-scene="save"]::after { background: #050403a8; }
+[data-scene="save"] header { width: min(760px, 62vw); margin: 0; padding: 10px 18px; text-align: center; }
+[data-scene="save"] header h2 { margin: 2px 0; }
+[data-scene="save"] .seed-field { color: #e8ddc8; }
+[data-scene="save"] .save-slots {
+  display: grid;
+  grid-template-columns: 1fr;
   gap: clamp(8px, 1vw, 16px);
-  width: min(920px, 70vw);
+  width: min(560px, 48vw);
   margin: 0 auto;
 }
-[data-scene="title"] .save-slot {
+[data-scene="save"] .save-slot {
   display: grid;
-  gap: 5px;
+  grid-template-columns: 22% 1fr auto;
+  align-items: center;
+  gap: 18px;
   min-width: 0;
-  min-height: 108px;
-  padding: 22px 28px;
+  min-height: 0;
+  aspect-ratio: 5.05 / 1;
+  padding: 13px 28px 13px 24%;
   color: #2b2015;
   background: url("./assets/ui/clean-v1/slots/save-slot-frame.png") center / 100% 100% no-repeat;
   filter: saturate(.72) brightness(.86);
 }
-[data-scene="title"] .save-slot:hover,
-[data-scene="title"] .save-slot.is-selected {
+[data-scene="save"] .save-slot:hover,
+[data-scene="save"] .save-slot.is-selected {
   background-image: url("./assets/ui/clean-v1/slots/save-slot-frame.png");
   filter: saturate(1.1) brightness(1.14) drop-shadow(0 0 12px #e8c47b99);
 }
-[data-scene="title"] .save-slot b { color: #65461d; }
-[data-scene="title"] .save-slot small { color: #584934; }
+[data-scene="save"] .save-slot b { color: #65461d; }
+[data-scene="save"] .save-slot small { color: #584934; }
+[data-scene="save"] .save-actions { display: flex; gap: 14px; }
+[data-scene="save"] #back-title { position: absolute; left: 2%; bottom: 2%; }
 
 header,
 .hub-stats,
@@ -152,6 +170,15 @@ button.secondary { background-image: url("./assets/ui/skin-v1/button-secondary.p
 button.secondary:hover:not(:disabled) { background-image: url("./assets/ui/skin-v1/button-secondary-hover.png"); }
 button.secondary:active:not(:disabled) { background-image: url("./assets/ui/skin-v1/button-secondary-pressed.png"); }
 button.secondary:disabled { background-image: url("./assets/ui/skin-v1/button-secondary-disabled.png"); }
+.quest-grid article button,
+.inventory-list article button {
+  justify-self: start;
+  width: auto;
+  min-width: 128px;
+  max-width: 190px;
+  height: 42px;
+  padding: 8px 24px;
+}
 
 /* City: the painted UI remains visible; these real controls sit on its hotspots. */
 [data-scene="hub"] > header {
@@ -333,6 +360,32 @@ button.secondary:disabled { background-image: url("./assets/ui/skin-v1/button-se
 [data-scene="shop"] #shop-upgrade { position: absolute; right: 6%; bottom: 12%; width: 22%; height: 8%; }
 [data-scene="shop"] #shop-message { position: absolute; left: 31%; bottom: 1.5%; margin: 0; }
 [data-scene="shop"] .return-city { position: absolute; left: 2.2%; bottom: 1.5%; }
+
+/* Guild: place live data inside the three empty areas painted into the mockup. */
+[data-scene="guild"] { padding: 0; }
+[data-scene="guild"] .guild-heading {
+  position: absolute; left: 8%; top: 9%; width: 27%; height: 12%;
+  color: #f0e5d1;
+}
+[data-scene="guild"] .guild-heading h2,
+[data-scene="guild"] .guild-heading .eyebrow { display: none; }
+[data-scene="guild"] .guild-heading strong { position: absolute; right: 0; top: 0; }
+[data-scene="guild"] #guild-detail {
+  position: absolute; left: 8%; top: 29%; width: 52.5%; height: 22%;
+  margin: 0; padding: 18px 24px; overflow: auto;
+  border: 0; background: transparent; box-shadow: none; color: #21180f;
+}
+[data-scene="guild"] .actions {
+  position: absolute; left: 63%; top: 29%; width: 29%; height: 45%;
+  display: grid; grid-template-columns: 230px; justify-content: center; align-content: start; gap: 14px;
+  margin: 0; padding: 28px; border: 0; background: transparent;
+}
+[data-scene="guild"] .actions button { justify-self: stretch; width: auto; height: 54px; }
+[data-scene="guild"] #guild-message {
+  position: absolute; left: 8%; top: 61%; width: 52.5%; min-height: 9%;
+  margin: 0; padding: 18px 24px; background: transparent; color: #21180f;
+}
+[data-scene="guild"] .return-city { position: absolute; left: 20%; bottom: 3%; width: 22%; }
 
 .catalog-grid { margin-top: 8%; padding: 12px; background: #080705e6; }
 .catalog-grid .lot-card { background: #15110ced; }
