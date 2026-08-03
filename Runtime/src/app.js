@@ -19,6 +19,7 @@ const root = document.querySelector('#app');
 const adapter = new VslRuntimeAdapter(root);
 const store = new SaveStore();
 const audio = new AudioBus();
+audio.setEnabled(localStorage.getItem('unknown-auction:sound') !== 'off');
 let generation = new GenerationBuffer();
 let state;
 let catalog;
@@ -512,7 +513,17 @@ document.querySelector('#museum-back').onclick = () => museumReturn === 'title' 
 document.querySelector('#title-exit').onclick = () => status('브라우저 게임은 이 탭을 닫으면 종료됩니다.');
 document.querySelector('#title-settings').onclick = () => document.querySelector('#settings-dialog').showModal();
 document.querySelector('#close-settings').onclick = () => document.querySelector('#settings-dialog').close();
-document.querySelector('#text-scale').onchange = (event) => document.documentElement.style.setProperty('--text-scale', event.target.value);
+const syncSoundToggle = () => {
+  const button = document.querySelector('#sound-toggle');
+  button.setAttribute('aria-pressed', String(!audio.enabled));
+  button.textContent = audio.enabled ? '소리: 켜짐' : '소리: 꺼짐';
+};
+document.querySelector('#sound-toggle').onclick = () => {
+  audio.setEnabled(!audio.enabled);
+  localStorage.setItem('unknown-auction:sound', audio.enabled ? 'on' : 'off');
+  syncSoundToggle();
+};
+syncSoundToggle();
 document.querySelectorAll('[data-place]').forEach((button) => button.onclick = () => { audio.playSfx('navigate'); placeRenderers[button.dataset.place]?.(); });
 document.querySelector('#sell-selected').onclick = () => { const ids = [...document.querySelectorAll('[data-item-select]:checked')].map((input) => input.dataset.itemSelect); const revenue = sellItems(state, balance, ids); if (revenue) audio.playSfx('sell'); renderExchange(`${money(revenue)}에 처분했습니다.`); };
 document.querySelectorAll('[data-info]').forEach((button) => button.onclick = () => { const ok = buyInformation(state, balance, button.dataset.info); if (ok) audio.playSfx('information'); renderTavern(ok ? '정보를 구매했습니다.' : '이미 구매했거나 현금이 부족합니다.'); });

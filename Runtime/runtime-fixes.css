@@ -370,6 +370,9 @@ button.secondary:disabled { background-image: url("./assets/ui/skin-v1/button-se
 }
 #settings-dialog::backdrop { background: #000a; }
 #settings-dialog label { display: flex; justify-content: space-between; align-items: center; margin: 24px 0; font-size: 18px; }
+#settings-dialog #sound-toggle,
+#settings-dialog #close-settings { width: 100%; margin-top: 14px; }
+#settings-dialog #sound-toggle[aria-pressed="true"] { filter: saturate(.45) brightness(.72); }
 
 /* Interior scenes use the mockup as art direction while live panels replace data. */
 .place { padding-top: 6.5%; }
