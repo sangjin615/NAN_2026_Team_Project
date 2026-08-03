@@ -1190,12 +1190,17 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
 [data-scene="save"] .save-slot.is-empty .empty-slot-copy strong { font-size: clamp(16px,1.65vw,27px); }
 [data-scene="save"] .save-slot.is-empty .empty-slot-copy small { color: #554633; font-size: clamp(9px,.85vw,14px); }
 [data-scene="save"] .save-slot.is-empty .slot-number {
-  left: 3.8%; top: 8%; z-index: 3;
+  left: 3.75%; top: 6.5%; z-index: 3;
   display: grid; place-items: center;
-  width: 6.1%; height: 29%; overflow: visible;
+  width: 6.4%; height: 37%; overflow: visible;
   clip: auto; white-space: normal;
-  border-radius: 2px; background: #302b26;
+  clip-path: polygon(0 0,100% 0,100% 72%,50% 100%,0 72%);
+  background: linear-gradient(135deg,#4a433b,#26211d 72%);
+  filter: drop-shadow(1px 0 #0e0c0a) drop-shadow(-1px 0 #0e0c0a) drop-shadow(0 2px #0e0c0a);
   color: #fffaf0; font: 500 clamp(18px,2.35vw,38px) Georgia,serif;
+}
+[data-scene="save"] .save-slot.is-empty.slot-1 .slot-number {
+  background: linear-gradient(135deg,#9a2f16,#5f170d 72%);
 }
 </style>
 </head>
