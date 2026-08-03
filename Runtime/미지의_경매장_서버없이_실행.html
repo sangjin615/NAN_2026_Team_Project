@@ -1906,6 +1906,8 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
       this.map = { bgm: {}, sfx: {} };
       this.currentBgm = null;
       this.requestedBgm = null;
+      this.activeSfx = /* @__PURE__ */ new Set();
+      this.playbackVersion = 0;
       this.enabled = true;
     }
     async load(url = "./data/audio-map.json") {
@@ -1914,35 +1916,67 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
       return this;
     }
     playSfx(id) {
-      if (!this.enabled || !this.map.sfx[id]) return false;
-      const audio2 = new Audio(this.map.sfx[id].file);
-      audio2.volume = this.map.sfx[id].volume ?? this.map.masterVolume ?? 0.8;
-      audio2.play().catch(() => {
-      });
+      const entry = this.map.sfx[id];
+      if (!this.enabled || !entry) return false;
+      const audio2 = new Audio(entry.file);
+      audio2.volume = entry.volume ?? this.map.masterVolume ?? 0.8;
+      this.activeSfx.add(audio2);
+      audio2.onended = () => this.activeSfx.delete(audio2);
+      audio2.play().then(() => {
+        if (!this.enabled || !this.activeSfx.has(audio2)) {
+          audio2.muted = true;
+          audio2.pause();
+        }
+      }).catch(() => this.activeSfx.delete(audio2));
       return true;
     }
     playBgm(id) {
       this.requestedBgm = id;
       const entry = this.map.bgm[id];
-      if (!this.enabled || !entry || this.currentBgm?.dataset.id === id) return false;
-      this.currentBgm?.pause();
+      if (!this.enabled || !entry || this.currentBgm?.dataset.id === id && !this.currentBgm.paused) return false;
+      const version = ++this.playbackVersion;
+      if (this.currentBgm) {
+        this.currentBgm.muted = true;
+        this.currentBgm.pause();
+      }
       const audio2 = new Audio(entry.file);
       audio2.dataset.id = id;
       audio2.loop = entry.loop ?? true;
       audio2.volume = entry.volume ?? this.map.masterVolume ?? 0.8;
-      audio2.play().catch(() => {
-      });
       this.currentBgm = audio2;
+      audio2.play().then(() => {
+        if (!this.enabled || version !== this.playbackVersion || this.currentBgm !== audio2) {
+          audio2.muted = true;
+          audio2.pause();
+        }
+      }).catch(() => {
+      });
       return true;
     }
     setEnabled(enabled) {
       this.enabled = Boolean(enabled);
-      if (!this.enabled) this.stop(false);
-      else if (this.requestedBgm) this.playBgm(this.requestedBgm);
+      if (!this.enabled) {
+        this.stop(false);
+        this.activeSfx.forEach((audio2) => {
+          audio2.muted = true;
+          audio2.pause();
+        });
+        this.activeSfx.clear();
+      } else if (this.requestedBgm) {
+        this.playBgm(this.requestedBgm);
+      }
       return this.enabled;
     }
     stop(clearRequest = true) {
-      this.currentBgm?.pause();
+      this.playbackVersion += 1;
+      if (this.currentBgm) {
+        this.currentBgm.muted = true;
+        this.currentBgm.pause();
+        try {
+          this.currentBgm.currentTime = 0;
+        } catch {
+        }
+      }
       this.currentBgm = null;
       if (clearRequest) this.requestedBgm = null;
     }
