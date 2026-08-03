@@ -1,0 +1,60 @@
+import { CATEGORY_EFFECTS, DEFAULT_GRADE_WEIGHTS, GRADES, LOTS_PER_DAY, RUN_DAYS } from './constants.js';
+import { createRng, shuffle, weightedChoice } from './rng.js';
+
+function normalizedGradeWeights(balance) {
+  const source = balance?.lotPool?.gradeWeights || DEFAULT_GRADE_WEIGHTS;
+  return Object.fromEntries(GRADES.map((grade) => [grade, source[grade] ?? source[grade.toLowerCase()] ?? DEFAULT_GRADE_WEIGHTS[grade]]));
+}
+
+export function selectVisualEffects(category, grade, rng) {
+  const candidates = shuffle(CATEGORY_EFFECTS[category] || ['rim-glow'], rng);
+  const count = grade === 'LEGENDARY' ? 3 : grade === 'EPIC' ? 2 : grade === 'RARE' ? 1 : 0;
+  return ['display-shadow', ...candidates.slice(0, count)];
+}
+
+export function createRunSchedule({ catalog, balance, seed }) {
+  const rng = createRng(seed);
+  const itemPool = [];
+  while (itemPool.length < RUN_DAYS * LOTS_PER_DAY) itemPool.push(...shuffle(catalog.items, rng));
+  const weights = normalizedGradeWeights(balance);
+  const gradeEntries = GRADES.map((grade) => [grade, weights[grade]]);
+  const gradeBase = balance?.gradeBase || { common: 8000, rare: 16000, epic: 32000, legendary: 64000 };
+  const qualityTable = balance?.quality?.table || [{ value: 1, label: '보통', weight: 1 }];
+
+  const days = Array.from({ length: RUN_DAYS }, (_, dayIndex) => ({
+    day: dayIndex + 1,
+    lots: Array.from({ length: LOTS_PER_DAY }, (_, lotIndex) => {
+      const item = itemPool[dayIndex * LOTS_PER_DAY + lotIndex];
+      const grade = weightedChoice(gradeEntries, rng);
+      const quality = weightedChoice(qualityTable.map((entry) => [entry, entry.weight]), rng);
+      const basePrice = Number(gradeBase[grade.toLowerCase()] || 8000);
+      const trueValue = Math.round(basePrice * Number(quality.value || 1));
+      return {
+        lotId: `${seed}-d${dayIndex + 1}-l${lotIndex + 1}`,
+        day: dayIndex + 1,
+        order: lotIndex + 1,
+        baseItemId: item.base_id,
+        baseName: item.item_name_ko,
+        category: item.category,
+        categoryName: item.category_name_ko,
+        grade,
+        spritePath: item.grades[grade],
+        quality: { label: quality.label, multiplier: quality.value },
+        pricing: { basePrice, trueValue },
+        visualEffects: selectVisualEffects(item.category, grade, rng),
+        content: null
+      };
+    })
+  }));
+  return { seed: String(seed), days };
+}
+
+export function validateSchedule(schedule) {
+  const lots = schedule?.days?.flatMap((day) => day.lots) || [];
+  return {
+    valid: schedule?.days?.length === RUN_DAYS && lots.length === RUN_DAYS * LOTS_PER_DAY,
+    days: schedule?.days?.length || 0,
+    lots: lots.length,
+    uniqueBaseItems: new Set(lots.map((lot) => lot.baseItemId)).size
+  };
+}

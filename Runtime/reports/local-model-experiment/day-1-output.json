@@ -1,0 +1,120 @@
+{
+  "experiment": {
+    "model": "qwen3:14b",
+    "mode": "daily-content",
+    "profile": "skill",
+    "promptChars": 2537,
+    "promptEvalCount": 1859,
+    "latencyMs": 35576,
+    "createdAt": "2026-08-02T14:35:03.019Z",
+    "evalCount": 1722,
+    "attempts": [
+      {
+        "attempt": 1,
+        "errors": []
+      }
+    ]
+  },
+  "output": {
+    "schemaVersion": "1.0",
+    "day": 1,
+    "marketHeadline": "흑백의 그림자가 경매장을 뒤덮다",
+    "lots": [
+      {
+        "lotId": "team-loop-local-001-d1-l1",
+        "displayName": "붉은 무대막 희곡집",
+        "description": "19세기 연극 무대의 붉은 막을 수놓은 희곡집. 손에 땀을 흘리며 보존한 듯한 흔적이 보인다.",
+        "rumor": "이 책은 유명 연극 작가의 손자에 의해 유출된 것으로 알려져 있다.",
+        "setHint": "희곡집 속에 숨겨진 연극 틀의 위치를 암시한다.",
+        "npcReaction": "이 책을 손에 넣는 순간, 무대 뒤편에서 낯선 연극의 음악이 울린다."
+      },
+      {
+        "lotId": "team-loop-local-001-d1-l2",
+        "displayName": "황동뚜껑 항아리",
+        "description": "황동으로 된 뚜껑이 특징인 육각 항아리. 오래된 식료품 저장 용기로 보인다.",
+        "rumor": "이 항아리 안에 옛날 음식 냄새가 아직도 남아 있다.",
+        "setHint": "항아리의 뚜껑 문양이 특정 집단의 상징을 암시한다.",
+        "npcReaction": "항아리를 열면 식기들이 자리를 바꾸는 것을 보게 될 것이다."
+      },
+      {
+        "lotId": "team-loop-local-001-d1-l3",
+        "displayName": "카메오 펜던트",
+        "description": "카메오 돌에 새긴 인물이 눈에 띄는 펜던트. 고대 신화의 인물이 새겨져 있다.",
+        "rumor": "이 펜던트는 어느 귀족의 여인의 마지막 유물로 알려져 있다.",
+        "setHint": "펜던트의 인물이 속한 문화의 비밀을 드러낸다.",
+        "npcReaction": "펜던트를 목에 걸면 고대의 목소리가 귀에 닿는다."
+      },
+      {
+        "lotId": "team-loop-local-001-d1-l4",
+        "displayName": "제본공 견본첩",
+        "description": "제본공이 만든 견본첩. 흔치 않은 종이와 독특한 바인딩 방식을 보여준다.",
+        "rumor": "이 견본첩은 제본공의 마지막 작품으로 알려져 있다.",
+        "setHint": "첩의 페이지 간격이 숨겨진 비밀을 암시한다.",
+        "npcReaction": "첩을 펼치면 제본공의 손길이 느껴진다."
+      },
+      {
+        "lotId": "team-loop-local-001-d1-l5",
+        "displayName": "북문 거리 행렬",
+        "description": "북문 거리의 행렬을 묘사한 그림. 수많은 인물이 움직이는 듯한 생생한 묘사가 특징이다.",
+        "rumor": "이 그림은 실제로 있었던 행렬을 그린 것으로 알려져 있다.",
+        "setHint": "행렬의 끝에 있는 인물이 중요한 단서를 제공한다.",
+        "npcReaction": "그림을 바라보면 북문에서 소리가 들리는 듯하다."
+      },
+      {
+        "lotId": "team-loop-local-001-d1-l6",
+        "displayName": "등대 창가의 가족",
+        "description": "등대 창가에 있는 가족의 모습을 그린 그림. 어둠 속에서 빛나는 등대가 인상적이다.",
+        "rumor": "이 그림의 등대는 실존하는 장소로 알려져 있다.",
+        "setHint": "가족의 눈빛이 숨겨진 비밀을 암시한다.",
+        "npcReaction": "그림을 바라보면 등대의 빛이 눈에 비친다."
+      },
+      {
+        "lotId": "team-loop-local-001-d1-l7",
+        "displayName": "루비 타이핀·커프스 세트",
+        "description": "루비로 된 타이핀과 커프스가 함께 있는 세트. 고귀한 보석으로 장식되어 있다.",
+        "rumor": "이 세트는 어느 귀족의 유산으로 알려져 있다.",
+        "setHint": "보석의 색상이 특정 집단의 상징을 암시한다.",
+        "npcReaction": "세트를 착용하면 귀족의 기분이 느껴진다."
+      },
+      {
+        "lotId": "team-loop-local-001-d1-l8",
+        "displayName": "청록 뚜껑 소금단지",
+        "description": "청록색 뚜껑이 특징인 소금단지. 오래된 식료품 저장 용기로 보인다.",
+        "rumor": "이 단지 안에 옛날 소금 냄새가 아직도 남아 있다.",
+        "setHint": "단지의 뚜껑 문양이 특정 집단의 상징을 암시한다.",
+        "npcReaction": "단지를 열면 소금 냄새가 풍겨나온다."
+      }
+    ],
+    "questCopy": [
+      {
+        "questId": "designated",
+        "title": "지정 계열 1점 낙찰",
+        "flavor": "지정된 계열의 상품을 1점 낙찰해야 성공입니다."
+      },
+      {
+        "questId": "multi",
+        "title": "서로 다른 계열 2점 낙찰",
+        "flavor": "두 개의 서로 다른 계열 상품을 낙찰해야 성공입니다."
+      },
+      {
+        "questId": "bargain",
+        "title": "기준가의 85% 이하 낙찰",
+        "flavor": "기준가의 85% 이하로 낙찰해야 성공입니다."
+      }
+    ],
+    "appraisalCopy": {
+      "intro": "심사 시작합니다. 진위를 판단하려면 주의 깊은 시선이 필요합니다.",
+      "success": "정확한 심사로 진품을 식별했습니다. 보상이 주어집니다.",
+      "warning": "심사 중 이상 신호가 감지되었습니다. 주의가 필요합니다."
+    },
+    "auctionCopy": {
+      "opening": "경매 시작합니다. 최고가를 기록하는 순간이 곧 다가옵니다.",
+      "outbid": "경매가 높아졌습니다. 더 높은 가격을 제시해야 합니다.",
+      "win": "경매에서 승리했습니다. 소유권이 이전됩니다.",
+      "lose": "경매에서 패배했습니다. 다음 기회를 기다리세요."
+    },
+    "settlementCopy": {
+      "summary": "경매가 마무리되었습니다. 낙찰된 상품을 확인하고, 다음 날로 이동하세요."
+    }
+  }
+}

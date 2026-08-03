@@ -1,0 +1,43 @@
+{
+  "id": "auction-generation-windows",
+  "label": "Unknown Auction generation (Windows)",
+  "description": "Validates expanded two-stage narrative output and runtime tests on Windows while preserving engine-owned numeric rules.",
+  "commands": [
+    {
+      "file": "node",
+      "args": [
+        "C:/NHN Project/team-loop-lite-ai-learning/tools/verification/check-auction-content.mjs",
+        "Runtime/reports/local-model-experiment/run-start-request.json",
+        "Runtime/reports/local-model-experiment/run-start-output.json"
+      ],
+      "cwd": ".",
+      "expectedExit": 0,
+      "timeoutMs": 60000
+    },
+    {
+      "file": "node",
+      "args": [
+        "C:/NHN Project/team-loop-lite-ai-learning/tools/verification/check-auction-content.mjs",
+        "Runtime/reports/local-model-experiment/day-1-request.json",
+        "Runtime/reports/local-model-experiment/day-1-output.json"
+      ],
+      "cwd": ".",
+      "expectedExit": 0,
+      "timeoutMs": 60000
+    },
+    {
+      "file": "cmd.exe",
+      "args": ["/d", "/s", "/c", "npm test"],
+      "cwd": "Runtime",
+      "expectedExit": 0,
+      "timeoutMs": 120000
+    },
+    {
+      "file": "git",
+      "args": ["diff", "--check"],
+      "cwd": ".",
+      "expectedExit": 0,
+      "timeoutMs": 60000
+    }
+  ]
+}

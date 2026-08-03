@@ -1,0 +1,16 @@
+{
+  "base_id": "BASE-BOK-06",
+  "item_name_ko": "건국항로 해도집",
+  "category": "BOK",
+  "category_name_ko": "고서",
+  "canvas": [
+    128,
+    128
+  ],
+  "grades": {
+    "COMMON": "04_BOK_고서/06_BASE-BOK-06_건국항로_해도집/01_COMMON_일반/BASE-BOK-06_COMMON.png",
+    "RARE": "04_BOK_고서/06_BASE-BOK-06_건국항로_해도집/02_RARE_레어/BASE-BOK-06_RARE.png",
+    "EPIC": "04_BOK_고서/06_BASE-BOK-06_건국항로_해도집/03_EPIC_에픽/BASE-BOK-06_EPIC.png",
+    "LEGENDARY": "04_BOK_고서/06_BASE-BOK-06_건국항로_해도집/04_LEGENDARY_전설/BASE-BOK-06_LEGENDARY.png"
+  }
+}

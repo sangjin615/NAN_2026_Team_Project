@@ -1,0 +1,759 @@
+{
+  "status": "aligned-to-simulation-v6-96pool",
+  "run": {
+    "days": 12,
+    "lotsPerDay": 8,
+    "startCash": 20000,
+    "growth": 1,
+    "growthNote": "시뮬레이션은 기저가가 고정이다. 난이도는 물가가 아니라 봇 자본 곡선이 만든다"
+  },
+  "quality": {
+    "table": [
+      {
+        "value": 0.6,
+        "label": "손상",
+        "weight": 15
+      },
+      {
+        "value": 0.9,
+        "label": "보통",
+        "weight": 40
+      },
+      {
+        "value": 1.1,
+        "label": "양호",
+        "weight": 25
+      },
+      {
+        "value": 1.35,
+        "label": "수려",
+        "weight": 15
+      },
+      {
+        "value": 1.6,
+        "label": "완품",
+        "weight": 5
+      }
+    ],
+    "note": "6.2 — 기대값 1.0075 · 표준편차 0.2585. 가중치를 바꿔도 기대값은 1.00 ±0.02 안에 둔다"
+  },
+  "gradeBeta": {
+    "common": 0.27,
+    "rare": 1,
+    "epic": 2.09,
+    "legendary": 3.64
+  },
+  "appraisal": {
+    "types": 1,
+    "typeNote": "정밀 하나만. 약식은 REQ-3 으로 삭제(2026-07-30)",
+    "rate": 0.095,
+    "rateNote": "기저가의 9%. 손익분기가 약 14% 이고 값어치/2.5 는 5.6% 인데, 정밀 하나만 남았으므로 옛 약식 5% 보다 비싸고 옛 정밀 18% 보다 싸야 한다. 실측: 1% +42,440 · 5% +11,860 · 9% +8,330 · 15% -4,110",
+    "errorByDay": {
+      "1-3": 0.35,
+      "4-6": 0.2,
+      "7-12": 0.1
+    },
+    "structuralFinding": "봇이 품질을 알면 가격 신탁 노릇을 해 무엇을 사도 안전하고 정보가 팔 것이 없다. 봇이 모르면 좋은 것도 나쁜 것도 같은 값에 올라가 그 차이를 정보가 먹는다",
+    "offersPerDay": 4
+  },
+  "informationRate": {
+    "competitors": 0.008,
+    "catalog": 0.007,
+    "forecast": 0.004,
+    "order": null,
+    "note": "측정으로 매겼다(6.20). 값어치 = 쓰는 정책 - 안 쓰는 정책, 가격 = 값어치/2.5. 총 기저가 64,000 대비 비율",
+    "orderNote": "출품 순서는 값이 안 나온다. 정책 셋을 다 태웠고 전부 음수 - 보관칸 3~6, 하루 8점이라 아껴둘 여지가 작다. 보류",
+    "previous": {
+      "order": 0.005,
+      "competitors": 0.007,
+      "forecast": 0.01
+    },
+    "removedChannels": {
+      "relicClue": "2026-07-30 삭제. 유물 경매를 경제 밖으로 두기로 했다 - 최적화할 여지가 없으면 정보가 팔 것도 없다. RELIC-6(거물은 이름만 표시)과도 앞뒤가 맞는다"
+    }
+  },
+  "loan": {
+    "limitFromDisposalValue": 0.35,
+    "repayMultiplier": 1.9,
+    "termDays": 2,
+    "concurrent": 1,
+    "minShopStage": 3,
+    "collateral": "재고. 담보로 잡히면 잠겨서 못 판다. 현금은 담보가 아니다",
+    "overdue": "담보 압류 + 조합 거래 제한(guildLocked)",
+    "measured": {
+      "loansPerRun": 0.78,
+      "seizureRate": 0.287,
+      "interestPerRun": 1469,
+      "deadlineFailWithout": 32.4,
+      "deadlineFailWith": 29.2,
+      "policy": "measurementPolicy.withLoan"
+    },
+    "note": "값어치는 이익이 아니라 생존이다. 마감 실패를 35.2% -> 22.7% 로 낮춘다. 여정당 0.87회 - 자주 쓰는 것이 아니라 한 번쯤 오는 위기에 쓰는 장치다",
+    "whyNotV5": "V5 의 70%/x1.10 은 이자가 542 라 사실상 공짜다. x1.45 는 이자 1,869 · 압류율 18% 로 쓸지 말지가 판단이 된다",
+    "correction6_10": "6.10 의 \"차익 0\" 은 절반만 맞다. 유동성 수단인 것은 맞지만 생존 중앙값이 203,290 -> 236,620 으로 오른다 - 개시 마감이라는 절벽이 있어 빌려서 승급하는 것이 그 자체로 이득이다",
+    "previous2": {
+      "limitFromDisposalValue": 0.6,
+      "repayMultiplier": 1.45,
+      "termDays": 3,
+      "minShopStage": 2,
+      "at": "2026-07-31 이전"
+    },
+    "tightenedAt": "2026-07-31",
+    "tightenedWhy": "대출을 켜면 도달 67.7% 로 밴드(45~60)를 벗어났다. 상환배수만 올려서는 안 깎인다 - x1.45 -> x2.20 으로 올려도 67.7 -> 66.6 이다. 이득의 출처가 이자가 아니라 개시 마감 회피이기 때문이다. 한도·만기·해금을 같이 조여서 도달 59.3% 로 넣었다",
+    "tightenedMeasured": {
+      "reach": 59.3,
+      "deadlineFail": 28.3,
+      "survivorMedian": 206100,
+      "loansPerRun": 0.77,
+      "seizureRate": 0.26,
+      "interestPerRun": 1997,
+      "seeds": 900,
+      "policy": "measurementPolicy.withLoan"
+    }
+  },
+  "shop": {
+    "upgradeCost": [
+      0,
+      7500,
+      12000,
+      17500
+    ],
+    "questRequirement": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "storage": [
+      0,
+      3,
+      4,
+      5,
+      6
+    ],
+    "auctionFee": [
+      0,
+      0.05,
+      0.03,
+      0.01,
+      0
+    ],
+    "upgradeCostNote": "합 37,000. 2026-07-31 재산정 - 시뮬을 balance.json 에 맞추고 의뢰 보상을 다시 매긴 뒤 다시 잡았다. 도달 55.9% · 마감실패 31.0% · 생존중앙값 193,280 (씨앗 900). 옛 값 32,500 은 6.36 에서 낡은 시뮬로 잡은 것이다",
+    "upgradeCostPrevious": [
+      0,
+      9000,
+      14500,
+      21500
+    ],
+    "upgradeCostDependsOn": "의뢰 하루 수주량. 1건/일 기준이다 - 3건/일 이면 같은 밴드가 207,000 근처로 옮겨간다",
+    "storageNote": "4/5/6/7 에서 조였다. 후반에 자산이 하루 총 기저가(64,000)를 넘으면 자산이 아니라 보관칸이 한도가 되어 생존 중앙값이 25만까지 갔다. 3/4/5/6 으로 19.6만(목표의 1.96배)이 된다",
+    "storagePrevious": [
+      0,
+      4,
+      5,
+      6,
+      7
+    ],
+    "storageFullhouseNote": "풀하우스(6계열 각 1점)가 3단계 -> 4단계로 밀린다. 2026-07-30 사용자 결정. 판정표 #18 의 계열 6종 = 풀하우스 근거는 그대로이고 닿는 시점만 늦어진다. 대신 풀하우스가 최종 단계 전용 보상이 된다. 3/4/4/5 로 더 조이면 풀하우스가 아예 불가능해져 그 근거가 끊어지므로 여기서 멈췄다",
+    "derivedFromStage": [
+      "auctionFee",
+      "infoDiscount",
+      "setBonus",
+      "questBonus",
+      "storage"
+    ],
+    "derivedNote": "상회 단계 하나가 여덟을 다 준다(V5 방식): 보관칸·수수료·정보할인·세트배수·의뢰보상. 6.27 에서 분리안을 기각했다. 계단값은 V5 원본이고 이번에 문서로 옮겼다",
+    "setBonus": [
+      0,
+      0.1,
+      0.2,
+      0.3,
+      0.4
+    ],
+    "questBonus": [
+      0,
+      0.1,
+      0.2,
+      0.3,
+      0.4
+    ],
+    "infoDiscount": [
+      0,
+      0.1,
+      0.2,
+      0.3,
+      0.4
+    ],
+    "upgradeCostPrevious2": [
+      0,
+      6500,
+      10500,
+      15500
+    ]
+  },
+  "quests": {
+    "designated": {
+      "fee": 300,
+      "reward": 4250,
+      "previous": 1300,
+      "completionRate": 0.306,
+      "difficulty": 2.4,
+      "rule": "지정 계열 1점을 낙찰한다",
+      "completionsPerRun": 4.33,
+      "previousReward": 3300,
+      "previousCompletionRate": 0.534,
+      "previousReward2": 4800
+    },
+    "multi": {
+      "fee": 500,
+      "reward": 2050,
+      "previous": 4700,
+      "completionRate": 0.733,
+      "difficulty": 1,
+      "rule": "서로 다른 계열 2점을 낙찰한다",
+      "completionsPerRun": 6,
+      "previousReward": 2000,
+      "previousCompletionRate": 0.885,
+      "previousReward2": 2000
+    },
+    "bargain": {
+      "fee": 400,
+      "reward": 2350,
+      "previous": 3000,
+      "completionRate": 0.598,
+      "difficulty": 1.22,
+      "rule": "기준가의 85% 이하에 낙찰한다",
+      "completionsPerRun": 3.71,
+      "previousReward": 2800,
+      "previousCompletionRate": 0.631,
+      "previousReward2": 2450
+    },
+    "restraint": {
+      "fee": 400,
+      "reward": 2750,
+      "previous": 1900,
+      "completionRate": 0.511,
+      "difficulty": 1.43,
+      "rule": "낙찰하되 그날 시작 자금의 60% 를 남긴다 (40% 에서 강화, 2026-07-30)",
+      "completionsPerRun": 5.19,
+      "previousReward": 2100,
+      "previousCompletionRate": 0.846,
+      "previousReward2": 2850
+    },
+    "block": {
+      "fee": 600,
+      "reward": 3250,
+      "previous": 2500,
+      "completionRate": 0.493,
+      "difficulty": 1.49,
+      "rule": "내가 부른 값 위에서 표적 봇이 낙찰한 금액이 1,500 이상 (2026-07-30 행동 기반으로 변경)",
+      "completionsPerRun": 2.19,
+      "previousRule": "표적 봇이 8,000 이상 지출 - 내가 아무것도 안 해도 달성될 수 있었다",
+      "previousReward": 4250,
+      "previousCompletionRate": 0.419,
+      "previousReward2": 3000
+    },
+    "formula": "보상 = (목표 기대값 1000 + 수수료) / 달성률. 다섯의 기대값을 같게 맞춘다",
+    "note": "보상 = 2,000 x 난이도비. 난이도비는 **의뢰를 쫓는 정책**에서의 달성률로 잰 것이다(6.33). 쫓지 않는 정책으로 재면 순서가 달라진다 - 절제가 44%에서 88%로 뛴다",
+    "exclusivityBroken": "6.12 의 배타성(#11 동시 수주 상한 불필요의 근거)이 실측으로 성립하지 않는다. 둘씩 같이 받으면 완료가 오히려 는다(+0.52 ~ +3.31). 절제·견제가 \"축이 반대인 것\" 이 아니라 \"저절로 되는 것\" 이기 때문이다",
+    "perDayNote": "하루 2건이 전제다(6.19). 1건이면 누적 의뢰가 모자라 마감 실패가 67% 로 뛴다",
+    "tightened": {
+      "restraintKeepRate": 0.6,
+      "previousKeepRate": 0.4,
+      "blockSpendThreshold": 8000,
+      "previousThreshold": 3500,
+      "effect": "절제 완료 4.22->2.62 · 견제 3.45->2.20. 저절로 되던 것이 조건이 됐다"
+    },
+    "exclusivity": {
+      "measured": "2026-07-30, 의뢰를 쫓는 정책으로",
+      "holds": {
+        "지정+차익": -31.5,
+        "절제+다중": -27.1,
+        "절제+지정": -6.3,
+        "절제+견제": -12.4
+      },
+      "fails": {
+        "차익+견제": 21.6
+      },
+      "note": "견제를 행동 기반으로 바꾼 뒤 6.12 예측 다섯 중 넷이 맞는다(전 셋). 남은 하나(차익 x 견제)는 시너지다 - 둘 다 \"올리다가 빠진다\" 라는 같은 행동을 쓴다. 편승은 +17.2%p 에서 +4.7%p 로 사라졌다",
+      "openDecision": "견제의 편승. (1) 같이 못 받게 한다 (2) 조건을 내 행동에 묶는다 - 권장 (3) 인정하고 보상을 낮춘다"
+    },
+    "restraintWarning": "절제는 12일 마감이 있는 판에서 독이다. 안 사는 축인데 승급이 사는 것에 달려 있다. 고정 메뉴로 받으면 +6,262 지만 무작위 제시에 섞이면 여정이 죽는다",
+    "offering": {
+      "mode": "random3of5",
+      "perDay": 3,
+      "acceptMax": 2,
+      "note": "하루 5종 중 3종을 무작위 제시하고 최대 2건 수주한다. 5종 전부 제시로 하면 왕실 인가장의 값어치가 0 이 된다",
+      "acceptancePolicy": "수주는 의무가 아니다. 이미 받은 것과 충돌하면 안 받는 것만으로 도달률이 11%p 오른다 - 화면이 충돌을 보여줘야 한다"
+    },
+    "remeasuredAt": {
+      "at": "2026-07-31",
+      "seeds": 900,
+      "method": "의뢰마다 고정 메뉴로 하루 1건만 받게 하고 여정 900회. 섞어 받으면 정책이 섞인다",
+      "why": "v6-sim 이 balance.json 을 읽게 고친 뒤 처음 잰 값이다. 옛 시뮬은 6.19·6.25·6.34·6.36 이전 상수였다",
+      "reversal": "기록은 견제가 제일 어렵다고 했는데(4,250) 격리해서 재니 지정이 제일 어렵다. 순서가 뒤집혔다"
+    },
+    "blockNeverOffered": {
+      "at": "2026-07-31",
+      "finding": "무작위 3종 제시 + 최대 2건 수주 + 선호순 수락이면 견제는 한 번도 수주되지 않는다. 900판에서 0회다",
+      "why": "선호순(지정-다중-차익-절제-견제)에서 견제가 꼴찌라, 3종 중 견제가 껴도 나머지 둘이 먼저 두 자리를 채운다",
+      "measuredHow": "고정 메뉴로 강제하면 달성률 49.3% 다. 보상 3,000 은 그 값으로 매긴 것이다",
+      "meaning": "지금 규칙대로면 견제는 화면에 뜨기만 하고 안 팔린다. 선호순은 정책이지 규칙이 아니므로 사람이 고를 수는 있다",
+      "needsDecision": false,
+      "resolvedAt": "2026-07-31",
+      "resolution": "고정 선호순을 버리고 기대값 순으로 고르게 했고, 보상 산식을 기대값이 같아지게 바꿨다(보상 = (1,000 + 수수료) / 달성률). 기대값이 같으니 남는 차이는 50 단위 반올림 잔차뿐이라 그날 무작위(폭 40)로 가른다. 지금은 다섯이 14~23% 로 고르게 수주된다 - 견제 14.1%, 달성 50.5%"
+    },
+    "formulaWhy": "옛 산식(2,000 x 난이도비)은 수수료를 안 봤다. 그래서 수수료가 제일 비싼 견제가 기대값 꼴찌였고, 3종 제시 x 2건 수주에서는 전역 꼴찌가 구조적으로 절대 안 뽑힌다 - 900판 0회였다. 기대값을 맞추면 고르는 이유가 숫자가 아니라 오늘 판에 맞는지가 된다",
+    "formulaAt": "2026-07-31"
+  },
+  "source": "docs/plan/SIMULATION-STATUS.md 6절 · rules.js (6절 검산 15건 통과)",
+  "alignedAt": "2026-07-30 (96종 고정 풀)",
+  "decidedBy": "사용자 — \"니가 시뮬레이션 할때 쓴거에 맞춰\"",
+  "bots": {
+    "nemesisInitial": 25000,
+    "growthPerDay": 1.155,
+    "capitalFormula": "25000 * 1.155^day  (day 는 1..12. 1일차 28,875 · 12일차 140,904)",
+    "bidCapRatio": 1,
+    "drifterRatio": 0.4,
+    "drifterCount": 2,
+    "note": "6.7 · 6.15 — 자본은 플레이어와 무관한 절대값이다. 입찰 상한이 자본의 15% 라 한 물건에 다 못 건다",
+    "bidCapNote": "0.15 -> 1.00 으로 올렸다. 0.15 는 1일차 상한이 4,331 인데 전설 시작가가 12,500 이라 초반 고가품이 무경쟁이었다 - 마진 전부가 거기서 나왔다. 실측: 상한 15% 도달률 49.3% vs 100% 6.5%",
+    "qualityKnowledge": "none",
+    "qualityKnowledgeNote": "봇은 숨은 품질을 아예 안 본다 - 공개 기저가와 시세로만 부른다. V5 v1.5 의 \"일반 봇이 숨은 실제 품질을 직접 읽지 않도록 수정\" 의 충실한 이식이다. 잡음(±25%)으로 옮겼더니 감정이 죽었다 - 한 줄 차이로 감정의 부호가 뒤집힌다(-38,480 -> +47,820)"
+  },
+  "market": {
+    "model": "AR1",
+    "formula": "I_f(d) = 1 + 0.7 x (I_f(d-1) - 1) + N(0, 0.0761),  clamp 0.6~1.6",
+    "phi": 0.7,
+    "shockSd": 0.0761,
+    "indexSd": 0.1065,
+    "idiosyncraticSd": 0.087,
+    "expectedDemand": 1.05,
+    "demandFormula": "M = 1.05 + beta(등급) x (I_f - 1) + N(0, 0.0870)",
+    "pathFixedAtRunStart": true,
+    "pathNote": "12일치 경로를 여정 시작에 고정 생성한다. 그래야 수요 동향 채널이 \"앞으로 3일\" 을 팔 수 있다",
+    "narrative": {
+      "source": "V5 MARKET_EVENTS 문구 목록",
+      "rule": "그날 |충격| 이 가장 큰 계열에 문구를 붙인다. 충격의 부호와 크기로 폭등/상승/하락/폭락을 고른다",
+      "measured": "하루 최대 충격 중앙값 0.1217 · 0.08 이상인 날 87.3%. 이벤트 표의 폭 0.12~0.20 과 같은 대역이다"
+    },
+    "why": [
+      "6.13 값을 재현한다 - AR(1) sd 0.1022 대 정한 값 0.1065. 이벤트 표는 0.1617 로 52% 넓다",
+      "평균회귀가 있어야 \"언제 팔까\" 가 판단이 된다 - 이벤트 표는 1 로 돌아오는 비율이 7.9% 다",
+      "전설(beta 3.64)이 사고가 되지 않는다 - 12일차 시세 폭 ±0.39 대 이벤트 표 ±0.78"
+    ],
+    "rejected": "이벤트 표를 폭 결정에 쓰는 것. 문구 목록으로는 남긴다"
+  },
+  "breakeven": {
+    "line": "basePrice",
+    "value": 1.005,
+    "formula": "E[k] x E[M] x (1 - 수수료) = 1.0075 x 1.05 x 0.95",
+    "note": "6.14 — 기준가에 사면 본전이다"
+  },
+  "gradeBetaNote": "6.13 — 같은 계열 지수라도 등급이 높을수록 시세가 크게 흔들린다",
+  "lotPool": {
+    "total": 96,
+    "families": 6,
+    "perFamily": 16,
+    "gradesPerFamily": {
+      "common": 4,
+      "rare": 6,
+      "epic": 4,
+      "legendary": 2
+    },
+    "note": "V5_경매품96종 시트. 여정 시작에 96점을 고정 생성하고 12일 x 8점으로 나눈다 - 매일 무작위 생성이 아니다. API 연결 시 이 축만 주고 표현을 생성한다",
+    "gradeWeights": {
+      "common": 0.25,
+      "rare": 0.375,
+      "epic": 0.25,
+      "legendary": 0.125
+    },
+    "previousWeights": {
+      "common": 0.3,
+      "rare": 0.43,
+      "epic": 0.195,
+      "legendary": 0.075
+    },
+    "avgBasePrice": 8000,
+    "dailyTotalBase": 64000,
+    "previousDailyTotalBase": 51080
+  },
+  "auction": {
+    "startBidRatio": 0.5,
+    "minRaiseRate": 0.1,
+    "startBidNote": "기저가의 절반. 0.3~1.0 을 훑어 정했다 - 0.3 은 초반 폭주, 1.0 은 마진 0",
+    "minRaiseNote": "결과를 거의 안 바꾼다(도달률 49.8/49.3/48.8/49.8). 밸런스가 아니라 조작감으로 10% 를 골랐다"
+  },
+  "measuredAt": {
+    "seeds": 900,
+    "policy": "measurementPolicy.baseline",
+    "reach": 55.6,
+    "deadlineFail": 32.4,
+    "ruin": 0,
+    "survivorMedian": 218060,
+    "setsPerRun": 7.96,
+    "questsPerRun": 8.06,
+    "loansPerRun": 0,
+    "seizureRate": 0,
+    "interestPerRun": 0
+  },
+  "relicAuction": {
+    "scope": "outside-economy",
+    "note": "2026-07-30 결정. 유물 경매는 경제적 판단이 아니라 번 돈을 영구 성장에 붓는 자리다. 유물 1점의 골드 환산가를 정하지 않는다 - 실측 지출 48,973 대 낡은 저울 효과 8,000 상당(6배)",
+    "rounds": 3,
+    "tiers": [
+      "low",
+      "mid",
+      "high"
+    ],
+    "startBid": [
+      12000,
+      25000,
+      45000
+    ],
+    "tierNote": "티어는 유지한다. 유물 9종 세부기획서가 하급=빠른 출발 · 중급=무료 정보 · 상급=규칙 변경으로 티어를 구조로 쓴다"
+  },
+  "sets": {
+    "formula": "배수 = 1.20 + 0.08 x (난이도비 - 1)",
+    "difficultyMethod": "돈 없이 모으기만 시뮬(여정 3000회). 낙찰률 23.4% 는 6.19 실측",
+    "conditionsRelaxed": {
+      "align": "같은 계열+같은 등급 3점 -> 2점",
+      "straight": "같은 계열 4등급 각 1점 -> 3등급",
+      "at": "2026-07-30",
+      "why": "완화 전 성립이 0.02·0.01건/여정이라 사실상 불가능했다"
+    },
+    "table": [
+      {
+        "id": "pair",
+        "name": "페어",
+        "rule": "같은 계열 2점",
+        "need": 2,
+        "perRun": 4.47,
+        "ratio": 1,
+        "mult": 1.2
+      },
+      {
+        "id": "fullhouse",
+        "name": "풀하우스",
+        "rule": "6계열 각 1점",
+        "need": 6,
+        "perRun": 1.2,
+        "ratio": 3.73,
+        "mult": 1.4
+      },
+      {
+        "id": "align",
+        "name": "정렬",
+        "rule": "같은 계열 + 같은 등급 2점",
+        "need": 2,
+        "perRun": 0.8,
+        "ratio": 5.58,
+        "mult": 1.6
+      },
+      {
+        "id": "triple",
+        "name": "트리플",
+        "rule": "같은 계열 3점",
+        "need": 3,
+        "perRun": 0.5,
+        "ratio": 8.96,
+        "mult": 1.8
+      },
+      {
+        "id": "royal",
+        "name": "로열",
+        "rule": "같은 계열 3점, 전부 에픽 이상",
+        "need": 3,
+        "perRun": 0.28,
+        "ratio": 16.25,
+        "mult": 2.4
+      },
+      {
+        "id": "straight",
+        "name": "스트레이트",
+        "rule": "같은 계열, 서로 다른 등급 3점",
+        "need": 3,
+        "perRun": 0.24,
+        "ratio": 18.72,
+        "mult": 2.6
+      }
+    ],
+    "note": "족보형(상시·기한없음). 배수 폭이 1.3~5.2 에서 1.2~2.6 으로 좁아졌다 - 여섯이 다 서면 한 족보에 몰아줄 이유가 없다",
+    "measured": {
+      "reach": 55.6,
+      "deadlineFail": 32.4,
+      "survivorMedian": 218060,
+      "setsPerRun": 7.96,
+      "seeds": 900,
+      "policy": "measurementPolicy.baseline"
+    }
+  },
+  "damagedPenalty": {
+    "enabled": false,
+    "damagedK": 0.6,
+    "saleMultiplier": 1,
+    "excludeFromSets": false,
+    "note": "2026-07-30 측정. 넣어봤으나 감정을 살리지 못하고 경제만 좁힌다 - 꺼둔다. 족보 제외는 도달률을 55%->22% 로 무너뜨린다 / 6.25 확정: 필요 없다. 봇이 손상품을 제값에 올려주는 것이 이미 페널티다"
+  },
+  "growthBranches": {
+    "enabled": false,
+    "decision": "V5 의 shopStage 파생 방식을 쓴다. 6.6 의 별도 축 분리는 기각(2026-07-30)",
+    "why": [
+      "분리하면 브랜치가 선택이 아니라 필수가 된다 - 아무것도 안 사면 12일 중앙값 33,390 (목표의 1/3)",
+      "어떤 가격을 매겨도 지배 전략이 남는다 - 6.6 표 그대로 1.89배, 값어치/2.5 재산정 7.95배",
+      "축별 값어치가 고르지 않다 - 보관 +95,560 대 정보 -6,730. 세트가 수입의 대부분이라 보관이 셋을 합친 만큼 세다",
+      "6.6 이 원한 판단축은 이미 셋 있다 - 족보 선택 · 감정 여부 · 정보 채널 선택"
+    ],
+    "table": {
+      "info": {
+        "effect": [
+          0,
+          0.1,
+          0.2,
+          0.3,
+          0.4
+        ],
+        "cost": [
+          0,
+          600,
+          1250,
+          1900,
+          2550
+        ],
+        "measuredValue": -6730
+      },
+      "trade": {
+        "effect": [
+          0.05,
+          0.03,
+          0.01,
+          0
+        ],
+        "cost": [
+          0,
+          1250,
+          2550,
+          3200
+        ],
+        "measuredValue": 27760
+      },
+      "storage": {
+        "effect": [
+          0,
+          0.1,
+          0.2,
+          0.3,
+          0.4
+        ],
+        "cost": [
+          0,
+          1050,
+          2100,
+          3200,
+          4250
+        ],
+        "measuredValue": 95560
+      },
+      "network": {
+        "effect": [
+          0,
+          0.1,
+          0.2,
+          0.3,
+          0.4
+        ],
+        "cost": [
+          0,
+          1250,
+          2550,
+          3850,
+          5100
+        ],
+        "measuredValue": 24000
+      }
+    },
+    "keptFor": "세트의 무게가 줄어 축별 값어치가 고르게 되면 다시 본다. 표는 지우지 않는다"
+  },
+  "deadlines": {
+    "requiredStageByDay": {
+      "1-3": 1,
+      "4-6": 2,
+      "7-9": 3,
+      "10-12": 4
+    },
+    "source": "index.html requiredStageForDay",
+    "note": "일차가 기한이고 누적 의뢰가 자격이다 - 둘은 다른 것을 맡는다(#17)"
+  },
+  "bankruptcy": {
+    "condition": "cash <= 0 AND 활성 보유품 0 AND 담보 대출 불가",
+    "loanBlockedWhen": [
+      "shopStage < 2",
+      "guildLocked",
+      "이미 대출이 있음",
+      "담보 잡을 보유품 없음"
+    ],
+    "source": "index.html bankruptcyCheck",
+    "note": "현금 0 하나로는 파산이 아니다. 담보 대출이 가능하면 살아난다 - 6.10 의 \"유동성 수단\" 이 여기서 규칙이 된다. 내 시뮬의 cash<=0 판정은 실제보다 헐거웠다",
+    "simulatorNote": "시뮬레이터도 실제 규칙으로 고쳤다(2026-07-30). 이전 cash<=0 판정은 실제보다 헐거웠다"
+  },
+  "meta": {
+    "carryRate": 0.4,
+    "carryRateWithSafe": 0.6,
+    "nextRunStart": "20,000 + 이월금. 낡은 저울이 있으면 그 합에 x1.4",
+    "source": "index.html endRun / newRun"
+  },
+  "relics": {
+    "count": 9,
+    "tiers": {
+      "low": 3,
+      "mid": 3,
+      "high": 3
+    },
+    "list": [
+      {
+        "id": "old-scale",
+        "tier": "low",
+        "name": "낡은 저울",
+        "effect": "다음 여정 시작 자금 +10%",
+        "measuredValue": 35930,
+        "previousEffect": "다음 여정 기본 시작 자금 +40%"
+      },
+      {
+        "id": "leather-ledger",
+        "tier": "low",
+        "name": "가죽 장부",
+        "effect": "1단계 보관칸만 +1",
+        "measuredValue": 2170,
+        "previousEffect": "보관칸 전 단계 +1"
+      },
+      {
+        "id": "worn-seal",
+        "tier": "low",
+        "name": "닳은 인장",
+        "effect": "1->2단계 승급 조건 면제",
+        "measuredValue": 4600,
+        "previousEffect": "1->2단계 승급 조건 면제"
+      },
+      {
+        "id": "magnifier",
+        "tier": "mid",
+        "name": "감정사의 확대경",
+        "effect": "매일 경쟁자 예산 채널 무료",
+        "redefinedAt": "2026-07-30",
+        "why": "약식만 빼면 그대로 성립한다. 정밀 하나뿐이므로 문구만 고쳤다",
+        "measuredValue": 15810,
+        "previousEffect": "매일 감정 1회 무료"
+      },
+      {
+        "id": "compass",
+        "tier": "mid",
+        "name": "뱃사람의 나침반",
+        "effect": "매일 수요 동향 채널 무료",
+        "measuredValue": 7070,
+        "previousEffect": "매일 시장 예보 1종 무료"
+      },
+      {
+        "id": "broker-card",
+        "tier": "mid",
+        "name": "거간꾼의 명함",
+        "effect": "매일 출품 목록 채널 무료",
+        "redefinedAt": "2026-07-30",
+        "why": "중급의 역할이 무료 정보다. 나침반(시장 예보 무료)과 짝이 된다. 값어치 약 5,400",
+        "rejected": "족보 배수 +0.2 (값어치 +85,610 - 중급 하나가 상급 전부보다 세진다) · 보관칸 +1 (가죽 장부와 중복)",
+        "measuredValue": 13380,
+        "previousEffect": "매일 출품 목록 채널 무료"
+      },
+      {
+        "id": "royal-charter",
+        "tier": "high",
+        "name": "왕실 인가장",
+        "effect": "의뢰 5종 전부 제시",
+        "measuredValue": 73640,
+        "previousEffect": "의뢰 매일 5종 전부 제시"
+      },
+      {
+        "id": "house-crest",
+        "tier": "high",
+        "name": "명가의 문장",
+        "effect": "족보 배수 +0.2",
+        "redefinedAt": "2026-07-30",
+        "why": "상급의 역할이 규칙 변경이다. 값어치 +12,040",
+        "measuredValue": 70530,
+        "previousEffect": "감정 오차를 한 단계 낮춘다 (1~3일 ±20% · 4~12일 ±10%)",
+        "previousId": "crystal-ball",
+        "previousName": "예언자의 수정구",
+        "identity": "흩어진 물건들이 한 집안의 것이었음을 증명하는 낡은 문장",
+        "icon": "🏵️",
+        "visual": "은실로 수놓은 문장 조각. 네 귀가 닳았고 봉랍 자국이 남아 있다. 여섯 계열 어디에도 안 속하는 무늬여야 한다"
+      },
+      {
+        "id": "merchant-safe",
+        "tier": "high",
+        "name": "대상인의 금고",
+        "effect": "이월률 40 -> 45%",
+        "measuredValue": 64900,
+        "previousEffect": "이월률 40% -> 60%"
+      }
+    ],
+    "source": "미지의경매장_V5_유물9종_세부기획서.docx",
+    "measurementLimit": "확대경의 -6,770 은 잡음 안이다. 씨앗 800개로도 이 크기는 부호가 안 정해진다",
+    "tierAverages": {
+      "low": 14233,
+      "mid": 12087,
+      "high": 69690
+    },
+    "note": "9종을 같은 축에서 재서 다시 매겼다(6.36). 티어 평균 하급 14,233 · 중급 12,087 · 상급 69,690. 중급 셋이 정보 채널 셋(경쟁자·수요·출품)을 하나씩 맡는다",
+    "idMigration": {
+      "crystal-ball": "house-crest",
+      "note": "meta.relics 는 저장 데이터다. 옛 저장을 읽을 때 옮기지 않으면 이미 딴 유물이 사라진다"
+    }
+  },
+  "gradeBase": {
+    "common": 1500,
+    "rare": 4000,
+    "epic": 12000,
+    "legendary": 25000
+  },
+  "gradeBaseNote": "등급별 기준가. 코드(gen-rules.py · v6-sim.js)에만 있던 값을 2026-07-31 에 기록으로 옮겼다 - 값은 안 바꿨다. 계열은 같은 값을 쓰고 차이는 등급과 품질과 시세가 만든다",
+  "measurementPolicy": {
+    "at": "2026-07-31",
+    "simulator": "sim/v6-sim.js (balance.json 을 읽는다. 상수를 직접 안 들고 있다)",
+    "seeds": 900,
+    "seedBase": 900000,
+    "seedStep": 7,
+    "baseline": {
+      "opts": {},
+      "means": "기준 정책 - 감정하고, 추정 범위 아래를 노리고, 족보가 서면 판다. 대출도 의뢰 추격도 안 한다",
+      "result": {
+        "reach": 55.6,
+        "deadlineFail": 32.4,
+        "ruin": 0,
+        "survivorMedian": 218060,
+        "setsPerRun": 7.96,
+        "questsPerRun": 8.06,
+        "loansPerRun": 0,
+        "seizureRate": 0,
+        "interestPerRun": 0
+      }
+    },
+    "withLoan": {
+      "opts": {
+        "useLoan": true,
+        "loanTrigger": 8000
+      },
+      "means": "위에 대출만 켠다. 6.29 의 대출 수치는 이 정책에서 나온 것이다",
+      "result": {
+        "reach": 57.1,
+        "deadlineFail": 29.2,
+        "ruin": 0,
+        "survivorMedian": 216260,
+        "setsPerRun": 8.37,
+        "questsPerRun": 8.24,
+        "loansPerRun": 0.78,
+        "seizureRate": 0.287,
+        "interestPerRun": 1469
+      }
+    },
+    "why": "수치만 적고 정책을 안 적으면 재현이 안 된다. 2026-07-30 의 55.6% 를 재현 못 한 것이 그 이유였다"
+  }
+}

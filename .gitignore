@@ -1,0 +1,9 @@
+.team-loop/results/
+.team-loop/scopes/
+.team-loop/learning/
+.team-loop/actual-run-data/
+.team-loop/reviewer-cli/
+.team-loop-worktrees/
+Docs/*-DRAFT.zip
+Docs/*-FINAL.zip
+*.zip

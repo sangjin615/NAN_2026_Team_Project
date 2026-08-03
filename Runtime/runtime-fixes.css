@@ -1,0 +1,330 @@
+[hidden] { display: none !important; }
+
+:root {
+  --design-width: 1600;
+  --design-height: 900;
+  --live-panel: #090806e8;
+  --live-line: #9d7638;
+  --skin-root: "./assets/ui/skin-v1";
+}
+
+html, body { min-height: 100%; }
+body {
+  display: grid;
+  place-items: center;
+  margin: 0;
+  overflow: hidden;
+  background: #050403;
+}
+
+#app { width: 100%; }
+
+.scene {
+  --mockup: none;
+  position: relative;
+  width: min(100vw, calc(100vh * 16 / 9));
+  min-height: 0;
+  aspect-ratio: 16 / 9;
+  margin: 0 auto;
+  padding: clamp(14px, 2.15vw, 34px);
+  overflow: hidden;
+  border: 0;
+  background: #0b0906;
+  isolation: isolate;
+}
+
+.scene::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background: var(--mockup) center / 100% 100% no-repeat;
+  pointer-events: none;
+}
+
+.scene::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: #05040324;
+  pointer-events: none;
+}
+
+.scene > * { position: relative; z-index: 1; }
+
+[data-scene="hub"] { --mockup: url("./assets/scene-backgrounds/city.png"); }
+[data-scene="quests"] { --mockup: url("./assets/scene-backgrounds/quests.png"); }
+[data-scene="exchange"] { --mockup: url("./assets/scene-backgrounds/exchange.png"); }
+[data-scene="shop"] { --mockup: url("./assets/scene-backgrounds/shop.png"); }
+[data-scene="guild"] { --mockup: url("./assets/scene-backgrounds/guild.png"); }
+[data-scene="museum"] { --mockup: url("./assets/scene-backgrounds/museum.png"); }
+[data-scene="catalog"], [data-scene="auction"] { --mockup: url("./assets/scene-backgrounds/auction.png"); }
+[data-scene="settlement"] { --mockup: url("./assets/scene-backgrounds/settlement.png"); }
+[data-scene="relic"] { --mockup: url("./assets/scene-backgrounds/relic.png"); }
+[data-scene="result"] { --mockup: url("./assets/scene-backgrounds/result-success.png"); }
+[data-scene="result"].is-failure { --mockup: url("./assets/scene-backgrounds/result-failure.png"); }
+
+/* Title has no 1600x900 v2 sheet yet, so keep the clean source background. */
+[data-scene="title"] {
+  background: url("./assets/scene-backgrounds/title.png") center / cover no-repeat;
+  text-shadow: 0 3px 14px #000;
+}
+[data-scene="title"]::before { display: none; }
+[data-scene="title"]::after { background: #05040366; }
+[data-scene="title"] > .eyebrow,
+[data-scene="title"] > h1,
+[data-scene="title"] > h1 + p {
+  visibility: hidden;
+  height: 0;
+  margin: 0;
+}
+[data-scene="title"] #new-run,
+[data-scene="title"] #continue-run {
+  width: min(500px, 36vw);
+  height: min(116px, 8.2vw);
+  color: transparent;
+  text-shadow: none;
+}
+[data-scene="title"] #new-run { background-image: url("./assets/ui/vsl-v6.4/buttons/new-game.png"); }
+[data-scene="title"] #continue-run { background-image: url("./assets/ui/vsl-v6.4/buttons/continue.png"); }
+[data-scene="title"] #new-run:hover:not(:disabled),
+[data-scene="title"] #continue-run:hover:not(:disabled) { filter: brightness(1.15); }
+
+header,
+.hub-stats,
+.market,
+.quest-grid,
+.place-panel,
+.inventory-list,
+.info-actions,
+.relic-list,
+#relic-card,
+#settlement-summary,
+#run-summary {
+  padding: clamp(10px, 1.15vw, 18px);
+  border: 18px solid transparent;
+  border-image: url("./assets/ui/skin-v1/panel-dark.png") 46 fill / 18px / 0 stretch;
+  background: #12100ddd;
+  box-shadow: 0 10px 28px #0009;
+}
+
+header { margin-bottom: 12px; }
+h2 { margin: 8px 0; }
+.status { padding: 8px 12px; background: #070604db; }
+
+button {
+  min-width: 128px;
+  border: 0;
+  background: url("./assets/ui/skin-v1/button-primary.png") center / 100% 100% no-repeat;
+  box-shadow: none;
+  font-weight: 700;
+}
+button:hover:not(:disabled) { background-image: url("./assets/ui/skin-v1/button-primary-hover.png"); filter: none; }
+button:active:not(:disabled) { background-image: url("./assets/ui/skin-v1/button-primary-pressed.png"); transform: translateY(1px); }
+button:disabled { background-image: url("./assets/ui/skin-v1/button-primary-disabled.png"); opacity: .72; }
+button.secondary { background-image: url("./assets/ui/skin-v1/button-secondary.png"); }
+button.secondary:hover:not(:disabled) { background-image: url("./assets/ui/skin-v1/button-secondary-hover.png"); }
+button.secondary:active:not(:disabled) { background-image: url("./assets/ui/skin-v1/button-secondary-pressed.png"); }
+button.secondary:disabled { background-image: url("./assets/ui/skin-v1/button-secondary-disabled.png"); }
+
+/* City: the painted UI remains visible; these real controls sit on its hotspots. */
+[data-scene="hub"] > header {
+  position: absolute;
+  top: 1.5%; left: 1.2%;
+  width: 30%;
+  height: 10%;
+  margin: 0;
+  padding: 6px 14px;
+  opacity: .94;
+  border-image-source: url("./assets/ui/skin-v1/status-card.png");
+}
+[data-scene="hub"] > header h2 { display: none; }
+[data-scene="hub"] > header .eyebrow { margin: 0; }
+[data-scene="hub"] .hub-stats,
+[data-scene="hub"] .market {
+  position: absolute;
+  left: 32%;
+  top: 1.5%;
+  display: flex;
+  gap: 8px;
+  margin: 0;
+  padding: 7px 10px;
+  font-size: clamp(9px, .75vw, 12px);
+  opacity: .94;
+}
+[data-scene="hub"] .market { left: auto; right: 1.2%; top: auto; bottom: 1.4%; max-width: 43%; }
+[data-scene="hub"] #download-log { position: absolute; right: 1.5%; top: 11%; min-width: 0; padding: 6px 10px; font-size: 11px; opacity: .75; }
+[data-scene="hub"] #hub-message { position: absolute; left: 40%; bottom: 1.4%; margin: 0; }
+.place-grid { position: absolute; inset: 0; margin: 0; padding: 0; }
+.place-grid button {
+  position: absolute;
+  min-width: 0;
+  padding: 0;
+  background-image: url("./assets/ui/skin-v1/tab-inactive.png");
+  box-shadow: 0 8px 24px #0009;
+  color: #f3ead7;
+  font-size: clamp(12px, 1.35vw, 22px);
+  text-shadow: 0 2px 5px #000;
+}
+.place-grid button:hover, .place-grid button:focus-visible { background-image: url("./assets/ui/skin-v1/tab-active.png"); outline: none; }
+.place-grid button[data-place="quests"] { left: 12%; top: 45%; width: 16%; height: 7%; }
+.place-grid button[data-place="catalog"] { left: 50.5%; top: 45%; width: 17%; height: 7%; }
+.place-grid button[data-place="exchange"] { left: 72%; top: 45%; width: 17%; height: 7%; }
+.place-grid button[data-place="guild"] { left: 11.5%; top: 76%; width: 17%; height: 7%; }
+.place-grid button[data-place="shop"] { left: 35%; top: 76%; width: 16%; height: 7%; }
+.place-grid button[data-place="museum"] { left: 55.5%; top: 76%; width: 17%; height: 7%; }
+
+/* Interior scenes use the mockup as art direction while live panels replace data. */
+.place { padding-top: 6.5%; }
+.place header { max-width: 48%; }
+.info-actions { display: flex; gap: 10px; width: fit-content; }
+.inventory-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  width: 68%;
+  max-height: 54vh;
+  overflow: auto;
+}
+.inventory-list article { display: grid; grid-template-columns: 1fr auto; gap: 7px; padding: 10px; background: #18130ef2; border: 1px solid #604b2d; }
+.inventory-list article label { grid-column: 1 / -1; }
+.quest-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 8%; }
+.quest-grid article { display: grid; gap: 7px; padding: 12px; background: #18130ef2; }
+.relic-list { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+
+/* Quest office: use the lower parchment as a three-column live board. */
+[data-scene="quests"] header {
+  position: absolute; left: 2.2%; top: 9.5%; width: 46%; height: 16%;
+}
+[data-scene="quests"] .quest-grid {
+  position: absolute; left: 2.2%; right: 2.2%; top: 38%; bottom: 7%;
+  grid-template-columns: repeat(3, 1fr);
+  margin: 0;
+  overflow: auto;
+}
+[data-scene="quests"] .quest-grid article { align-content: start; min-height: 0; }
+[data-scene="quests"] #quest-message { position: absolute; left: 34%; bottom: 1.5%; margin: 0; }
+[data-scene="quests"] > [data-place="city"] { position: absolute; left: 2.2%; bottom: 1.5%; }
+
+/* Exchange: inventory on the large left parchment, market data on the right. */
+[data-scene="exchange"] { padding: 0; }
+[data-scene="exchange"] header {
+  position: absolute; left: 2.2%; top: 9.5%; width: 45%; height: 15%; margin: 0;
+}
+[data-scene="exchange"] .info-actions {
+  position: absolute; left: 2.2%; top: 26%; width: 63%;
+  padding: 8px; margin: 0;
+}
+[data-scene="exchange"] .info-actions button { min-width: 0; flex: 1; }
+[data-scene="exchange"] .inventory-list {
+  position: absolute; left: 2.2%; top: 36%; width: 64%; height: 48%;
+  max-height: none; margin: 0; padding: 12px;
+  grid-template-columns: repeat(3, 1fr);
+  border: 20px solid transparent;
+  border-image: url("./assets/ui/skin-v1/panel-parchment.png") 48 fill / 20px / 0 stretch;
+  background: #f0dfc6e8; color: #21180f;
+}
+[data-scene="exchange"] .inventory-list > p { color: #44372a; }
+[data-scene="exchange"] .inventory-list article { color: #eee7d8; }
+[data-scene="exchange"] .market-board {
+  position: absolute; right: 2.1%; top: 20.5%; width: 30.5%; height: 66%;
+  padding: 18px; overflow: auto;
+  border: 20px solid transparent;
+  border-image: url("./assets/ui/skin-v1/panel-parchment.png") 48 fill / 20px / 0 stretch;
+  background: #f0dfc6ea; color: #21180f;
+}
+.market-board h3 { margin: 0 0 14px; font-size: clamp(17px, 1.45vw, 25px); }
+.market-rates { display: grid; gap: 8px; }
+.market-rates > div { display: grid; grid-template-columns: 1fr auto auto; gap: 10px; align-items: center; padding: 10px 4px; border-bottom: 1px solid #8b7962; }
+.market-rates strong { font-size: 1.1em; }
+.market-rates .rise { color: #33702e; }.market-rates .fall { color: #a63c2f; }
+.market-board p { margin-top: 18px; color: #5c4b38; line-height: 1.55; }
+[data-scene="exchange"] .actions { position: absolute; left: 38.5%; bottom: 8%; margin: 0; }
+[data-scene="exchange"] #exchange-message { position: absolute; left: 25%; bottom: 1.5%; margin: 0; }
+[data-scene="exchange"] .return-city { position: absolute; left: 2.2%; bottom: 1.5%; }
+
+/* Merchant: two real cards occupy the empty lower panels. */
+[data-scene="shop"] { padding: 0; }
+[data-scene="shop"] header {
+  position: absolute; left: 2.2%; top: 9.5%; width: 45%; height: 15%; margin: 0;
+}
+[data-scene="shop"] #shop-detail {
+  position: absolute; left: 2.3%; right: 3.2%; top: 44%; bottom: 9%;
+  display: grid; grid-template-columns: 32% 1fr; gap: 3.2%;
+  margin: 0; padding: 0; border: 0; background: transparent; box-shadow: none;
+}
+[data-scene="shop"] #shop-detail section {
+  padding: 22px;
+  border: 20px solid transparent;
+  border-image: url("./assets/ui/skin-v1/panel-parchment.png") 48 fill / 20px / 0 stretch;
+  background: #f0dfc6e8; color: #21180f;
+}
+[data-scene="shop"] #shop-detail .eyebrow { color: #745322; }
+[data-scene="shop"] #shop-detail h3 { margin: 6px 0 16px; font-size: clamp(22px, 2vw, 34px); }
+[data-scene="shop"] #shop-detail dl { display: grid; gap: 10px; }
+[data-scene="shop"] #shop-detail dl div { display: flex; justify-content: space-between; padding-bottom: 8px; border-bottom: 1px solid #8b7962; }
+[data-scene="shop"] #shop-detail dd { margin: 0; font-weight: 800; }
+[data-scene="shop"] #shop-upgrade { position: absolute; right: 6%; bottom: 12%; width: 22%; height: 8%; }
+[data-scene="shop"] #shop-message { position: absolute; left: 31%; bottom: 1.5%; margin: 0; }
+[data-scene="shop"] .return-city { position: absolute; left: 2.2%; bottom: 1.5%; }
+
+.catalog-grid { margin-top: 8%; padding: 12px; background: #080705e6; }
+.catalog-grid .lot-card { background: #15110ced; }
+.catalog-grid .mini-sprite { height: min(14vh, 130px); }
+
+.auction-layout {
+  width: 60%;
+  margin: 4% auto 0;
+  padding: 14px;
+  grid-template-columns: minmax(220px, .8fr) 1fr;
+  border: 20px solid transparent;
+  border-image: url("./assets/ui/skin-v1/panel-dark.png") 48 fill / 20px / 0 stretch;
+  background: #080705e8;
+}
+.sprite-stage { min-height: min(36vh, 330px); }
+.auction-feed { min-height: 72px; }
+.actions { width: fit-content; margin: 12px auto 0; padding: 10px; border: 16px solid transparent; border-image: url("./assets/ui/skin-v1/panel-dark.png") 48 fill / 16px / 0 stretch; background: #11100ddd; }
+
+[data-scene="settlement"], [data-scene="result"], [data-scene="relic"] { display: grid; place-content: center; text-align: center; }
+[data-scene="settlement"] > *, [data-scene="result"] > *, [data-scene="relic"] > * { width: min(720px, 75vw); }
+#relic-card { margin: 0 auto; }
+.failure { color: #ff9b84; font-weight: 800; }
+
+/* Reusable image cards and tabs. */
+.lot-card,
+.quest-grid article,
+.inventory-list article,
+.relic-list article {
+  border: 14px solid transparent;
+  border-image: url("./assets/ui/skin-v1/item-card.png") 42 fill / 14px / 0 stretch;
+  background: #efe0c9e8;
+  color: #21180f;
+}
+.lot-card p, .quest-grid article small { color: #574735; }
+.info-actions button {
+  background-image: url("./assets/ui/skin-v1/tab-inactive.png");
+}
+.info-actions button:hover:not(:disabled),
+.info-actions button:focus-visible {
+  background-image: url("./assets/ui/skin-v1/tab-active.png");
+}
+#relic-card,
+#run-summary {
+  min-height: 360px;
+  padding: 100px 72px 52px;
+  border: 0;
+  border-image: none;
+  background: url("./assets/ui/vsl-v6.4/popups/common.png") center / 100% 100% no-repeat;
+  box-shadow: none;
+  color: #2b2015;
+}
+#return-title { background-image: url("./assets/ui/vsl-v6.4/buttons/back.png"); color: transparent; }
+
+@media (max-width: 900px), (max-height: 620px) {
+  .scene { font-size: 12px; }
+  .scene button { min-width: 92px; padding: 7px 10px; }
+  .scene h2 { font-size: 22px; }
+  .inventory-list { max-height: 45vh; }
+  .quest-grid { margin-top: 3%; }
+}

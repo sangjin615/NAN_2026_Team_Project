@@ -1,0 +1,114 @@
+{
+  "measuredAt": "2026-08-02T14:14:43.778Z",
+  "windowDays": 8,
+  "repository": {
+    "commits": 10,
+    "contributors": [
+      "sangjin615",
+      "GD_JM"
+    ],
+    "commitLog": [
+      {
+        "hash": "5481b41",
+        "at": "2026-08-02T04:23:53+09:00",
+        "author": "sangjin615",
+        "subject": "0802 임상진 작업내역"
+      },
+      {
+        "hash": "efbcccf",
+        "at": "2026-07-31T17:59:29+09:00",
+        "author": "sangjin615",
+        "subject": "배경 사진 비율 수정"
+      },
+      {
+        "hash": "8b9f153",
+        "at": "2026-07-31T17:15:00+09:00",
+        "author": "GD_JM",
+        "subject": "샘플 이미지 스케일링 v2"
+      },
+      {
+        "hash": "7f12dad",
+        "at": "2026-07-31T16:45:06+09:00",
+        "author": "sangjin615",
+        "subject": "화면별 배경 이미지 추가"
+      },
+      {
+        "hash": "b0183fd",
+        "at": "2026-07-31T16:36:50+09:00",
+        "author": "GD_JM",
+        "subject": "Delete Sample_Image_1600x900 directory"
+      },
+      {
+        "hash": "8277145",
+        "at": "2026-07-31T16:10:23+09:00",
+        "author": "GD_JM",
+        "subject": "Merge branch 'main' of https://github.com/sangjin615/NAN_2026_Team_Project"
+      },
+      {
+        "hash": "c8ae6e8",
+        "at": "2026-07-31T16:08:19+09:00",
+        "author": "GD_JM",
+        "subject": "샘플 이미지 스케일링 완료"
+      },
+      {
+        "hash": "7f654b6",
+        "at": "2026-07-31T14:43:09+09:00",
+        "author": "sangjin615",
+        "subject": "이미지 파일 폴더 구분"
+      },
+      {
+        "hash": "f13899c",
+        "at": "2026-07-31T01:43:45+09:00",
+        "author": "sangjin615",
+        "subject": "통합 기획서 V5 업로드"
+      },
+      {
+        "hash": "241c7bf",
+        "at": "2026-07-31T01:42:42+09:00",
+        "author": "sangjin615",
+        "subject": "샘플 이미지 업로드"
+      }
+    ]
+  },
+  "runtime": {
+    "files": 342,
+    "bytes": 1566262,
+    "javascriptModules": 19,
+    "javascriptLines": 891,
+    "automatedTests": 8
+  },
+  "assets": {
+    "projectImages": 46,
+    "itemSprites": 240
+  },
+  "generation900": {
+    "measuredAt": "2026-08-02T14:14:43.665Z",
+    "seeds": 900,
+    "totalLots": 86400,
+    "invalidSchedules": 0,
+    "gradeDistribution": {
+      "COMMON": {
+        "count": 21433,
+        "rate": 0.2481
+      },
+      "RARE": {
+        "count": 32551,
+        "rate": 0.3767
+      },
+      "EPIC": {
+        "count": 21744,
+        "rate": 0.2517
+      },
+      "LEGENDARY": {
+        "count": 10672,
+        "rate": 0.1235
+      }
+    }
+  },
+  "humanInputsNeeded": {
+    "manualUiBaselineMinutes": null,
+    "vslUiMinutes": null,
+    "teamPlaytestCount": null,
+    "qualitativeFeedback": []
+  }
+}

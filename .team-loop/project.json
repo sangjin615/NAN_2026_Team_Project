@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "name": "NAN_2026_Team_Project",
+  "initializedAt": "2026-08-02T14:31:03.058Z",
+  "mode": "AUTO",
+  "sourceRoots": [
+    "Runtime/**"
+  ],
+  "testRoots": [
+    "Runtime/test/**"
+  ],
+  "documentRoots": [
+    "Docs/**",
+    "*.md"
+  ],
+  "protectedPaths": [
+    ".env",
+    ".env.*",
+    "secrets/**",
+    "production-data/**"
+  ],
+  "defaultExecutor": "codex",
+  "defaultProfile": "project-default",
+  "autoMerge": false,
+  "detectedStack": "generic"
+}

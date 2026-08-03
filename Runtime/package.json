@@ -1,0 +1,12 @@
+{
+  "name": "unknown-auction-vsl-runtime",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node dev-server.js",
+    "test": "node --test test/*.test.js",
+    "measure": "node tools/measure-generation.js && node tools/measure-project.js",
+    "measure:project": "node tools/measure-project.js",
+    "experiment:prepare": "node tools/prepare-local-generation-experiment.js"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "base_id": "BASE-CLK-08",
+  "item_name_ko": "유리돔 골격시계",
+  "category": "CLK",
+  "category_name_ko": "시계",
+  "canvas": [
+    128,
+    128
+  ],
+  "grades": {
+    "COMMON": "02_CLK_시계/08_BASE-CLK-08_유리돔_골격시계/01_COMMON_일반/BASE-CLK-08_COMMON.png",
+    "RARE": "02_CLK_시계/08_BASE-CLK-08_유리돔_골격시계/02_RARE_레어/BASE-CLK-08_RARE.png",
+    "EPIC": "02_CLK_시계/08_BASE-CLK-08_유리돔_골격시계/03_EPIC_에픽/BASE-CLK-08_EPIC.png",
+    "LEGENDARY": "02_CLK_시계/08_BASE-CLK-08_유리돔_골격시계/04_LEGENDARY_전설/BASE-CLK-08_LEGENDARY.png"
+  }
+}

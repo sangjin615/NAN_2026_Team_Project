@@ -1,0 +1,89 @@
+{
+  "experiment": {
+    "model": "qwen3:14b",
+    "mode": "daily-content",
+    "profile": "skill",
+    "promptChars": 2062,
+    "promptEvalCount": 2292,
+    "latencyMs": 38220,
+    "createdAt": "2026-08-02T14:23:54.089Z",
+    "evalCount": 1176,
+    "attempts": [
+      {
+        "attempt": 1,
+        "errors": []
+      }
+    ]
+  },
+  "output": {
+    "schemaVersion": "1.0",
+    "day": 1,
+    "marketHeadline": "이상한 흔적이 남은 날",
+    "lots": [
+      {
+        "lotId": "team-loop-local-001-d1-l1",
+        "displayName": "붉은 무대막 희곡집",
+        "description": "연극 무대의 붉은 막을 덮은 희곡집. 손으로 만지면 미묘한 진동이 느껴짐.",
+        "rumor": "이 책은 연극의 실제 죽은 배우가 쓴 것으로 알려짐.",
+        "setHint": "희곡집의 냄새가 특별함.",
+        "npcReaction": "『이 책은 연극의 영혼을 담고 있소.』"
+      },
+      {
+        "lotId": "team-loop-local-001-d1-l2",
+        "displayName": "황동뚜껑 육각 항아리",
+        "description": "오래된 항아리. 손상된 뚜껑이 투명하게 보임. 내부는 비어 있음.",
+        "rumor": "이 항아리가 담은 물은 죽은 사람의 눈물이었다고 함.",
+        "setHint": "뚜껑의 각이 이상함.",
+        "npcReaction": "『이 항아리는 영원한 욕망을 상징하오.』"
+      },
+      {
+        "lotId": "team-loop-local-001-d1-l3",
+        "displayName": "카메오 펜던트",
+        "description": "불꽃처럼 반짝이는 펜던트. 중앙에 낯선 얼굴이 새겨짐.",
+        "rumor": "이 펜던트는 유령 연기자의 얼굴이 새겨져 있다고 함.",
+        "setHint": "펜던트의 빛이 변함.",
+        "npcReaction": "『이 장신구는 연기자의 영혼을 담고 있소.』"
+      },
+      {
+        "lotId": "team-loop-local-001-d1-l4",
+        "displayName": "제본공 견본첩",
+        "description": "제본공의 손으로 만든 견본첩. 표지에 낯선 문양이 새겨짐.",
+        "rumor": "이 견본첩은 죽은 제본공의 마지막 작품이라 함.",
+        "setHint": "첩의 테두리가 이상함.",
+        "npcReaction": "『이 책은 죽은 장인의 손길이 닿았소.』"
+      },
+      {
+        "lotId": "team-loop-local-001-d1-l5",
+        "displayName": "북문 거리 행렬",
+        "description": "북문 거리의 행렬을 묘사한 수첩. 흐릿한 흑백 사진이 부록에 있음.",
+        "rumor": "이 수첩에 기록된 행렬은 실은 유령의 행진이었다고 함.",
+        "setHint": "사진의 사람들은 움직임이 있음.",
+        "npcReaction": "『이 수첩은 죽은 이들의 서사가 담겨 있소.』"
+      },
+      {
+        "lotId": "team-loop-local-001-d1-l6",
+        "displayName": "등대 창가의 가족",
+        "description": "등대 창가에서 살던 가족의 일기. 마지막 페이지는 흐릿하게 찢어짐.",
+        "rumor": "이 가족은 등대를 지키던 유령으로 전해짐.",
+        "setHint": "일기의 마지막 페이지가 특별함.",
+        "npcReaction": "『이 일기는 죽은 가족의 마지막 기도가 담겨 있소.』"
+      },
+      {
+        "lotId": "team-loop-local-001-d1-l7",
+        "displayName": "루비 타이핀·커프스 세트",
+        "description": "루비로 장식된 타이핀과 커프스. 손에 닿는 순간 뜨거워짐.",
+        "rumor": "이 세트는 유령 연기자의 마지막 무대에서 착용했다고 함.",
+        "setHint": "루비가 뜨거운 이유가 있음.",
+        "npcReaction": "『이 장신구는 연기자의 마지막 순간을 담고 있소.』"
+      },
+      {
+        "lotId": "team-loop-local-001-d1-l8",
+        "displayName": "청록 뚜껑 소금단지",
+        "description": "청록색 뚜껑의 소금단지. 내부는 비어 있지만 향기가 남음.",
+        "rumor": "이 단지에 담은 소금은 유령의 눈물이었다고 함.",
+        "setHint": "뚜껑의 색이 특별함.",
+        "npcReaction": "『이 단지는 영원한 욕망을 상징하오.』"
+      }
+    ]
+  }
+}

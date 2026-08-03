@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "profiles": {
+    "project-default": {
+      "label": "generic project",
+      "description": "Project-local commands detected by team-loop init.",
+      "commands": [
+        {
+          "file": "git",
+          "args": [
+            "diff",
+            "--check"
+          ],
+          "expectedExit": 0,
+          "timeoutMs": 60000
+        }
+      ]
+    },
+    "auction-generation": {
+      "label": "Unknown Auction local generation",
+      "description": "Validates the expanded run blueprint, daily presentation copy, game tests, and patch integrity.",
+      "commands": [
+        {"file":"node","args":["{teamLoopRoot}/tools/verification/check-auction-content.mjs","Runtime/reports/local-model-experiment/run-start-request.json","Runtime/reports/local-model-experiment/run-start-output.json"],"expectedExit":0,"timeoutMs":60000},
+        {"file":"node","args":["{teamLoopRoot}/tools/verification/check-auction-content.mjs","Runtime/reports/local-model-experiment/day-1-request.json","Runtime/reports/local-model-experiment/day-1-output.json"],"expectedExit":0,"timeoutMs":60000},
+        {"file":"npm.cmd","args":["test"],"cwd":"Runtime","expectedExit":0,"timeoutMs":120000},
+        {"file":"git","args":["diff","--check"],"expectedExit":0,"timeoutMs":60000}
+      ]
+    }
+  }
+}

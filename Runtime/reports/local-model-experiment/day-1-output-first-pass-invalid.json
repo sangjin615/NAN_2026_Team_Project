@@ -1,0 +1,80 @@
+{
+  "experiment": {
+    "model": "qwen3:14b",
+    "mode": "daily-content",
+    "latencyMs": 23797,
+    "createdAt": "2026-08-02T14:12:27.021Z",
+    "evalCount": 1057
+  },
+  "output": {
+    "schemaVersion": "1.0",
+    "day": 1,
+    "marketHeadline": "고대 유물의 첫 번째 등장",
+    "lots": [
+      {
+        "lotId": "team-loop-local-001-d1-l1",
+        "displayName": "붉은 무대막 희곡집",
+        "description": "먼 옛날 왕실 연극단이 사용했던 희곡집. 낡은 흔적이지만, 페이지 속에 숨은 비밀이 있다.",
+        "rumor": "무대 뒤에서 속삭이는 연극의 진실을 간파한 자만이 그 가치를 알 수 있다.",
+        "setHint": "금빛 왕관이 숨긴 과거",
+        "npcReaction": "이 책은 왕의 저주를 받은 연극의 마지막 장을 기록했다고 들었습니다."
+      },
+      {
+        "lotId": "team-loop-local-001-d1-l2",
+        "displayName": "황동뚜껑 육각 항아리",
+        "description": "오래된 항아리로, 손상된 상태지만 이국적인 무늬가 남아 있다.",
+        "rumor": "해양 신전에서 유래한 것으로 보이는 이 항아리, 속에 숨은 것이 무엇인지 궁금하다.",
+        "setHint": "바다의 저주",
+        "npcReaction": "이 항아리가 담았던 것에 대해선 아무도 말을 하지 않더군요."
+      },
+      {
+        "lotId": "team-loop-local-001-d1-l3",
+        "displayName": "카메오 펜던트",
+        "description": "고대 해양 문명의 조각을 새긴 펜던트. 반짝이는 카메오가 눈을 끈다.",
+        "rumor": "별의 예언이 새겨진 카메오, 그 속에 숨은 운명을 간파한 자는 누구인가.",
+        "setHint": "천문학자의 일기",
+        "npcReaction": "그 펜던트를 보면 별이 깜빡이는 것 같아요."
+      },
+      {
+        "lotId": "team-loop-local-00身-l4",
+        "displayName": "제본공 견본첩",
+        "description": "오래된 제본공이 남긴 견본첩. 손으로 그린 그림이 독특하다.",
+        "rumor": "이 견본첩은 잃어버린 집행자의 유산에 대한 단서를 담고 있다.",
+        "setHint": "왕실의 유산",
+        "npcReaction": "그 견본첩을 보면 왕의 시선이 따라오는 듯해요."
+      },
+      {
+        "lotId": "team-loop-local-001-d1-l5",
+        "displayName": "북문 거리 행렬",
+        "description": "북문 거리의 붐비는 장면을 묘사한 책. 생생한 묘사로 유명하다.",
+        "rumor": "이 책의 묘사 속에 숨은 행렬의 비밀, 그 끝에 무엇이 기다리고 있는가.",
+        "setHint": "바다의 저주",
+        "npcReaction": "북문 거리의 행렬은 그저 지나가던 행렬이 아니었습니다."
+      },
+      {
+        "lotId": "team-loop-local-001-d1-l6",
+        "displayName": "등대 창가의 가족",
+        "description": "등대에서 살던 가족의 이야기를 담은 책. 애절한 감정이 묻어 있다.",
+        "rumor": "등대 창가의 가족, 그 뒤에 숨은 비밀스러운 유산을 간파한 자는 누구인가.",
+        "setHint": "초록색 꽃의 비밀",
+        "npcReaction": "등대의 그림자는 늘 어둠 속에 남아 있더군요."
+      },
+      {
+        "lotId": "team-loop-local-001-d1-l7",
+        "displayName": "루비 타이핀·커프스 세트",
+        "description": "고대의 귀족들이 사용했던 루비 장신구. 화려하면서도 묘한 분위기를 품고 있다.",
+        "rumor": "별의 그림자가 움직이는 루비, 그 속에 숨은 운명을 간파한 자는 누구인가.",
+        "setHint": "별의 예언",
+        "npcReaction": "그 루비는 별을 따라 움직이는 것 같아요."
+      },
+      {
+        "lotId": "team-loop-local-001-d1-l8",
+        "displayName": "청록 뚜껑 소금단지",
+        "description": "청록색 뚜껑의 소금단지. 오래된 제작 방식으로 만들어졌다.",
+        "rumor": "이 소금단지 속에 숨은 것은 소금보다 더 값진 것일지도 모른다.",
+        "setHint": "금단의 식물",
+        "npcReaction": "그 소금단지가 담았던 것에 대해선 아무도 말을 하지 않더군요."
+      }
+    ]
+  }
+}

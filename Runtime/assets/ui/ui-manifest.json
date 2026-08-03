@@ -1,0 +1,23 @@
+{
+  "version": "skin-v1",
+  "source": "Hybrid: exact VSL v6.4/project popup assets where available; AI-derived reusable skins only where the source package has no text-free scalable asset",
+  "exactAssets": {
+    "titleButtons": "vsl-v6.4/buttons/",
+    "popups": "vsl-v6.4/popups/"
+  },
+  "panels": {
+    "dark": { "path": "skin-v1/panel-dark.png", "slice": [48, 48, 48, 48] },
+    "parchment": { "path": "skin-v1/panel-parchment.png", "slice": [48, 48, 48, 48] },
+    "status": { "path": "skin-v1/status-card.png", "slice": [40, 40, 40, 40] },
+    "popup": { "path": "skin-v1/popup-frame.png", "slice": [44, 44, 44, 44] },
+    "itemCard": { "path": "skin-v1/item-card.png", "slice": [36, 36, 36, 36] }
+  },
+  "buttons": {
+    "primary": ["button-primary.png", "button-primary-hover.png", "button-primary-pressed.png", "button-primary-disabled.png"],
+    "secondary": ["button-secondary.png", "button-secondary-hover.png", "button-secondary-pressed.png", "button-secondary-disabled.png"]
+  },
+  "tabs": {
+    "active": "skin-v1/tab-active.png",
+    "inactive": "skin-v1/tab-inactive.png"
+  }
+}
