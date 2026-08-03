@@ -26,6 +26,18 @@ let selectedSlot = 1;
 let slotMode = 'new';
 let museumReturn = 'city';
 
+const relicArt = {
+  'old-scale': '황금 저울의 심장.png',
+  'leather-ledger': '끝나지 않는 장부.png',
+  'worn-seal': '봉인된 유리잔.png',
+  magnifier: '침묵하는 감정안.png',
+  compass: '상인의 별 나침반.png',
+  'broker-card': '망각의 낙찰표.png',
+  'royal-charter': '도시의 축소 모형.png',
+  'house-crest': '마지막 상회의 문장.png',
+  'merchant-safe': '검은 금고의 열쇠.png',
+};
+
 const money = (value) => `${Math.round(Number(value || 0)).toLocaleString('ko-KR')} G`;
 const status = (text, tone = 'ready') => { const element = document.querySelector('#boot-status'); element.textContent = text; element.dataset.tone = tone; };
 const ownedItems = () => state.inventory.filter((item) => !item.sold && !item.delivered);
@@ -219,9 +231,10 @@ function renderMuseum(returnTo = 'city') {
   adapter.showScene('museum');
   const owned = new Set(state?.metaRelics || loadMeta());
   const relics = balance.relics.list;
-  document.querySelector('#relic-list').innerHTML = relics.map((relic) => {
+  document.querySelector('#relic-list').innerHTML = relics.map((relic, index) => {
     const isOwned = owned.has(relic.id);
-    return `<article class="${isOwned ? 'is-owned' : 'is-locked'}" aria-label="${isOwned ? relic.name : '미획득 유물'}">${isOwned ? `<b>${relic.name}</b><span>${relic.effect}</span>` : ''}</article>`;
+    const art = relicArt[relic.id];
+    return `<article class="${isOwned ? 'is-owned' : 'is-locked'}" aria-label="${isOwned ? relic.name : '미획득 유물'}" data-slot="${index + 1}">${isOwned && art ? `<img src="./assets/relics/${encodeURIComponent(art)}" alt=""><b>${relic.name}</b><span>${relic.effect}</span>` : ''}</article>`;
   }).join('');
 }
 
@@ -244,6 +257,12 @@ function renderAuction() {
   adapter.setText('lot-grade', lot.grade); adapter.setText('lot-description', lot.content.description); adapter.setText('base-price', money(lot.pricing.basePrice));
   adapter.setText('current-bid', money(state.auctionSession.currentPrice)); adapter.setText('cash', money(state.cash)); adapter.setSprite('current-lot', spriteUrl(lot, lot.grade)); adapter.setEffects('current-lot', lot.visualEffects);
   document.querySelector('#auction-feed').innerHTML = state.auctionSession.feed.slice(-4).map((line) => `<p>${line}</p>`).join('');
+  const participants = [
+    { name: '당신', budget: state.cash, leader: state.auctionSession.leader === 'player', player: true },
+    ...state.auctionSession.bots.map((bot) => ({ name: bot.name, budget: bot.maxBid, leader: state.auctionSession.leader === bot.id })),
+  ];
+  document.querySelector('#auction-participants').innerHTML = `<h3>참가자 명단 (${participants.length} / 4)</h3>${participants.map((participant, index) => `<div class="participant ${participant.leader ? 'is-leading' : ''}"><span>${participant.player ? '나' : index}</span><b>${participant.name}</b><strong>${money(participant.budget)}</strong></div>`).join('')}`;
+  document.querySelector('#auction-lot-status').innerHTML = `<b>경매 ${state.lotIndex + 1} / 8</b><span>${lot.grade}</span><strong>${money(state.auctionSession.currentPrice)}</strong>`;
 }
 
 function finishLot(action, multiplier = 1) {
