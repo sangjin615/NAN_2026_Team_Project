@@ -72,10 +72,16 @@ function loadMeta() {
 
 function renderSaveSlots() {
   const slots = store.list();
+  const savedTime = (value) => value ? new Intl.DateTimeFormat('ko-KR', { month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hour12: false }).format(new Date(value)) : '';
   document.querySelector('#save-slots').innerHTML = slots.map((slot) => `
-    <button class="save-slot ${slot.slot === selectedSlot ? 'is-selected' : ''}" data-save-slot="${slot.slot}">
-      <b>SLOT ${slot.slot}</b>
-      ${slot.empty ? '<span>빈 저장 슬롯</span>' : `<span>${slot.day}일차 · ${money(slot.cash)}</span><small>상회 ${slot.shopStage}단계</small>`}
+    <button class="save-slot slot-${slot.slot} ${slot.empty ? 'is-empty' : ''} ${slot.slot === selectedSlot ? 'is-selected' : ''}" data-save-slot="${slot.slot}">
+      <b class="slot-number">${String(slot.slot).padStart(2, '0')}</b>
+      <span class="slot-preview ${slot.empty ? 'is-empty' : ''}" aria-hidden="true">${slot.empty ? '+' : ''}</span>
+      ${slot.empty ? '<span class="empty-slot-copy"><strong>빈 슬롯</strong><small>새 게임을 시작하여 저장할 수 있습니다.</small></span>' : `
+        <span class="slot-stat"><small>현재 일차</small><strong>${slot.day}일차</strong></span>
+        <span class="slot-stat"><small>보유 자산</small><strong>${money(slot.cash)}</strong></span>
+        <span class="slot-stat"><small>상회 단계</small><strong>${slot.shopStage}단계</strong></span>
+        <span class="slot-stat saved-at"><small>마지막 저장</small><strong>${savedTime(slot.savedAt)}</strong></span>`}
     </button>`).join('');
   document.querySelectorAll('[data-save-slot]').forEach((button) => {
     button.onclick = () => { selectedSlot = Number(button.dataset.saveSlot); renderSaveSlots(); };
@@ -85,6 +91,9 @@ function renderSaveSlots() {
   document.querySelector('#new-run').textContent = selected?.empty ? '새 여정 시작' : '선택 슬롯 덮어쓰기';
   document.querySelector('#new-run').hidden = slotMode !== 'new';
   document.querySelector('#continue-run').hidden = slotMode !== 'continue';
+  document.querySelector('#delete-save').hidden = slotMode !== 'continue';
+  document.querySelector('#delete-save').disabled = selected?.empty ?? true;
+  document.querySelector('#save-guide').textContent = slotMode === 'continue' ? '저장 슬롯을 선택한 후 실행 버튼을 눌러 진행하세요.' : '새 여정을 저장할 슬롯을 선택하세요.';
   document.querySelector('#save-mode-title').textContent = slotMode === 'new' ? '새 여정 슬롯 선택' : '이어할 여정 선택';
 }
 
@@ -486,6 +495,12 @@ document.querySelector('#new-run').onclick = () => newRun(document.querySelector
 document.querySelector('#open-new-slots').onclick = () => { audio.playBgm('title'); openSlotScene('new'); };
 document.querySelector('#open-continue-slots').onclick = () => { audio.playBgm('title'); openSlotScene('continue'); };
 document.querySelector('#back-title').onclick = () => adapter.showScene('title');
+document.querySelector('#save-settings').onclick = () => document.querySelector('#settings-dialog').showModal();
+document.querySelector('#delete-save').onclick = () => {
+  const slot = store.list().find((entry) => entry.slot === selectedSlot);
+  if (!slot || slot.empty || !window.confirm(`SLOT ${selectedSlot} 저장을 삭제할까요?`)) return;
+  store.clear(selectedSlot); renderSaveSlots();
+};
 document.querySelector('#continue-run').onclick = () => { state = store.load(selectedSlot); if (!state) return status('유효한 저장 데이터가 없습니다.', 'error'); ({ auction: renderAuction, settlement: renderSettlement, relic: renderRelic, result: renderResult, quests: renderQuestOffice, tavern: renderTavern, exchange: renderExchange, shop: renderShop, guild: renderGuild, museum: () => renderMuseum('city'), catalog: renderCatalog }[state.phase] || renderHub)(); };
 document.querySelector('#start-auction').onclick = renderAuction;
 document.querySelectorAll('[data-raise]').forEach((button) => button.onclick = () => finishLot('bid', Number(button.dataset.raise)));

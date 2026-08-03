@@ -157,6 +157,96 @@ body {
 [data-scene="save"] .save-actions { position: absolute; left: 64%; top: 68.5%; width: 16%; display: block; }
 [data-scene="save"] .save-actions button { width: 100%; }
 [data-scene="save"] #back-title { position: absolute; left: 7%; top: 87.5%; width: 16%; }
+[data-scene="save"] #save-settings {
+  position: absolute; right: 2.5%; top: 2%; width: min(70px,5vw); aspect-ratio: 1;
+  min-width: 0; padding: 0; border: 0; color: transparent;
+  background: url("./assets/ui/vsl-v6.4/buttons/settings.png") center / contain no-repeat;
+}
+[data-scene="save"] #delete-save { display: none; }
+[data-scene="save"] #save-guide {
+  position: absolute; left: 25%; bottom: 2%; width: 50%; margin: 0; padding: 10px;
+  text-align: center; color: #ead9bd;
+}
+
+/* Continue screen follows the 1600x900 save-slot mockup. */
+[data-scene="save"][data-mode="continue"]::after { background: #05040318; }
+[data-scene="save"][data-mode="continue"] .save-slots {
+  left: 20.5%; top: 13.6%; transform: none;
+  width: 62.2%; gap: .9vh;
+}
+[data-scene="save"][data-mode="continue"] .save-slot {
+  position: relative;
+  grid-template-columns: 31% repeat(4,minmax(0,1fr));
+  gap: 0; width: 100%; aspect-ratio: 5.05 / 1;
+  padding: 3% 3.2% 2.5% 2.5%;
+  background: url("./assets/ui/save-slots/slot-2.png") center / 100% 100% no-repeat;
+  filter: saturate(.82) brightness(.94);
+  text-align: center;
+}
+[data-scene="save"][data-mode="continue"] .save-slot.slot-1 { background-image: url("./assets/ui/save-slots/slot-1.png"); }
+[data-scene="save"][data-mode="continue"] .save-slot.is-empty { background-image: url("./assets/ui/save-slots/slot-3.png"); }
+[data-scene="save"][data-mode="continue"] .save-slot.is-selected,
+[data-scene="save"][data-mode="continue"] .save-slot:hover {
+  filter: saturate(1.06) brightness(1.05) drop-shadow(0 0 7px #d99a2d88);
+}
+[data-scene="save"][data-mode="continue"] .slot-number {
+  position: absolute; width: 1px; height: 1px; overflow: hidden;
+  clip: rect(0 0 0 0); white-space: nowrap;
+}
+[data-scene="save"][data-mode="continue"] .save-slot.slot-3:not(.is-empty) .slot-number {
+  left: 3.35%; top: 7.5%; z-index: 2;
+  display: grid; place-items: center;
+  width: 5.8%; height: 31%; overflow: visible;
+  clip: auto; white-space: normal;
+  border-radius: 2px; background: #302a24;
+  color: #fffaf0; font: 500 clamp(20px,2.7vw,44px) Georgia,serif;
+}
+[data-scene="save"][data-mode="continue"] .slot-preview {
+  grid-column: 1; visibility: hidden;
+}
+[data-scene="save"][data-mode="continue"] .slot-stat {
+  display: grid; align-content: center; gap: 8%; min-width: 0;
+  border-left: 1px solid #6e594033; color: #2c2116;
+}
+[data-scene="save"][data-mode="continue"] .slot-stat small { color: #4f3b24; font-size: clamp(9px,.85vw,14px); font-weight: 800; }
+[data-scene="save"][data-mode="continue"] .slot-stat strong { font-size: clamp(14px,1.55vw,25px); white-space: nowrap; }
+[data-scene="save"][data-mode="continue"] .saved-at strong { font-size: clamp(10px,1vw,16px); white-space: normal; }
+[data-scene="save"][data-mode="continue"] .empty-slot-copy {
+  grid-column: 2 / 6; display: grid; align-content: center; justify-items: start; gap: 8px;
+  padding-left: 7%; color: #2c2116; text-align: left;
+}
+[data-scene="save"][data-mode="continue"] .empty-slot-copy strong { font-size: clamp(16px,1.8vw,28px); }
+[data-scene="save"][data-mode="continue"] .empty-slot-copy small { color: #554633; font-size: clamp(10px,.95vw,15px); }
+[data-scene="save"][data-mode="continue"] .save-actions { position: static; width: auto; }
+[data-scene="save"][data-mode="continue"] .save-actions #continue-run,
+[data-scene="save"][data-mode="continue"] #delete-save,
+[data-scene="save"][data-mode="continue"] #back-title {
+  top: 80.5%; bottom: auto; height: 8%; min-height: 0;
+}
+[data-scene="save"][data-mode="continue"] #back-title { left: 14.5%; width: 20.5%; }
+[data-scene="save"][data-mode="continue"] .save-actions #continue-run { position: absolute; left: 40.5%; width: 20.5%; }
+[data-scene="save"][data-mode="continue"] #delete-save { display: block; left: 62.5%; width: 20.5%; }
+[data-scene="save"][data-mode="continue"] #back-title,
+[data-scene="save"][data-mode="continue"] .save-actions #continue-run,
+[data-scene="save"][data-mode="continue"] #delete-save {
+  border: 0; padding: 0 24px; background-position: center; background-size: 100% 100%; background-repeat: no-repeat;
+  font-size: clamp(14px,1.5vw,24px); text-shadow: 0 2px 2px #0007;
+}
+[data-scene="save"][data-mode="continue"] #back-title {
+  background-image: url("./assets/ui/clean-v1/buttons/button-parchment.png"); color: #2b2015; text-shadow: none;
+}
+[data-scene="save"][data-mode="continue"] .save-actions #continue-run {
+  background-image: url("./assets/ui/clean-v1/buttons/button-green.png"); color: #f0e4c9;
+}
+[data-scene="save"][data-mode="continue"] #delete-save {
+  background-image: url("./assets/ui/clean-v1/buttons/button-red.png"); color: #f0e4c9;
+}
+[data-scene="save"][data-mode="continue"] #save-guide {
+  left: 29%; bottom: 1.3%; width: 42%;
+  border: 10px solid transparent;
+  border-image: url("./assets/ui/skin-v1/status-card.png") 34 fill / 10px / 0 stretch;
+  background: #0b0906e8; background-clip: padding-box;
+}
 
 header,
 .hub-stats,
@@ -502,7 +592,7 @@ button.secondary:disabled { background-image: url("./assets/ui/skin-v1/button-se
 }
 
 /* Final visual audit: preserve button corners at every width with true 9-slice borders. */
-button:not(.title-actions button):not(#title-settings):not(.save-slot):not(.place-grid button):not(.info-actions button):not(#return-title) {
+button:not(.title-actions button):not(#title-settings):not(#save-settings):not(.save-slot):not(.place-grid button):not(.info-actions button):not(#return-title) {
   min-height: 44px;
   border: 12px solid transparent;
   border-image: url("./assets/ui/skin-v1/button-primary.png") 24 34 fill / 12px 17px / 0 stretch;
@@ -510,7 +600,7 @@ button:not(.title-actions button):not(#title-settings):not(.save-slot):not(.plac
   background-clip: padding-box;
   padding: 2px 16px;
 }
-button:not(.title-actions button):not(#title-settings):not(.save-slot):not(.place-grid button):not(.info-actions button):not(#return-title):hover:not(:disabled) {
+button:not(.title-actions button):not(#title-settings):not(#save-settings):not(.save-slot):not(.place-grid button):not(.info-actions button):not(#return-title):hover:not(:disabled) {
   border-image-source: url("./assets/ui/skin-v1/button-primary-hover.png");
   background: #211b12;
 }
@@ -995,3 +1085,14 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
   background: #15100bd9;
 }
 [data-scene="relic"] #relic-feed p { margin: 0 0 9px; font-size: clamp(10px,.9vw,14px); }
+
+/* Keep the mockup-specific continue controls above the generic secondary-button skin. */
+[data-scene="save"][data-mode="continue"] #back-title,
+[data-scene="save"][data-mode="continue"] .save-actions #continue-run,
+[data-scene="save"][data-mode="continue"] #delete-save {
+  border: 0; border-image: none; padding: 0 24px;
+  background-position: center; background-size: 100% 100%; background-repeat: no-repeat;
+}
+[data-scene="save"][data-mode="continue"] #back-title { background: transparent url("./assets/ui/clean-v1/buttons/button-parchment.png") center / 100% 100% no-repeat !important; color: #2b2015; }
+[data-scene="save"][data-mode="continue"] .save-actions #continue-run { background: transparent url("./assets/ui/clean-v1/buttons/button-green.png") center / 100% 100% no-repeat !important; color: #f0e4c9; }
+[data-scene="save"][data-mode="continue"] #delete-save { background: transparent url("./assets/ui/clean-v1/buttons/button-red.png") center / 100% 100% no-repeat !important; color: #f0e4c9; }
