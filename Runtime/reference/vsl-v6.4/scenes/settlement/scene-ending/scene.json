@@ -1,0 +1,259 @@
+{
+  "id": "scene-ending",
+  "type": "scene",
+  "title": "12일 여정 판정",
+  "groupId": "g-settlement",
+  "x": 1720,
+  "y": 190,
+  "description": "12일차 정산 뒤 상회 4단계 자격을 확인하고 유물 경매 진입 또는 여정 실패를 판정한다.",
+  "requirements": [
+    "상회 4단계 자격",
+    "최종 자금 표시",
+    "유물 경매 진입",
+    "자격 미달 실패"
+  ],
+  "referencePath": "V5 §5.4, §15.1",
+  "image": "assets/reference/scene-mockups/qualification.png",
+  "annotations": [
+    {
+      "id": "scene-ending-topbar",
+      "type": "area",
+      "xPercent": 50,
+      "yPercent": 5,
+      "coordinateSpace": "image",
+      "title": "[공통] 여정 상태 표시",
+      "requirement": "현재 일차·자금·상회 단계·보관칸을 표시한다. 대출 활성 시 만기 잔여 일수·상환 총액·담보 처분가 합계를 함께 표시한다.",
+      "acceptanceCriteria": [
+        "일차는 현재 값과 12일을 함께 표시한다.",
+        "플레이어 자금은 예산이라고 부르지 않는다.",
+        "대출이 없으면 대출 관련 값은 숨긴다."
+      ],
+      "refType": "data",
+      "actionRef": "",
+      "dataRefs": [
+        "run.day",
+        "run.totalDays",
+        "player.cash",
+        "shop.stage",
+        "player.inventory",
+        "player.storageCapacity",
+        "loan.dueDay",
+        "loan.repay",
+        "loan.collateralDisposalValue"
+      ],
+      "navTargetSceneId": "",
+      "modalName": "",
+      "commonKey": "global-topbar",
+      "failureSlot": false,
+      "sourceBasis": "V5 §0.5.2, §5, §12",
+      "implementationStatus": "implemented",
+      "widthPercent": 92,
+      "heightPercent": 8
+    },
+    {
+      "id": "ending-status",
+      "type": "area",
+      "xPercent": 50,
+      "yPercent": 38,
+      "coordinateSpace": "image",
+      "title": "상회 단계·최종 자금",
+      "requirement": "상회 단계와 정산 후 자금을 표시한다.",
+      "acceptanceCriteria": [
+        "유물 경매 자격은 4단계 여부로 판정한다."
+      ],
+      "refType": "data",
+      "actionRef": "",
+      "dataRefs": [
+        "shop.stage",
+        "player.cash"
+      ],
+      "navTargetSceneId": "",
+      "modalName": "",
+      "commonKey": "",
+      "failureSlot": false,
+      "sourceBasis": "V5 §15.1",
+      "implementationStatus": "implemented",
+      "widthPercent": 62,
+      "heightPercent": 28
+    },
+    {
+      "id": "ending-qualified",
+      "type": "pin",
+      "xPercent": 50,
+      "yPercent": 68,
+      "coordinateSpace": "image",
+      "title": "유물 경매 입장",
+      "requirement": "상회 4단계면 유물 경매를 시작한다.",
+      "acceptanceCriteria": [
+        "하급→중급→상급 3라운드로 이동한다."
+      ],
+      "refType": "action",
+      "actionRef": "act-start-relic-auction",
+      "dataRefs": [
+        "competitor.tycoons",
+        "meta.relics"
+      ],
+      "navTargetSceneId": "scene-final",
+      "modalName": "",
+      "commonKey": "",
+      "failureSlot": false,
+      "sourceBasis": "V5 §15.1",
+      "implementationStatus": "implemented",
+      "soundCue": "sfx-scene-in"
+    },
+    {
+      "id": "ending-unqualified",
+      "type": "pin",
+      "xPercent": 50,
+      "yPercent": 80,
+      "coordinateSpace": "image",
+      "title": "자격 미달 결과",
+      "requirement": "4단계 미달이면 여정 실패 결과로 이동한다.",
+      "acceptanceCriteria": [
+        "실패 원인을 기록한다."
+      ],
+      "refType": "action",
+      "actionRef": "act-check-final-qualification",
+      "dataRefs": [
+        "loan.principal",
+        "player.cash",
+        "run.totalDays",
+        "shop.stage"
+      ],
+      "navTargetSceneId": "scene-result",
+      "modalName": "",
+      "commonKey": "",
+      "failureSlot": false,
+      "sourceBasis": "V5 §5.2, §15.1",
+      "implementationStatus": "implemented",
+      "soundCue": "sfx-ui-click"
+    }
+  ],
+  "actionRefs": [
+    "act-check-final-qualification",
+    "act-start-relic-auction",
+    "act-save-game",
+    "act-open-settings"
+  ],
+  "implementationStatus": "implemented",
+  "referenceImage": "assets/reference/scene-mockups/qualification.png",
+  "runtimeBackground": "assets/runtime/backgrounds/ending.png",
+  "imageRole": "reference-mockup",
+  "assetStatus": "pure-background-and-mockup",
+  "uiRequirements": [
+    {
+      "id": "ending-title",
+      "name": "12일 여정 종료 제목",
+      "kind": "display",
+      "priority": "A",
+      "implementationStatus": "asset-available",
+      "dataRefs": [],
+      "actionRefs": [],
+      "notes": ""
+    },
+    {
+      "id": "ending-stage",
+      "name": "최종 상회 단계",
+      "kind": "display",
+      "priority": "A",
+      "implementationStatus": "implemented",
+      "dataRefs": [],
+      "actionRefs": [],
+      "notes": ""
+    },
+    {
+      "id": "ending-cash",
+      "name": "정산 후 자금",
+      "kind": "display",
+      "priority": "A",
+      "implementationStatus": "implemented",
+      "dataRefs": [],
+      "actionRefs": [],
+      "notes": ""
+    },
+    {
+      "id": "ending-qualification",
+      "name": "유물 경매 자격 결과",
+      "kind": "result-panel",
+      "priority": "A",
+      "implementationStatus": "implemented",
+      "dataRefs": [],
+      "actionRefs": [],
+      "notes": ""
+    },
+    {
+      "id": "ending-enter-final",
+      "name": "유물 경매 입장 버튼",
+      "kind": "button",
+      "priority": "A",
+      "implementationStatus": "implemented",
+      "dataRefs": [],
+      "actionRefs": [],
+      "notes": ""
+    },
+    {
+      "id": "ending-result",
+      "name": "여정 결과로 진행 버튼",
+      "kind": "button",
+      "priority": "A",
+      "implementationStatus": "implemented",
+      "dataRefs": [],
+      "actionRefs": [],
+      "notes": ""
+    }
+  ],
+  "popupRefs": [
+    "modal-confirm",
+    "toast-global",
+    "popup-global-failure"
+  ],
+  "mockupCorrections": [
+    "중상회 엔딩 등 운영 방식별 엔딩을 삭제한다.",
+    "명성·순자산 엔딩 판정을 삭제한다.",
+    "상회 4단계 자격과 유물 경매 진입 여부만 판정한다."
+  ],
+  "backgroundPolicy": {
+    "source": "runtime",
+    "path": "assets/runtime/backgrounds/ending.png",
+    "fit": "contain",
+    "contentRect": {
+      "x": 0.0,
+      "y": 0.0,
+      "width": 1536.0,
+      "height": 1024.0,
+      "xPercent": 0.0,
+      "yPercent": 0.0,
+      "widthPercent": 100.0,
+      "heightPercent": 100.0
+    },
+    "sourceImageSize": {
+      "width": 1536,
+      "height": 1024
+    },
+    "sceneTransform": {
+      "scale": 1.0,
+      "offsetXPercent": 0.0,
+      "offsetYPercent": 0.0,
+      "anchor": "center",
+      "appliesTo": "background-and-scene-ui",
+      "editable": true
+    },
+    "onMissingAsset": "show-error-placeholder"
+  },
+  "runtimeBackgroundSource": "runtime",
+  "temporaryRuntimeUse": false,
+  "layoutCanvas": {
+    "width": 1536,
+    "height": 1024
+  },
+  "failureFeedbackRef": "popup-global-failure",
+  "failureFeedbackPolicy": "global-popup",
+  "sound": {
+    "bgm": "bgm-04-relic",
+    "layers": [
+      "L1"
+    ],
+    "layersOnSuccess": null,
+    "restart": true
+  }
+}

@@ -1,0 +1,193 @@
+{
+  "id": "scene-loading",
+  "type": "scene",
+  "title": "여정 생성",
+  "groupId": "g-entry",
+  "x": 430,
+  "y": 190,
+  "description": "12일 시장 사건·출품·경쟁자·거물 데이터를 준비하고 1일차를 시작한다.",
+  "requirements": [
+    "로딩 진행 표시",
+    "고정 엔진 데이터 생성",
+    "API 없이 완주 가능한 폴백",
+    "생성 후 마감 검사"
+  ],
+  "referencePath": "V5 §3 불변 3·4, §5, §7·§8·§9",
+  "image": "assets/reference/scene-mockups/loading.png",
+  "annotations": [
+    {
+      "id": "loading-progress",
+      "type": "area",
+      "xPercent": 50,
+      "yPercent": 52,
+      "coordinateSpace": "image",
+      "title": "생성 진행 상태",
+      "requirement": "시장 사건·출품 96점·경쟁자 지갑·거물 절대 데이터를 생성하는 진행 상태를 표시한다.",
+      "acceptanceCriteria": [
+        "진행률과 단계 로그를 표시한다.",
+        "수치 판정은 고정 엔진이 담당한다."
+      ],
+      "refType": "data",
+      "actionRef": "",
+      "dataRefs": [
+        "run.scene",
+        "market.schedule",
+        "competitor.bennett",
+        "competitor.tycoons"
+      ],
+      "navTargetSceneId": "",
+      "modalName": "",
+      "commonKey": "",
+      "failureSlot": false,
+      "sourceBasis": "V5 §3",
+      "implementationStatus": "implemented",
+      "widthPercent": 60,
+      "heightPercent": 32
+    },
+    {
+      "id": "loading-complete",
+      "type": "pin",
+      "xPercent": 50,
+      "yPercent": 80,
+      "coordinateSpace": "image",
+      "title": "생성 완료",
+      "requirement": "생성 완료 후 1일차 도시로 자동 이동한다.",
+      "acceptanceCriteria": [
+        "마감·대출 만기 검사를 통과한 뒤 이동한다."
+      ],
+      "refType": "action",
+      "actionRef": "act-complete-loading",
+      "dataRefs": [
+        "run.day"
+      ],
+      "navTargetSceneId": "scene-city",
+      "modalName": "",
+      "commonKey": "",
+      "failureSlot": false,
+      "sourceBasis": "V5 §5",
+      "implementationStatus": "implemented",
+      "soundCue": "sfx-loading-done"
+    }
+  ],
+  "actionRefs": [
+    "act-complete-loading"
+  ],
+  "implementationStatus": "implemented",
+  "referenceImage": "assets/reference/scene-mockups/loading.png",
+  "runtimeBackground": "assets/runtime/backgrounds/loading.png",
+  "imageRole": "reference-mockup",
+  "assetStatus": "pure-background-and-mockup",
+  "uiRequirements": [
+    {
+      "id": "loading-title",
+      "name": "생성 상태 제목",
+      "kind": "display",
+      "priority": "A",
+      "implementationStatus": "asset-available",
+      "dataRefs": [],
+      "actionRefs": [],
+      "notes": ""
+    },
+    {
+      "id": "loading-progress",
+      "name": "진행률 막대와 숫자",
+      "kind": "progress",
+      "priority": "A",
+      "implementationStatus": "implemented",
+      "dataRefs": [],
+      "actionRefs": [],
+      "notes": ""
+    },
+    {
+      "id": "loading-steps",
+      "name": "생성 단계 체크 목록",
+      "kind": "list",
+      "priority": "A",
+      "implementationStatus": "implemented",
+      "dataRefs": [],
+      "actionRefs": [],
+      "notes": ""
+    },
+    {
+      "id": "loading-tip",
+      "name": "게임 팁 영역",
+      "kind": "notice",
+      "priority": "B",
+      "implementationStatus": "partial",
+      "dataRefs": [],
+      "actionRefs": [],
+      "notes": ""
+    },
+    {
+      "id": "loading-fallback",
+      "name": "폴백 적용 안내",
+      "kind": "notice",
+      "priority": "A",
+      "implementationStatus": "partial",
+      "dataRefs": [],
+      "actionRefs": [],
+      "notes": ""
+    },
+    {
+      "id": "loading-retry",
+      "name": "다시 시도 버튼",
+      "kind": "button",
+      "priority": "B",
+      "implementationStatus": "spec-only",
+      "dataRefs": [],
+      "actionRefs": [],
+      "notes": ""
+    }
+  ],
+  "popupRefs": [
+    "modal-confirm",
+    "toast-global",
+    "popup-global-failure"
+  ],
+  "mockupCorrections": [
+    "생성 모델이 실패해도 고정 엔진과 사전 생성 폴백으로 완주 가능해야 한다.",
+    "로딩 문구에서 수치 판정을 AI가 한다고 표현하지 않는다."
+  ],
+  "backgroundPolicy": {
+    "source": "runtime",
+    "path": "assets/runtime/backgrounds/loading.png",
+    "fit": "contain",
+    "contentRect": {
+      "x": 0.0,
+      "y": 79.77,
+      "width": 1536.0,
+      "height": 864.459,
+      "xPercent": 0.0,
+      "yPercent": 7.790072,
+      "widthPercent": 100.0,
+      "heightPercent": 84.419856
+    },
+    "sourceImageSize": {
+      "width": 1672,
+      "height": 941
+    },
+    "sceneTransform": {
+      "scale": 1.0,
+      "offsetXPercent": 0.0,
+      "offsetYPercent": 0.0,
+      "anchor": "center",
+      "appliesTo": "background-and-scene-ui",
+      "editable": true
+    },
+    "onMissingAsset": "show-error-placeholder"
+  },
+  "runtimeBackgroundSource": "runtime",
+  "temporaryRuntimeUse": false,
+  "layoutCanvas": {
+    "width": 1536,
+    "height": 1024
+  },
+  "failureFeedbackRef": "popup-global-failure",
+  "failureFeedbackPolicy": "global-popup",
+  "sound": {
+    "bgm": "bgm-01-title",
+    "layers": null,
+    "layersOnSuccess": null,
+    "restart": false
+  }
+}

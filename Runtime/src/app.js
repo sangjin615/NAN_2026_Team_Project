@@ -24,9 +24,10 @@ let catalog;
 let balance;
 let selectedSlot = 1;
 let slotMode = 'new';
+let museumReturn = 'city';
 
 const money = (value) => `${Math.round(Number(value || 0)).toLocaleString('ko-KR')} G`;
-const status = (text) => { document.querySelector('#boot-status').textContent = text; };
+const status = (text, tone = 'ready') => { const element = document.querySelector('#boot-status'); element.textContent = text; element.dataset.tone = tone; };
 const ownedItems = () => state.inventory.filter((item) => !item.sold && !item.delivered);
 const save = () => store.save(state, state.saveSlot);
 
@@ -55,6 +56,7 @@ function renderSaveSlots() {
 
 function openSlotScene(mode) {
   slotMode = mode;
+  document.querySelector('[data-scene="save"]').dataset.mode = mode;
   adapter.showScene('save');
   renderSaveSlots();
 }
@@ -72,7 +74,7 @@ async function boot() {
     status(`기본 품목 ${catalog.items.length}종 · 등급 스프라이트 240개 · V6.2 준비 완료`);
     renderSaveSlots();
   } catch (error) {
-    status(`초기화 실패: ${error.message}`);
+    status(`초기화 실패: ${error.message}`, 'error');
   }
 }
 
@@ -181,6 +183,14 @@ function renderExchange(message = '') {
   document.querySelector('#exchange-message').textContent = message;
 }
 
+function renderTavern(message = '') {
+  state.phase = 'tavern'; adapter.showScene('tavern'); syncHeader();
+  const bought = Object.keys(state.information?.[state.day] || {});
+  const names = { forecast: '수요 동향', catalog: '출품 목록', competitors: '경쟁자 정보' };
+  document.querySelector('#tavern-owned').innerHTML = `<h3>오늘 확보한 정보</h3><p>${bought.length ? bought.map((key) => names[key]).join(' · ') : '아직 구매한 정보가 없습니다.'}</p>`;
+  document.querySelector('#tavern-message').textContent = message;
+}
+
 function renderShop(message = '') {
   state.phase = 'shop'; adapter.showScene('shop'); syncHeader();
   const next = Math.min(4, state.shopStage + 1); const maxed = state.shopStage >= 4;
@@ -203,9 +213,11 @@ function renderGuild(message = '') {
   document.querySelector('#guild-message').textContent = message;
 }
 
-function renderMuseum() {
-  state.phase = 'museum'; adapter.showScene('museum');
-  const owned = new Set(state.metaRelics || []);
+function renderMuseum(returnTo = 'city') {
+  museumReturn = returnTo;
+  if (state) state.phase = 'museum';
+  adapter.showScene('museum');
+  const owned = new Set(state?.metaRelics || loadMeta());
   const relics = balance.relics.list;
   document.querySelector('#relic-list').innerHTML = relics.map((relic) => `<article class="${owned.has(relic.id) ? 'is-owned' : 'is-locked'}"><small>${relic.tier}</small><b>${owned.has(relic.id) ? relic.name : '미획득 유물'}</b><span>${owned.has(relic.id) ? relic.effect : '???'}</span></article>`).join('');
 }
@@ -307,22 +319,28 @@ function renderResult() {
   save();
 }
 
-const placeRenderers = { city: renderHub, quests: renderQuestOffice, exchange: renderExchange, shop: renderShop, guild: renderGuild, museum: renderMuseum, catalog: renderCatalog };
+const placeRenderers = { city: renderHub, quests: renderQuestOffice, tavern: renderTavern, exchange: renderExchange, shop: renderShop, guild: renderGuild, museum: () => renderMuseum('city'), catalog: renderCatalog };
 
 document.querySelector('#new-run').onclick = () => newRun(document.querySelector('#seed').value.trim() || Date.now());
 document.querySelector('#open-new-slots').onclick = () => openSlotScene('new');
 document.querySelector('#open-continue-slots').onclick = () => openSlotScene('continue');
 document.querySelector('#back-title').onclick = () => adapter.showScene('title');
-document.querySelector('#continue-run').onclick = () => { state = store.load(selectedSlot); if (!state) return status('유효한 저장 데이터가 없습니다.'); ({ auction: renderAuction, settlement: renderSettlement, relic: renderRelic, result: renderResult, quests: renderQuestOffice, exchange: renderExchange, shop: renderShop, guild: renderGuild, museum: renderMuseum, catalog: renderCatalog }[state.phase] || renderHub)(); };
+document.querySelector('#continue-run').onclick = () => { state = store.load(selectedSlot); if (!state) return status('유효한 저장 데이터가 없습니다.', 'error'); ({ auction: renderAuction, settlement: renderSettlement, relic: renderRelic, result: renderResult, quests: renderQuestOffice, tavern: renderTavern, exchange: renderExchange, shop: renderShop, guild: renderGuild, museum: () => renderMuseum('city'), catalog: renderCatalog }[state.phase] || renderHub)(); };
 document.querySelector('#start-auction').onclick = renderAuction;
 document.querySelectorAll('[data-raise]').forEach((button) => button.onclick = () => finishLot('bid', Number(button.dataset.raise)));
 document.querySelector('#pass').onclick = () => finishLot('pass'); document.querySelector('#next-day').onclick = nextDay;
 document.querySelector('#buy-relic').onclick = () => finishRelic(true); document.querySelector('#skip-relic').onclick = () => finishRelic(false);
 document.querySelector('#return-title').onclick = () => adapter.showScene('title');
+document.querySelector('#title-museum').onclick = () => renderMuseum('title');
+document.querySelector('#museum-back').onclick = () => museumReturn === 'title' ? adapter.showScene('title') : renderHub();
+document.querySelector('#title-exit').onclick = () => status('브라우저 게임은 이 탭을 닫으면 종료됩니다.');
+document.querySelector('#title-settings').onclick = () => document.querySelector('#settings-dialog').showModal();
+document.querySelector('#close-settings').onclick = () => document.querySelector('#settings-dialog').close();
+document.querySelector('#text-scale').onchange = (event) => document.documentElement.style.setProperty('--text-scale', event.target.value);
 document.querySelectorAll('[data-place]').forEach((button) => button.onclick = () => { audio.playSfx('navigate'); placeRenderers[button.dataset.place]?.(); });
 document.querySelector('#appraise-selected').onclick = () => { const ids = [...document.querySelectorAll('[data-item-select]:checked')].map((input) => input.dataset.itemSelect); let count = 0; ids.forEach((id) => { if (appraiseItem(state, balance, id)) count += 1; }); renderExchange(`${count}개를 감정했습니다.`); };
 document.querySelector('#sell-selected').onclick = () => { const ids = [...document.querySelectorAll('[data-item-select]:checked')].map((input) => input.dataset.itemSelect); renderExchange(`${money(sellItems(state, balance, ids))}에 처분했습니다.`); };
-document.querySelectorAll('[data-info]').forEach((button) => button.onclick = () => { const ok = buyInformation(state, balance, button.dataset.info); renderExchange(ok ? '정보를 구매했습니다.' : '이미 구매했거나 현금이 부족합니다.'); });
+document.querySelectorAll('[data-info]').forEach((button) => button.onclick = () => { const ok = buyInformation(state, balance, button.dataset.info); renderTavern(ok ? '정보를 구매했습니다.' : '이미 구매했거나 현금이 부족합니다.'); });
 document.querySelector('#shop-upgrade').onclick = () => { const ok = upgradeShop(state, balance); renderShop(ok ? '상회를 승급했습니다.' : '현금 또는 완료 의뢰가 부족합니다.'); };
 document.querySelector('#guild-loan').onclick = () => { const ok = takeLoan(state, balance); renderGuild(ok ? '담보 대출을 실행했습니다.' : '해금 단계·담보·기존 대출을 확인하세요.'); };
 document.querySelector('#guild-repay').onclick = () => { const ok = repayLoanEarly(state, balance); renderGuild(ok ? '원금을 중도 상환했습니다.' : '상환할 수 없습니다.'); };

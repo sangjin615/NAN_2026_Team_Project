@@ -6,6 +6,7 @@
   --live-panel: #090806e8;
   --live-line: #9d7638;
   --skin-root: "./assets/ui/skin-v1";
+  --text-scale: 1;
 }
 
 html, body { min-height: 100%; }
@@ -22,15 +23,16 @@ body {
 .scene {
   --mockup: none;
   position: relative;
-  width: min(100vw, calc(100vh * 16 / 9));
+  width: min(100vw, calc(100vh * 3 / 2));
   min-height: 0;
-  aspect-ratio: 16 / 9;
+  aspect-ratio: 3 / 2;
   margin: 0 auto;
   padding: clamp(14px, 2.15vw, 34px);
   overflow: hidden;
   border: 0;
   background: #0b0906;
   isolation: isolate;
+  font-size: calc(16px * var(--text-scale));
 }
 
 .scene::before {
@@ -38,7 +40,7 @@ body {
   position: absolute;
   inset: 0;
   z-index: -2;
-  background: var(--mockup) center / 100% 100% no-repeat;
+  background: var(--mockup) center / contain no-repeat;
   pointer-events: none;
 }
 
@@ -67,7 +69,7 @@ body {
 
 /* Title has no 1600x900 v2 sheet yet, so keep the clean source background. */
 [data-scene="title"] {
-  background: url("./assets/scene-backgrounds/title.png") center / cover no-repeat;
+  background: url("./assets/scene-backgrounds/title.png") center / contain no-repeat;
   text-shadow: 0 3px 14px #000;
 }
 [data-scene="title"]::before { display: none; }
@@ -82,14 +84,14 @@ body {
 [data-scene="title"] .title-actions {
   position: absolute;
   left: 50%;
-  bottom: 10%;
+  top: 44%;
   transform: translateX(-50%);
-  display: flex;
-  gap: clamp(12px, 1.5vw, 24px);
+  display: grid;
+  gap: 2.2vh;
 }
 [data-scene="title"] .title-actions button {
-  width: min(500px, 36vw);
-  height: min(116px, 8.2vw);
+  width: min(430px, 30vw);
+  height: min(78px, 5.4vw);
   color: transparent;
   text-shadow: none;
   border: 0;
@@ -99,25 +101,34 @@ body {
   background-image: url("./assets/ui/vsl-v6.4/buttons/new-game.png");
 }
 [data-scene="title"] #open-continue-slots { background-image: url("./assets/ui/vsl-v6.4/buttons/continue.png"); }
+[data-scene="title"] #title-museum { background-image: url("./assets/ui/vsl-v6.4/buttons/museum.png"); }
+[data-scene="title"] #title-exit { background-image: url("./assets/ui/vsl-v6.4/buttons/exit.png"); }
+[data-scene="title"] #title-settings {
+  position: absolute; right: 2%; top: 2%; width: min(70px, 5vw); aspect-ratio: 1;
+  min-width: 0; padding: 0; border: 0;
+  color: transparent; background: url("./assets/ui/vsl-v6.4/buttons/settings.png") center / contain no-repeat;
+}
 [data-scene="title"] .title-actions button:hover:not(:disabled) { filter: brightness(1.15); }
 [data-scene="title"] #boot-status { position: absolute; left: 50%; bottom: 4%; transform: translateX(-50%); }
+[data-scene="title"] #boot-status[data-tone="ready"] { display: none; }
 
 [data-scene="save"] {
-  background: url("./assets/scene-backgrounds/title.png") center / cover no-repeat;
-  display: grid;
-  align-content: center;
-  justify-items: center;
-  gap: 10px;
+  background: url("./assets/scene-backgrounds/continue.png") center / contain no-repeat;
+  display: block;
 }
+[data-scene="save"][data-mode="new"] { background-image: url("./assets/scene-backgrounds/title.png"); }
 [data-scene="save"]::after { background: #050403a8; }
-[data-scene="save"] header { width: min(760px, 62vw); margin: 0; padding: 10px 18px; text-align: center; }
+[data-scene="save"] header { position: absolute; left: 19%; top: 8%; width: 62%; margin: 0; padding: 10px 18px; text-align: center; }
 [data-scene="save"] header h2 { margin: 2px 0; }
-[data-scene="save"] .seed-field { color: #e8ddc8; }
+[data-scene="save"] .seed-field { position: absolute; left: 50%; top: 17%; transform: translateX(-50%); color: #e8ddc8; }
+[data-scene="save"][data-mode="continue"] header,
+[data-scene="save"][data-mode="continue"] .seed-field { display: none; }
 [data-scene="save"] .save-slots {
+  position: absolute; left: 50%; top: 21%; transform: translateX(-50%);
   display: grid;
   grid-template-columns: 1fr;
   gap: clamp(8px, 1vw, 16px);
-  width: min(560px, 48vw);
+  width: min(500px, 46vw);
   margin: 0 auto;
 }
 [data-scene="save"] .save-slot {
@@ -140,8 +151,9 @@ body {
 }
 [data-scene="save"] .save-slot b { color: #65461d; }
 [data-scene="save"] .save-slot small { color: #584934; }
-[data-scene="save"] .save-actions { display: flex; gap: 14px; }
-[data-scene="save"] #back-title { position: absolute; left: 2%; bottom: 2%; }
+[data-scene="save"] .save-actions { position: absolute; left: 64%; top: 68.5%; width: 16%; display: block; }
+[data-scene="save"] .save-actions button { width: 100%; }
+[data-scene="save"] #back-title { position: absolute; left: 7%; top: 87.5%; width: 16%; }
 
 header,
 .hub-stats,
@@ -192,9 +204,9 @@ button.secondary:disabled { background-image: url("./assets/ui/skin-v1/button-se
 /* City: the painted UI remains visible; these real controls sit on its hotspots. */
 [data-scene="hub"] > header {
   position: absolute;
-  top: 1.5%; left: 1.2%;
+  top: 8.634%; left: 4%;
   width: 30%;
-  height: 10%;
+  height: 6.754%;
   margin: 0;
   padding: 6px 14px;
   opacity: .94;
@@ -205,17 +217,17 @@ button.secondary:disabled { background-image: url("./assets/ui/skin-v1/button-se
 [data-scene="hub"] .hub-stats,
 [data-scene="hub"] .market {
   position: absolute;
-  left: 32%;
-  top: 1.5%;
+  left: 35%;
+  top: 8.634%;
   display: flex;
   gap: 8px;
   margin: 0;
   padding: 7px 10px;
-  font-size: clamp(9px, .75vw, 12px);
+  font-size: calc(13px * var(--text-scale));
   opacity: .94;
 }
-[data-scene="hub"] .market { left: auto; right: 1.2%; top: auto; bottom: 1.4%; max-width: 43%; }
-[data-scene="hub"] #download-log { position: absolute; right: 1.5%; top: 11%; min-width: 0; padding: 6px 10px; font-size: 11px; opacity: .75; }
+[data-scene="hub"] .market { left: 12.5%; right: 12.5%; top: 71.95%; bottom: auto; justify-content: center; max-width: none; }
+[data-scene="hub"] #download-log { display: none; }
 [data-scene="hub"] #hub-message { position: absolute; left: 40%; bottom: 1.4%; margin: 0; }
 .place-grid { position: absolute; inset: 0; margin: 0; padding: 0; }
 .place-grid button {
@@ -229,12 +241,42 @@ button.secondary:disabled { background-image: url("./assets/ui/skin-v1/button-se
   text-shadow: 0 2px 5px #000;
 }
 .place-grid button:hover, .place-grid button:focus-visible { background-image: url("./assets/ui/skin-v1/tab-active.png"); outline: none; }
-.place-grid button[data-place="quests"] { left: 12%; top: 45%; width: 16%; height: 7%; }
-.place-grid button[data-place="catalog"] { left: 50.5%; top: 45%; width: 17%; height: 7%; }
-.place-grid button[data-place="exchange"] { left: 72%; top: 45%; width: 17%; height: 7%; }
-.place-grid button[data-place="guild"] { left: 11.5%; top: 76%; width: 17%; height: 7%; }
-.place-grid button[data-place="shop"] { left: 35%; top: 76%; width: 16%; height: 7%; }
-.place-grid button[data-place="museum"] { left: 55.5%; top: 76%; width: 17%; height: 7%; }
+.place-grid button[data-place="quests"] { left: 7%; top: 33.538%; width: 16%; height: 5.91%; }
+.place-grid button[data-place="tavern"] { left: 28%; top: 33.538%; width: 16%; height: 5.91%; }
+.place-grid button[data-place="catalog"] { left: 49%; top: 33.538%; width: 16%; height: 5.91%; }
+.place-grid button[data-place="exchange"] { left: 70%; top: 33.538%; width: 16%; height: 5.91%; }
+.place-grid button[data-place="guild"] { left: 17%; top: 58.864%; width: 16%; height: 5.91%; }
+.place-grid button[data-place="shop"] { left: 42%; top: 58.864%; width: 16%; height: 5.91%; }
+.place-grid button[data-place="museum"] { left: 67%; top: 58.864%; width: 16%; height: 5.91%; }
+
+[data-scene="tavern"] { --mockup: url("./assets/scene-backgrounds/tavern.png"); padding: 0; }
+[data-scene="tavern"] header { position: absolute; left: 4%; top: 1%; width: 92%; max-width: none; height: 8%; margin: 0; padding: 6px 18px; }
+[data-scene="tavern"] header h2 { display: none; }
+[data-scene="tavern"] .info-actions {
+  position: absolute; inset: 0; width: 100%; height: 100%; display: block;
+  padding: 0; border: 0; background: transparent; box-shadow: none; pointer-events: none;
+}
+[data-scene="tavern"] .info-actions button { position: absolute; top: 60.552%; width: 16%; height: 5.91%; min-height: 0; font-size: calc(17px * var(--text-scale)); pointer-events: auto; }
+[data-scene="tavern"] .info-actions button:nth-child(1) { left: 9%; }
+[data-scene="tavern"] .info-actions button:nth-child(2) { left: 30%; }
+[data-scene="tavern"] .info-actions button:nth-child(3) { left: 53%; }
+[data-scene="tavern"] #tavern-owned {
+  position: absolute; left: 9%; width: 82%; top: 70.683%; height: 12.663%;
+  padding: 12px 20px; text-align: center;
+}
+[data-scene="tavern"] #tavern-owned h3,
+[data-scene="tavern"] #tavern-owned p { margin: 4px; }
+[data-scene="tavern"] #tavern-message { position: absolute; left: 35%; top: 85%; margin: 0; }
+[data-scene="tavern"] .return-city { position: absolute; left: 0; top: 5.5%; width: 16%; height: 7%; z-index: 3; }
+
+#settings-dialog {
+  width: min(520px, 80vw); padding: 28px;
+  border: 18px solid transparent;
+  border-image: url("./assets/ui/skin-v1/panel-dark.png") 46 fill / 18px / 0 stretch;
+  background: #17140f; color: #eee7d8;
+}
+#settings-dialog::backdrop { background: #000a; }
+#settings-dialog label { display: flex; justify-content: space-between; align-items: center; margin: 24px 0; font-size: 18px; }
 
 /* Interior scenes use the mockup as art direction while live panels replace data. */
 .place { padding-top: 6.5%; }
@@ -272,7 +314,7 @@ button.secondary:disabled { background-image: url("./assets/ui/skin-v1/button-se
   position: absolute;
   left: 2.2%; right: 2.2%; top: 29%; bottom: 7%;
   display: grid;
-  grid-template-columns: 40% 60%;
+  grid-template-columns: 1fr 1fr;
   gap: 12px;
 }
 [data-scene="quests"] .office-layout > section {
@@ -457,14 +499,14 @@ button.secondary:disabled { background-image: url("./assets/ui/skin-v1/button-se
 }
 
 /* Final visual audit: preserve button corners at every width with true 9-slice borders. */
-button:not(#open-new-slots):not(#open-continue-slots):not(.save-slot):not(.place-grid button):not(.info-actions button):not(#return-title) {
+button:not(.title-actions button):not(#title-settings):not(.save-slot):not(.place-grid button):not(.info-actions button):not(#return-title) {
   min-height: 44px;
   border: 12px solid transparent;
   border-image: url("./assets/ui/skin-v1/button-primary.png") 24 34 fill / 12px 17px / 0 stretch;
   background: #17140f;
   padding: 2px 16px;
 }
-button:not(#open-new-slots):not(#open-continue-slots):not(.save-slot):not(.place-grid button):not(.info-actions button):not(#return-title):hover:not(:disabled) {
+button:not(.title-actions button):not(#title-settings):not(.save-slot):not(.place-grid button):not(.info-actions button):not(#return-title):hover:not(:disabled) {
   border-image-source: url("./assets/ui/skin-v1/button-primary-hover.png");
   background: #211b12;
 }
@@ -484,10 +526,11 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
   padding: 5px 10px;
   border-width: 7px;
   border-image-width: 7px;
-  font-size: clamp(10px, .82vw, 13px);
+  font-size: calc(15px * var(--text-scale));
 }
 [data-scene="quests"] .quest-grid article h4,
 [data-scene="quests"] .quest-grid article p { margin: 2px 0; }
+[data-scene="quests"] .quest-grid article h4 { font-size: calc(17px * var(--text-scale)); }
 [data-scene="quests"] .quest-grid article button { min-height: 30px; height: 30px; border-width: 8px; border-image-width: 8px; padding: 0 12px; }
 
 /* Museum: the painted display cases are the card frames; do not cover them with another panel. */
@@ -505,8 +548,9 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
   min-height: 0; padding: 5px 2px 10%;
   border: 0; background: transparent; color: #2b2015; text-align: center;
 }
-[data-scene="museum"] .relic-list article small { font-size: 9px; text-transform: uppercase; }
-[data-scene="museum"] .relic-list article span { font-size: 9px; }
+[data-scene="museum"] .relic-list article small { font-size: calc(11px * var(--text-scale)); text-transform: uppercase; }
+[data-scene="museum"] .relic-list article b { font-size: calc(14px * var(--text-scale)); }
+[data-scene="museum"] .relic-list article span { display: none; }
 [data-scene="museum"] > [data-place="city"] { position: absolute; left: 6.5%; bottom: 4%; width: 28%; }
 
 /* Catalog: two complete rows and the start control must fit inside one 16:9 frame. */
@@ -522,8 +566,12 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
   gap: 8px; margin: 0; padding: 8px; overflow: hidden;
 }
 [data-scene="catalog"] .lot-card { min-height: 0; padding: 7px; border-width: 8px; border-image-width: 8px; overflow: hidden; }
-[data-scene="catalog"] .lot-card h3 { margin: 3px 0; font-size: clamp(13px, 1.1vw, 17px); }
-[data-scene="catalog"] .lot-card p { margin: 3px 0; font-size: clamp(9px, .72vw, 11px); line-height: 1.25; }
+[data-scene="catalog"] .lot-card h3 { margin: 5px 0; font-size: calc(17px * var(--text-scale)); }
+[data-scene="catalog"] .lot-card p {
+  display: -webkit-box; margin: 4px 0; overflow: hidden;
+  -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+  font-size: calc(14px * var(--text-scale)); line-height: 1.35;
+}
 [data-scene="catalog"] .catalog-grid .mini-sprite { height: min(10vh, 82px); }
 [data-scene="catalog"] .catalog-grid .mini-sprite img { width: min(9vh, 76px); height: min(9vh, 76px); }
 [data-scene="catalog"] #start-auction { position: absolute; left: 50%; bottom: 2%; transform: translateX(-50%); min-width: 230px; }
@@ -548,7 +596,7 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
 [data-scene="settlement"] > .eyebrow,
 [data-scene="settlement"] > h2 { display: none; }
 [data-scene="settlement"] > p {
-  position: absolute; left: 35.2%; top: 27%; width: 29.5%;
+  position: absolute; left: 35.2%; top: 32%; width: 29.5%;
   margin: 0; color: #2b2015; text-align: center;
 }
 [data-scene="settlement"] #settlement-summary {
