@@ -1,0 +1,180 @@
+{
+  "valid": true,
+  "model": "qwen2.5-coder:14b",
+  "latencyMs": 18488,
+  "request": {
+    "schemaVersion": "1.0",
+    "mode": "daily-content",
+    "runSeed": "api-html-minimal-v3",
+    "day": 1,
+    "context": {
+      "premise": "A mysterious late-19th-century auction city where ancient artifacts, rare botanicals, and celestial instruments converge.",
+      "market": {
+        "day": 1,
+        "headline": "BOK 상승: 고대의 보석이 매력으로 환한다",
+        "mood": "열정적"
+      },
+      "sets": [
+        {
+          "setId": "set-01",
+          "title": "해상의 여정",
+          "sharedSecret": "해양에서 발견된 비밀의 보석",
+          "revealHint": "비밀의 보석은 해양의 깊숙이 숨겨져 있다"
+        },
+        {
+          "setId": "set-02",
+          "title": "황제의 시대",
+          "sharedSecret": "황제의 왕실 소유물",
+          "revealHint": "황제의 왕실 소유물은 과거의 풍요로움을 상징한다"
+        },
+        {
+          "setId": "set-07",
+          "title": "해상의 여정",
+          "sharedSecret": "해양에서 발견된 비밀의 보석",
+          "revealHint": "비밀의 보석은 해양의 깊숙이 숨겨져 있다"
+        },
+        {
+          "setId": "set-10",
+          "title": "천체의 탐험",
+          "sharedSecret": "별자리에서 발견된 비밀의 도구",
+          "revealHint": "별자리에서 발견된 비밀의 도구는 천체를 이해하는 데 도움이 된다"
+        },
+        {
+          "setId": "set-12",
+          "title": "생물학의 발견",
+          "sharedSecret": "비밀의 식물",
+          "revealHint": "비밀의 식물은 생명의 힘을 상징한다"
+        }
+      ]
+    },
+    "lots": [
+      {
+        "lotId": "api-html-minimal-v3-d1-l1",
+        "baseName": "끈잠금 통역 수첩",
+        "category": "BOK",
+        "grade": "LEGENDARY",
+        "setId": "set-10"
+      },
+      {
+        "lotId": "api-html-minimal-v3-d1-l2",
+        "baseName": "제본공 견본첩",
+        "category": "BOK",
+        "grade": "COMMON",
+        "setId": "set-07"
+      },
+      {
+        "lotId": "api-html-minimal-v3-d1-l3",
+        "baseName": "항로문 금은 상감함",
+        "category": "MET",
+        "grade": "RARE",
+        "setId": "set-02"
+      },
+      {
+        "lotId": "api-html-minimal-v3-d1-l4",
+        "baseName": "제비문 찻잔 한 쌍",
+        "category": "CER",
+        "grade": "EPIC",
+        "setId": "set-01"
+      },
+      {
+        "lotId": "api-html-minimal-v3-d1-l5",
+        "baseName": "건국항로 해도집",
+        "category": "BOK",
+        "grade": "RARE",
+        "setId": "set-10"
+      },
+      {
+        "lotId": "api-html-minimal-v3-d1-l6",
+        "baseName": "잎문양 소형 촛대",
+        "category": "MET",
+        "grade": "RARE",
+        "setId": "set-07"
+      },
+      {
+        "lotId": "api-html-minimal-v3-d1-l7",
+        "baseName": "세 갈래 다이아몬드 티아라",
+        "category": "JEW",
+        "grade": "COMMON",
+        "setId": "set-02"
+      },
+      {
+        "lotId": "api-html-minimal-v3-d1-l8",
+        "baseName": "파도문 은제 티포트",
+        "category": "MET",
+        "grade": "EPIC",
+        "setId": "set-12"
+      }
+    ]
+  },
+  "output": {
+    "schemaVersion": "1.0",
+    "day": 1,
+    "marketHeadline": "BOK 상승: 고대의 보석이 매력으로 환한다",
+    "lots": [
+      {
+        "lotId": "api-html-minimal-v3-d1-l1",
+        "displayName": "끈잠금 통역 수첩",
+        "description": "고대의 언어를 적은 검은 종이로 이루어진 수첩. 낡아보이는 흔적과 잠긴 비밀이 느껴진다.",
+        "rumor": "해상의 여정에서 발견된 것으로 알려져 있으며, 해양의 깊숙이 숨겨져 있던 보석에 대한 정보를 담고 있을 수 있다.",
+        "setHint": "비밀의 도구",
+        "npcReaction": "이 수첩은 복잡한 암호로 가득 차 있어 이해하기 어렵다."
+      },
+      {
+        "lotId": "api-html-minimal-v3-d1-l2",
+        "displayName": "제본공 견본첩",
+        "description": "고대 제본공의 손길이 느껴지는 깨끗한 종이로 채워진 견본첩. 정교한 디자인과 품질이 뛰어난다.",
+        "rumor": "황제의 왕실 소유물로 추정되며, 과거의 풍요로움을 상징한다.",
+        "setHint": "해상의 여정",
+        "npcReaction": "이 견본첩은 고대 제본공의 정밀한 기술을 보여준다."
+      },
+      {
+        "lotId": "api-html-minimal-v3-d1-l3",
+        "displayName": "항로문 금은 상감함",
+        "description": "금과 은으로 만든 고대 항로를 가리키는 상감함. 낡아보이는 흔적과 잠긴 비밀이 느껴진다.",
+        "rumor": "황제의 왕실 소유물로 추정되며, 과거의 풍요로움을 상징한다.",
+        "setHint": "황제의 시대",
+        "npcReaction": "이 상감함은 과거의 해상 여행 경로를 보여준다."
+      },
+      {
+        "lotId": "api-html-minimal-v3-d1-l4",
+        "displayName": "제비문 찻잔 한 쌍",
+        "description": "고대 제비 문양이 새겨진 화려한 찻잔. 품질이 뛰어나며, 고유한 디자인을 가지고 있다.",
+        "rumor": "해상의 여정에서 발견된 것으로 알려져 있으며, 해양의 깊숙이 숨겨져 있던 보석에 대한 정보를 담고 있을 수 있다.",
+        "setHint": "해상의 여정",
+        "npcReaction": "이 찻잔은 고대 제비 문양을 통해 과거의 해상 생활을 상징한다."
+      },
+      {
+        "lotId": "api-html-minimal-v3-d1-l5",
+        "displayName": "건국항로 해도집",
+        "description": "고대 건국 항로를 가리키는 화려한 해도집. 품질이 뛰어나며, 고유한 디자인을 가지고 있다.",
+        "rumor": "비밀의 도구로 추정되며, 천체를 이해하는 데 도움이 된다.",
+        "setHint": "천체의 탐험",
+        "npcReaction": "이 해도집은 과거의 건국 항로를 보여준다."
+      },
+      {
+        "lotId": "api-html-minimal-v3-d1-l6",
+        "displayName": "잎문양 소형 촛대",
+        "description": "고대 식물 문양이 새겨진 작은 촛대. 품질이 뛰어나며, 고유한 디자인을 가지고 있다.",
+        "rumor": "황제의 왕실 소유물로 추정되며, 과거의 풍요로움을 상징한다.",
+        "setHint": "해상의 여정",
+        "npcReaction": "이 촛대는 고대 식물 문양을 통해 과거의 자연과 생명을 상징한다."
+      },
+      {
+        "lotId": "api-html-minimal-v3-d1-l7",
+        "displayName": "세 갈래 다이아몬드 티아라",
+        "description": "세 개의 갈래가 달린 작은 다이아몬드 티아라. 품질이 뛰어나며, 고유한 디자인을 가지고 있다.",
+        "rumor": "황제의 왕실 소유물로 추정되며, 과거의 풍요로움을 상징한다.",
+        "setHint": "황제의 시대",
+        "npcReaction": "이 다이아몬드 티아라는 고유한 디자인을 가지고 있다."
+      },
+      {
+        "lotId": "api-html-minimal-v3-d1-l8",
+        "displayName": "파도문 은제 티포트",
+        "description": "고대 파도 문양이 새겨진 작은 은제 티포트. 품질이 뛰어나며, 고유한 디자인을 가지고 있다.",
+        "rumor": "비밀의 식물로 추정되며, 생명의 힘을 상징한다.",
+        "setHint": "생물학의 발견",
+        "npcReaction": "이 티포트는 고대 파도 문양을 통해 과거의 해상 생활을 상징한다."
+      }
+    ]
+  }
+}

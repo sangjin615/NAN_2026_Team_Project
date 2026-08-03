@@ -29,16 +29,23 @@ export class GenerationBuffer {
     this.fallback = fallback;
     this.readyDays = new Map();
     this.failures = [];
+    this.blueprint = null;
   }
 
-  async ensure({ currentDay, schedule, sets }) {
-    const lastDay = Math.min(RUN_DAYS, currentDay + BUFFER_AHEAD_DAYS);
+  async prepareRun(input) {
+    if (!this.provider.generateBlueprint) return null;
+    try { this.blueprint = await this.provider.generateBlueprint(input); return this.blueprint; }
+    catch (error) { this.failures.push({ day: 0, message: error.message }); return null; }
+  }
+
+  async ensure({ currentDay, schedule, sets, aheadDays = BUFFER_AHEAD_DAYS }) {
+    const lastDay = Math.min(RUN_DAYS, currentDay + aheadDays);
     for (let day = currentDay; day <= lastDay; day += 1) {
       if (this.readyDays.has(day)) continue;
       const lots = schedule.days[day - 1].lots;
       let generated;
       try {
-        generated = await this.provider.generateDay({ day, lots, sets });
+        generated = await this.provider.generateDay({ day, lots, sets, blueprint: this.blueprint });
         if (!Array.isArray(generated) || generated.length !== lots.length) throw new Error('provider returned an incomplete day');
       } catch (error) {
         this.failures.push({ day, message: error.message });

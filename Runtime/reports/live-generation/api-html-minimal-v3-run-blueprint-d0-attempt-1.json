@@ -1,0 +1,263 @@
+{
+  "valid": true,
+  "model": "qwen2.5-coder:14b",
+  "latencyMs": 19636,
+  "request": {
+    "schemaVersion": "1.0",
+    "mode": "run-blueprint",
+    "runSeed": "api-html-minimal-v3",
+    "sets": [
+      {
+        "setId": "set-01",
+        "themeKey": "voyage"
+      },
+      {
+        "setId": "set-02",
+        "themeKey": "dynasty"
+      },
+      {
+        "setId": "set-03",
+        "themeKey": "guild"
+      },
+      {
+        "setId": "set-04",
+        "themeKey": "astronomy"
+      },
+      {
+        "setId": "set-05",
+        "themeKey": "theatre"
+      },
+      {
+        "setId": "set-06",
+        "themeKey": "botany"
+      },
+      {
+        "setId": "set-07",
+        "themeKey": "voyage"
+      },
+      {
+        "setId": "set-08",
+        "themeKey": "dynasty"
+      },
+      {
+        "setId": "set-09",
+        "themeKey": "guild"
+      },
+      {
+        "setId": "set-10",
+        "themeKey": "astronomy"
+      },
+      {
+        "setId": "set-11",
+        "themeKey": "theatre"
+      },
+      {
+        "setId": "set-12",
+        "themeKey": "botany"
+      }
+    ],
+    "marketSignals": [
+      {
+        "day": 1,
+        "leadingCategory": "BOK",
+        "direction": "상승"
+      },
+      {
+        "day": 2,
+        "leadingCategory": "BOK",
+        "direction": "상승"
+      },
+      {
+        "day": 3,
+        "leadingCategory": "BOK",
+        "direction": "상승"
+      },
+      {
+        "day": 4,
+        "leadingCategory": "BOK",
+        "direction": "상승"
+      },
+      {
+        "day": 5,
+        "leadingCategory": "MET",
+        "direction": "하락"
+      },
+      {
+        "day": 6,
+        "leadingCategory": "CER",
+        "direction": "상승"
+      },
+      {
+        "day": 7,
+        "leadingCategory": "PNT",
+        "direction": "하락"
+      },
+      {
+        "day": 8,
+        "leadingCategory": "BOK",
+        "direction": "상승"
+      },
+      {
+        "day": 9,
+        "leadingCategory": "JEW",
+        "direction": "하락"
+      },
+      {
+        "day": 10,
+        "leadingCategory": "BOK",
+        "direction": "상승"
+      },
+      {
+        "day": 11,
+        "leadingCategory": "BOK",
+        "direction": "상승"
+      },
+      {
+        "day": 12,
+        "leadingCategory": "BOK",
+        "direction": "상승"
+      }
+    ]
+  },
+  "output": {
+    "schemaVersion": "1.0",
+    "runSeed": "api-html-minimal-v3",
+    "premise": "A mysterious late-19th-century auction city where ancient artifacts, rare botanicals, and celestial instruments converge.",
+    "marketArc": [
+      {
+        "day": 1,
+        "headline": "BOK 상승: 고대의 보석이 매력으로 환한다",
+        "mood": "열정적"
+      },
+      {
+        "day": 2,
+        "headline": "BOK 상승: 보석 거래가 활발해진다",
+        "mood": "활기차"
+      },
+      {
+        "day": 3,
+        "headline": "BOK 상승: 고대의 보석이 더욱 매력적이다",
+        "mood": "신비로움"
+      },
+      {
+        "day": 4,
+        "headline": "BOK 상승: 보석 경매가 열린다",
+        "mood": "기대감 넘치는"
+      },
+      {
+        "day": 5,
+        "headline": "MET 하락: 미술품 거래가 줄어든다",
+        "mood": "슬uggish"
+      },
+      {
+        "day": 6,
+        "headline": "CER 상승: 신비로운 도자기 경매가 열린다",
+        "mood": "신비롭게"
+      },
+      {
+        "day": 7,
+        "headline": "PNT 하락: 지구의 위치를 파악하는 기술이 부족하다",
+        "mood": "불안정함"
+      },
+      {
+        "day": 8,
+        "headline": "BOK 상승: 보석 경매가 더욱 열광받는다",
+        "mood": "열정적"
+      },
+      {
+        "day": 9,
+        "headline": "JEW 하락: 귀금속의 가치가 떨어진다",
+        "mood": "슬uggish"
+      },
+      {
+        "day": 10,
+        "headline": "BOK 상승: 고대 보석이 더욱 매력적이다",
+        "mood": "신비로움"
+      },
+      {
+        "day": 11,
+        "headline": "BOK 상승: 보석 경매가 더욱 활발해진다",
+        "mood": "활기차"
+      },
+      {
+        "day": 12,
+        "headline": "BOK 상승: 고대의 보석이 환한다",
+        "mood": "열정적"
+      }
+    ],
+    "sets": [
+      {
+        "setId": "set-01",
+        "title": "해상의 여정",
+        "sharedSecret": "해양에서 발견된 비밀의 보석",
+        "revealHint": "비밀의 보석은 해양의 깊숙이 숨겨져 있다"
+      },
+      {
+        "setId": "set-02",
+        "title": "황제의 시대",
+        "sharedSecret": "황제의 왕실 소유물",
+        "revealHint": "황제의 왕실 소유물은 과거의 풍요로움을 상징한다"
+      },
+      {
+        "setId": "set-03",
+        "title": "길드의 영향력",
+        "sharedSecret": "길드의 전설적인 보석",
+        "revealHint": "길드의 전설적인 보석은 길드의 힘을 상징한다"
+      },
+      {
+        "setId": "set-04",
+        "title": "천체의 탐험",
+        "sharedSecret": "별자리에서 발견된 비밀의 도구",
+        "revealHint": "별자리에서 발견된 비밀의 도구는 천체를 이해하는 데 도움이 된다"
+      },
+      {
+        "setId": "set-05",
+        "title": "연극의 매력",
+        "sharedSecret": "연극의 전설적인 장식품",
+        "revealHint": "연극의 전설적인 장식품은 연극의 아름다움을 상징한다"
+      },
+      {
+        "setId": "set-06",
+        "title": "생물학의 발견",
+        "sharedSecret": "비밀의 식물",
+        "revealHint": "비밀의 식물은 생명의 힘을 상징한다"
+      },
+      {
+        "setId": "set-07",
+        "title": "해상의 여정",
+        "sharedSecret": "해양에서 발견된 비밀의 보석",
+        "revealHint": "비밀의 보석은 해양의 깊숙이 숨겨져 있다"
+      },
+      {
+        "setId": "set-08",
+        "title": "황제의 시대",
+        "sharedSecret": "황제의 왕실 소유물",
+        "revealHint": "황제의 왕실 소유물은 과거의 풍요로움을 상징한다"
+      },
+      {
+        "setId": "set-09",
+        "title": "길드의 영향력",
+        "sharedSecret": "길드의 전설적인 보석",
+        "revealHint": "길드의 전설적인 보석은 길드의 힘을 상징한다"
+      },
+      {
+        "setId": "set-10",
+        "title": "천체의 탐험",
+        "sharedSecret": "별자리에서 발견된 비밀의 도구",
+        "revealHint": "별자리에서 발견된 비밀의 도구는 천체를 이해하는 데 도움이 된다"
+      },
+      {
+        "setId": "set-11",
+        "title": "연극의 매력",
+        "sharedSecret": "연극의 전설적인 장식품",
+        "revealHint": "연극의 전설적인 장식품은 연극의 아름다움을 상징한다"
+      },
+      {
+        "setId": "set-12",
+        "title": "생물학의 발견",
+        "sharedSecret": "비밀의 식물",
+        "revealHint": "비밀의 식물은 생명의 힘을 상징한다"
+      }
+    ]
+  }
+}

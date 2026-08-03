@@ -1,0 +1,192 @@
+{
+  "valid": true,
+  "model": "qwen2.5-coder:14b",
+  "latencyMs": 15267,
+  "request": {
+    "schemaVersion": "1.0",
+    "mode": "daily-content",
+    "runSeed": "api-html-minimal-v3",
+    "day": 3,
+    "context": {
+      "premise": "A mysterious late-19th-century auction city where ancient artifacts, rare botanicals, and celestial instruments converge.",
+      "market": {
+        "day": 3,
+        "headline": "BOK 상승: 고대의 보석이 더욱 매력적이다",
+        "mood": "신비로움"
+      },
+      "sets": [
+        {
+          "setId": "set-01",
+          "title": "해상의 여정",
+          "sharedSecret": "해양에서 발견된 비밀의 보석",
+          "revealHint": "비밀의 보석은 해양의 깊숙이 숨겨져 있다"
+        },
+        {
+          "setId": "set-03",
+          "title": "길드의 영향력",
+          "sharedSecret": "길드의 전설적인 보석",
+          "revealHint": "길드의 전설적인 보석은 길드의 힘을 상징한다"
+        },
+        {
+          "setId": "set-05",
+          "title": "연극의 매력",
+          "sharedSecret": "연극의 전설적인 장식품",
+          "revealHint": "연극의 전설적인 장식품은 연극의 아름다움을 상징한다"
+        },
+        {
+          "setId": "set-07",
+          "title": "해상의 여정",
+          "sharedSecret": "해양에서 발견된 비밀의 보석",
+          "revealHint": "비밀의 보석은 해양의 깊숙이 숨겨져 있다"
+        },
+        {
+          "setId": "set-09",
+          "title": "길드의 영향력",
+          "sharedSecret": "길드의 전설적인 보석",
+          "revealHint": "길드의 전설적인 보석은 길드의 힘을 상징한다"
+        },
+        {
+          "setId": "set-10",
+          "title": "천체의 탐험",
+          "sharedSecret": "별자리에서 발견된 비밀의 도구",
+          "revealHint": "별자리에서 발견된 비밀의 도구는 천체를 이해하는 데 도움이 된다"
+        },
+        {
+          "setId": "set-12",
+          "title": "생물학의 발견",
+          "sharedSecret": "비밀의 식물",
+          "revealHint": "비밀의 식물은 생명의 힘을 상징한다"
+        }
+      ]
+    },
+    "lots": [
+      {
+        "lotId": "api-html-minimal-v3-d3-l1",
+        "baseName": "카메오 펜던트",
+        "category": "JEW",
+        "grade": "EPIC",
+        "setId": "set-10"
+      },
+      {
+        "lotId": "api-html-minimal-v3-d3-l2",
+        "baseName": "과실문 주전자",
+        "category": "CER",
+        "grade": "EPIC",
+        "setId": "set-05"
+      },
+      {
+        "lotId": "api-html-minimal-v3-d3-l3",
+        "baseName": "창가의 재봉사",
+        "category": "PNT",
+        "grade": "EPIC",
+        "setId": "set-09"
+      },
+      {
+        "lotId": "api-html-minimal-v3-d3-l4",
+        "baseName": "유리돔 골격시계",
+        "category": "CLK",
+        "grade": "EPIC",
+        "setId": "set-03"
+      },
+      {
+        "lotId": "api-html-minimal-v3-d3-l5",
+        "baseName": "대륙 우편 지도첩",
+        "category": "BOK",
+        "grade": "COMMON",
+        "setId": "set-01"
+      },
+      {
+        "lotId": "api-html-minimal-v3-d3-l6",
+        "baseName": "달과 파도 조수력",
+        "category": "BOK",
+        "grade": "RARE",
+        "setId": "set-12"
+      },
+      {
+        "lotId": "api-html-minimal-v3-d3-l7",
+        "baseName": "월상표시 회중시계",
+        "category": "CLK",
+        "grade": "EPIC",
+        "setId": "set-05"
+      },
+      {
+        "lotId": "api-html-minimal-v3-d3-l8",
+        "baseName": "갑판 크로노미터",
+        "category": "CLK",
+        "grade": "COMMON",
+        "setId": "set-07"
+      }
+    ]
+  },
+  "output": {
+    "schemaVersion": "1.0",
+    "day": 3,
+    "marketHeadline": "BOK 상승: 고대의 보석이 더욱 매력적이다",
+    "lots": [
+      {
+        "lotId": "api-html-minimal-v3-d3-l1",
+        "displayName": "카메오 펜던트",
+        "description": "고급 카메오로 장식된 금속 펜던트, 세심한 조각이 돋보인다.",
+        "rumor": "별자리에서 발견된 비밀의 도구와 관련이 있을 수 있다.",
+        "setHint": "별자리에서 발견된 비밀의 도구",
+        "npcReaction": "카메오의 품질은 놀라워, 많은 경매참가자가 관심을 보인다."
+      },
+      {
+        "lotId": "api-html-minimal-v3-d3-l2",
+        "displayName": "과실문 주전자",
+        "description": "과일 모양의 유리 주전자, 세련된 디자인이 돋보인다.",
+        "rumor": "연극의 전설적인 장식품으로 알려져 있다.",
+        "setHint": "연극의 전설적인 장식품",
+        "npcReaction": "주전자의 아름다움에 경매 참가자들이 환상한다."
+      },
+      {
+        "lotId": "api-html-minimal-v3-d3-l3",
+        "displayName": "창가의 재봉사",
+        "description": "창가 모양의 금속 재봉사, 세심한 디자인이 돋보인다.",
+        "rumor": "길드의 전설적인 보석과 관련이 있을 수 있다.",
+        "setHint": "길드의 전설적인 보석",
+        "npcReaction": "재봉사의 품질에 경매 참가자들이 놀라며 경쟁한다."
+      },
+      {
+        "lotId": "api-html-minimal-v3-d3-l4",
+        "displayName": "유리돔 골격시계",
+        "description": "유리돔으로 만든 골격 시계, 세심한 디자인이 돋보인다.",
+        "rumor": "길드의 전설적인 보석과 관련이 있을 수 있다.",
+        "setHint": "길드의 전설적인 보석",
+        "npcReaction": "골격시계의 품질에 경매 참가자들이 놀라며 경쟁한다."
+      },
+      {
+        "lotId": "api-html-minimal-v3-d3-l5",
+        "displayName": "대륙 우편 지도첩",
+        "description": "대륙을 담은 유리 조각 지도, 세심한 디자인이 돋보인다.",
+        "rumor": "해양에서 발견된 비밀의 보석과 관련이 있을 수 있다.",
+        "setHint": "해양에서 발견된 비밀의 보석",
+        "npcReaction": "지도첩의 품질에 경매 참가자들이 놀라며 경쟁한다."
+      },
+      {
+        "lotId": "api-html-minimal-v3-d3-l6",
+        "displayName": "달과 파도 조수력",
+        "description": "달과 파도 모양의 유리 조수력, 세심한 디자인이 돋보인다.",
+        "rumor": "비밀의 식물과 관련이 있을 수 있다.",
+        "setHint": "비밀의 식물",
+        "npcReaction": "조수력의 품질에 경매 참가자들이 놀라며 경쟁한다."
+      },
+      {
+        "lotId": "api-html-minimal-v3-d3-l7",
+        "displayName": "월상표시 회중시계",
+        "description": "월상을 표시하는 금속 회중시계, 세심한 디자인이 돋보인다.",
+        "rumor": "연극의 전설적인 장식품으로 알려져 있다.",
+        "setHint": "연극의 전설적인 장식품",
+        "npcReaction": "회중시계의 품질에 경매 참가자들이 놀라며 경쟁한다."
+      },
+      {
+        "lotId": "api-html-minimal-v3-d3-l8",
+        "displayName": "갑판 크로노미터",
+        "description": "갑판으로 만든 크로노미터, 세심한 디자인이 돋보인다.",
+        "rumor": "해양에서 발견된 비밀의 보석과 관련이 있을 수 있다.",
+        "setHint": "해양에서 발견된 비밀의 보석",
+        "npcReaction": "크로노미터의 품질에 경매 참가자들이 놀라며 경쟁한다."
+      }
+    ]
+  }
+}

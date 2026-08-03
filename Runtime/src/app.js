@@ -135,9 +135,13 @@ async function newRun(seed) {
   state.version = 2;
   recordEvent(state, 'run-start', { saveSlot: selectedSlot });
   audio.playBgm('city');
-  await generation.ensure({ currentDay: 1, schedule, sets });
+  state.generationBlueprint = await generation.prepareRun({
+    runSeed: seed, sets, market: state.marketPath,
+  });
+  await generation.ensure({ currentDay: 1, schedule, sets, aheadDays: 0 });
   save();
   renderHub();
+  generation.ensure({ currentDay: 1, schedule, sets }).then(save);
 }
 
 function syncHeader() {
@@ -508,7 +512,12 @@ document.querySelector('#delete-save').onclick = () => {
   if (!slot || slot.empty || !window.confirm(`SLOT ${selectedSlot} 저장을 삭제할까요?`)) return;
   store.clear(selectedSlot); renderSaveSlots();
 };
-document.querySelector('#continue-run').onclick = () => { state = store.load(selectedSlot); if (!state) return status('유효한 저장 데이터가 없습니다.', 'error'); ({ auction: renderAuction, settlement: renderSettlement, relic: renderRelic, result: renderResult, quests: renderQuestOffice, tavern: renderTavern, exchange: renderExchange, shop: renderShop, guild: renderGuild, museum: () => renderMuseum('city'), catalog: renderCatalog }[state.phase] || renderHub)(); };
+document.querySelector('#continue-run').onclick = () => {
+  state = store.load(selectedSlot);
+  if (!state) return status('유효한 저장 데이터가 없습니다.', 'error');
+  generation.blueprint = state.generationBlueprint || null;
+  ({ auction: renderAuction, settlement: renderSettlement, relic: renderRelic, result: renderResult, quests: renderQuestOffice, tavern: renderTavern, exchange: renderExchange, shop: renderShop, guild: renderGuild, museum: () => renderMuseum('city'), catalog: renderCatalog }[state.phase] || renderHub)();
+};
 document.querySelector('#start-auction').onclick = renderAuction;
 document.querySelectorAll('[data-raise]').forEach((button) => button.onclick = () => finishLot('bid', Number(button.dataset.raise)));
 document.querySelector('#pass').onclick = () => finishLot('pass'); document.querySelector('#next-day').onclick = nextDay;

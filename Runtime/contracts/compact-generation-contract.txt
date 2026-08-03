@@ -1,0 +1,6 @@
+Return one JSON object only. Never output numeric game rules.
+RUN: {schemaVersion:"1.0",runSeed,premise,marketArc:[exactly 12 {day,headline,mood}],sets:[one per input {setId,title,sharedSecret,revealHint}]}.
+DAY: {schemaVersion:"1.0",day,marketHeadline,lots:[exactly 8 {lotId,displayName,description,rumor,setHint,npcReaction}]}.
+Copy IDs exactly and preserve input order. Write concise natural Korean for a mysterious late-19th-century auction city.
+Daily limits per item: displayName 20 Korean characters, description 70, rumor 45, setHint 25, npcReaction 45. Use one sentence per text field.
+Describe only visible form, material, provenance, wear, and uncertain rumor. Never claim magic, supernatural powers, translation, navigation, appraisal, market value, or gameplay effects as fact.

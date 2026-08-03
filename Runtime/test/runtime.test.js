@@ -165,3 +165,28 @@ test('disabled generation API fails fast so the two-day buffer can use fallback'
   const provider = new GenerationApiProvider({ enabled: false });
   await assert.rejects(() => provider.generateDay({ day: 1, lots: [], sets: [] }), /disabled/);
 });
+
+test('generation API sends only narrative identifiers and accepts fixed-order content', async () => {
+  const originalFetch = globalThis.fetch;
+  const requests = [];
+  globalThis.fetch = async (_url, options) => {
+    const request = JSON.parse(options.body); requests.push(request);
+    const payload = request.mode === 'run-blueprint'
+      ? { schemaVersion: '1.0', runSeed: request.runSeed, premise: '도시의 경매 기록', marketArc: Array.from({ length: 12 }, (_, index) => ({ day: index + 1, headline: `${index + 1}일`, mood: '긴장' })), sets: request.sets.map(({ setId }) => ({ setId, title: setId, sharedSecret: '비밀', revealHint: '문양' })) }
+      : { schemaVersion: '1.0', day: request.day, lots: request.lots.map(({ lotId, baseName }) => ({ lotId, displayName: baseName, description: `${baseName}의 기록`, rumor: '소문', setHint: '문양', npcReaction: '주시한다' })) };
+    return { ok: true, async json() { return payload; } };
+  };
+  try {
+    const provider = new GenerationApiProvider({ enabled: true, endpoint: 'http://local.test/generate', timeoutMs: 1000 });
+    const sets = Array.from({ length: 12 }, (_, index) => ({ setId: `set-${index + 1}`, themeKey: 'voyage' }));
+    const market = Object.fromEntries(['CER', 'CLK'].map((category) => [category, Array(12).fill(category === 'CER' ? 1.1 : 0.9)]));
+    const blueprint = await provider.generateBlueprint({ runSeed: 'api-test', sets, market });
+    const lots = Array.from({ length: 8 }, (_, index) => ({ lotId: `api-test-d1-l${index + 1}`, baseName: `물품 ${index + 1}`, category: 'CER', grade: 'COMMON', setId: sets[index].setId, pricing: { basePrice: 100, trueValue: 200 }, quality: 1.5 }));
+    const generated = await provider.generateDay({ day: 1, lots, sets, blueprint });
+    assert.equal(generated.length, 8);
+    assert.deepEqual(Object.keys(requests[1].lots[0]), ['lotId', 'baseName', 'category', 'grade', 'setId']);
+    assert.equal(JSON.stringify(requests).includes('basePrice'), false);
+    assert.equal(JSON.stringify(requests).includes('trueValue'), false);
+    assert.equal(JSON.stringify(requests).includes('quality'), false);
+  } finally { globalThis.fetch = originalFetch; }
+});
