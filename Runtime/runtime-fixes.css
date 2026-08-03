@@ -79,18 +79,27 @@ body {
   height: 0;
   margin: 0;
 }
-[data-scene="title"] #open-slots {
+[data-scene="title"] .title-actions {
   position: absolute;
   left: 50%;
   bottom: 10%;
   transform: translateX(-50%);
+  display: flex;
+  gap: clamp(12px, 1.5vw, 24px);
+}
+[data-scene="title"] .title-actions button {
   width: min(500px, 36vw);
   height: min(116px, 8.2vw);
   color: transparent;
   text-shadow: none;
+  border: 0;
+  background: center / 100% 100% no-repeat;
+}
+[data-scene="title"] #open-new-slots {
   background-image: url("./assets/ui/vsl-v6.4/buttons/new-game.png");
 }
-[data-scene="title"] #open-slots:hover:not(:disabled) { filter: brightness(1.15); transform: translateX(-50%); }
+[data-scene="title"] #open-continue-slots { background-image: url("./assets/ui/vsl-v6.4/buttons/continue.png"); }
+[data-scene="title"] .title-actions button:hover:not(:disabled) { filter: brightness(1.15); }
 [data-scene="title"] #boot-status { position: absolute; left: 50%; bottom: 4%; transform: translateX(-50%); }
 
 [data-scene="save"] {
@@ -448,14 +457,14 @@ button.secondary:disabled { background-image: url("./assets/ui/skin-v1/button-se
 }
 
 /* Final visual audit: preserve button corners at every width with true 9-slice borders. */
-button:not(#open-slots):not(.save-slot):not(.place-grid button):not(.info-actions button):not(#return-title) {
+button:not(#open-new-slots):not(#open-continue-slots):not(.save-slot):not(.place-grid button):not(.info-actions button):not(#return-title) {
   min-height: 44px;
   border: 12px solid transparent;
   border-image: url("./assets/ui/skin-v1/button-primary.png") 24 34 fill / 12px 17px / 0 stretch;
   background: #17140f;
   padding: 2px 16px;
 }
-button:not(#open-slots):not(.save-slot):not(.place-grid button):not(.info-actions button):not(#return-title):hover:not(:disabled) {
+button:not(#open-new-slots):not(#open-continue-slots):not(.save-slot):not(.place-grid button):not(.info-actions button):not(#return-title):hover:not(:disabled) {
   border-image-source: url("./assets/ui/skin-v1/button-primary-hover.png");
   background: #211b12;
 }
@@ -587,4 +596,5 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
   left: 36%; top: 38%; width: 47%; height: 20%;
   display: block; padding: 8px 20px; background: transparent; text-align: left;
 }
+[data-scene="result"].is-failure #run-summary p { margin: 5px 0; font-size: clamp(11px, 1.05vw, 15px); }
 [data-scene="result"].is-failure #return-title { bottom: 12%; }

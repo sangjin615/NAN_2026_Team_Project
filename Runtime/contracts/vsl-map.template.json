@@ -5,7 +5,8 @@
   "coordinatePolicy": "VSL layout JSON is authoritative; Runtime CSS only positions mapped image assets.",
   "scenes": [
     { "runtimeSceneId": "title", "vslSceneId": "scene-title", "actions": [
-      { "selector": "#open-slots", "vslActionId": "action-open-save-slots" }
+      { "selector": "#open-new-slots", "vslActionId": "action-open-new-slots" },
+      { "selector": "#open-continue-slots", "vslActionId": "action-open-continue-slots" }
     ], "dataBindings": [] },
     { "runtimeSceneId": "save", "vslSceneId": "scene-save-slot", "actions": [
       { "selector": "#new-run", "vslActionId": "action-run-new" },

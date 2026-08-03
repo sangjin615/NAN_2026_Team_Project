@@ -23,6 +23,7 @@ let state;
 let catalog;
 let balance;
 let selectedSlot = 1;
+let slotMode = 'new';
 
 const money = (value) => `${Math.round(Number(value || 0)).toLocaleString('ko-KR')} G`;
 const status = (text) => { document.querySelector('#boot-status').textContent = text; };
@@ -45,6 +46,17 @@ function renderSaveSlots() {
     button.onclick = () => { selectedSlot = Number(button.dataset.saveSlot); renderSaveSlots(); };
   });
   document.querySelector('#continue-run').disabled = store.list().find((slot) => slot.slot === selectedSlot)?.empty ?? true;
+  const selected = slots.find((slot) => slot.slot === selectedSlot);
+  document.querySelector('#new-run').textContent = selected?.empty ? '새 여정 시작' : '선택 슬롯 덮어쓰기';
+  document.querySelector('#new-run').hidden = slotMode !== 'new';
+  document.querySelector('#continue-run').hidden = slotMode !== 'continue';
+  document.querySelector('#save-mode-title').textContent = slotMode === 'new' ? '새 여정 슬롯 선택' : '이어할 여정 선택';
+}
+
+function openSlotScene(mode) {
+  slotMode = mode;
+  adapter.showScene('save');
+  renderSaveSlots();
 }
 
 async function boot() {
@@ -204,9 +216,10 @@ function renderCatalog() {
 }
 
 function renderAuction() {
+  const lot = state.schedule.days[state.day - 1].lots[state.lotIndex];
+  if (!lot) return renderSettlement();
   const expired = expireQuestsBeforeAuction(state);
   state.phase = 'auction'; audio.playBgm('auction');
-  const lot = state.schedule.days[state.day - 1].lots[state.lotIndex];
   if (state.auctionSession?.lotId !== lot.lotId) {
     const marketIndex = state.marketPath[lot.category][state.day - 1];
     state.auctionSession = { lotId: lot.lotId, currentPrice: Math.max(1, Math.round(lot.pricing.basePrice * balance.auction.startBidRatio)), leader: null, bots: botBidForLot({ lot, day: state.day, balance, marketIndex, seed: state.seed }), feed: expired ? [`기한이 지난 의뢰 ${expired}건이 만료됐습니다.`] : ['경매가 시작되었습니다.'] };
@@ -297,9 +310,10 @@ function renderResult() {
 const placeRenderers = { city: renderHub, quests: renderQuestOffice, exchange: renderExchange, shop: renderShop, guild: renderGuild, museum: renderMuseum, catalog: renderCatalog };
 
 document.querySelector('#new-run').onclick = () => newRun(document.querySelector('#seed').value.trim() || Date.now());
-document.querySelector('#open-slots').onclick = () => { adapter.showScene('save'); renderSaveSlots(); };
+document.querySelector('#open-new-slots').onclick = () => openSlotScene('new');
+document.querySelector('#open-continue-slots').onclick = () => openSlotScene('continue');
 document.querySelector('#back-title').onclick = () => adapter.showScene('title');
-document.querySelector('#continue-run').onclick = () => { state = store.load(selectedSlot); if (!state) return status('유효한 저장 데이터가 없습니다.'); ({ auction: renderAuction, settlement: renderSettlement, relic: renderRelic, quests: renderQuestOffice, exchange: renderExchange, shop: renderShop, guild: renderGuild, museum: renderMuseum, catalog: renderCatalog }[state.phase] || renderHub)(); };
+document.querySelector('#continue-run').onclick = () => { state = store.load(selectedSlot); if (!state) return status('유효한 저장 데이터가 없습니다.'); ({ auction: renderAuction, settlement: renderSettlement, relic: renderRelic, result: renderResult, quests: renderQuestOffice, exchange: renderExchange, shop: renderShop, guild: renderGuild, museum: renderMuseum, catalog: renderCatalog }[state.phase] || renderHub)(); };
 document.querySelector('#start-auction').onclick = renderAuction;
 document.querySelectorAll('[data-raise]').forEach((button) => button.onclick = () => finishLot('bid', Number(button.dataset.raise)));
 document.querySelector('#pass').onclick = () => finishLot('pass'); document.querySelector('#next-day').onclick = nextDay;

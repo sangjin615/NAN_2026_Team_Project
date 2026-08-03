@@ -11,11 +11,11 @@
 <body><main id="app">
   <section class="scene title" data-scene="title">
     <h1 class="sr-only">미지의 경매장</h1>
-    <button id="open-slots">게임 시작</button>
+    <div class="title-actions"><button id="open-new-slots">새 게임</button><button id="open-continue-slots">이어하기</button></div>
     <p id="boot-status" class="status"></p>
   </section>
   <section class="scene save-select" data-scene="save" hidden>
-    <header><p class="eyebrow">SAVE SLOT</p><h2>여정을 선택하세요</h2></header>
+    <header><p class="eyebrow">SAVE SLOT</p><h2 id="save-mode-title">여정을 선택하세요</h2></header>
     <label class="seed-field">런 시드 <input id="seed" value="nan-2026-demo"></label>
     <div id="save-slots" class="save-slots" aria-label="저장 슬롯"></div>
     <div class="save-actions"><button id="new-run">새 여정</button><button id="continue-run" class="secondary">이어하기</button></div>
