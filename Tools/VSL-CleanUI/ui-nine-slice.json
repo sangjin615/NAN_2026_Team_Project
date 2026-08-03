@@ -1,0 +1,73 @@
+{
+  "schemaVersion": "1.0",
+  "projectId": "unknown-auction-v5-v1-3-pins",
+  "source": "Clean UI VSL v1",
+  "assets": [
+    {
+      "id": "clean-button-green",
+      "path": "shared/buttons/clean-button-green.png",
+      "role": "button",
+      "enabled": true,
+      "top": 32,
+      "right": 52,
+      "bottom": 32,
+      "left": 52,
+      "repeat": "stretch"
+    },
+    {
+      "id": "clean-button-dark",
+      "path": "shared/buttons/clean-button-dark.png",
+      "role": "button",
+      "enabled": true,
+      "top": 32,
+      "right": 52,
+      "bottom": 32,
+      "left": 52,
+      "repeat": "stretch"
+    },
+    {
+      "id": "clean-button-parchment",
+      "path": "shared/buttons/clean-button-parchment.png",
+      "role": "button",
+      "enabled": true,
+      "top": 32,
+      "right": 52,
+      "bottom": 32,
+      "left": 52,
+      "repeat": "stretch"
+    },
+    {
+      "id": "clean-button-red",
+      "path": "shared/buttons/clean-button-red.png",
+      "role": "button",
+      "enabled": true,
+      "top": 32,
+      "right": 52,
+      "bottom": 32,
+      "left": 52,
+      "repeat": "stretch"
+    },
+    {
+      "id": "clean-button-purple",
+      "path": "shared/buttons/clean-button-purple.png",
+      "role": "button",
+      "enabled": true,
+      "top": 32,
+      "right": 52,
+      "bottom": 32,
+      "left": 52,
+      "repeat": "stretch"
+    },
+    {
+      "id": "clean-save-slot-frame",
+      "path": "shared/frames/clean-save-slot-frame.png",
+      "role": "frame",
+      "enabled": true,
+      "top": 24,
+      "right": 28,
+      "bottom": 24,
+      "left": 28,
+      "repeat": "stretch"
+    }
+  ]
+}
