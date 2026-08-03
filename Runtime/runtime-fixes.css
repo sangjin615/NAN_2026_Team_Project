@@ -1158,13 +1158,15 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
 [data-scene="save"][data-mode="new"] .save-actions #new-run {
   position: absolute; top: 82%; width: 20%; height: 7.2%; min-height: 0;
   box-sizing: border-box; padding: 0; border: 0 !important; border-image: none !important;
-  z-index: 6; font-size: 0; color: transparent;
+  z-index: 6; font-size: clamp(13px,1.25vw,20px); font-weight: 900;
 }
 [data-scene="save"][data-mode="new"] #back-title {
-  left: 27.5%; background: transparent url("./assets/ui/save-actions/back-title.png") center / 100% 100% no-repeat !important;
+  left: 27.5%; color: #2b2015; text-shadow: none;
+  background: transparent url("./assets/ui/clean-v1/buttons/button-parchment.png") center / 100% 100% no-repeat !important;
 }
 [data-scene="save"][data-mode="new"] .save-actions #new-run {
-  left: 52.5%; background: transparent url("./assets/ui/save-actions/new-run.png") center / 100% 100% no-repeat !important;
+  left: 52.5%; color: #f0e4c9; text-shadow: 0 2px 2px #0008;
+  background: transparent url("./assets/ui/clean-v1/buttons/button-green.png") center / 100% 100% no-repeat !important;
 }
 [data-scene="save"][data-mode="new"] #save-guide {
   left: 29%; bottom: 1.3%; width: 42%;
