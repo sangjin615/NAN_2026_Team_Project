@@ -19,10 +19,10 @@
     <header><p class="eyebrow">SAVE SLOT</p><h2 id="save-mode-title">여정을 선택하세요</h2></header>
     <label class="seed-field">런 시드 <input id="seed" value="nan-2026-demo"></label>
     <div id="save-slots" class="save-slots" aria-label="저장 슬롯"></div>
-    <div class="save-actions"><button id="new-run">새 여정</button><button id="continue-run" class="secondary">실행</button></div>
+    <div class="save-actions"><button id="new-run">새 여정</button><button id="continue-run" class="secondary">이어하기</button></div>
     <button id="delete-save" class="secondary">저장 삭제</button>
     <button id="save-settings" aria-label="설정">설정</button>
-    <p id="save-guide">저장 슬롯을 선택한 후 실행 버튼을 눌러 진행하세요.</p>
+    <p id="save-guide">저장 슬롯을 선택한 후 이어하기 버튼을 눌러 진행하세요.</p>
     <button id="back-title" class="secondary">타이틀로 돌아가기</button>
   </section>
   <section class="scene hub" data-scene="hub" hidden><header><div><p class="eyebrow">CITY HUB · <span data-bind="day"></span>일차</p><h2>미지의 도시</h2></div><strong data-bind="cash"></strong></header><div class="hub-stats"><span>상점 <b data-bind="stage"></b>단계</span><span>창고 <b data-bind="storage"></b></span><span>완료 의뢰 <b data-bind="quests"></b></span><span id="loan-status"></span></div><div id="market-indices" class="market"></div><div class="place-grid"><button data-place="quests">의뢰소</button><button data-place="tavern">술집</button><button data-place="catalog">경매장</button><button data-place="exchange">거래소</button><button data-place="shop">상회</button><button data-place="guild">조합</button><button data-place="museum">유물 전시관</button></div><button id="download-log" class="secondary">플레이 기록 다운로드</button><p id="hub-message" class="status"></p></section>
@@ -43,5 +43,5 @@
   </section>
   <section class="scene" data-scene="settlement" hidden><p class="eyebrow">DAILY SETTLEMENT</p><h2><span data-bind="day"></span>일차 결산</h2><p>오늘의 8 LOT이 종료되었습니다. 생성 버퍼는 다음 2일을 준비합니다.</p><div id="settlement-summary"></div><button id="next-day">다음 날</button></section>
   <section class="scene relic" data-scene="relic" hidden><p class="eyebrow">RELIC AUCTION</p><aside id="relic-participants"></aside><div id="relic-card"></div><div id="relic-feed" class="auction-feed"></div><div class="actions"><button id="buy-relic">유물 입찰</button><button id="skip-relic" class="secondary">포기</button></div></section>
-  <section class="scene" data-scene="result" hidden><p class="eyebrow">RUN RESULT</p><h2 id="result-title">12일 여정 종료</h2><div id="run-summary"></div><button id="return-title">타이틀로</button></section>
+  <section class="scene" data-scene="result" hidden><p class="eyebrow">RUN RESULT</p><h2 id="result-title">12일 여정 종료</h2><div id="run-summary"></div><button id="return-title">타이틀로 돌아가기</button></section>
 </main><dialog id="settings-dialog"><h2>설정</h2><button id="sound-toggle" type="button" aria-pressed="false">소리: 켜짐</button><button id="close-settings">닫기</button></dialog><script type="module" src="./src/app.js"></script></body></html>

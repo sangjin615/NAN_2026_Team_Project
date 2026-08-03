@@ -94,7 +94,7 @@ function renderSaveSlots() {
   document.querySelector('#continue-run').hidden = slotMode !== 'continue';
   document.querySelector('#delete-save').hidden = slotMode !== 'continue';
   document.querySelector('#delete-save').disabled = selected?.empty ?? true;
-  document.querySelector('#save-guide').textContent = slotMode === 'continue' ? '저장 슬롯을 선택한 후 실행 버튼을 눌러 진행하세요.' : '새 여정을 저장할 슬롯을 선택하세요.';
+  document.querySelector('#save-guide').textContent = slotMode === 'continue' ? '저장 슬롯을 선택한 후 이어하기 버튼을 눌러 진행하세요.' : '새 여정을 저장할 슬롯을 선택하세요.';
   document.querySelector('#save-mode-title').textContent = slotMode === 'new' ? '새 여정 슬롯 선택' : '이어할 여정 선택';
 }
 
@@ -414,8 +414,10 @@ function renderSettlement() {
     if (missedDeadline(state)) state.failure = `${state.day}일차 승급 기한 실패 · 상회 ${state.shopStage}단계`;
   }
   adapter.showScene('settlement'); adapter.setText('day', state.day);
-  document.querySelector('#settlement-summary').textContent = `보유품 ${ownedItems().length}개 · 현금 ${money(state.cash)} · 제출 의뢰 ${state.lastSettlement.quests}건 · 대출 ${state.lastSettlement.loan}`;
-  document.querySelector('#next-day').textContent = state.failure ? '실패 결과 확인' : state.day === 12 ? '최종 유물 경매' : `${state.day + 1}일차`;
+  const loanLabels = { none: '변동 없음', repaid: '상환 완료', seized: '담보 처분' };
+  const loanResult = loanLabels[state.lastSettlement.loan] || state.lastSettlement.loan;
+  document.querySelector('#settlement-summary').textContent = `보유품 ${ownedItems().length}개 · 현금 ${money(state.cash)} · 제출 의뢰 ${state.lastSettlement.quests}건 · 대출 ${loanResult}`;
+  document.querySelector('#next-day').textContent = state.failure ? '실패 결과 확인' : state.day === 12 ? '최종 유물 경매로' : `${state.day + 1}일차로`;
   save();
 }
 

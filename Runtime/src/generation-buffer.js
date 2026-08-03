@@ -14,7 +14,7 @@ export class FallbackContentProvider {
       return {
         lotId: lot.lotId,
         displayName: lot.baseName,
-        description: `${lot.baseName}. ${theme}와 이어지는 ${lot.grade.toLowerCase()} 등급 출품품이다.`,
+        description: `${lot.baseName}. ${theme} 테마와 연결된 ${lot.grade.toLowerCase()} 등급 출품품이다.`,
         setId: lot.setId,
         provenance: 'local-fallback',
         generatedForDay: day

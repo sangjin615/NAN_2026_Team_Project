@@ -764,6 +764,7 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
   display: block; padding: 8px 20px; background: transparent; text-align: left;
 }
 [data-scene="result"].is-failure #run-summary p { margin: 5px 0; font-size: clamp(11px, 1.05vw, 15px); }
+[data-scene="result"].is-failure #run-summary .failure { color: #7f1d12; }
 [data-scene="result"].is-failure #return-title { bottom: 12%; }
 
 /* Team 1600x900 mockups: rebuild the dynamic HUD over the clean upscaled art. */
