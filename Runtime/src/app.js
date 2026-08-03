@@ -29,6 +29,10 @@ let slotMode = 'new';
 let museumReturn = 'city';
 let actionTimer = null;
 
+const GRADE_LABELS = { COMMON: '일반', RARE: '희귀', EPIC: '영웅', LEGENDARY: '전설' };
+const RELIC_TIER_LABELS = { low: '하급', mid: '중급', high: '상급' };
+const gradeLabel = (grade) => GRADE_LABELS[grade] || grade;
+
 function clearActionTimer() {
   if (actionTimer) window.clearInterval(actionTimer);
   actionTimer = null;
@@ -181,10 +185,10 @@ function questTitle(quest) {
 
 function questRequirement(quest) {
   if (quest.id === 'designated') return `${quest.targetCategory} 계열 물품 1개를 인도한다.`;
-  if (quest.id === 'multi') return 'RARE 이상 물품 1개를 인도한다.';
+  if (quest.id === 'multi') return '희귀 등급 이상 물품 1개를 인도한다.';
   if (quest.id === 'bargain') return '기준가의 85% 이하에 낙찰한 물품을 인도한다.';
-  if (quest.id === 'restraint') return 'COMMON 또는 RARE 물품 1개를 인도한다.';
-  return 'EPIC 또는 LEGENDARY 물품 1개를 인도한다.';
+  if (quest.id === 'restraint') return '일반 또는 희귀 등급 물품 1개를 인도한다.';
+  return '영웅 또는 전설 등급 물품 1개를 인도한다.';
 }
 
 function renderQuestOffice(message = '') {
@@ -196,7 +200,7 @@ function renderQuestOffice(message = '') {
   const activeMarkup = active.length ? active.map((quest) => {
     const candidates = ownedItems().filter((item) => questMatchesItem(quest, item));
     return `<article><b>${questTitle(quest)}</b><span>${quest.deadlineDay}일차 경매 전까지</span>
-      <select data-delivery-select="${quest.id}"><option value="">제출할 물품 선택</option>${candidates.map((item) => `<option value="${item.lotId}">${item.name} · ${item.grade}</option>`).join('')}</select>
+      <select data-delivery-select="${quest.id}"><option value="">제출할 물품 선택</option>${candidates.map((item) => `<option value="${item.lotId}">${item.name} · ${gradeLabel(item.grade)}</option>`).join('')}</select>
       <button data-deliver-quest="${quest.id}" ${candidates.length ? '' : 'disabled'}>물품 제출</button></article>`;
   }).join('') : '<p class="empty-note">수주한 의뢰가 없습니다.</p>';
   const appraisalMarkup = ownedItems().length ? ownedItems().map((item) => {
@@ -208,7 +212,7 @@ function renderQuestOffice(message = '') {
       : `<span>감정 비용 ${money(cost)}</span>`;
     return `<article class="appraisal-card">
       <img src="${lot ? spriteUrl(lot, item.grade) : ''}" alt="${item.name}">
-      <div><b>${item.name}</b><small>${item.grade} · ${item.category}</small>${result}</div>
+      <div><b>${item.name}</b><small>${gradeLabel(item.grade)} · ${item.category}</small>${result}</div>
       <button data-office-appraise="${item.lotId}" ${item.appraised || item.collateral || state.cash < cost ? 'disabled' : ''}>${item.appraised ? '감정 완료' : item.collateral ? '담보 설정됨' : '정밀 감정'}</button>
     </article>`;
   }).join('') : '<p class="empty-note">감정할 보유 물품이 없습니다.</p>';
@@ -244,7 +248,7 @@ function renderExchange(message = '') {
   clearActionTimer(); audio.playBgm('workplace'); state.phase = 'exchange'; adapter.showScene('exchange'); syncHeader();
   document.querySelector('#inventory-list').innerHTML = ownedItems().length ? ownedItems().map((item) => `
     <article><label><input type="checkbox" data-item-select="${item.lotId}"> <b>${item.name}</b></label>
-    <span>${item.grade} · ${item.category}</span><span>매입 ${money(item.paid)} · ${item.appraised ? `감정 ${money(item.trueValue)} ±${money(item.appraisalRange)}` : '미감정'}</span>
+    <span>${gradeLabel(item.grade)} · ${item.category}</span><span>매입 ${money(item.paid)} · ${item.appraised ? `감정 ${money(item.trueValue)} ±${money(item.appraisalRange)}` : '미감정'}</span>
     <button data-sell-item="${item.lotId}" ${item.collateral ? 'disabled' : ''}>즉시 처분</button></article>`).join('') : '<p>보유 물품이 없습니다.</p>';
   document.querySelectorAll('[data-sell-item]').forEach((button) => button.onclick = () => {
     const revenue = sellItems(state, balance, [button.dataset.sellItem]);
@@ -357,7 +361,7 @@ function renderMuseum(returnTo = 'city') {
 
 function renderCatalog() {
   clearActionTimer(); audio.playBgm('workplace'); state.phase = 'catalog'; adapter.showScene('catalog'); syncHeader();
-  document.querySelector('#catalog-grid').innerHTML = state.schedule.days[state.day - 1].lots.map((lot) => `<article class="lot-card"><div class="mini-sprite ${lot.visualEffects.map((effect) => `vfx-${effect}`).join(' ')}"><img src="${spriteUrl(lot, lot.grade)}" alt=""></div><span>${lot.grade}</span><h3>${lot.content.displayName}</h3><p>${lot.content.description}</p></article>`).join('');
+  document.querySelector('#catalog-grid').innerHTML = state.schedule.days[state.day - 1].lots.map((lot) => `<article class="lot-card"><div class="mini-sprite ${lot.visualEffects.map((effect) => `vfx-${effect}`).join(' ')}"><img src="${spriteUrl(lot, lot.grade)}" alt=""></div><span>${gradeLabel(lot.grade)}</span><h3>${lot.content.displayName}</h3><p>${lot.content.description}</p></article>`).join('');
 }
 
 function renderAuction() {
@@ -380,7 +384,7 @@ function renderAuction() {
     ...state.auctionSession.bots.map((bot) => ({ name: bot.name, budget: bot.maxBid, leader: state.auctionSession.leader === bot.id })),
   ];
   document.querySelector('#auction-participants').innerHTML = `<h3>참가자 명단 (${participants.length} / 4)</h3>${participants.map((participant, index) => `<div class="participant ${participant.leader ? 'is-leading' : ''}"><span>${participant.player ? '나' : index}</span><b>${participant.name}</b><strong>${money(participant.budget)}</strong></div>`).join('')}`;
-  document.querySelector('#auction-lot-status').innerHTML = `<b>경매 ${state.lotIndex + 1} / 8</b><span>${lot.grade}</span><strong>${money(state.auctionSession.currentPrice)}</strong><em id="auction-timer" aria-label="남은 시간"></em>`;
+  document.querySelector('#auction-lot-status').innerHTML = `<b>경매 ${state.lotIndex + 1} / 8</b><span>${gradeLabel(lot.grade)}</span><strong>${money(state.auctionSession.currentPrice)}</strong><em id="auction-timer" aria-label="남은 시간"></em>`;
   armActionTimer('#auction-timer', state.auctionSession.deadline, () => finishLot('pass'));
 }
 
@@ -451,7 +455,7 @@ function renderRelic() {
     state.relicSession = { round: state.relicRound, currentPrice: opening, leader: null, bots, deadline: Date.now() + 15000, feed: ['최종 유물 경매가 시작되었습니다.'] };
   }
   const session = state.relicSession;
-  document.querySelector('#relic-card').innerHTML = `<p>${tier.toUpperCase()} · ROUND ${state.relicRound + 1}/3</p><h2>${relic.name}</h2><p>${relic.effect}</p><strong>현재 호가 ${money(session.currentPrice)}</strong><em id="relic-timer" aria-label="남은 시간"></em>`;
+  document.querySelector('#relic-card').innerHTML = `<p>${RELIC_TIER_LABELS[tier] || tier} · ${state.relicRound + 1}/3회</p><h2>${relic.name}</h2><p>${relic.effect}</p><strong>현재 호가 ${money(session.currentPrice)}</strong><em id="relic-timer" aria-label="남은 시간"></em>`;
   const participants = [{ id: 'player', name: '당신', budget: state.cash }, ...session.bots.map((bot) => ({ ...bot, budget: bot.maxBid }))];
   document.querySelector('#relic-participants').innerHTML = `<h3>최종 경매 참가자</h3>${participants.map((participant) => `<div class="participant ${session.leader === participant.id ? 'is-leading' : ''}"><b>${participant.name}</b><strong>${money(participant.budget)}</strong></div>`).join('')}`;
   document.querySelector('#relic-feed').innerHTML = session.feed.slice(-4).map((line) => `<p>${line}</p>`).join('');

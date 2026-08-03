@@ -1458,7 +1458,7 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
         return {
           lotId: lot.lotId,
           displayName: lot.baseName,
-          description: `${lot.baseName}. ${theme} \uD14C\uB9C8\uC640 \uC5F0\uACB0\uB41C ${lot.grade.toLowerCase()} \uB4F1\uAE09 \uCD9C\uD488\uD488\uC774\uB2E4.`,
+          description: `${lot.baseName}. ${theme} \uD14C\uB9C8\uC640 \uC5F0\uACB0\uB41C ${{ COMMON: "\uC77C\uBC18", RARE: "\uD76C\uADC0", EPIC: "\uC601\uC6C5", LEGENDARY: "\uC804\uC124" }[lot.grade] || lot.grade} \uB4F1\uAE09 \uCD9C\uD488\uD488\uC774\uB2E4.`,
           setId: lot.setId,
           provenance: "local-fallback",
           generatedForDay: day
@@ -2015,6 +2015,9 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
   var slotMode = "new";
   var museumReturn = "city";
   var actionTimer = null;
+  var GRADE_LABELS = { COMMON: "\uC77C\uBC18", RARE: "\uD76C\uADC0", EPIC: "\uC601\uC6C5", LEGENDARY: "\uC804\uC124" };
+  var RELIC_TIER_LABELS = { low: "\uD558\uAE09", mid: "\uC911\uAE09", high: "\uC0C1\uAE09" };
+  var gradeLabel = (grade) => GRADE_LABELS[grade] || grade;
   function clearActionTimer() {
     if (actionTimer) window.clearInterval(actionTimer);
     actionTimer = null;
@@ -2166,10 +2169,10 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
   }
   function questRequirement(quest) {
     if (quest.id === "designated") return `${quest.targetCategory} \uACC4\uC5F4 \uBB3C\uD488 1\uAC1C\uB97C \uC778\uB3C4\uD55C\uB2E4.`;
-    if (quest.id === "multi") return "RARE \uC774\uC0C1 \uBB3C\uD488 1\uAC1C\uB97C \uC778\uB3C4\uD55C\uB2E4.";
+    if (quest.id === "multi") return "\uD76C\uADC0 \uB4F1\uAE09 \uC774\uC0C1 \uBB3C\uD488 1\uAC1C\uB97C \uC778\uB3C4\uD55C\uB2E4.";
     if (quest.id === "bargain") return "\uAE30\uC900\uAC00\uC758 85% \uC774\uD558\uC5D0 \uB099\uCC30\uD55C \uBB3C\uD488\uC744 \uC778\uB3C4\uD55C\uB2E4.";
-    if (quest.id === "restraint") return "COMMON \uB610\uB294 RARE \uBB3C\uD488 1\uAC1C\uB97C \uC778\uB3C4\uD55C\uB2E4.";
-    return "EPIC \uB610\uB294 LEGENDARY \uBB3C\uD488 1\uAC1C\uB97C \uC778\uB3C4\uD55C\uB2E4.";
+    if (quest.id === "restraint") return "\uC77C\uBC18 \uB610\uB294 \uD76C\uADC0 \uB4F1\uAE09 \uBB3C\uD488 1\uAC1C\uB97C \uC778\uB3C4\uD55C\uB2E4.";
+    return "\uC601\uC6C5 \uB610\uB294 \uC804\uC124 \uB4F1\uAE09 \uBB3C\uD488 1\uAC1C\uB97C \uC778\uB3C4\uD55C\uB2E4.";
   }
   function renderQuestOffice(message = "") {
     clearActionTimer();
@@ -2184,7 +2187,7 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
     const activeMarkup = active.length ? active.map((quest) => {
       const candidates = ownedItems().filter((item) => questMatchesItem(quest, item));
       return `<article><b>${questTitle(quest)}</b><span>${quest.deadlineDay}\uC77C\uCC28 \uACBD\uB9E4 \uC804\uAE4C\uC9C0</span>
-      <select data-delivery-select="${quest.id}"><option value="">\uC81C\uCD9C\uD560 \uBB3C\uD488 \uC120\uD0DD</option>${candidates.map((item) => `<option value="${item.lotId}">${item.name} \xB7 ${item.grade}</option>`).join("")}</select>
+      <select data-delivery-select="${quest.id}"><option value="">\uC81C\uCD9C\uD560 \uBB3C\uD488 \uC120\uD0DD</option>${candidates.map((item) => `<option value="${item.lotId}">${item.name} \xB7 ${gradeLabel(item.grade)}</option>`).join("")}</select>
       <button data-deliver-quest="${quest.id}" ${candidates.length ? "" : "disabled"}>\uBB3C\uD488 \uC81C\uCD9C</button></article>`;
     }).join("") : '<p class="empty-note">\uC218\uC8FC\uD55C \uC758\uB8B0\uAC00 \uC5C6\uC2B5\uB2C8\uB2E4.</p>';
     const appraisalMarkup = ownedItems().length ? ownedItems().map((item) => {
@@ -2194,7 +2197,7 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
       const result = item.appraised ? `<strong>${money(item.trueValue)} <small>\xB1 ${money(item.appraisalRange)}</small></strong>` : `<span>\uAC10\uC815 \uBE44\uC6A9 ${money(cost)}</span>`;
       return `<article class="appraisal-card">
       <img src="${lot ? spriteUrl(lot, item.grade) : ""}" alt="${item.name}">
-      <div><b>${item.name}</b><small>${item.grade} \xB7 ${item.category}</small>${result}</div>
+      <div><b>${item.name}</b><small>${gradeLabel(item.grade)} \xB7 ${item.category}</small>${result}</div>
       <button data-office-appraise="${item.lotId}" ${item.appraised || item.collateral || state.cash < cost ? "disabled" : ""}>${item.appraised ? "\uAC10\uC815 \uC644\uB8CC" : item.collateral ? "\uB2F4\uBCF4 \uC124\uC815\uB428" : "\uC815\uBC00 \uAC10\uC815"}</button>
     </article>`;
     }).join("") : '<p class="empty-note">\uAC10\uC815\uD560 \uBCF4\uC720 \uBB3C\uD488\uC774 \uC5C6\uC2B5\uB2C8\uB2E4.</p>';
@@ -2239,7 +2242,7 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
     syncHeader();
     document.querySelector("#inventory-list").innerHTML = ownedItems().length ? ownedItems().map((item) => `
     <article><label><input type="checkbox" data-item-select="${item.lotId}"> <b>${item.name}</b></label>
-    <span>${item.grade} \xB7 ${item.category}</span><span>\uB9E4\uC785 ${money(item.paid)} \xB7 ${item.appraised ? `\uAC10\uC815 ${money(item.trueValue)} \xB1${money(item.appraisalRange)}` : "\uBBF8\uAC10\uC815"}</span>
+    <span>${gradeLabel(item.grade)} \xB7 ${item.category}</span><span>\uB9E4\uC785 ${money(item.paid)} \xB7 ${item.appraised ? `\uAC10\uC815 ${money(item.trueValue)} \xB1${money(item.appraisalRange)}` : "\uBBF8\uAC10\uC815"}</span>
     <button data-sell-item="${item.lotId}" ${item.collateral ? "disabled" : ""}>\uC989\uC2DC \uCC98\uBD84</button></article>`).join("") : "<p>\uBCF4\uC720 \uBB3C\uD488\uC774 \uC5C6\uC2B5\uB2C8\uB2E4.</p>";
     document.querySelectorAll("[data-sell-item]").forEach((button) => button.onclick = () => {
       const revenue = sellItems(state, balance, [button.dataset.sellItem]);
@@ -2375,7 +2378,7 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
     state.phase = "catalog";
     adapter.showScene("catalog");
     syncHeader();
-    document.querySelector("#catalog-grid").innerHTML = state.schedule.days[state.day - 1].lots.map((lot) => `<article class="lot-card"><div class="mini-sprite ${lot.visualEffects.map((effect) => `vfx-${effect}`).join(" ")}"><img src="${spriteUrl(lot, lot.grade)}" alt=""></div><span>${lot.grade}</span><h3>${lot.content.displayName}</h3><p>${lot.content.description}</p></article>`).join("");
+    document.querySelector("#catalog-grid").innerHTML = state.schedule.days[state.day - 1].lots.map((lot) => `<article class="lot-card"><div class="mini-sprite ${lot.visualEffects.map((effect) => `vfx-${effect}`).join(" ")}"><img src="${spriteUrl(lot, lot.grade)}" alt=""></div><span>${gradeLabel(lot.grade)}</span><h3>${lot.content.displayName}</h3><p>${lot.content.description}</p></article>`).join("");
   }
   function renderAuction() {
     const lot = state.schedule.days[state.day - 1].lots[state.lotIndex];
@@ -2404,7 +2407,7 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
       ...state.auctionSession.bots.map((bot) => ({ name: bot.name, budget: bot.maxBid, leader: state.auctionSession.leader === bot.id }))
     ];
     document.querySelector("#auction-participants").innerHTML = `<h3>\uCC38\uAC00\uC790 \uBA85\uB2E8 (${participants.length} / 4)</h3>${participants.map((participant, index) => `<div class="participant ${participant.leader ? "is-leading" : ""}"><span>${participant.player ? "\uB098" : index}</span><b>${participant.name}</b><strong>${money(participant.budget)}</strong></div>`).join("")}`;
-    document.querySelector("#auction-lot-status").innerHTML = `<b>\uACBD\uB9E4 ${state.lotIndex + 1} / 8</b><span>${lot.grade}</span><strong>${money(state.auctionSession.currentPrice)}</strong><em id="auction-timer" aria-label="\uB0A8\uC740 \uC2DC\uAC04"></em>`;
+    document.querySelector("#auction-lot-status").innerHTML = `<b>\uACBD\uB9E4 ${state.lotIndex + 1} / 8</b><span>${gradeLabel(lot.grade)}</span><strong>${money(state.auctionSession.currentPrice)}</strong><em id="auction-timer" aria-label="\uB0A8\uC740 \uC2DC\uAC04"></em>`;
     armActionTimer("#auction-timer", state.auctionSession.deadline, () => finishLot("pass"));
   }
   function finishLot(action, multiplier = 1) {
@@ -2502,7 +2505,7 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
       state.relicSession = { round: state.relicRound, currentPrice: opening, leader: null, bots, deadline: Date.now() + 15e3, feed: ["\uCD5C\uC885 \uC720\uBB3C \uACBD\uB9E4\uAC00 \uC2DC\uC791\uB418\uC5C8\uC2B5\uB2C8\uB2E4."] };
     }
     const session = state.relicSession;
-    document.querySelector("#relic-card").innerHTML = `<p>${tier.toUpperCase()} \xB7 ROUND ${state.relicRound + 1}/3</p><h2>${relic.name}</h2><p>${relic.effect}</p><strong>\uD604\uC7AC \uD638\uAC00 ${money(session.currentPrice)}</strong><em id="relic-timer" aria-label="\uB0A8\uC740 \uC2DC\uAC04"></em>`;
+    document.querySelector("#relic-card").innerHTML = `<p>${RELIC_TIER_LABELS[tier] || tier} \xB7 ${state.relicRound + 1}/3\uD68C</p><h2>${relic.name}</h2><p>${relic.effect}</p><strong>\uD604\uC7AC \uD638\uAC00 ${money(session.currentPrice)}</strong><em id="relic-timer" aria-label="\uB0A8\uC740 \uC2DC\uAC04"></em>`;
     const participants = [{ id: "player", name: "\uB2F9\uC2E0", budget: state.cash }, ...session.bots.map((bot) => ({ ...bot, budget: bot.maxBid }))];
     document.querySelector("#relic-participants").innerHTML = `<h3>\uCD5C\uC885 \uACBD\uB9E4 \uCC38\uAC00\uC790</h3>${participants.map((participant) => `<div class="participant ${session.leader === participant.id ? "is-leading" : ""}"><b>${participant.name}</b><strong>${money(participant.budget)}</strong></div>`).join("")}`;
     document.querySelector("#relic-feed").innerHTML = session.feed.slice(-4).map((line) => `<p>${line}</p>`).join("");
