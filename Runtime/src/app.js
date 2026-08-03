@@ -78,7 +78,7 @@ function renderSaveSlots() {
     <button class="save-slot slot-${slot.slot} ${slot.empty ? 'is-empty' : ''} ${slot.slot === selectedSlot ? 'is-selected' : ''}" data-save-slot="${slot.slot}">
       <b class="slot-number">${String(slot.slot).padStart(2, '0')}</b>
       <span class="slot-preview ${slot.empty ? 'is-empty' : ''}" aria-hidden="true">${slot.empty ? '+' : ''}</span>
-      ${slot.empty ? '<span class="empty-slot-copy"><strong>빈 슬롯</strong><small>새 게임을 시작하여 저장할 수 있습니다.</small></span>' : `
+      ${slot.empty ? '<span class="empty-slot-copy"><strong>빈 저장칸</strong><small>새 게임을 시작하여 저장할 수 있습니다.</small></span>' : `
         <span class="slot-stat"><small>현재 일차</small><strong>${slot.day}일차</strong></span>
         <span class="slot-stat"><small>보유 자산</small><strong>${money(slot.cash)}</strong></span>
         <span class="slot-stat"><small>상회 단계</small><strong>${slot.shopStage}단계</strong></span>

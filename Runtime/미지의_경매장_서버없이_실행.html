@@ -2050,7 +2050,7 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
     <button class="save-slot slot-${slot.slot} ${slot.empty ? "is-empty" : ""} ${slot.slot === selectedSlot ? "is-selected" : ""}" data-save-slot="${slot.slot}">
       <b class="slot-number">${String(slot.slot).padStart(2, "0")}</b>
       <span class="slot-preview ${slot.empty ? "is-empty" : ""}" aria-hidden="true">${slot.empty ? "+" : ""}</span>
-      ${slot.empty ? '<span class="empty-slot-copy"><strong>\uBE48 \uC2AC\uB86F</strong><small>\uC0C8 \uAC8C\uC784\uC744 \uC2DC\uC791\uD558\uC5EC \uC800\uC7A5\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4.</small></span>' : `
+      ${slot.empty ? '<span class="empty-slot-copy"><strong>\uBE48 \uC800\uC7A5\uCE78</strong><small>\uC0C8 \uAC8C\uC784\uC744 \uC2DC\uC791\uD558\uC5EC \uC800\uC7A5\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4.</small></span>' : `
         <span class="slot-stat"><small>\uD604\uC7AC \uC77C\uCC28</small><strong>${slot.day}\uC77C\uCC28</strong></span>
         <span class="slot-stat"><small>\uBCF4\uC720 \uC790\uC0B0</small><strong>${money(slot.cash)}</strong></span>
         <span class="slot-stat"><small>\uC0C1\uD68C \uB2E8\uACC4</small><strong>${slot.shopStage}\uB2E8\uACC4</strong></span>
