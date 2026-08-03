@@ -1,8 +1,8 @@
 {
   "schemaVersion": "2.0",
   "projectId": "unknown-auction-v6.2",
-  "resolution": { "width": 1536, "height": 1024 },
-  "coordinatePolicy": "VSL layout JSON is authoritative; Runtime CSS only positions mapped image assets.",
+  "resolution": { "width": 1600, "height": 900 },
+  "coordinatePolicy": "VSL layout JSON is authoritative in its 1536x1024 editor space; Runtime transforms mapped coordinates into the 16:9 background content rect.",
   "scenes": [
     { "runtimeSceneId": "title", "vslSceneId": "scene-title", "actions": [
       { "selector": "#open-new-slots", "vslActionId": "action-open-new-slots" },
