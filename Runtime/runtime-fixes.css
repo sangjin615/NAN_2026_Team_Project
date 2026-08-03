@@ -92,25 +92,26 @@ body {
 [data-scene="title"] .title-actions button {
   width: min(430px, 30vw);
   height: min(78px, 5.4vw);
-  color: transparent;
-  text-shadow: none;
-  border: 0;
-  background: center / 100% 100% no-repeat;
+  min-height: 0; padding: 0 28px;
+  border: 12px solid transparent;
+  border-image: url("./assets/ui/skin-v1/button-primary.png") 24 34 fill / 12px 17px / 0 stretch;
+  background: #17140f;
+  background-clip: padding-box;
+  color: #f1ddb0;
+  font-size: clamp(17px, 1.65vw, 26px);
+  font-weight: 800;
+  letter-spacing: .04em;
+  text-shadow: 0 2px 3px #000;
 }
-[data-scene="title"] #open-new-slots {
-  background-image: url("./assets/ui/vsl-v6.4/buttons/new-game.png");
-  /* This export has more transparent padding than the other three buttons. */
-  background-size: 106% 109%;
-}
-[data-scene="title"] #open-continue-slots { background-image: url("./assets/ui/vsl-v6.4/buttons/continue.png"); }
-[data-scene="title"] #title-museum { background-image: url("./assets/ui/vsl-v6.4/buttons/museum.png"); }
-[data-scene="title"] #title-exit { background-image: url("./assets/ui/vsl-v6.4/buttons/exit.png"); }
 [data-scene="title"] #title-settings {
   position: absolute; right: 2%; top: 2%; width: min(70px, 5vw); aspect-ratio: 1;
   min-width: 0; padding: 0; border: 0;
   color: transparent; background: url("./assets/ui/vsl-v6.4/buttons/settings.png") center / contain no-repeat;
 }
-[data-scene="title"] .title-actions button:hover:not(:disabled) { filter: brightness(1.15); }
+[data-scene="title"] .title-actions button:hover:not(:disabled) {
+  border-image-source: url("./assets/ui/skin-v1/button-primary-hover.png");
+  background: #211b12; background-clip: padding-box; filter: none;
+}
 [data-scene="title"] #boot-status { position: absolute; left: 50%; bottom: 4%; transform: translateX(-50%); }
 [data-scene="title"] #boot-status[data-tone="ready"] { display: none; }
 
@@ -506,6 +507,7 @@ button:not(.title-actions button):not(#title-settings):not(.save-slot):not(.plac
   border: 12px solid transparent;
   border-image: url("./assets/ui/skin-v1/button-primary.png") 24 34 fill / 12px 17px / 0 stretch;
   background: #17140f;
+  background-clip: padding-box;
   padding: 2px 16px;
 }
 button:not(.title-actions button):not(#title-settings):not(.save-slot):not(.place-grid button):not(.info-actions button):not(#return-title):hover:not(:disabled) {
@@ -515,6 +517,32 @@ button:not(.title-actions button):not(#title-settings):not(.save-slot):not(.plac
 button.secondary:not(.save-slot) {
   border-image-source: url("./assets/ui/skin-v1/button-secondary.png");
   background: #151515;
+  background-clip: padding-box;
+}
+
+/* Transparent 9-slice corners must reveal the scene, not a rectangular CSS backing. */
+header,
+.hub-stats,
+.market,
+.quest-grid,
+.place-panel,
+.inventory-list,
+.info-actions,
+.relic-list,
+#relic-card,
+#settlement-summary,
+#run-summary,
+.actions,
+.lot-card,
+.quest-grid article,
+.inventory-list article,
+.relic-list article,
+#auction-participants,
+#auction-feed,
+#auction-lot-status,
+[data-scene="relic"] #relic-participants,
+[data-scene="relic"] #relic-feed {
+  background-clip: padding-box;
 }
 button.secondary:not(.save-slot):hover:not(:disabled) { border-image-source: url("./assets/ui/skin-v1/button-secondary-hover.png"); }
 button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/ui/skin-v1/button-secondary-disabled.png"); }
