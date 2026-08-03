@@ -219,7 +219,10 @@ function renderMuseum(returnTo = 'city') {
   adapter.showScene('museum');
   const owned = new Set(state?.metaRelics || loadMeta());
   const relics = balance.relics.list;
-  document.querySelector('#relic-list').innerHTML = relics.map((relic) => `<article class="${owned.has(relic.id) ? 'is-owned' : 'is-locked'}"><small>${relic.tier}</small><b>${owned.has(relic.id) ? relic.name : '미획득 유물'}</b><span>${owned.has(relic.id) ? relic.effect : '???'}</span></article>`).join('');
+  document.querySelector('#relic-list').innerHTML = relics.map((relic) => {
+    const isOwned = owned.has(relic.id);
+    return `<article class="${isOwned ? 'is-owned' : 'is-locked'}" aria-label="${isOwned ? relic.name : '미획득 유물'}">${isOwned ? `<b>${relic.name}</b><span>${relic.effect}</span>` : ''}</article>`;
+  }).join('');
 }
 
 function renderCatalog() {

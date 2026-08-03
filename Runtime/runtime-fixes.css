@@ -548,7 +548,6 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
   min-height: 0; padding: 5px 2px 10%;
   border: 0; background: transparent; color: #2b2015; text-align: center;
 }
-[data-scene="museum"] .relic-list article small { font-size: calc(11px * var(--text-scale)); text-transform: uppercase; }
 [data-scene="museum"] .relic-list article b { font-size: calc(14px * var(--text-scale)); }
 [data-scene="museum"] .relic-list article span { display: none; }
 [data-scene="museum"] > #museum-back {
