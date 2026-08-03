@@ -107,6 +107,18 @@ async function newRun(seed) {
 function syncHeader() {
   adapter.setText('day', state.day);
   adapter.setText('cash', money(state.cash));
+  const scene = document.querySelector('.scene:not([hidden])');
+  if (scene?.classList.contains('place')) {
+    let hud = scene.querySelector('.scene-hud');
+    if (!hud) {
+      hud = document.createElement('div');
+      hud.className = 'scene-hud';
+      hud.setAttribute('aria-label', '현재 여정 상태');
+      scene.prepend(hud);
+    }
+    const loan = state.loan ? `${state.loan.dueDay}일 만기` : '없음';
+    hud.innerHTML = `<span><small>여정</small><b>${state.day}일차 / 12</b></span><span><small>자산</small><b>${money(state.cash)}</b></span><span><small>보관칸</small><b>${ownedItems().length} / ${state.storage}</b></span><span><small>상회 단계</small><b>${state.shopStage}단계</b></span><span><small>담보 대출</small><b>${loan}</b></span>`;
+  }
 }
 
 function renderHub(message = '') {
@@ -187,6 +199,19 @@ function renderExchange(message = '') {
     const revenue = sellItems(state, balance, [button.dataset.sellItem]);
     renderExchange(`${money(revenue)}에 처분했습니다.`);
   });
+  const syncBulkActions = () => {
+    const checked = [...document.querySelectorAll('[data-item-select]:checked')];
+    document.querySelector('#appraise-selected').disabled = !checked.some((input) => {
+      const item = ownedItems().find((entry) => entry.lotId === input.dataset.itemSelect);
+      return item && !item.appraised && !item.collateral;
+    });
+    document.querySelector('#sell-selected').disabled = !checked.some((input) => {
+      const item = ownedItems().find((entry) => entry.lotId === input.dataset.itemSelect);
+      return item && !item.collateral;
+    });
+  };
+  document.querySelectorAll('[data-item-select]').forEach((input) => { input.onchange = syncBulkActions; });
+  syncBulkActions();
   const names = { CER: '도자기', CLK: '시계', PNT: '회화', BOK: '고서', MET: '금은세공', JEW: '장신구' };
   document.querySelector('#exchange-market').innerHTML = `<h3>최근 시세</h3><div class="market-rates">${Object.entries(state.marketPath).map(([key, path]) => {
     const now = path[state.day - 1]; const previous = state.day > 1 ? path[state.day - 2] : 1; const delta = now - previous;
@@ -199,6 +224,16 @@ function renderTavern(message = '') {
   state.phase = 'tavern'; adapter.showScene('tavern'); syncHeader();
   const bought = Object.keys(state.information?.[state.day] || {});
   const names = { forecast: '수요 동향', catalog: '출품 목록', competitors: '경쟁자 정보' };
+  const descriptions = { forecast: '시장 수요가 높은 계열을 분석합니다.', catalog: '오늘 출품될 물품 목록을 확인합니다.', competitors: '경쟁자들의 예상 입찰 한도를 확인합니다.' };
+  const lots = state.schedule.days[state.day - 1].lots;
+  const totalBase = lots.reduce((sum, lot) => sum + lot.pricing.basePrice, 0);
+  document.querySelectorAll('[data-info]').forEach((button) => {
+    const kind = button.dataset.info;
+    const discount = 1 - (balance.shop.infoDiscount?.[state.shopStage] ?? 0);
+    const cost = Math.ceil(totalBase * balance.informationRate[kind] * discount / 100) * 100;
+    button.innerHTML = `<strong>${names[kind]}</strong><small>${descriptions[kind]}</small><span>${bought.includes(kind) ? '구매 완료' : money(cost)}</span>`;
+    button.disabled = bought.includes(kind);
+  });
   document.querySelector('#tavern-owned').innerHTML = `<h3>오늘 확보한 정보</h3><p>${bought.length ? bought.map((key) => names[key]).join(' · ') : '아직 구매한 정보가 없습니다.'}</p>`;
   document.querySelector('#tavern-message').textContent = message;
 }
@@ -208,27 +243,33 @@ function renderShop(message = '') {
   const next = Math.min(4, state.shopStage + 1); const maxed = state.shopStage >= 4;
   const cost = maxed ? 0 : balance.shop.upgradeCost[next - 1];
   const required = maxed ? 0 : balance.shop.questRequirement[next - 1];
-  document.querySelector('#shop-detail').innerHTML = `<section><h3>${state.shopStage}단계 상회</h3><dl><div><dt>보관칸</dt><dd>${state.storage}칸</dd></div><div><dt>거래 수수료</dt><dd>없음</dd></div><div><dt>완료 의뢰</dt><dd>${state.completedQuestCount}건</dd></div></dl></section>
-    <section><h3>${maxed ? '최고 단계 달성' : `${next}단계 승급`}</h3><p>${maxed ? '대상회에 도달했습니다.' : `비용 ${money(cost)} · 완료 의뢰 ${required}건 필요`}</p></section>`;
-  document.querySelector('#shop-upgrade').disabled = maxed;
+  const nextStorage = maxed ? state.storage : balance.shop.storage[next];
+  const nextDiscount = maxed ? balance.shop.infoDiscount[state.shopStage] : balance.shop.infoDiscount[next];
+  document.querySelector('#shop-detail').innerHTML = `<section><h3>${state.shopStage}단계 상회</h3><dl><div><dt>보관칸</dt><dd>${state.storage}칸</dd></div><div><dt>정보 할인</dt><dd>${Math.round((balance.shop.infoDiscount[state.shopStage] || 0) * 100)}%</dd></div><div><dt>완료 의뢰</dt><dd>${state.completedQuestCount}건</dd></div></dl></section>
+    <section><h3>${maxed ? '최고 단계 달성' : `${next}단계 승급`}</h3><p>${maxed ? '대상회에 도달했습니다.' : `비용 ${money(cost)} · 완료 의뢰 ${required}건 필요`}</p><ul><li>보관칸 ${nextStorage}칸</li><li>동시 의뢰 및 보상 강화</li><li>정보 비용 ${Math.round((nextDiscount || 0) * 100)}% 할인</li>${next >= 3 ? '<li>유물 전시관 이용 확대</li>' : ''}</ul></section>`;
+  document.querySelector('#shop-upgrade').disabled = maxed || state.cash < cost || state.completedQuestCount < required;
   document.querySelector('#shop-message').textContent = message;
 }
 
 function renderGuild(message = '') {
   state.phase = 'guild'; adapter.showScene('guild'); syncHeader();
   const locked = state.shopStage < balance.loan.minShopStage;
-  document.querySelector('#guild-detail').textContent = locked ? `상회 ${balance.loan.minShopStage}단계에서 해금됩니다.`
-    : state.loan ? `담보 ${state.loan.lotId} · 원금 ${money(state.loan.principal)} · 만기 ${state.loan.dueDay}일 ${money(state.loan.due)}`
-      : state.guildLocked ? '이번 여정에서는 조합을 이용할 수 없습니다.' : '대출이 없습니다.';
+  const collateralCount = ownedItems().filter((item) => !item.collateral).length;
+  const detail = locked ? `<h3>담보 대출 잠김</h3><p>상회 ${balance.loan.minShopStage}단계에서 해금됩니다.</p>`
+    : state.loan ? `<h3>활성 대출</h3><p>담보 ${state.loan.lotId}</p><p>원금 ${money(state.loan.principal)} · 만기 ${state.loan.dueDay}일 · 상환 ${money(state.loan.due)}</p>`
+      : state.guildLocked ? '<h3>조합 이용 제한</h3><p>연체로 인해 이번 여정에서는 조합을 이용할 수 없습니다.</p>'
+        : `<h3>활성 대출 없음</h3><p>담보로 사용할 수 있는 미판매 물품 ${collateralCount}개</p>`;
+  document.querySelector('#guild-detail').innerHTML = detail;
   document.querySelector('#guild-loan').disabled = locked || Boolean(state.loan) || state.guildLocked;
   document.querySelector('#guild-repay').disabled = !state.loan || state.day >= state.loan?.dueDay;
-  document.querySelector('#guild-message').textContent = message;
+  document.querySelector('#guild-message').innerHTML = message ? `<b>${message}</b>` : `<b>대출 안내</b><p>첫 번째 미판매 물품을 담보로 정산가치의 ${Math.round(balance.loan.limitFromDisposalValue * 100)}%까지 대출합니다.</p><p>만기 ${balance.loan.termDays}일 · 만기 상환액 ${Math.round(balance.loan.repayMultiplier * 100)}%</p>`;
 }
 
 function renderMuseum(returnTo = 'city') {
   museumReturn = returnTo;
   if (state) state.phase = 'museum';
   adapter.showScene('museum');
+  if (state) syncHeader();
   const owned = new Set(state?.metaRelics || loadMeta());
   const relics = balance.relics.list;
   document.querySelector('#relic-list').innerHTML = relics.map((relic, index) => {

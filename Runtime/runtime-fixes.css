@@ -784,3 +784,83 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
   border: 0; background: transparent; transform: none;
 }
 [data-scene="auction"] > .actions button { min-width: 0; height: 58%; padding: 0 8px; font-size: clamp(11px, 1vw, 16px); }
+
+/* Shared live HUD for the team place mockups. */
+.place > .scene-hud {
+  position: absolute; left: 3.2%; right: 10.5%; top: 1%; height: 8.5%; z-index: 8;
+  display: grid; grid-template-columns: 1.05fr 1.2fr 1fr 1fr 1.55fr; gap: .55%;
+  pointer-events: none;
+}
+.place > .scene-hud > span {
+  display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 7px;
+  min-width: 0; padding: 0 12px;
+  border: 9px solid transparent;
+  border-image: url("./assets/ui/skin-v1/status-card.png") 34 fill / 9px / 0 stretch;
+  background: #0a0907ec; color: #f2e6d0; white-space: nowrap;
+}
+.place > .scene-hud small { color: #c59c55; font-size: clamp(9px, .8vw, 12px); }
+.place > .scene-hud b { overflow: hidden; text-overflow: ellipsis; font-size: clamp(12px, 1vw, 17px); }
+
+/* Tavern: the three implemented information channels occupy the painted cards. */
+[data-scene="tavern"] > header { display: none; }
+[data-scene="tavern"] .info-actions button {
+  top: 35%; width: 25%; height: 28%;
+  display: grid; grid-template-rows: auto 1fr auto; place-items: center; gap: 8px;
+  padding: 24px 18px;
+  border: 0; background: transparent; box-shadow: none;
+  color: #2b2015; text-shadow: none; white-space: normal;
+}
+[data-scene="tavern"] .info-actions button:nth-child(1) { left: 4.3%; }
+[data-scene="tavern"] .info-actions button:nth-child(2) { left: 37.5%; }
+[data-scene="tavern"] .info-actions button:nth-child(3) { left: 70.7%; }
+[data-scene="tavern"] .info-actions button strong { font-size: clamp(18px, 1.8vw, 29px); }
+[data-scene="tavern"] .info-actions button small { line-height: 1.45; font-size: clamp(10px, .9vw, 14px); }
+[data-scene="tavern"] .info-actions button span {
+  min-width: 58%; padding: 8px 18px;
+  border: 9px solid transparent;
+  border-image: url("./assets/ui/skin-v1/button-primary.png") 34 fill / 9px / 0 stretch;
+  color: #f4ead8; font-weight: 900; text-shadow: 0 2px 3px #000;
+}
+[data-scene="tavern"] .info-actions button:disabled span {
+  border-image-source: url("./assets/ui/skin-v1/button-primary-disabled.png");
+}
+[data-scene="tavern"] #tavern-owned { left: 9%; top: 72%; width: 82%; height: 11%; }
+[data-scene="tavern"] .return-city { left: 2.2%; top: auto; bottom: 1.5%; width: 16%; height: 6%; }
+
+/* Keep the quest cards clear of the persistent return control. */
+[data-scene="quests"] .office-layout { bottom: 11%; }
+[data-scene="quests"] > [data-place="city"] { z-index: 7; }
+[data-scene="quests"] .quest-grid article { padding: 5px 10px; }
+[data-scene="quests"] .office-layout > section { box-sizing: border-box; overflow: hidden; }
+[data-scene="quests"] .office-layout .quest-grid,
+[data-scene="quests"] .office-layout .inventory-list {
+  position: absolute; left: 12px; right: 12px; top: 56px; bottom: 12px;
+  width: auto; height: auto;
+}
+[data-scene="quests"] .office-layout .quest-grid { grid-template-rows: repeat(3, minmax(0, 1fr)); }
+[data-scene="quests"] .quest-grid article {
+  position: relative; display: block;
+  padding: 9px 150px 8px 12px; overflow: hidden;
+  font-size: calc(12px * var(--text-scale)); line-height: 1.2;
+}
+[data-scene="quests"] .quest-grid article > b,
+[data-scene="quests"] .quest-grid article > small,
+[data-scene="quests"] .quest-grid article > span { display: block; margin: 0 0 4px; }
+[data-scene="quests"] .quest-grid article button {
+  position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+  width: 120px; min-height: 30px; height: 30px; padding: 0 10px;
+  border-width: 7px; border-image-width: 7px;
+}
+
+/* The new HUD owns run status; scene headers remain title plaques. */
+[data-scene="exchange"] header,
+[data-scene="shop"] header,
+[data-scene="quests"] header { top: 10%; height: 14%; }
+[data-scene="exchange"] header .eyebrow,
+[data-scene="exchange"] header strong,
+[data-scene="shop"] header .eyebrow,
+[data-scene="shop"] header strong,
+[data-scene="quests"] header .eyebrow,
+[data-scene="quests"] header strong { display: none; }
+[data-scene="guild"] .guild-heading strong { display: none; }
+[data-scene="shop"] #shop-detail ul { margin: 16px 0 0; padding-left: 22px; line-height: 1.7; }
