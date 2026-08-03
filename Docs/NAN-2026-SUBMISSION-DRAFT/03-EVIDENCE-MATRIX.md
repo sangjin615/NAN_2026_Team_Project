@@ -20,7 +20,7 @@
 | API 비용이 절감됐다 | 미확정 | 실제 API 비용 없음 | 최종 API 선택 후 1런 비용 측정 |
 | 생성 속도가 개선됐다 | 미확정 | 정상 결과 간 유의한 우위 없음 | 모델별 10회 중앙값 측정 전에는 주장 금지 |
 | 외부 npm 런타임 의존성이 없다 | 확정 | `Runtime/package.json` | 최종 패키지 변경 시 재확인 |
-| BGM과 SFX가 게임에 적용됐다 | 미확정 | `Runtime/data/audio-map.json`이 비어 있음 | 실제 음원·출처를 등록하고 플레이 확인 |
+| BGM과 SFX가 게임에 적용됐다 | 확정 | `Runtime/data/audio-map.json`, `Runtime/assets/audio`, `Docs/AUDIO-CREDITS.md` | 제출 빌드에서 볼륨·반복 재생 최종 청취 |
 | 공개 웹에서 바로 플레이할 수 있다 | 미확정 | GitHub `homepageUrl` 없음, 저장소 비공개 | 공개 배포 및 로그아웃 접근 확인 |
 
 2026-08-03 재검증에서 런타임 테스트는 8/8 통과했고, `Runtime/assets/items`에는 PNG 240개와 60개 품목을 기술한 카탈로그가 존재했다.

@@ -168,8 +168,8 @@
 |---|---|---|---|---|
 | 경매품 스프라이트 240개 | 팀 제공 `Sprites_Final`, 저장소 `Runtime/assets/items` | `[담당 확인 — 원 제작 도구·권리·배포 조건]` | AI 제작 자료로 전달받음 `[도구명 확인]` | 품목 카드·경매 화면 |
 | UI·목업·배경 | 팀 제작 자료 및 VSL 최종 ZIP | `[담당 확인 — 제작자별 출처]` | `[담당 확인]` | 씬별 화면 |
-| BGM | 2026-08-03 현재 미연결 | 해당 없음 | 해당 없음 | `audio-map.json`의 `bgm`이 비어 있음 |
-| SFX | 2026-08-03 현재 미연결 | 해당 없음 | 해당 없음 | `audio-map.json`의 `sfx`가 비어 있음 |
+| BGM | V6.4 승인 프로그램의 장면군별 8개 런타임 슬롯 연결 | Kevin MacLeod 6곡 CC BY 4.0, 사용자 제공 타이틀곡 | `Docs/AUDIO-CREDITS.md` | 타이틀곡 공개·재배포 권리 최종 확인 필요 |
+| SFX | V6.4 큐에서 핵심 행동 18종 연결 | V6.4 사운드 패키지 | `Runtime/data/audio-map.json` | 제출 빌드에서 최종 청취 필요 |
 | JavaScript 패키지 | `Runtime/package.json` | 외부 런타임 패키지 선언 없음, Node.js 내장 모듈만 사용 | 아니오 | 개발 서버·테스트·런타임 |
 
 전체 소스 저장소는 https://github.com/sangjin615/NAN_2026_Team_Project 이다. 2026-08-03 확인 시 비공개 저장소이므로 제출 전 공개 전환 또는 심사 계정 초대가 필요하다.

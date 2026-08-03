@@ -13,6 +13,7 @@ import {
 } from './systems.js';
 import { downloadRunLog, recordEvent } from './telemetry.js';
 import { AudioBus } from './audio-bus.js';
+import { createRng } from './rng.js';
 
 const root = document.querySelector('#app');
 const adapter = new VslRuntimeAdapter(root);
@@ -25,6 +26,26 @@ let balance;
 let selectedSlot = 1;
 let slotMode = 'new';
 let museumReturn = 'city';
+let actionTimer = null;
+
+function clearActionTimer() {
+  if (actionTimer) window.clearInterval(actionTimer);
+  actionTimer = null;
+}
+
+function armActionTimer(selector, deadline, onExpire) {
+  clearActionTimer();
+  let expired = false;
+  const update = () => {
+    const remaining = Math.max(0, deadline - Date.now());
+    const element = document.querySelector(selector);
+    if (element) element.textContent = `${Math.ceil(remaining / 1000)}초`;
+    if (!remaining && !expired) {
+      expired = true; clearActionTimer(); onExpire();
+    }
+  };
+  update(); actionTimer = window.setInterval(update, 200);
+}
 
 const relicArt = {
   'old-scale': '황금 저울의 심장.png',
@@ -123,6 +144,7 @@ function syncHeader() {
 }
 
 function renderHub(message = '') {
+  clearActionTimer(); audio.playBgm('city');
   state.phase = 'hub';
   adapter.showScene('hub');
   const values = {
@@ -156,7 +178,7 @@ function questRequirement(quest) {
 }
 
 function renderQuestOffice(message = '') {
-  state.phase = 'quests'; adapter.showScene('quests'); syncHeader();
+  clearActionTimer(); audio.playBgm('workplace'); state.phase = 'quests'; adapter.showScene('quests'); syncHeader();
   document.querySelector('#quest-offers').innerHTML = state.questOffers.map((quest) => `
     <article><b>${questTitle(quest)}</b><small>${questRequirement(quest)}</small><span>수주비 ${money(quest.fee)} · 보상 ${money(quest.reward)}</span>
     <button data-quest="${quest.id}" ${quest.accepted ? 'disabled' : ''}>${quest.accepted ? '수주 완료' : '수주'}</button></article>`).join('');
@@ -186,7 +208,7 @@ function renderQuestOffice(message = '') {
   document.querySelectorAll('[data-quest]').forEach((button) => {
     button.onclick = () => {
       const ok = acceptQuest(state, button.dataset.quest, balance);
-      if (ok) recordEvent(state, 'quest-accept', { questId: button.dataset.quest });
+      if (ok) { recordEvent(state, 'quest-accept', { questId: button.dataset.quest }); audio.playSfx('quest'); }
       renderQuestOffice(ok ? '의뢰를 수주했습니다.' : '현금·수주 한도·충돌 조건을 확인하세요.');
     };
   });
@@ -201,7 +223,7 @@ function renderQuestOffice(message = '') {
   document.querySelectorAll('[data-office-appraise]').forEach((button) => {
     button.onclick = () => {
       const ok = appraiseItem(state, balance, button.dataset.officeAppraise);
-      if (ok) recordEvent(state, 'appraisal', { lotId: button.dataset.officeAppraise, location: 'quest-office' });
+      if (ok) { recordEvent(state, 'appraisal', { lotId: button.dataset.officeAppraise, location: 'quest-office' }); audio.playSfx('appraise'); }
       renderQuestOffice(ok ? '정밀 감정을 완료했습니다.' : '감정 비용 또는 물품 상태를 확인하세요.');
     };
   });
@@ -209,13 +231,14 @@ function renderQuestOffice(message = '') {
 }
 
 function renderExchange(message = '') {
-  state.phase = 'exchange'; adapter.showScene('exchange'); syncHeader();
+  clearActionTimer(); audio.playBgm('workplace'); state.phase = 'exchange'; adapter.showScene('exchange'); syncHeader();
   document.querySelector('#inventory-list').innerHTML = ownedItems().length ? ownedItems().map((item) => `
     <article><label><input type="checkbox" data-item-select="${item.lotId}"> <b>${item.name}</b></label>
     <span>${item.grade} · ${item.category}</span><span>매입 ${money(item.paid)} · ${item.appraised ? `감정 ${money(item.trueValue)} ±${money(item.appraisalRange)}` : '미감정'}</span>
     <button data-sell-item="${item.lotId}" ${item.collateral ? 'disabled' : ''}>즉시 처분</button></article>`).join('') : '<p>보유 물품이 없습니다.</p>';
   document.querySelectorAll('[data-sell-item]').forEach((button) => button.onclick = () => {
     const revenue = sellItems(state, balance, [button.dataset.sellItem]);
+    if (revenue) audio.playSfx('sell');
     renderExchange(`${money(revenue)}에 처분했습니다.`);
   });
   const syncBulkActions = () => {
@@ -236,7 +259,7 @@ function renderExchange(message = '') {
 }
 
 function renderTavern(message = '') {
-  state.phase = 'tavern'; adapter.showScene('tavern'); syncHeader();
+  clearActionTimer(); audio.playBgm('tavern'); state.phase = 'tavern'; adapter.showScene('tavern'); syncHeader();
   const bought = Object.keys(state.information?.[state.day] || {});
   const names = { forecast: '수요 동향', catalog: '출품 목록', competitors: '경쟁자 정보' };
   const descriptions = { forecast: '시장 수요가 높은 계열을 분석합니다.', catalog: '오늘 출품될 물품 목록을 확인합니다.', competitors: '경쟁자들의 예상 입찰 한도를 확인합니다.' };
@@ -254,7 +277,7 @@ function renderTavern(message = '') {
 }
 
 function renderShop(message = '') {
-  state.phase = 'shop'; adapter.showScene('shop'); syncHeader();
+  clearActionTimer(); audio.playBgm('workplace'); state.phase = 'shop'; adapter.showScene('shop'); syncHeader();
   const next = Math.min(4, state.shopStage + 1); const maxed = state.shopStage >= 4;
   const cost = maxed ? 0 : balance.shop.upgradeCost[next - 1];
   const required = maxed ? 0 : balance.shop.questRequirement[next - 1];
@@ -267,7 +290,7 @@ function renderShop(message = '') {
 }
 
 function renderGuild(message = '') {
-  state.phase = 'guild'; adapter.showScene('guild'); syncHeader();
+  clearActionTimer(); audio.playBgm('workplace'); state.phase = 'guild'; adapter.showScene('guild'); syncHeader();
   const locked = state.shopStage < balance.loan.minShopStage;
   const collateralItems = ownedItems().filter((item) => !item.collateral);
   const collateralCount = collateralItems.length;
@@ -293,6 +316,7 @@ function renderGuild(message = '') {
 }
 
 function renderMuseum(returnTo = 'city') {
+  clearActionTimer(); audio.playBgm('museum');
   museumReturn = returnTo;
   if (state) state.phase = 'museum';
   adapter.showScene('museum');
@@ -312,7 +336,7 @@ function renderMuseum(returnTo = 'city') {
       : `<small>${tierNames[relic.tier]} 전시 슬롯</small><h3>미획득 유물</h3><p>여정을 완주하고 유물 경매에서 획득하면 정보가 공개됩니다.</p>`;
   };
   document.querySelectorAll('[data-relic]').forEach((card) => {
-    const select = () => { document.querySelectorAll('[data-relic]').forEach((entry) => entry.classList.toggle('is-selected', entry === card)); showRelicDetail(relics.find((relic) => relic.id === card.dataset.relic)); };
+    const select = () => { document.querySelectorAll('[data-relic]').forEach((entry) => entry.classList.toggle('is-selected', entry === card)); showRelicDetail(relics.find((relic) => relic.id === card.dataset.relic)); audio.playSfx('museum'); };
     card.onclick = select; card.onkeydown = (event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); select(); } };
   });
   const ownedCount = relics.filter((relic) => owned.has(relic.id)).length;
@@ -322,7 +346,7 @@ function renderMuseum(returnTo = 'city') {
 }
 
 function renderCatalog() {
-  state.phase = 'catalog'; adapter.showScene('catalog'); syncHeader();
+  clearActionTimer(); audio.playBgm('workplace'); state.phase = 'catalog'; adapter.showScene('catalog'); syncHeader();
   document.querySelector('#catalog-grid').innerHTML = state.schedule.days[state.day - 1].lots.map((lot) => `<article class="lot-card"><div class="mini-sprite ${lot.visualEffects.map((effect) => `vfx-${effect}`).join(' ')}"><img src="${spriteUrl(lot, lot.grade)}" alt=""></div><span>${lot.grade}</span><h3>${lot.content.displayName}</h3><p>${lot.content.description}</p></article>`).join('');
 }
 
@@ -333,8 +357,9 @@ function renderAuction() {
   state.phase = 'auction'; audio.playBgm('auction');
   if (state.auctionSession?.lotId !== lot.lotId) {
     const marketIndex = state.marketPath[lot.category][state.day - 1];
-    state.auctionSession = { lotId: lot.lotId, currentPrice: Math.max(1, Math.round(lot.pricing.basePrice * balance.auction.startBidRatio)), leader: null, bots: botBidForLot({ lot, day: state.day, balance, marketIndex, seed: state.seed }), feed: expired ? [`기한이 지난 의뢰 ${expired}건이 만료됐습니다.`] : ['경매가 시작되었습니다.'] };
+    state.auctionSession = { lotId: lot.lotId, currentPrice: Math.max(1, Math.round(lot.pricing.basePrice * balance.auction.startBidRatio)), leader: null, bots: botBidForLot({ lot, day: state.day, balance, marketIndex, seed: state.seed }), deadline: Date.now() + 15000, feed: expired ? [`기한이 지난 의뢰 ${expired}건이 만료됐습니다.`] : ['경매가 시작되었습니다.'] };
   }
+  state.auctionSession.deadline ||= Date.now() + 15000;
   adapter.showScene('auction');
   adapter.setText('lot-progress', `${state.day}일차 · LOT ${state.lotIndex + 1} / 8`); adapter.setText('lot-name', lot.content.displayName);
   adapter.setText('lot-grade', lot.grade); adapter.setText('lot-description', lot.content.description); adapter.setText('base-price', money(lot.pricing.basePrice));
@@ -345,10 +370,12 @@ function renderAuction() {
     ...state.auctionSession.bots.map((bot) => ({ name: bot.name, budget: bot.maxBid, leader: state.auctionSession.leader === bot.id })),
   ];
   document.querySelector('#auction-participants').innerHTML = `<h3>참가자 명단 (${participants.length} / 4)</h3>${participants.map((participant, index) => `<div class="participant ${participant.leader ? 'is-leading' : ''}"><span>${participant.player ? '나' : index}</span><b>${participant.name}</b><strong>${money(participant.budget)}</strong></div>`).join('')}`;
-  document.querySelector('#auction-lot-status').innerHTML = `<b>경매 ${state.lotIndex + 1} / 8</b><span>${lot.grade}</span><strong>${money(state.auctionSession.currentPrice)}</strong>`;
+  document.querySelector('#auction-lot-status').innerHTML = `<b>경매 ${state.lotIndex + 1} / 8</b><span>${lot.grade}</span><strong>${money(state.auctionSession.currentPrice)}</strong><em id="auction-timer" aria-label="남은 시간"></em>`;
+  armActionTimer('#auction-timer', state.auctionSession.deadline, () => finishLot('pass'));
 }
 
 function finishLot(action, multiplier = 1) {
+  clearActionTimer();
   const lot = state.schedule.days[state.day - 1].lots[state.lotIndex]; const session = state.auctionSession; let result;
   if (action === 'bid') {
     const raise = Math.max(1, Math.ceil(session.currentPrice * balance.auction.minRaiseRate));
@@ -357,7 +384,7 @@ function finishLot(action, multiplier = 1) {
     if (ownedItems().length >= state.storage) { session.feed.push('보관칸이 가득 찼습니다.'); return renderAuction(); }
     session.currentPrice = proposed; session.leader = 'player'; session.feed.push(`플레이어 ${money(proposed)}`); audio.playSfx('bid');
     const challenger = [...session.bots].filter((bot) => bot.maxBid > proposed).sort((a, b) => b.maxBid - a.maxBid)[0];
-    if (challenger) { session.currentPrice = Math.min(challenger.maxBid, proposed + raise); session.leader = challenger.id; session.feed.push(`${challenger.name} ${money(session.currentPrice)}`); return renderAuction(); }
+    if (challenger) { session.currentPrice = Math.min(challenger.maxBid, proposed + raise); session.leader = challenger.id; session.feed.push(`${challenger.name} ${money(session.currentPrice)}`); audio.playSfx('bot-bid'); return renderAuction(); }
     result = { winner: 'player', price: proposed, bots: session.bots };
   } else {
     const leader = [...session.bots].sort((a, b) => b.maxBid - a.maxBid)[0];
@@ -365,11 +392,13 @@ function finishLot(action, multiplier = 1) {
   }
   resolveLot(state, { action, playerBid: session.currentPrice, auctionResult: result });
   recordEvent(state, 'auction', { lotId: lot.lotId, action, winner: result.winner, price: result.price });
+  audio.playSfx(action === 'pass' ? 'pass' : 'gavel');
   state.auctionSession = null;
   state.phase === 'settlement' ? renderSettlement() : renderAuction();
 }
 
 function renderSettlement() {
+  clearActionTimer(); audio.playBgm('settlement');
   if (state.settledDay !== state.day) {
     const quests = settleQuests(state); const loan = settleLoan(state); state.settledDay = state.day; state.lastSettlement = { quests, loan };
     if (missedDeadline(state)) state.failure = `${state.day}일차 승급 기한 실패 · 상회 ${state.shopStage}단계`;
@@ -381,6 +410,7 @@ function renderSettlement() {
 }
 
 async function nextDay() {
+  audio.playSfx('day');
   if (state.failure) return renderResult();
   if (state.day === 12) return startRelicAuction();
   advanceDay(state); state.questOffers = createDailyQuestOffers(balance, state.day, state.seed, state.metaRelics); state.settledDay = null;
@@ -389,33 +419,59 @@ async function nextDay() {
 }
 
 function startRelicAuction() {
+  clearActionTimer(); audio.playBgm('relic');
   const permanent = new Set(state.metaRelics || []);
   if (permanent.size >= 9) return renderResult();
-  state.phase = 'relic'; state.relicRound ??= 0; state.relicChoices ??= []; renderRelic();
+  state.phase = 'relic'; state.relicRound ??= 0; state.relicChoices ??= []; state.relicSession = null; renderRelic();
 }
 
 function renderRelic() {
   if (state.relicRound >= 3) return renderResult();
-  adapter.showScene('relic'); const tier = balance.relicAuction.tiers[state.relicRound]; const opening = balance.relicAuction.startBid[state.relicRound];
+  adapter.showScene('relic'); audio.playBgm('relic'); const tier = balance.relicAuction.tiers[state.relicRound]; const opening = balance.relicAuction.startBid[state.relicRound];
   const choices = balance.relics.list.filter((relic) => relic.tier === tier && !state.metaRelics.includes(relic.id));
   const relic = choices[(state.relicRound + state.seed.length) % Math.max(1, choices.length)] || balance.relics.list.find((entry) => entry.tier === tier);
-  state.currentRelic = relic; state.relicBid = state.relicBid || opening;
-  document.querySelector('#relic-card').innerHTML = `<p>${tier.toUpperCase()} · ROUND ${state.relicRound + 1}/3</p><h2>${relic.name}</h2><p>${relic.effect}</p><strong>현재 호가 ${money(state.relicBid)}</strong>`;
+  state.currentRelic = relic;
+  if (!state.relicSession || state.relicSession.round !== state.relicRound) {
+    const rng = createRng(`${state.seed}:relic:${state.relicRound}`);
+    const bands = [[.6,.85],[.85,1.1],[1.1,1.4]];
+    const names = ['왕실 대리인', '북부 대상인', '해외 수집가'];
+    const bots = bands.map(([low, high], index) => ({ id: `royal-${index + 1}`, name: names[index], maxBid: Math.max(opening, Math.min(opening * 2, Math.round(state.cash * (low + rng() * (high - low))))) }));
+    state.relicSession = { round: state.relicRound, currentPrice: opening, leader: null, bots, deadline: Date.now() + 15000, feed: ['최종 유물 경매가 시작되었습니다.'] };
+  }
+  const session = state.relicSession;
+  document.querySelector('#relic-card').innerHTML = `<p>${tier.toUpperCase()} · ROUND ${state.relicRound + 1}/3</p><h2>${relic.name}</h2><p>${relic.effect}</p><strong>현재 호가 ${money(session.currentPrice)}</strong><em id="relic-timer" aria-label="남은 시간"></em>`;
+  const participants = [{ id: 'player', name: '당신', budget: state.cash }, ...session.bots.map((bot) => ({ ...bot, budget: bot.maxBid }))];
+  document.querySelector('#relic-participants').innerHTML = `<h3>최종 경매 참가자</h3>${participants.map((participant) => `<div class="participant ${session.leader === participant.id ? 'is-leading' : ''}"><b>${participant.name}</b><strong>${money(participant.budget)}</strong></div>`).join('')}`;
+  document.querySelector('#relic-feed').innerHTML = session.feed.slice(-4).map((line) => `<p>${line}</p>`).join('');
   document.querySelector('#buy-relic').textContent = `10% 인상 입찰`;
   document.querySelector('#skip-relic').textContent = '물러나기';
-  document.querySelector('#buy-relic').disabled = state.cash < Math.ceil(state.relicBid * 1.1);
+  document.querySelector('#buy-relic').disabled = state.cash < Math.ceil(session.currentPrice * 1.1);
+  armActionTimer('#relic-timer', session.deadline, () => finishRelic(false));
 }
 
 function finishRelic(bid) {
+  clearActionTimer(); const session = state.relicSession;
   if (bid) {
-    const price = Math.ceil(state.relicBid * 1.1);
-    if (state.cash >= price) { state.cash -= price; state.relicChoices.push(state.currentRelic.id); }
+    const price = Math.ceil(session.currentPrice * 1.1);
+    if (state.cash < price) return renderRelic();
+    session.currentPrice = price; session.leader = 'player'; session.feed.push(`당신 ${money(price)}`); audio.playSfx('relic-bid');
+    const challenger = [...session.bots].filter((bot) => bot.maxBid > price).sort((a, b) => b.maxBid - a.maxBid)[0];
+    if (challenger) {
+      session.currentPrice = Math.min(challenger.maxBid, Math.ceil(price * 1.1)); session.leader = challenger.id; session.feed.push(`${challenger.name} ${money(session.currentPrice)}`); audio.playSfx('bot-bid'); return renderRelic();
+    }
   }
-  state.relicRound += 1; state.relicBid = null; renderRelic();
+  if (session.leader === 'player') {
+    state.cash -= session.currentPrice; state.relicChoices.push(state.currentRelic.id); audio.playSfx('relic-gavel');
+    recordEvent(state, 'relic-auction', { relicId: state.currentRelic.id, winner: 'player', price: session.currentPrice });
+  } else {
+    const winner = [...session.bots].sort((a, b) => b.maxBid - a.maxBid)[0]; audio.playSfx('relic-pass');
+    recordEvent(state, 'relic-auction', { relicId: state.currentRelic.id, winner: session.leader || winner.id, price: session.currentPrice });
+  }
+  state.relicRound += 1; state.relicSession = null; renderRelic();
 }
 
 function renderResult() {
-  state.completed = true; state.phase = 'result'; adapter.showScene('result');
+  clearActionTimer(); audio.playBgm('settlement'); state.completed = true; state.phase = 'result'; adapter.showScene('result');
   document.querySelector('[data-scene="result"]').classList.toggle('is-failure', Boolean(state.failure));
   const unsold = ownedItems().reduce((sum, item) => sum + item.trueValue, 0);
   const relics = [...new Set([...state.metaRelics, ...(state.relicChoices || [])])]; localStorage.setItem('unknown-auction:relics', JSON.stringify(relics));
@@ -427,8 +483,8 @@ function renderResult() {
 const placeRenderers = { city: renderHub, quests: renderQuestOffice, tavern: renderTavern, exchange: renderExchange, shop: renderShop, guild: renderGuild, museum: () => renderMuseum('city'), catalog: renderCatalog };
 
 document.querySelector('#new-run').onclick = () => newRun(document.querySelector('#seed').value.trim() || Date.now());
-document.querySelector('#open-new-slots').onclick = () => openSlotScene('new');
-document.querySelector('#open-continue-slots').onclick = () => openSlotScene('continue');
+document.querySelector('#open-new-slots').onclick = () => { audio.playBgm('title'); openSlotScene('new'); };
+document.querySelector('#open-continue-slots').onclick = () => { audio.playBgm('title'); openSlotScene('continue'); };
 document.querySelector('#back-title').onclick = () => adapter.showScene('title');
 document.querySelector('#continue-run').onclick = () => { state = store.load(selectedSlot); if (!state) return status('유효한 저장 데이터가 없습니다.', 'error'); ({ auction: renderAuction, settlement: renderSettlement, relic: renderRelic, result: renderResult, quests: renderQuestOffice, tavern: renderTavern, exchange: renderExchange, shop: renderShop, guild: renderGuild, museum: () => renderMuseum('city'), catalog: renderCatalog }[state.phase] || renderHub)(); };
 document.querySelector('#start-auction').onclick = renderAuction;
@@ -443,11 +499,11 @@ document.querySelector('#title-settings').onclick = () => document.querySelector
 document.querySelector('#close-settings').onclick = () => document.querySelector('#settings-dialog').close();
 document.querySelector('#text-scale').onchange = (event) => document.documentElement.style.setProperty('--text-scale', event.target.value);
 document.querySelectorAll('[data-place]').forEach((button) => button.onclick = () => { audio.playSfx('navigate'); placeRenderers[button.dataset.place]?.(); });
-document.querySelector('#sell-selected').onclick = () => { const ids = [...document.querySelectorAll('[data-item-select]:checked')].map((input) => input.dataset.itemSelect); renderExchange(`${money(sellItems(state, balance, ids))}에 처분했습니다.`); };
-document.querySelectorAll('[data-info]').forEach((button) => button.onclick = () => { const ok = buyInformation(state, balance, button.dataset.info); renderTavern(ok ? '정보를 구매했습니다.' : '이미 구매했거나 현금이 부족합니다.'); });
-document.querySelector('#shop-upgrade').onclick = () => { const ok = upgradeShop(state, balance); renderShop(ok ? '상회를 승급했습니다.' : '현금 또는 완료 의뢰가 부족합니다.'); };
-document.querySelector('#guild-loan').onclick = () => { const lotId = document.querySelector('#guild-collateral')?.value; const ok = takeLoan(state, balance, lotId); renderGuild(ok ? '선택한 물품으로 담보 대출을 실행했습니다.' : '담보 물품을 선택하고 해금 조건을 확인하세요.'); };
-document.querySelector('#guild-repay').onclick = () => { const ok = repayLoanEarly(state, balance); renderGuild(ok ? '원금을 중도 상환했습니다.' : '상환할 수 없습니다.'); };
+document.querySelector('#sell-selected').onclick = () => { const ids = [...document.querySelectorAll('[data-item-select]:checked')].map((input) => input.dataset.itemSelect); const revenue = sellItems(state, balance, ids); if (revenue) audio.playSfx('sell'); renderExchange(`${money(revenue)}에 처분했습니다.`); };
+document.querySelectorAll('[data-info]').forEach((button) => button.onclick = () => { const ok = buyInformation(state, balance, button.dataset.info); if (ok) audio.playSfx('information'); renderTavern(ok ? '정보를 구매했습니다.' : '이미 구매했거나 현금이 부족합니다.'); });
+document.querySelector('#shop-upgrade').onclick = () => { const ok = upgradeShop(state, balance); if (ok) audio.playSfx('upgrade'); renderShop(ok ? '상회를 승급했습니다.' : '현금 또는 완료 의뢰가 부족합니다.'); };
+document.querySelector('#guild-loan').onclick = () => { const lotId = document.querySelector('#guild-collateral')?.value; const ok = takeLoan(state, balance, lotId); if (ok) audio.playSfx('loan'); renderGuild(ok ? '선택한 물품으로 담보 대출을 실행했습니다.' : '담보 물품을 선택하고 해금 조건을 확인하세요.'); };
+document.querySelector('#guild-repay').onclick = () => { const ok = repayLoanEarly(state, balance); if (ok) audio.playSfx('repay'); renderGuild(ok ? '원금을 중도 상환했습니다.' : '상환할 수 없습니다.'); };
 document.querySelector('#download-log').onclick = () => downloadRunLog(state);
 
 boot();

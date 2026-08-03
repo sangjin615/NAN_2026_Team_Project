@@ -930,3 +930,38 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
 [data-scene="museum"] #museum-progress b { color: #876126; font-size: clamp(11px,1vw,16px); }
 [data-scene="museum"] #museum-progress strong { font: 700 clamp(27px,3vw,48px) Georgia,serif; }
 [data-scene="museum"] #museum-progress span { font-size: clamp(9px,.8vw,13px); line-height: 1.5; }
+
+/* Fifteen-second public auction clocks. */
+#auction-lot-status #auction-timer {
+  display: grid; place-items: center; min-width: 58px; height: 32px;
+  border: 1px solid #a7772d; background: #1c130b; color: #f4cf78;
+  font-style: normal; font-weight: 900;
+}
+
+/* Final relic auction uses the same four-participant, open-bid structure. */
+[data-scene="relic"] #relic-card { height: 36%; }
+[data-scene="relic"] #relic-card #relic-timer {
+  display: block; width: 64px; margin: 5px auto 0; padding: 5px;
+  border: 1px solid #9d712e; background: #26190c; color: #f3d78e;
+  font-style: normal; font-weight: 900;
+}
+[data-scene="relic"] #relic-participants {
+  position: absolute; left: 7%; top: 23%; width: 23%; height: 47%;
+  padding: 18px; color: #e9dcc3; text-align: left;
+  border: 14px solid transparent;
+  border-image: url("./assets/ui/skin-v1/panel-dark.png") 46 fill / 14px / 0 stretch;
+}
+[data-scene="relic"] #relic-participants h3 { margin: 0 0 12px; color: #e4b95d; }
+[data-scene="relic"] #relic-participants .participant {
+  display: flex; justify-content: space-between; gap: 10px; margin: 7px 0; padding: 9px;
+  border: 1px solid #554025; background: #17110be6;
+}
+[data-scene="relic"] #relic-participants .participant.is-leading { border-color: #e3b64f; box-shadow: inset 0 0 12px #e3b64f33; }
+[data-scene="relic"] #relic-feed {
+  position: absolute; right: 7%; top: 23%; width: 23%; height: 47%;
+  padding: 18px; overflow: hidden; color: #e9dcc3; text-align: left;
+  border: 14px solid transparent;
+  border-image: url("./assets/ui/skin-v1/panel-dark.png") 46 fill / 14px / 0 stretch;
+  background: #15100bd9;
+}
+[data-scene="relic"] #relic-feed p { margin: 0 0 9px; font-size: clamp(10px,.9vw,14px); }
