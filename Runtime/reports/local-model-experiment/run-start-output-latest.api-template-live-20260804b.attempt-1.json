@@ -1,0 +1,257 @@
+{
+  "model": "qwen3:14b",
+  "seed": "api-template-live-20260804b",
+  "attempt": 1,
+  "temperature": 0.3,
+  "latencyMs": 28522,
+  "output": {
+    "schemaVersion": "1.0",
+    "runSeed": "api-template-live-20260804b",
+    "premise": "19세기 말, 신비로운 경매 도시에서 거래되는 유물과 수집품을 둘러싼 이야기가 펼쳐진다.",
+    "marketArc": [
+      {
+        "day": 1,
+        "headline": "경매의 시작",
+        "mood": "긴장"
+      },
+      {
+        "day": 2,
+        "headline": "유물의 서사",
+        "mood": "미스터리"
+      },
+      {
+        "day": 3,
+        "headline": "거래의 시작",
+        "mood": "흥분"
+      },
+      {
+        "day": 4,
+        "headline": "신비로운 유물",
+        "mood": "불확실"
+      },
+      {
+        "day": 5,
+        "headline": "경매의 고조",
+        "mood": "경쟁"
+      },
+      {
+        "day": 6,
+        "headline": "과거의 유물",
+        "mood": "추억"
+      },
+      {
+        "day": 7,
+        "headline": "비밀의 유물",
+        "mood": "스스로"
+      },
+      {
+        "day": 8,
+        "headline": "경매의 전환점",
+        "mood": "불확실"
+      },
+      {
+        "day": 9,
+        "headline": "유물의 진실",
+        "mood": "미스터리"
+      },
+      {
+        "day": 10,
+        "headline": "경매의 정점",
+        "mood": "경쟁"
+      },
+      {
+        "day": 11,
+        "headline": "유물의 결정",
+        "mood": "결정"
+      },
+      {
+        "day": 12,
+        "headline": "경매의 종말",
+        "mood": "결말"
+      }
+    ],
+    "sets": [
+      {
+        "setId": "set-1",
+        "theme": "해양",
+        "items": [
+          "old-scale",
+          "leather-ledger",
+          "worn-seal"
+        ]
+      },
+      {
+        "setId": "set-2",
+        "theme": "탐험",
+        "items": [
+          "magnifier",
+          "compass",
+          "broker-card"
+        ]
+      },
+      {
+        "setId": "set-3",
+        "theme": "귀족",
+        "items": [
+          "royal-charter",
+          "house-crest",
+          "merchant-safe"
+        ]
+      }
+    ],
+    "bots": [
+      {
+        "botId": "nemesis",
+        "role": "숙적",
+        "speech": "당신은 이 경매에서 절대 이길 수 없습니다."
+      },
+      {
+        "botId": "drifter-a",
+        "role": "유랑 상인",
+        "speech": "이 유물은 당신에게 큰 행운을 가져다줄 것입니다."
+      },
+      {
+        "botId": "drifter-b",
+        "role": "유랑 상인",
+        "speech": "이 유물은 당신의 운명을 바꿀 것입니다."
+      }
+    ],
+    "relics": [
+      {
+        "relicId": "old-scale",
+        "tier": "low",
+        "description": "오래된 척도로, 가치를 측정하는 데 사용된다."
+      },
+      {
+        "relicId": "leather-ledger",
+        "tier": "low",
+        "description": "가죽으로 만든 장부로, 거래 기록을 담고 있다."
+      },
+      {
+        "relicId": "worn-seal",
+        "tier": "low",
+        "description": "마모된 도장으로, 신뢰의 상징이다."
+      },
+      {
+        "relicId": "magnifier",
+        "tier": "mid",
+        "description": "경매에서 유물의 세부 사항을 관찰하는 데 사용된다."
+      },
+      {
+        "relicId": "compass",
+        "tier": "mid",
+        "description": "탐험의 길을 안내하는 데 사용되는 오래된 나침반이다."
+      },
+      {
+        "relicId": "broker-card",
+        "tier": "mid",
+        "description": "중개인의 신분을 증명하는 카드로, 거래에 유리하다."
+      },
+      {
+        "relicId": "royal-charter",
+        "tier": "high",
+        "description": "왕실의 특권을 증명하는 문서로, 귀한 유물이다."
+      },
+      {
+        "relicId": "house-crest",
+        "tier": "high",
+        "description": "귀족 가문의 상징으로, 고귀한 유물이다."
+      },
+      {
+        "relicId": "merchant-safe",
+        "tier": "high",
+        "description": "상인의 보물로, 귀중한 물품을 보관하는 데 사용된다."
+      }
+    ],
+    "market": {
+      "CER": [
+        1.0063,
+        0.9388,
+        0.8717,
+        0.8764,
+        0.8319,
+        0.7876,
+        0.8822,
+        0.8936,
+        0.924,
+        1.0033,
+        1.0005,
+        0.9997
+      ],
+      "CLK": [
+        1.0784,
+        1.1576,
+        1.0876,
+        1.1039,
+        1.105,
+        1.0638,
+        1.1252,
+        1.0741,
+        1.1159,
+        1.0263,
+        0.9732,
+        1.0684
+      ],
+      "PNT": [
+        1.0914,
+        1.0081,
+        0.9938,
+        1.1598,
+        1.1412,
+        1.1614,
+        1.2129,
+        1.1651,
+        1.0682,
+        1.1608,
+        1.1293,
+        1.0268
+      ],
+      "BOK": [
+        0.9829,
+        0.9532,
+        0.9823,
+        1.0768,
+        1.1856,
+        1.0716,
+        0.9605,
+        1.0648,
+        1.0222,
+        0.8298,
+        1.019,
+        0.9896
+      ],
+      "MET": [
+        1.0517,
+        0.9535,
+        1.0059,
+        0.9093,
+        0.8409,
+        0.8483,
+        0.9649,
+        0.946,
+        1.0508,
+        1.2049,
+        1.0599,
+        0.8759
+      ],
+      "JEW": [
+        1.0383,
+        1.142,
+        0.9933,
+        1.0167,
+        0.9404,
+        1.0132,
+        1.0553,
+        1.0384,
+        1.1119,
+        1.1144,
+        0.9127,
+        0.9204
+      ]
+    },
+    "ending": {
+      "success": "경매에서 승리하여 귀중한 유물을 손에 넣었다.",
+      "failure": "경매에서 패배하여 유물을 잃고 떠나야 했다."
+    }
+  }
+}

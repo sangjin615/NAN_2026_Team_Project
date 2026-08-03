@@ -1,0 +1,262 @@
+{
+  "model": "qwen2.5-coder:14b",
+  "seed": "api-template-coder-20260804",
+  "attempt": 2,
+  "temperature": 0.1,
+  "latencyMs": 31885,
+  "output": {
+    "schemaVersion": "1.0",
+    "runSeed": "api-template-coder-20260804",
+    "premise": "세월이 흐르며, 오랜 세월 동안 숨겨진 보물들이 하나씩 밝혀집니다.",
+    "marketArc": [
+      {
+        "day": 1,
+        "headline": "비밀의 상인 등장!",
+        "mood": "신비로움"
+      },
+      {
+        "day": 2,
+        "headline": "세계를 뒤집는 비밀",
+        "mood": "긴장감"
+      },
+      {
+        "day": 3,
+        "headline": "보물의 힘",
+        "mood": "신비로움"
+      },
+      {
+        "day": 4,
+        "headline": "왕실의 비밀",
+        "mood": "격렬함"
+      },
+      {
+        "day": 5,
+        "headline": "유랑 상인의 도전",
+        "mood": "모험"
+      },
+      {
+        "day": 6,
+        "headline": "천문학자의 발견",
+        "mood": "신비로움"
+      },
+      {
+        "day": 7,
+        "headline": "극장의 비밀",
+        "mood": "격렬함"
+      },
+      {
+        "day": 8,
+        "headline": "생물학자의 발견",
+        "mood": "신비로움"
+      },
+      {
+        "day": 9,
+        "headline": "보물의 경쟁",
+        "mood": "긴장감"
+      },
+      {
+        "day": 10,
+        "headline": "왕실의 비밀 깨기",
+        "mood": "격렬함"
+      },
+      {
+        "day": 11,
+        "headline": "극장의 비밀 깨기",
+        "mood": "긴장감"
+      },
+      {
+        "day": 12,
+        "headline": "생물학자의 발견",
+        "mood": "신비로움"
+      }
+    ],
+    "sets": [
+      {
+        "setId": "set-1",
+        "themeKey": "voyage",
+        "relicIds": [
+          "old-scale",
+          "leather-ledger",
+          "worn-seal"
+        ],
+        "sharedFlavorText": "세월이 흐르며, 오랜 세월 동안 숨겨진 보물들이 하나씩 밝혀집니다."
+      },
+      {
+        "setId": "set-2",
+        "themeKey": "royalty",
+        "relicIds": [
+          "magnifier",
+          "compass",
+          "broker-card"
+        ],
+        "sharedFlavorText": "세월이 흐르며, 오랜 세월 동안 숨겨진 보물들이 하나씩 밝혀집니다."
+      },
+      {
+        "setId": "set-3",
+        "themeKey": "guild",
+        "relicIds": [
+          "royal-charter",
+          "house-crest",
+          "merchant-safe"
+        ],
+        "sharedFlavorText": "세월이 흐르며, 오랜 세월 동안 숨겨진 보물들이 하나씩 밝혀집니다."
+      }
+    ],
+    "bots": [
+      {
+        "botId": "nemesis",
+        "role": "숙적"
+      },
+      {
+        "botId": "drifter-a",
+        "role": "유랑 상인"
+      },
+      {
+        "botId": "drifter-b",
+        "role": "유랑 상인"
+      }
+    ],
+    "relics": [
+      {
+        "relicId": "old-scale",
+        "tier": "low",
+        "displayName": "오래된 저울",
+        "description": "세월이 흐르며, 오랜 세월 동안 숨겨진 보물들이 하나씩 밝혀집니다."
+      },
+      {
+        "relicId": "leather-ledger",
+        "tier": "low",
+        "displayName": "가죽장부",
+        "description": "세월이 흐르며, 오랜 세월 동안 숨겨진 보물들이 하나씩 밝혀집니다."
+      },
+      {
+        "relicId": "worn-seal",
+        "tier": "low",
+        "displayName": "오래된 도장",
+        "description": "세월이 흐르며, 오랜 세월 동안 숨겨진 보물들이 하나씩 밝혀집니다."
+      },
+      {
+        "relicId": "magnifier",
+        "tier": "mid",
+        "displayName": "확대경",
+        "description": "세월이 흐르며, 오랜 세월 동안 숨겨진 보물들이 하나씩 밝혀집니다."
+      },
+      {
+        "relicId": "compass",
+        "tier": "mid",
+        "displayName": "나침반",
+        "description": "세월이 흐르며, 오랜 세월 동안 숨겨진 보물들이 하나씩 밝혀집니다."
+      },
+      {
+        "relicId": "broker-card",
+        "tier": "mid",
+        "displayName": "중개인 카드",
+        "description": "세월이 흐르며, 오랜 세월 동안 숨겨진 보물들이 하나씩 밝혀집니다."
+      },
+      {
+        "relicId": "royal-charter",
+        "tier": "high",
+        "displayName": "왕실 특권",
+        "description": "세월이 흐르며, 오랜 세월 동안 숨겨진 보물들이 하나씩 밝혀집니다."
+      },
+      {
+        "relicId": "house-crest",
+        "tier": "high",
+        "displayName": "가정 상징",
+        "description": "세월이 흐르며, 오랜 세월 동안 숨겨진 보물들이 하나씩 밝혀집니다."
+      },
+      {
+        "relicId": "merchant-safe",
+        "tier": "high",
+        "displayName": "상인의 안전함",
+        "description": "세월이 흐르며, 오랜 세월 동안 숨겨진 보물들이 하나씩 밝혀집니다."
+      }
+    ],
+    "market": {
+      "CER": [
+        0.8818,
+        0.91,
+        0.967,
+        0.8902,
+        0.9976,
+        1.0156,
+        0.9977,
+        0.9697,
+        0.8849,
+        0.9316,
+        1.0217,
+        0.9251
+      ],
+      "CLK": [
+        1.0466,
+        1.1546,
+        1.2197,
+        1.1494,
+        1.2407,
+        1.1941,
+        1.0208,
+        1.0963,
+        1.0954,
+        1.0882,
+        1.1881,
+        1.1118
+      ],
+      "PNT": [
+        0.828,
+        0.8159,
+        0.9336,
+        0.9774,
+        0.8412,
+        1.0501,
+        0.9553,
+        0.9664,
+        0.8691,
+        0.9083,
+        0.9197,
+        0.9513
+      ],
+      "BOK": [
+        1.1493,
+        1.2348,
+        1.1744,
+        1.093,
+        1.0675,
+        0.9802,
+        0.8573,
+        0.8989,
+        1.0914,
+        1.204,
+        1.1743,
+        1.0937
+      ],
+      "MET": [
+        1.1222,
+        1.168,
+        1.2662,
+        1.1777,
+        1.1213,
+        1.0195,
+        0.9829,
+        0.8542,
+        1.055,
+        1.0171,
+        1.0472,
+        0.9433
+      ],
+      "JEW": [
+        1.0872,
+        1.037,
+        1.0591,
+        1.0068,
+        0.9895,
+        1.0447,
+        1.1134,
+        0.9538,
+        0.9521,
+        0.9182,
+        1.0708,
+        1.0447
+      ]
+    }
+  }
+}

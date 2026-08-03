@@ -1,0 +1,8 @@
+{
+  "model": "qwen3:14b",
+  "seed": "api-template-live-20260804",
+  "attempt": 2,
+  "temperature": 0.1,
+  "latencyMs": 179,
+  "output": {}
+}

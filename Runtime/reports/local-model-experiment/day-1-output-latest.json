@@ -1,0 +1,109 @@
+{
+  "model": "qwen2.5-coder:14b",
+  "seed": "api-template-schema-20260804",
+  "attempt": 1,
+  "temperature": 0.3,
+  "latencyMs": 24586,
+  "output": {
+    "schemaVersion": "1.0",
+    "day": 1,
+    "marketHeadline": "비밀의 경매장 오픈",
+    "lots": [
+      {
+        "lotId": "api-template-schema-20260804-d1-l1",
+        "displayName": "월상표시 회중시계",
+        "description": "세월을 담은 고급 시계로, 시간의 흐름을 정확하게 파악할 수 있습니다.",
+        "rumor": "이 시계는 왕실에서 사용되었던 것으로 알려져 있습니다.",
+        "setHint": "신비의 보석",
+        "npcReaction": "이 시계를 낙찰하면, 시간에 대한 깊은 이해를 얻을 수 있을 것 같습니다."
+      },
+      {
+        "lotId": "api-template-schema-20260804-d1-l2",
+        "displayName": "끈잠금 통역 수첩",
+        "description": "비밀의 언어를 해독할 수 있는 특별한 수첩입니다.",
+        "rumor": "이 수첩은 유명한 상인들이 사용하던 것으로 알려져 있습니다.",
+        "setHint": "상인의 지혜",
+        "npcReaction": "이 수첩을 낙찰하면, 다양한 언어를 이해할 수 있을 것 같습니다."
+      },
+      {
+        "lotId": "api-template-schema-20260804-d1-l3",
+        "displayName": "세 갈래 다이아몬드 티아라",
+        "description": "세 개의 큰 다이아몬드로 만들어진 화려한 티아라는 장식입니다.",
+        "rumor": "이 티아라는 왕실에 소중히 보관되어온 것으로 알려져 있습니다.",
+        "setHint": "왕실의 보물",
+        "npcReaction": "이 티아라는 낙찰하면, 왕실의 부자의 모습을 볼 수 있을 것 같습니다."
+      },
+      {
+        "lotId": "api-template-schema-20260804-d1-l4",
+        "displayName": "쌍어문 청록 화병",
+        "description": "아름다운 쌍어모양의 청록색 화병으로, 식물이 잘 자라는 환경을 제공합니다.",
+        "rumor": "이 화병은 세계를 여행한 자들이 사용하던 것으로 알려져 있습니다.",
+        "setHint": "여행의 기록",
+        "npcReaction": "이 화병을 낙찰하면, 다양한 식물들을 키울 수 있을 것 같습니다."
+      },
+      {
+        "lotId": "api-template-schema-20260804-d1-l5",
+        "displayName": "접이식 탁상시계",
+        "description": "편리하게 접을 수 있는 작은 시계로, 시간을 간단히 확인할 수 있습니다.",
+        "rumor": "이 시계는 마법의 보석들과 함께 빛나는 것으로 알려져 있습니다.",
+        "setHint": "마법의 보석들",
+        "npcReaction": "이 시계를 낙찰하면, 마법과 시간을 조화롭게 사용할 수 있을 것 같습니다."
+      },
+      {
+        "lotId": "api-template-schema-20260804-d1-l6",
+        "displayName": "건국항로 해도집",
+        "description": "세월을 담은 고급 해도집으로, 바다의 흐름을 정확하게 파악할 수 있습니다.",
+        "rumor": "이 해도집은 유명한 상인들이 사용하던 것으로 알려져 있습니다.",
+        "setHint": "상인의 지혜",
+        "npcReaction": "이 해도집을 낙찰하면, 다양한 바다를 탐험할 수 있을 것 같습니다."
+      },
+      {
+        "lotId": "api-template-schema-20260804-d1-l7",
+        "displayName": "산호구슬 귀걸이",
+        "description": "아름다운 산호구슬로 만들어진 화려한 귀걸입니다.",
+        "rumor": "이 귀걸이는 마법의 보석들과 함께 빛나는 것으로 알려져 있습니다.",
+        "setHint": "마법의 보석들",
+        "npcReaction": "이 귀걸을 낙찰하면, 마법과 아름다움을 조화롭게 사용할 수 있을 것 같습니다."
+      },
+      {
+        "lotId": "api-template-schema-20260804-d1-l8",
+        "displayName": "올리브문 쌍촛대",
+        "description": "아름다운 올리브모양의 쌍촛대로, 밤을 밝히는 데 효과적입니다.",
+        "rumor": "이 쌍촛대는 세계를 여행한 자들이 사용하던 것으로 알려져 있습니다.",
+        "setHint": "여행의 기록",
+        "npcReaction": "이 쌍촛대를 낙찰하면, 다양한 밤을 밝히는 데 효과적일 것 같습니다."
+      }
+    ],
+    "questCopy": [
+      {
+        "questId": "designated",
+        "title": "지정 계열 낙찰하기",
+        "flavor": "특정 계열의 물건을 낙찰하세요. 이는 당신의 전략력을 시험합니다."
+      },
+      {
+        "questId": "multi",
+        "title": "다양한 계열 낙찰하기",
+        "flavor": "서로 다른 계열의 두 가지 물건을 낙찰하세요. 다양한 경험을 쌓아보세요."
+      },
+      {
+        "questId": "bargain",
+        "title": "할인된 가격으로 낙찰하기",
+        "flavor": "기준가의 85% 이하로 물건을 낙찰하세요. 당신의 협상 능력을 보여주세요."
+      }
+    ],
+    "appraisalCopy": {
+      "intro": "비밀의 경매장에 오신 것을 환영합니다. 다양한 물건들이 준비되어 있습니다.",
+      "success": "축하드립니다! 선택한 물건을 낙찰했습니다.",
+      "warning": "주의하세요, 이 물건은 매우 특별할 수 있습니다."
+    },
+    "auctionCopy": {
+      "opening": "비밀의 경매장이 열립니다. 다양한 물건들이 준비되어 있습니다.",
+      "outbid": "다른 입찰자가 높은 가격을 제시했습니다. 다시 한번 시도해보세요.",
+      "win": "축하드립니다! 선택한 물건을 낙찰했습니다.",
+      "lose": "아쉽지만, 이 물건은 다른 입찰자에게 넘어갔습니다."
+    },
+    "settlementCopy": {
+      "summary": "오늘의 경매가 마무리되었습니다. 다양한 물건들이 낙찰되었습니다."
+    }
+  }
+}

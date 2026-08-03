@@ -1,16 +1,16 @@
 {
   "schemaVersion": "1.0",
   "mode": "daily-content",
-  "runSeed": "team-loop-local-001",
+  "runSeed": "api-template-schema-20260804",
   "day": 1,
   "blueprintFile": "run-start-output.json",
   "market": {
-    "CER": 0.9178,
-    "CLK": 0.9207,
-    "PNT": 1.079,
-    "BOK": 1.034,
-    "MET": 0.8609,
-    "JEW": 0.9384
+    "CER": 0.9036,
+    "CLK": 0.9443,
+    "PNT": 0.9443,
+    "BOK": 1.0064,
+    "MET": 0.8335,
+    "JEW": 0.952
   },
   "questOffers": [
     {
@@ -28,10 +28,10 @@
   ],
   "lots": [
     {
-      "lotId": "team-loop-local-001-d1-l1",
-      "baseItemId": "BASE-BOK-03",
-      "baseName": "붉은 무대막 희곡집",
-      "category": "BOK",
+      "lotId": "api-template-schema-20260804-d1-l1",
+      "baseItemId": "BASE-CLK-04",
+      "baseName": "월상표시 회중시계",
+      "category": "CLK",
       "grade": "COMMON",
       "basePrice": 1500,
       "trueValue": 1650,
@@ -39,97 +39,13 @@
         "label": "양호",
         "multiplier": 1.1
       },
-      "setId": "set-02"
-    },
-    {
-      "lotId": "team-loop-local-001-d1-l2",
-      "baseItemId": "BASE-CER-05",
-      "baseName": "황동뚜껑 육각 항아리",
-      "category": "CER",
-      "grade": "COMMON",
-      "basePrice": 1500,
-      "trueValue": 900,
-      "quality": {
-        "label": "손상",
-        "multiplier": 0.6
-      },
-      "setId": "set-01"
-    },
-    {
-      "lotId": "team-loop-local-001-d1-l3",
-      "baseItemId": "BASE-JEW-03",
-      "baseName": "카메오 펜던트",
-      "category": "JEW",
-      "grade": "RARE",
-      "basePrice": 4000,
-      "trueValue": 3600,
-      "quality": {
-        "label": "보통",
-        "multiplier": 0.9
-      },
       "setId": "set-04"
     },
     {
-      "lotId": "team-loop-local-001-d1-l4",
-      "baseItemId": "BASE-BOK-02",
-      "baseName": "제본공 견본첩",
+      "lotId": "api-template-schema-20260804-d1-l2",
+      "baseItemId": "BASE-BOK-09",
+      "baseName": "끈잠금 통역 수첩",
       "category": "BOK",
-      "grade": "COMMON",
-      "basePrice": 1500,
-      "trueValue": 1350,
-      "quality": {
-        "label": "보통",
-        "multiplier": 0.9
-      },
-      "setId": "set-09"
-    },
-    {
-      "lotId": "team-loop-local-001-d1-l5",
-      "baseItemId": "BASE-PNT-08",
-      "baseName": "북문 거리 행렬",
-      "category": "PNT",
-      "grade": "COMMON",
-      "basePrice": 1500,
-      "trueValue": 2025,
-      "quality": {
-        "label": "수려",
-        "multiplier": 1.35
-      },
-      "setId": "set-01"
-    },
-    {
-      "lotId": "team-loop-local-001-d1-l6",
-      "baseItemId": "BASE-PNT-07",
-      "baseName": "등대 창가의 가족",
-      "category": "PNT",
-      "grade": "RARE",
-      "basePrice": 4000,
-      "trueValue": 3600,
-      "quality": {
-        "label": "보통",
-        "multiplier": 0.9
-      },
-      "setId": "set-08"
-    },
-    {
-      "lotId": "team-loop-local-001-d1-l7",
-      "baseItemId": "BASE-JEW-10",
-      "baseName": "루비 타이핀·커프스 세트",
-      "category": "JEW",
-      "grade": "LEGENDARY",
-      "basePrice": 25000,
-      "trueValue": 33750,
-      "quality": {
-        "label": "수려",
-        "multiplier": 1.35
-      },
-      "setId": "set-12"
-    },
-    {
-      "lotId": "team-loop-local-001-d1-l8",
-      "baseItemId": "BASE-CER-02",
-      "baseName": "청록 뚜껑 소금단지",
-      "category": "CER",
       "grade": "EPIC",
       "basePrice": 12000,
       "trueValue": 13200,
@@ -137,7 +53,91 @@
         "label": "양호",
         "multiplier": 1.1
       },
-      "setId": "set-06"
+      "setId": "set-03"
+    },
+    {
+      "lotId": "api-template-schema-20260804-d1-l3",
+      "baseItemId": "BASE-JEW-09",
+      "baseName": "세 갈래 다이아몬드 티아라",
+      "category": "JEW",
+      "grade": "RARE",
+      "basePrice": 4000,
+      "trueValue": 4400,
+      "quality": {
+        "label": "양호",
+        "multiplier": 1.1
+      },
+      "setId": "set-01"
+    },
+    {
+      "lotId": "api-template-schema-20260804-d1-l4",
+      "baseItemId": "BASE-CER-04",
+      "baseName": "쌍어문 청록 화병",
+      "category": "CER",
+      "grade": "RARE",
+      "basePrice": 4000,
+      "trueValue": 4400,
+      "quality": {
+        "label": "양호",
+        "multiplier": 1.1
+      },
+      "setId": "set-01"
+    },
+    {
+      "lotId": "api-template-schema-20260804-d1-l5",
+      "baseItemId": "BASE-CLK-01",
+      "baseName": "접이식 탁상시계",
+      "category": "CLK",
+      "grade": "COMMON",
+      "basePrice": 1500,
+      "trueValue": 1350,
+      "quality": {
+        "label": "보통",
+        "multiplier": 0.9
+      },
+      "setId": "set-12"
+    },
+    {
+      "lotId": "api-template-schema-20260804-d1-l6",
+      "baseItemId": "BASE-BOK-06",
+      "baseName": "건국항로 해도집",
+      "category": "BOK",
+      "grade": "RARE",
+      "basePrice": 4000,
+      "trueValue": 2400,
+      "quality": {
+        "label": "손상",
+        "multiplier": 0.6
+      },
+      "setId": "set-08"
+    },
+    {
+      "lotId": "api-template-schema-20260804-d1-l7",
+      "baseItemId": "BASE-JEW-01",
+      "baseName": "산호구슬 귀걸이",
+      "category": "JEW",
+      "grade": "RARE",
+      "basePrice": 4000,
+      "trueValue": 4400,
+      "quality": {
+        "label": "양호",
+        "multiplier": 1.1
+      },
+      "setId": "set-12"
+    },
+    {
+      "lotId": "api-template-schema-20260804-d1-l8",
+      "baseItemId": "BASE-MET-08",
+      "baseName": "올리브문 쌍촛대",
+      "category": "MET",
+      "grade": "RARE",
+      "basePrice": 4000,
+      "trueValue": 3600,
+      "quality": {
+        "label": "보통",
+        "multiplier": 0.9
+      },
+      "setId": "set-05"
     }
   ]
 }
