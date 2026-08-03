@@ -5,9 +5,10 @@ import { createRunSchedule, validateSchedule } from '../src/schedule.js';
 import { createSetGraph } from '../src/set-graph.js';
 import { FallbackContentProvider, GenerationBuffer } from '../src/generation-buffer.js';
 import { createInitialState, resolveLot, advanceDay } from '../src/game-state.js';
-import { resolveAuction, appraiseAll, appraiseItem, sellAll, sellItems, acceptQuest, takeLoan, botBidForLot, buyInformation, missedDeadline, isBankrupt } from '../src/systems.js';
+import { resolveAuction, appraiseAll, appraiseItem, sellAll, sellItems, acceptQuest, takeLoan, botBidForLot, buyInformation, missedDeadline, isBankrupt, deliverQuestItem, repayLoanEarly } from '../src/systems.js';
 import { recordEvent, runMetrics } from '../src/telemetry.js';
 import { GenerationApiProvider } from '../src/generation-api-provider.js';
+import { SaveStore } from '../src/save-store.js';
 
 const catalog = JSON.parse(await readFile(new URL('../assets/items/catalog.json', import.meta.url), 'utf8'));
 const balance = JSON.parse(await readFile(new URL('../data/balance.json', import.meta.url), 'utf8'));
@@ -71,7 +72,7 @@ test('auction inventory connects to appraisal, sale, quest and loan systems', ()
   assert.equal(takeLoan(state, balance), true);
 });
 
-test('balance-lab rules apply grade demand, quest clashes, deadlines and bankruptcy', () => {
+test('V6.2 rules apply grade demand, quest clashes, upgrade deadlines and no bankruptcy', () => {
   const schedule = createRunSchedule({ catalog, balance, seed: 'lab-rules' });
   const sets = createSetGraph(schedule, 'lab-rules');
   const state = createInitialState({ schedule, sets, balance, startCash: 20000 });
@@ -85,7 +86,48 @@ test('balance-lab rules apply grade demand, quest clashes, deadlines and bankrup
   state.day = 3; state.shopStage = 1;
   assert.equal(missedDeadline(state), true);
   state.cash = 0; state.inventory = []; state.loan = null;
-  assert.equal(isBankrupt(state, balance), true);
+  assert.equal(isBankrupt(state, balance), false);
+});
+
+test('V6.2 quests complete only after a matching inventory item is delivered', () => {
+  const schedule = createRunSchedule({ catalog, balance, seed: 'delivery' });
+  const sets = createSetGraph(schedule, 'delivery');
+  const state = createInitialState({ schedule, sets, balance, startCash: 1000000 });
+  const lot = schedule.days[0].lots[0];
+  state.inventory.push({ lotId: lot.lotId, name: lot.baseName, paid: 1, basePrice: lot.pricing.basePrice, trueValue: lot.pricing.trueValue, category: lot.category, grade: lot.grade, sold: false, collateral: false });
+  state.questOffers = [{ id: 'designated', fee: 0, reward: 1000, accepted: false, targetCategory: lot.category }];
+  assert.equal(acceptQuest(state, 'designated', balance), true);
+  assert.equal(deliverQuestItem(state, 'designated', lot.lotId), true);
+  assert.equal(state.inventory[0].delivered, true);
+  assert.equal(state.completedQuestCount, 1);
+});
+
+test('V6.2 loan unlocks at stage two and early repayment costs principal only', () => {
+  const schedule = createRunSchedule({ catalog, balance, seed: 'loan-v62' });
+  const state = createInitialState({ schedule, sets: createSetGraph(schedule, 'loan-v62'), balance, startCash: 100000 });
+  const lot = schedule.days[0].lots[0];
+  state.inventory.push({ lotId: lot.lotId, trueValue: 10000, sold: false, collateral: false });
+  state.shopStage = 2;
+  assert.equal(takeLoan(state, balance), true);
+  assert.equal(state.loan.principal, 3500);
+  const cashBeforeRepay = state.cash;
+  assert.equal(repayLoanEarly(state, balance), true);
+  assert.equal(state.cash, cashBeforeRepay - 3500);
+  assert.equal(state.loan, null);
+});
+
+test('three save slots keep current and backup packets independently', () => {
+  const values = new Map();
+  const storage = { getItem: (key) => values.get(key) ?? null, setItem: (key, value) => values.set(key, value), removeItem: (key) => values.delete(key) };
+  const saves = new SaveStore(storage);
+  const schedule = createRunSchedule({ catalog, balance, seed: 'save-v62' });
+  const state = createInitialState({ schedule, sets: createSetGraph(schedule, 'save-v62'), balance });
+  assert.equal(saves.save(state, 2), true);
+  state.day = 2;
+  assert.equal(saves.save(state, 2), true);
+  assert.equal(saves.load(2).day, 2);
+  assert.equal(saves.list()[1].empty, false);
+  assert.equal(saves.list()[0].empty, true);
 });
 
 test('individual inventory actions, information and telemetry are ready for place scenes', () => {

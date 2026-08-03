@@ -75,9 +75,10 @@
   "loan": {
     "limitFromDisposalValue": 0.35,
     "repayMultiplier": 1.9,
+    "earlyRepayMultiplier": 1.0,
     "termDays": 2,
     "concurrent": 1,
-    "minShopStage": 3,
+    "minShopStage": 2,
     "collateral": "재고. 담보로 잡히면 잠겨서 못 판다. 현금은 담보가 아니다",
     "overdue": "담보 압류 + 조합 거래 제한(guildLocked)",
     "measured": {
@@ -133,9 +134,9 @@
     ],
     "auctionFee": [
       0,
-      0.05,
-      0.03,
-      0.01,
+      0,
+      0,
+      0,
       0
     ],
     "upgradeCostNote": "합 37,000. 2026-07-31 재산정 - 시뮬을 balance.json 에 맞추고 의뢰 보상을 다시 매긴 뒤 다시 잡았다. 도달 55.9% · 마감실패 31.0% · 생존중앙값 193,280 (씨앗 900). 옛 값 32,500 은 6.36 에서 낡은 시뮬로 잡은 것이다",

@@ -1,13 +1,62 @@
 {
-  "measuredAt": "2026-08-02T14:14:43.778Z",
+  "measuredAt": "2026-08-03T12:22:38.806Z",
   "windowDays": 8,
   "repository": {
-    "commits": 10,
+    "commits": 18,
     "contributors": [
+      "Jaehyuk",
       "sangjin615",
       "GD_JM"
     ],
     "commitLog": [
+      {
+        "hash": "f3f977a",
+        "at": "2026-08-03T14:57:18+09:00",
+        "author": "Jaehyuk",
+        "subject": "동시 반영된 이미지 작업을 증거 집계에 포함"
+      },
+      {
+        "hash": "f01f9d0",
+        "at": "2026-08-03T14:56:04+09:00",
+        "author": "Jaehyuk",
+        "subject": "해커톤 프로젝트 효과 증거 패키지 정리"
+      },
+      {
+        "hash": "3b9ed01",
+        "at": "2026-08-03T14:25:22+09:00",
+        "author": "sangjin615",
+        "subject": "Merge branch 'codex/vsl-runtime-core' of https://github.com/sangjin615/NAN_2026_Team_Project into codex/vsl-runtime-core"
+      },
+      {
+        "hash": "41a6f99",
+        "at": "2026-08-03T14:25:02+09:00",
+        "author": "sangjin615",
+        "subject": "경매품 이미지 추가"
+      },
+      {
+        "hash": "00224da",
+        "at": "2026-08-03T14:22:32+09:00",
+        "author": "Jaehyuk",
+        "subject": "최신 Clean UI VSL 프로젝트 패키지 추가"
+      },
+      {
+        "hash": "0353a21",
+        "at": "2026-08-03T14:20:24+09:00",
+        "author": "Jaehyuk",
+        "subject": "최신 VSL 프로젝트 패키징 도구 추가"
+      },
+      {
+        "hash": "ab34844",
+        "at": "2026-08-03T14:14:13+09:00",
+        "author": "Jaehyuk",
+        "subject": "Clean UI VSL 편집기 포함"
+      },
+      {
+        "hash": "8df0f1a",
+        "at": "2026-08-03T14:02:25+09:00",
+        "author": "Jaehyuk",
+        "subject": "VSL 기반 경매 런타임과 해커톤 자료 추가"
+      },
       {
         "hash": "5481b41",
         "at": "2026-08-02T04:23:53+09:00",
@@ -71,18 +120,18 @@
     ]
   },
   "runtime": {
-    "files": 342,
-    "bytes": 1566262,
+    "files": 434,
+    "bytes": 68991941,
     "javascriptModules": 19,
-    "javascriptLines": 891,
-    "automatedTests": 8
+    "javascriptLines": 1168,
+    "automatedTests": 11
   },
   "assets": {
-    "projectImages": 46,
+    "projectImages": 349,
     "itemSprites": 240
   },
   "generation900": {
-    "measuredAt": "2026-08-02T14:14:43.665Z",
+    "measuredAt": "2026-08-03T12:22:38.659Z",
     "seeds": 900,
     "totalLots": 86400,
     "invalidSchedules": 0,

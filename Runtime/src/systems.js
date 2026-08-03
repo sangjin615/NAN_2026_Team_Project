@@ -23,9 +23,11 @@ export function createMarketPath(balance, seed) {
 
 export function createDailyQuestOffers(balance, day, seed, relics = []) {
   const count = relics.includes('royal-charter') ? 5 : balance.quests?.offering?.perDay || 3;
-  return shuffle(QUEST_IDS, createRng(`${seed}:quests:${day}`)).slice(0, count).map((id) => ({
+  const families = shuffle(['CER', 'CLK', 'PNT', 'BOK', 'MET', 'JEW'], createRng(`${seed}:quest-targets:${day}`));
+  return shuffle(QUEST_IDS, createRng(`${seed}:quests:${day}`)).slice(0, count).map((id, index) => ({
     id, fee: balance.quests[id].fee, reward: balance.quests[id].reward,
-    rule: balance.quests[id].rule, accepted: false, completed: false
+    rule: balance.quests[id].rule, accepted: false, completed: false,
+    targetCategory: families[index % families.length], acceptedDay: null, deadlineDay: null
   }));
 }
 
@@ -145,24 +147,39 @@ export function acceptQuest(state, questId, balance) {
   if (!quest || state.cash < quest.fee) return false;
   if (state.activeQuests.some((active) => QUEST_CLASH[active.id]?.includes(questId) || QUEST_CLASH[questId]?.includes(active.id))) return false;
   state.cash -= quest.fee; quest.accepted = true;
-  state.activeQuests.push({ ...quest, startCash: state.cash, startHistory: state.history.length });
+  state.activeQuests.push({ ...quest, acceptedDay: state.day, deadlineDay: Math.min(12, state.day + 2) });
   return true;
 }
 
+export function questMatchesItem(quest, item) {
+  if (!quest || !item || item.sold || item.collateral || item.delivered) return false;
+  if (quest.id === 'designated') return item.category === quest.targetCategory;
+  if (quest.id === 'multi') return ['RARE', 'EPIC', 'LEGENDARY'].includes(item.grade);
+  if (quest.id === 'bargain') return item.paid <= item.basePrice * 0.85;
+  if (quest.id === 'restraint') return ['COMMON', 'RARE'].includes(item.grade);
+  return ['EPIC', 'LEGENDARY'].includes(item.grade);
+}
+
+export function deliverQuestItem(state, questId, lotId) {
+  const quest = state.activeQuests.find((entry) => entry.id === questId && !entry.completed);
+  const item = state.inventory.find((entry) => entry.lotId === lotId);
+  if (!quest || state.day > quest.deadlineDay || !questMatchesItem(quest, item)) return false;
+  item.delivered = true; item.sold = true; item.salePrice = 0;
+  quest.completed = true; quest.deliveredLotId = lotId; quest.completedDay = state.day;
+  const reward = Math.round(quest.reward * (1 + (state.balanceQuestBonus?.[state.shopStage] ?? 0)));
+  state.cash += reward; state.completedQuestCount += 1;
+  return true;
+}
+
+export function expireQuestsBeforeAuction(state) {
+  const expired = state.activeQuests.filter((quest) => !quest.completed && state.day > quest.deadlineDay);
+  state.activeQuests = state.activeQuests.filter((quest) => !quest.completed && state.day <= quest.deadlineDay);
+  return expired.length;
+}
+
 export function settleQuests(state) {
-  const today = state.history.filter((entry) => entry.day === state.day);
-  const wins = today.filter((entry) => entry.won);
-  for (const quest of state.activeQuests) {
-    const wonItems = wins.map((win) => state.inventory.find((item) => item.lotId === win.lotId)).filter(Boolean);
-    quest.completed = quest.id === 'designated' ? wonItems.some((item) => item.category === state.questTarget)
-      : quest.id === 'multi' ? new Set(wonItems.map((item) => item.category)).size >= 2
-      : quest.id === 'bargain' ? wonItems.some((item) => item.paid <= item.basePrice * 0.85)
-      : quest.id === 'restraint' ? wins.length > 0 && state.cash >= quest.startCash * 0.6
-      : today.some((entry) => entry.botPrice - entry.playerBid >= 1500);
-    if (quest.completed) { state.cash += Math.round(quest.reward * (1 + (state.balanceQuestBonus?.[state.shopStage] ?? 0))); state.completedQuestCount += 1; }
-  }
   const completed = state.activeQuests.filter((quest) => quest.completed).length;
-  state.activeQuests = [];
+  state.activeQuests = state.activeQuests.filter((quest) => !quest.completed);
   return completed;
 }
 
@@ -193,12 +210,21 @@ export function settleLoan(state) {
   collateral.sold = true; collateral.collateral = false; state.guildLocked = true; state.loan = null; return 'seized';
 }
 
+export function repayLoanEarly(state, balance) {
+  if (!state.loan || state.day >= state.loan.dueDay) return false;
+  const amount = Math.round(state.loan.principal * (balance.loan.earlyRepayMultiplier ?? 1));
+  if (state.cash < amount) return false;
+  const collateral = state.inventory.find((item) => item.lotId === state.loan.lotId);
+  state.cash -= amount;
+  if (collateral) collateral.collateral = false;
+  state.loan = null;
+  return true;
+}
+
 export function requiredStageForDay(day) { return day <= 3 ? 1 : day <= 6 ? 2 : day <= 9 ? 3 : 4; }
 
 export function missedDeadline(state) { const required = { 3: 2, 6: 3, 9: 4 }[state.day]; return required ? state.shopStage < required : false; }
 
 export function isBankrupt(state, balance) {
-  const sellable = state.inventory.filter((item) => !item.sold && !item.collateral);
-  const canLoan = state.shopStage >= balance.loan.minShopStage && !state.guildLocked && !state.loan && sellable.length > 0;
-  return state.cash <= 0 && sellable.length === 0 && !canLoan;
+  return false;
 }
