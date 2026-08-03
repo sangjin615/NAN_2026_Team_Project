@@ -864,3 +864,41 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
 [data-scene="quests"] header strong { display: none; }
 [data-scene="guild"] .guild-heading strong { display: none; }
 [data-scene="shop"] #shop-detail ul { margin: 16px 0 0; padding-left: 22px; line-height: 1.7; }
+
+/* Appraisal belongs to the quest office; the exchange is sale-only. */
+[data-scene="quests"] #active-quests.inventory-list {
+  display: flex; flex-direction: column; gap: 8px; overflow: auto; padding-right: 4px;
+}
+[data-scene="quests"] #active-quests > section {
+  position: relative; flex: 0 0 auto; padding: 29px 7px 7px;
+  border: 1px solid #72501f; background: #160f09c7;
+}
+[data-scene="quests"] #active-quests h4 {
+  position: absolute; left: 10px; top: 6px; margin: 0;
+  color: #e7c172; font-size: calc(12px * var(--text-scale));
+}
+[data-scene="quests"] .accepted-quests > article {
+  display: grid; grid-template-columns: minmax(90px, 1fr) 112px 115px 86px;
+  align-items: center; gap: 6px; margin-top: 5px; padding: 5px 7px;
+  background: #21180f; border: 1px solid #4d361c; font-size: calc(10px * var(--text-scale));
+}
+[data-scene="quests"] .accepted-quests select,
+[data-scene="quests"] .accepted-quests button { min-width: 0; height: 30px; padding: 2px 6px; }
+[data-scene="quests"] .appraisal-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 7px; }
+[data-scene="quests"] .appraisal-card {
+  display: grid; grid-template-columns: 54px minmax(0, 1fr) 86px;
+  align-items: center; gap: 7px; min-height: 66px; padding: 6px;
+  background: linear-gradient(90deg,#20170e,#130e09); border: 1px solid #5b401e;
+}
+[data-scene="quests"] .appraisal-card img {
+  width: 52px; height: 52px; object-fit: contain; image-rendering: auto;
+  background: radial-gradient(circle,#72522255,transparent 70%);
+}
+[data-scene="quests"] .appraisal-card div > * { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+[data-scene="quests"] .appraisal-card b { color: #f1dfbd; font-size: calc(11px * var(--text-scale)); }
+[data-scene="quests"] .appraisal-card small,
+[data-scene="quests"] .appraisal-card span { color: #bdae92; font-size: calc(9px * var(--text-scale)); }
+[data-scene="quests"] .appraisal-card strong { color: #e9c66c; font-size: calc(11px * var(--text-scale)); }
+[data-scene="quests"] .appraisal-card button { width: 86px; min-height: 30px; padding: 3px 5px; font-size: calc(10px * var(--text-scale)); }
+[data-scene="quests"] .empty-note { margin: 6px; color: #bdae92; font-size: calc(11px * var(--text-scale)); }
+[data-scene="exchange"] #inventory-list article { grid-template-columns: minmax(0,1.4fr) .75fr 1.2fr 100px; }

@@ -41,6 +41,7 @@ const relicArt = {
 const money = (value) => `${Math.round(Number(value || 0)).toLocaleString('ko-KR')} G`;
 const status = (text, tone = 'ready') => { const element = document.querySelector('#boot-status'); element.textContent = text; element.dataset.tone = tone; };
 const ownedItems = () => state.inventory.filter((item) => !item.sold && !item.delivered);
+const scheduledLot = (lotId) => state.schedule.days.flatMap((day) => day.lots).find((lot) => lot.lotId === lotId);
 const save = () => store.save(state, state.saveSlot);
 
 function loadMeta() {
@@ -160,12 +161,28 @@ function renderQuestOffice(message = '') {
     <article><b>${questTitle(quest)}</b><small>${questRequirement(quest)}</small><span>수주비 ${money(quest.fee)} · 보상 ${money(quest.reward)}</span>
     <button data-quest="${quest.id}" ${quest.accepted ? 'disabled' : ''}>${quest.accepted ? '수주 완료' : '수주'}</button></article>`).join('');
   const active = state.activeQuests.filter((quest) => !quest.completed);
-  document.querySelector('#active-quests').innerHTML = active.length ? active.map((quest) => {
+  const activeMarkup = active.length ? active.map((quest) => {
     const candidates = ownedItems().filter((item) => questMatchesItem(quest, item));
     return `<article><b>${questTitle(quest)}</b><span>${quest.deadlineDay}일차 경매 전까지</span>
       <select data-delivery-select="${quest.id}"><option value="">제출할 물품 선택</option>${candidates.map((item) => `<option value="${item.lotId}">${item.name} · ${item.grade}</option>`).join('')}</select>
       <button data-deliver-quest="${quest.id}" ${candidates.length ? '' : 'disabled'}>물품 제출</button></article>`;
-  }).join('') : '<p>수주한 의뢰가 없습니다.</p>';
+  }).join('') : '<p class="empty-note">수주한 의뢰가 없습니다.</p>';
+  const appraisalMarkup = ownedItems().length ? ownedItems().map((item) => {
+    const lot = scheduledLot(item.lotId);
+    const discount = 1 - (balance.shop.infoDiscount?.[state.shopStage] ?? 0);
+    const cost = Math.ceil(item.basePrice * balance.appraisal.rate * discount / 100) * 100;
+    const result = item.appraised
+      ? `<strong>${money(item.trueValue)} <small>± ${money(item.appraisalRange)}</small></strong>`
+      : `<span>감정 비용 ${money(cost)}</span>`;
+    return `<article class="appraisal-card">
+      <img src="${lot ? spriteUrl(lot, item.grade) : ''}" alt="${item.name}">
+      <div><b>${item.name}</b><small>${item.grade} · ${item.category}</small>${result}</div>
+      <button data-office-appraise="${item.lotId}" ${item.appraised || item.collateral || state.cash < cost ? 'disabled' : ''}>${item.appraised ? '감정 완료' : item.collateral ? '담보 설정됨' : '정밀 감정'}</button>
+    </article>`;
+  }).join('') : '<p class="empty-note">감정할 보유 물품이 없습니다.</p>';
+  document.querySelector('#active-quests').innerHTML = `
+    <section class="accepted-quests"><h4>수주 의뢰 · 물품 제출</h4>${activeMarkup}</section>
+    <section class="appraisal-office"><h4>보유 물품 · 정밀 감정</h4><div class="appraisal-grid">${appraisalMarkup}</div></section>`;
   document.querySelectorAll('[data-quest]').forEach((button) => {
     button.onclick = () => {
       const ok = acceptQuest(state, button.dataset.quest, balance);
@@ -181,6 +198,13 @@ function renderQuestOffice(message = '') {
       renderQuestOffice(ok ? '물품을 제출하고 보상을 받았습니다.' : '제출 조건과 물품을 확인하세요.');
     };
   });
+  document.querySelectorAll('[data-office-appraise]').forEach((button) => {
+    button.onclick = () => {
+      const ok = appraiseItem(state, balance, button.dataset.officeAppraise);
+      if (ok) recordEvent(state, 'appraisal', { lotId: button.dataset.officeAppraise, location: 'quest-office' });
+      renderQuestOffice(ok ? '정밀 감정을 완료했습니다.' : '감정 비용 또는 물품 상태를 확인하세요.');
+    };
+  });
   document.querySelector('#quest-message').textContent = message;
 }
 
@@ -189,22 +213,13 @@ function renderExchange(message = '') {
   document.querySelector('#inventory-list').innerHTML = ownedItems().length ? ownedItems().map((item) => `
     <article><label><input type="checkbox" data-item-select="${item.lotId}"> <b>${item.name}</b></label>
     <span>${item.grade} · ${item.category}</span><span>매입 ${money(item.paid)} · ${item.appraised ? `감정 ${money(item.trueValue)} ±${money(item.appraisalRange)}` : '미감정'}</span>
-    <button data-appraise-item="${item.lotId}" ${item.appraised || item.collateral ? 'disabled' : ''}>감정</button>
     <button data-sell-item="${item.lotId}" ${item.collateral ? 'disabled' : ''}>즉시 처분</button></article>`).join('') : '<p>보유 물품이 없습니다.</p>';
-  document.querySelectorAll('[data-appraise-item]').forEach((button) => button.onclick = () => {
-    const ok = appraiseItem(state, balance, button.dataset.appraiseItem);
-    renderExchange(ok ? '감정을 완료했습니다.' : '감정 비용이 부족합니다.');
-  });
   document.querySelectorAll('[data-sell-item]').forEach((button) => button.onclick = () => {
     const revenue = sellItems(state, balance, [button.dataset.sellItem]);
     renderExchange(`${money(revenue)}에 처분했습니다.`);
   });
   const syncBulkActions = () => {
     const checked = [...document.querySelectorAll('[data-item-select]:checked')];
-    document.querySelector('#appraise-selected').disabled = !checked.some((input) => {
-      const item = ownedItems().find((entry) => entry.lotId === input.dataset.itemSelect);
-      return item && !item.appraised && !item.collateral;
-    });
     document.querySelector('#sell-selected').disabled = !checked.some((input) => {
       const item = ownedItems().find((entry) => entry.lotId === input.dataset.itemSelect);
       return item && !item.collateral;
@@ -401,7 +416,6 @@ document.querySelector('#title-settings').onclick = () => document.querySelector
 document.querySelector('#close-settings').onclick = () => document.querySelector('#settings-dialog').close();
 document.querySelector('#text-scale').onchange = (event) => document.documentElement.style.setProperty('--text-scale', event.target.value);
 document.querySelectorAll('[data-place]').forEach((button) => button.onclick = () => { audio.playSfx('navigate'); placeRenderers[button.dataset.place]?.(); });
-document.querySelector('#appraise-selected').onclick = () => { const ids = [...document.querySelectorAll('[data-item-select]:checked')].map((input) => input.dataset.itemSelect); let count = 0; ids.forEach((id) => { if (appraiseItem(state, balance, id)) count += 1; }); renderExchange(`${count}개를 감정했습니다.`); };
 document.querySelector('#sell-selected').onclick = () => { const ids = [...document.querySelectorAll('[data-item-select]:checked')].map((input) => input.dataset.itemSelect); renderExchange(`${money(sellItems(state, balance, ids))}에 처분했습니다.`); };
 document.querySelectorAll('[data-info]').forEach((button) => button.onclick = () => { const ok = buyInformation(state, balance, button.dataset.info); renderTavern(ok ? '정보를 구매했습니다.' : '이미 구매했거나 현금이 부족합니다.'); });
 document.querySelector('#shop-upgrade').onclick = () => { const ok = upgradeShop(state, balance); renderShop(ok ? '상회를 승급했습니다.' : '현금 또는 완료 의뢰가 부족합니다.'); };
