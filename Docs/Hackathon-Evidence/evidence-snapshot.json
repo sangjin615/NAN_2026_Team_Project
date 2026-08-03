@@ -4,20 +4,21 @@
   "window": {
     "from": "2026-07-27T00:00:00+09:00",
     "to": "2026-08-03T23:59:59+09:00",
-    "commits": 16,
+    "commits": 30,
     "contributors": 3,
     "activeDates": ["2026-07-31", "2026-08-02", "2026-08-03"],
-    "textLinesAdded": 17642
+    "textLinesAdded": 37212,
+    "textLinesDeleted": 302
   },
   "project": {
-    "trackedRuntimeFiles": 431,
+    "runtimeFilesMeasured": 464,
     "baseItems": 60,
     "itemSprites": 240,
-    "sceneBackgrounds": 16,
+    "sceneBackgrounds": 17,
     "daysPerRun": 12,
     "lotsPerDay": 8,
     "lotsPerRun": 96,
-    "automatedTests": {"passed": 8, "failed": 0}
+    "automatedTests": {"passed": 12, "failed": 0}
   },
   "simulation": {
     "seeds": 900,

@@ -116,6 +116,21 @@ test('V6.2 loan unlocks at stage two and early repayment costs principal only', 
   assert.equal(state.loan, null);
 });
 
+test('guild loan uses the collateral item selected by the player', () => {
+  const schedule = createRunSchedule({ catalog, balance, seed: 'selected-collateral' });
+  const state = createInitialState({ schedule, sets: createSetGraph(schedule, 'selected-collateral'), balance, startCash: 100000 });
+  state.shopStage = 2;
+  state.inventory.push(
+    { lotId: 'first', trueValue: 10000, sold: false, collateral: false },
+    { lotId: 'chosen', trueValue: 20000, sold: false, collateral: false },
+  );
+  assert.equal(takeLoan(state, balance, 'chosen'), true);
+  assert.equal(state.loan.lotId, 'chosen');
+  assert.equal(state.loan.principal, 7000);
+  assert.equal(state.inventory[0].collateral, false);
+  assert.equal(state.inventory[1].collateral, true);
+});
+
 test('three save slots keep current and backup packets independently', () => {
   const values = new Map();
   const storage = { getItem: (key) => values.get(key) ?? null, setItem: (key, value) => values.set(key, value), removeItem: (key) => values.delete(key) };

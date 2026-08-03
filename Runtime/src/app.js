@@ -269,15 +269,27 @@ function renderShop(message = '') {
 function renderGuild(message = '') {
   state.phase = 'guild'; adapter.showScene('guild'); syncHeader();
   const locked = state.shopStage < balance.loan.minShopStage;
-  const collateralCount = ownedItems().filter((item) => !item.collateral).length;
+  const collateralItems = ownedItems().filter((item) => !item.collateral);
+  const collateralCount = collateralItems.length;
+  const collateralOptions = collateralItems.map((item) => `<option value="${item.lotId}">${item.name} · ${money(Math.round(item.trueValue * balance.loan.limitFromDisposalValue))}</option>`).join('');
   const detail = locked ? `<h3>담보 대출 잠김</h3><p>상회 ${balance.loan.minShopStage}단계에서 해금됩니다.</p>`
-    : state.loan ? `<h3>활성 대출</h3><p>담보 ${state.loan.lotId}</p><p>원금 ${money(state.loan.principal)} · 만기 ${state.loan.dueDay}일 · 상환 ${money(state.loan.due)}</p>`
+    : state.loan ? `<h3>활성 대출</h3><p>담보 ${state.inventory.find((item) => item.lotId === state.loan.lotId)?.name || state.loan.lotId}</p><p>원금 ${money(state.loan.principal)} · 만기 ${state.loan.dueDay}일 · 상환 ${money(state.loan.due)}</p>`
       : state.guildLocked ? '<h3>조합 이용 제한</h3><p>연체로 인해 이번 여정에서는 조합을 이용할 수 없습니다.</p>'
-        : `<h3>활성 대출 없음</h3><p>담보로 사용할 수 있는 미판매 물품 ${collateralCount}개</p>`;
+        : `<h3>담보 물품 선택</h3><p>대출 가능 물품 ${collateralCount}개 · 정산가치의 ${Math.round(balance.loan.limitFromDisposalValue * 100)}%</p><label class="collateral-picker"><span>담보</span><select id="guild-collateral"><option value="">물품을 선택하세요</option>${collateralOptions}</select></label><p id="loan-preview">물품을 선택하면 대출액과 만기 상환액을 계산합니다.</p>`;
   document.querySelector('#guild-detail').innerHTML = detail;
-  document.querySelector('#guild-loan').disabled = locked || Boolean(state.loan) || state.guildLocked;
+  document.querySelector('#guild-loan').disabled = locked || Boolean(state.loan) || state.guildLocked || !collateralCount;
   document.querySelector('#guild-repay').disabled = !state.loan || state.day >= state.loan?.dueDay;
-  document.querySelector('#guild-message').innerHTML = message ? `<b>${message}</b>` : `<b>대출 안내</b><p>첫 번째 미판매 물품을 담보로 정산가치의 ${Math.round(balance.loan.limitFromDisposalValue * 100)}%까지 대출합니다.</p><p>만기 ${balance.loan.termDays}일 · 만기 상환액 ${Math.round(balance.loan.repayMultiplier * 100)}%</p>`;
+  document.querySelector('#guild-message').innerHTML = message ? `<b>${message}</b>` : `<b>대출 안내</b><p>선택한 물품은 상환 전까지 판매·감정·의뢰 제출이 제한됩니다.</p><p>만기 ${balance.loan.termDays}일 · 만기 상환액은 원금의 ${Math.round(balance.loan.repayMultiplier * 100)}%</p>`;
+  const picker = document.querySelector('#guild-collateral');
+  if (picker) {
+    document.querySelector('#guild-loan').disabled = true;
+    picker.onchange = () => {
+    const item = collateralItems.find((entry) => entry.lotId === picker.value);
+    const principal = item ? Math.round(item.trueValue * balance.loan.limitFromDisposalValue) : 0;
+    document.querySelector('#guild-loan').disabled = !item;
+    document.querySelector('#loan-preview').textContent = item ? `대출 ${money(principal)} · ${state.day + balance.loan.termDays}일차 만기 ${money(Math.round(principal * balance.loan.repayMultiplier))}` : '물품을 선택하면 대출액과 만기 상환액을 계산합니다.';
+    };
+  }
 }
 
 function renderMuseum(returnTo = 'city') {
@@ -287,11 +299,26 @@ function renderMuseum(returnTo = 'city') {
   if (state) syncHeader();
   const owned = new Set(state?.metaRelics || loadMeta());
   const relics = balance.relics.list;
+  const tierNames = { low: '하급', mid: '중급', high: '상급' };
   document.querySelector('#relic-list').innerHTML = relics.map((relic, index) => {
     const isOwned = owned.has(relic.id);
     const art = relicArt[relic.id];
-    return `<article class="${isOwned ? 'is-owned' : 'is-locked'}" aria-label="${isOwned ? relic.name : '미획득 유물'}" data-slot="${index + 1}">${isOwned && art ? `<img src="./assets/relics/${encodeURIComponent(art)}" alt=""><b>${relic.name}</b><span>${relic.effect}</span>` : ''}</article>`;
+    return `<article class="${isOwned ? 'is-owned' : 'is-locked'}" role="button" tabindex="0" aria-label="${isOwned ? relic.name : '미획득 유물'}" data-slot="${index + 1}" data-relic="${relic.id}">${isOwned && art ? `<img src="./assets/relics/${encodeURIComponent(art)}" alt=""><b>${relic.name}</b><span>${relic.effect}</span>` : ''}</article>`;
   }).join('');
+  const showRelicDetail = (relic) => {
+    const isOwned = owned.has(relic.id); const art = relicArt[relic.id];
+    document.querySelector('#relic-detail').innerHTML = isOwned
+      ? `${art ? `<img src="./assets/relics/${encodeURIComponent(art)}" alt="">` : ''}<small>${tierNames[relic.tier]} 유물</small><h3>${relic.name}</h3><p>${relic.effect}</p>`
+      : `<small>${tierNames[relic.tier]} 전시 슬롯</small><h3>미획득 유물</h3><p>여정을 완주하고 유물 경매에서 획득하면 정보가 공개됩니다.</p>`;
+  };
+  document.querySelectorAll('[data-relic]').forEach((card) => {
+    const select = () => { document.querySelectorAll('[data-relic]').forEach((entry) => entry.classList.toggle('is-selected', entry === card)); showRelicDetail(relics.find((relic) => relic.id === card.dataset.relic)); };
+    card.onclick = select; card.onkeydown = (event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); select(); } };
+  });
+  const ownedCount = relics.filter((relic) => owned.has(relic.id)).length;
+  document.querySelector('#museum-progress').innerHTML = `<b>수집 현황</b><strong>${ownedCount} / ${relics.length}</strong><span>하급 ${relics.filter((relic) => relic.tier === 'low' && owned.has(relic.id)).length}/3 · 중급 ${relics.filter((relic) => relic.tier === 'mid' && owned.has(relic.id)).length}/3 · 상급 ${relics.filter((relic) => relic.tier === 'high' && owned.has(relic.id)).length}/3</span>`;
+  const initial = relics.find((relic) => owned.has(relic.id)) || relics[0];
+  document.querySelector(`[data-relic="${initial.id}"]`)?.click();
 }
 
 function renderCatalog() {
@@ -419,7 +446,7 @@ document.querySelectorAll('[data-place]').forEach((button) => button.onclick = (
 document.querySelector('#sell-selected').onclick = () => { const ids = [...document.querySelectorAll('[data-item-select]:checked')].map((input) => input.dataset.itemSelect); renderExchange(`${money(sellItems(state, balance, ids))}에 처분했습니다.`); };
 document.querySelectorAll('[data-info]').forEach((button) => button.onclick = () => { const ok = buyInformation(state, balance, button.dataset.info); renderTavern(ok ? '정보를 구매했습니다.' : '이미 구매했거나 현금이 부족합니다.'); });
 document.querySelector('#shop-upgrade').onclick = () => { const ok = upgradeShop(state, balance); renderShop(ok ? '상회를 승급했습니다.' : '현금 또는 완료 의뢰가 부족합니다.'); };
-document.querySelector('#guild-loan').onclick = () => { const ok = takeLoan(state, balance); renderGuild(ok ? '담보 대출을 실행했습니다.' : '해금 단계·담보·기존 대출을 확인하세요.'); };
+document.querySelector('#guild-loan').onclick = () => { const lotId = document.querySelector('#guild-collateral')?.value; const ok = takeLoan(state, balance, lotId); renderGuild(ok ? '선택한 물품으로 담보 대출을 실행했습니다.' : '담보 물품을 선택하고 해금 조건을 확인하세요.'); };
 document.querySelector('#guild-repay').onclick = () => { const ok = repayLoanEarly(state, balance); renderGuild(ok ? '원금을 중도 상환했습니다.' : '상환할 수 없습니다.'); };
 document.querySelector('#download-log').onclick = () => downloadRunLog(state);
 

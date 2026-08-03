@@ -193,9 +193,9 @@ export function upgradeShop(state, balance) {
   return true;
 }
 
-export function takeLoan(state, balance) {
+export function takeLoan(state, balance, lotId = null) {
   if (state.loan || state.shopStage < balance.loan.minShopStage || state.guildLocked) return false;
-  const collateral = state.inventory.find((item) => !item.sold && !item.collateral);
+  const collateral = state.inventory.find((item) => !item.sold && !item.collateral && !item.delivered && (!lotId || item.lotId === lotId));
   if (!collateral) return false;
   const principal = Math.round(collateral.trueValue * balance.loan.limitFromDisposalValue);
   collateral.collateral = true; state.cash += principal;
