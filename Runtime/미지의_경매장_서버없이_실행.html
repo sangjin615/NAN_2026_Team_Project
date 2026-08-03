@@ -229,16 +229,16 @@ body {
 [data-scene="save"][data-mode="continue"] .save-actions #continue-run,
 [data-scene="save"][data-mode="continue"] #delete-save,
 [data-scene="save"][data-mode="continue"] #back-title {
-  top: 80.5%; bottom: auto; height: 8%; min-height: 0;
+  top: 82%; bottom: auto; height: 7.2%; min-height: 0;
 }
-[data-scene="save"][data-mode="continue"] #back-title { left: 14.5%; width: 20.5%; }
-[data-scene="save"][data-mode="continue"] .save-actions #continue-run { position: absolute; left: 40.5%; width: 20.5%; }
-[data-scene="save"][data-mode="continue"] #delete-save { display: block; left: 62.5%; width: 20.5%; }
+[data-scene="save"][data-mode="continue"] #back-title { left: 15%; width: 20%; }
+[data-scene="save"][data-mode="continue"] .save-actions #continue-run { position: absolute; left: 40%; width: 20%; }
+[data-scene="save"][data-mode="continue"] #delete-save { position: absolute; display: block; left: 65%; width: 20%; }
 [data-scene="save"][data-mode="continue"] #back-title,
 [data-scene="save"][data-mode="continue"] .save-actions #continue-run,
 [data-scene="save"][data-mode="continue"] #delete-save {
   border: 0; padding: 0 24px; background-position: center; background-size: 100% 100%; background-repeat: no-repeat;
-  font-size: clamp(14px,1.5vw,24px); text-shadow: 0 2px 2px #0007;
+  z-index: 6; font-size: 0; color: transparent; text-shadow: none;
 }
 [data-scene="save"][data-mode="continue"] #back-title {
   background-image: url("./assets/ui/clean-v1/buttons/button-parchment.png"); color: #2b2015; text-shadow: none;
@@ -1098,12 +1098,12 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
 [data-scene="save"][data-mode="continue"] #back-title,
 [data-scene="save"][data-mode="continue"] .save-actions #continue-run,
 [data-scene="save"][data-mode="continue"] #delete-save {
-  border: 0; border-image: none; padding: 0 24px;
-  background-position: center; background-size: 100% 100%; background-repeat: no-repeat;
+  box-sizing: border-box; border: 0 !important; border-image: none !important; padding: 0;
+  background-position: center; background-size: 100% 100% !important; background-repeat: no-repeat;
 }
-[data-scene="save"][data-mode="continue"] #back-title { background: transparent url("./assets/ui/clean-v1/buttons/button-parchment.png") center / 100% 100% no-repeat !important; color: #2b2015; }
-[data-scene="save"][data-mode="continue"] .save-actions #continue-run { background: transparent url("./assets/ui/clean-v1/buttons/button-green.png") center / 100% 100% no-repeat !important; color: #f0e4c9; }
-[data-scene="save"][data-mode="continue"] #delete-save { background: transparent url("./assets/ui/clean-v1/buttons/button-red.png") center / 100% 100% no-repeat !important; color: #f0e4c9; }
+[data-scene="save"][data-mode="continue"] #back-title { background: transparent url("./assets/ui/save-actions/back-title.png") center / contain no-repeat !important; }
+[data-scene="save"][data-mode="continue"] .save-actions #continue-run { background: transparent url("./assets/ui/save-actions/continue.png") center / contain no-repeat !important; }
+[data-scene="save"][data-mode="continue"] #delete-save { background: transparent url("./assets/ui/save-actions/delete-save.png") center / contain no-repeat !important; }
 </style>
 </head>
 <body><main id="app">
