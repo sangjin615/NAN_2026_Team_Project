@@ -9,3 +9,4 @@ Docs/*-FINAL.zip
 *.zip
 __pycache__/
 *.py[cod]
+node_modules/

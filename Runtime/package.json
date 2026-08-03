@@ -4,9 +4,13 @@
   "type": "module",
   "scripts": {
     "start": "node dev-server.js",
+    "build:standalone": "node tools/build-standalone.mjs",
     "test": "node --test test/*.test.js",
     "measure": "node tools/measure-generation.js && node tools/measure-project.js",
     "measure:project": "node tools/measure-project.js",
     "experiment:prepare": "node tools/prepare-local-generation-experiment.js"
+  },
+  "devDependencies": {
+    "esbuild": "^0.25.8"
   }
 }
