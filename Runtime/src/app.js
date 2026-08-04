@@ -325,7 +325,7 @@ function renderExchange(message = '') {
     document.querySelectorAll('[data-set-rule]').forEach((rule) => rule.classList.toggle('is-active', activeRules[rule.dataset.setRule]));
   };
   document.querySelectorAll('[data-item-select]').forEach((input) => { input.onchange = syncBulkActions; });
-  document.querySelector('#sell-selected').textContent = '선택 묶음 판매';
+  document.querySelector('#sell-selected').textContent = '판매';
   syncBulkActions();
   document.querySelector('#exchange-message').textContent = message;
 }

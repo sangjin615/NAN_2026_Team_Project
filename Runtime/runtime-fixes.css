@@ -515,7 +515,7 @@ button.secondary:disabled { background-image: url("./assets/ui/skin-v1/button-se
 }
 [data-scene="exchange"] .market-board {
   right: 1.6%; top: 28.9%; width: 30.5%; height: auto; bottom: 5%;
-  box-sizing: border-box; padding: 18px 22px;
+  box-sizing: border-box; display: flex; flex-direction: column; padding: 18px 22px;
   border: 0; border-image: none; background: transparent; box-shadow: none;
   overflow: visible;
 }
@@ -525,6 +525,9 @@ button.secondary:disabled { background-image: url("./assets/ui/skin-v1/button-se
 }
 
 [data-scene="exchange"] .market-rates { gap: 2px; }
+[data-scene="exchange"] .market-rates { order: 1; }
+[data-scene="exchange"] .set-bonus-guide { order: 2; }
+[data-scene="exchange"] .bundle-sale-panel { order: 3; }
 [data-scene="exchange"] .market-rates > div { padding: 5px 3px; }
 [data-scene="exchange"] .bundle-sale-panel {
   margin-top: 12px;
@@ -569,6 +572,12 @@ button.secondary:disabled { background-image: url("./assets/ui/skin-v1/button-se
   background: transparent !important; box-shadow: none !important;
 }
 [data-scene="exchange"] .actions #sell-selected { width: 100%; height: 100%; }
+[data-scene="exchange"] .actions #sell-selected {
+  color: #f4ecd8; text-shadow: 0 2px 2px #0009;
+  border: 0 !important; border-image: none !important;
+  background: transparent url("./assets/ui/clean-v1/buttons/button-green.png") center / 100% 100% no-repeat !important;
+}
+[data-scene="exchange"] .actions #sell-selected:disabled { filter: grayscale(.45) brightness(.7); opacity: .72; }
 [data-scene="exchange"] .return-city {
   left: 2%; bottom: 1.25%; width: 15%; height: 5.5%;
   color: #2b2015; text-shadow: none;
