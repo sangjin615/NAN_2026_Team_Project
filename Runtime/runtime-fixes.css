@@ -1430,10 +1430,11 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
   padding: 0; border: 0; border-image: none; background: transparent; box-shadow: none;
 }
 [data-scene="quests"] .office-layout .quest-grid {
-  gap: 1.8%; grid-template-rows: repeat(3,minmax(0,1fr));
+  gap: 2%; grid-template-rows: repeat(3,minmax(0,27%));
+  align-content: start;
 }
 [data-scene="quests"] .quest-grid article {
-  padding: 6.5% 23% 5% 17%;
+  padding: 8px 23% 8px 17%;
   border: 10px solid transparent;
   border-image: url("./assets/ui/skin-v1/panel-parchment.png") 48 fill / 10px / 0 stretch;
   background: #f0dfc6e8; background-clip: padding-box;
@@ -1527,6 +1528,9 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
 [data-scene="quests"] > [data-place="city"] {
   left: auto; right: 3.25%; top: 32.95%; bottom: auto;
   width: 12.5%; height: 4.8%; z-index: 8;
+  color: #2b2015; text-shadow: none;
+  border: 0 !important; border-image: none !important;
+  background: transparent url("./assets/ui/clean-v1/buttons/button-parchment.png") center / 100% 100% no-repeat !important;
 }
 [data-scene="quests"] #quest-message {
   left: auto; right: 17%; top: 39.62%; bottom: auto;
