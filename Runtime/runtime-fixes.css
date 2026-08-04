@@ -810,6 +810,24 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
 }
 [data-scene="hub"] .hub-stats > span { flex-direction: column; line-height: 1.15; }
 [data-scene="hub"] .hub-stats b { color: #f3bd3f; font-size: 1.12em; }
+[data-scene="hub"] > header > div,
+[data-scene="hub"] > header > strong,
+[data-scene="hub"] .hub-stats > span {
+  position: relative; padding-left: clamp(34px, 3vw, 48px);
+}
+[data-scene="hub"] > header > div::before,
+[data-scene="hub"] > header > strong::before,
+[data-scene="hub"] .hub-stats > span::before {
+  content: ""; position: absolute; left: 7px; top: 50%; transform: translateY(-50%);
+  width: clamp(24px, 2.5vw, 38px); height: 72%;
+  background-position: center; background-repeat: no-repeat; background-size: contain;
+  filter: drop-shadow(0 2px 2px #0008);
+}
+[data-scene="hub"] > header > div::before { background-image: url("./assets/ui/quest-icons/restraint.png"); }
+[data-scene="hub"] > header > strong::before { background-image: url("./assets/ui/quest-icons/bargain.png"); }
+[data-scene="hub"] .storage-stat::before { background-image: url("./assets/ui/quest-icons/multi.png"); }
+[data-scene="hub"] .stage-stat::before { background-image: url("./assets/ui/quest-icons/block.png"); }
+[data-scene="hub"] #loan-status::before { background-image: url("./assets/ui/quest-icons/designated.png"); }
 [data-scene="hub"] #market-indices {
   left: auto; right: 1.2%; top: 55%; bottom: auto; width: 30%; height: 38%;
   display: block; box-sizing: border-box; padding: 8px 14px;
@@ -1473,3 +1491,29 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
 }
 [data-scene="quests"] .accepted-quests > article { position: relative; padding-left: 13%; }
 [data-scene="quests"] .accepted-quests .quest-icon { left: 1.5%; width: 10%; height: 76%; }
+
+/* Replace the temporary City HUD glyphs with the normalized production icons. */
+[data-scene="hub"] > header > div,
+[data-scene="hub"] > header > strong,
+[data-scene="hub"] .hub-stats > .storage-stat,
+[data-scene="hub"] .hub-stats > .stage-stat { padding-left: clamp(44px, 3.8vw, 60px); }
+[data-scene="hub"] > header > div::before,
+[data-scene="hub"] > header > strong::before,
+[data-scene="hub"] .storage-stat::before,
+[data-scene="hub"] .stage-stat::before {
+  content: ""; left: 5px; width: clamp(32px, 3.2vw, 50px); height: 90%; aspect-ratio: auto;
+  background-position: center; background-repeat: no-repeat; background-size: contain;
+  filter: drop-shadow(0 2px 2px #0008);
+}
+[data-scene="hub"] > header > div::before { background-image: url("./assets/ui/quest-icons/restraint.png"); }
+[data-scene="hub"] > header > strong::before { background-image: url("./assets/ui/quest-icons/bargain.png"); }
+[data-scene="hub"] .storage-stat::before { background-image: url("./assets/ui/quest-icons/multi.png"); }
+[data-scene="hub"] .stage-stat::before { background-image: url("./assets/ui/quest-icons/block.png"); }
+[data-scene="hub"] #loan-status { position: relative; justify-content: flex-end; padding-left: clamp(96px, 8.5vw, 132px); }
+[data-scene="hub"] #loan-status::before {
+  content: "담보 대출"; position: absolute; left: 8px; top: 50%; transform: translateY(-50%);
+  display: flex; align-items: center; width: auto; height: 82%; padding-left: clamp(31px, 2.8vw, 44px);
+  background: url("./assets/ui/quest-icons/designated.png") left center / contain no-repeat;
+  color: #f2e6d0; font-size: .88em; font-weight: 600; white-space: nowrap;
+  filter: drop-shadow(0 2px 2px #0008);
+}
