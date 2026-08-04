@@ -1393,3 +1393,30 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
     #05040318;
   box-shadow: inset 0 10px 24px #0005;
 }
+
+/* The whole building is the hit target; only its nameplate is painted below it. */
+[data-scene="hub"] .place-grid button {
+  padding: 0; border: 0; background: transparent !important; box-shadow: none;
+  color: #f3ead7; overflow: visible;
+}
+[data-scene="hub"] .place-grid button > span {
+  position: absolute; left: 10%; right: 10%; bottom: 0;
+  display: grid; place-items: center; height: 18%; min-height: 30px;
+  background: url("./assets/ui/skin-v1/tab-inactive.png") center / 100% 100% no-repeat;
+  filter: drop-shadow(0 7px 8px #0007);
+  font-size: clamp(12px,1.25vw,20px); font-weight: 900;
+  text-shadow: 0 2px 4px #000;
+  pointer-events: none;
+}
+[data-scene="hub"] .place-grid button:hover > span,
+[data-scene="hub"] .place-grid button:focus-visible > span {
+  background-image: url("./assets/ui/skin-v1/tab-active.png");
+}
+[data-scene="hub"] .place-grid button:focus-visible { outline: 2px solid #e3b754; outline-offset: -4px; }
+[data-scene="hub"] .place-grid button[data-place="quests"] { left: 8%; top: 18%; width: 20%; height: 34%; }
+[data-scene="hub"] .place-grid button[data-place="tavern"] { left: 29%; top: 18%; width: 20%; height: 34%; }
+[data-scene="hub"] .place-grid button[data-place="catalog"] { left: 49%; top: 18%; width: 20%; height: 34%; }
+[data-scene="hub"] .place-grid button[data-place="exchange"] { left: 70%; top: 18%; width: 20%; height: 34%; }
+[data-scene="hub"] .place-grid button[data-place="guild"] { left: 11%; top: 55%; width: 20%; height: 32%; }
+[data-scene="hub"] .place-grid button[data-place="shop"] { left: 36%; top: 55%; width: 20%; height: 32%; }
+[data-scene="hub"] .place-grid button[data-place="museum"] { left: 61%; top: 55%; width: 20%; height: 32%; }

@@ -1401,6 +1401,33 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
     #05040318;
   box-shadow: inset 0 10px 24px #0005;
 }
+
+/* The whole building is the hit target; only its nameplate is painted below it. */
+[data-scene="hub"] .place-grid button {
+  padding: 0; border: 0; background: transparent !important; box-shadow: none;
+  color: #f3ead7; overflow: visible;
+}
+[data-scene="hub"] .place-grid button > span {
+  position: absolute; left: 10%; right: 10%; bottom: 0;
+  display: grid; place-items: center; height: 18%; min-height: 30px;
+  background: url("./assets/ui/skin-v1/tab-inactive.png") center / 100% 100% no-repeat;
+  filter: drop-shadow(0 7px 8px #0007);
+  font-size: clamp(12px,1.25vw,20px); font-weight: 900;
+  text-shadow: 0 2px 4px #000;
+  pointer-events: none;
+}
+[data-scene="hub"] .place-grid button:hover > span,
+[data-scene="hub"] .place-grid button:focus-visible > span {
+  background-image: url("./assets/ui/skin-v1/tab-active.png");
+}
+[data-scene="hub"] .place-grid button:focus-visible { outline: 2px solid #e3b754; outline-offset: -4px; }
+[data-scene="hub"] .place-grid button[data-place="quests"] { left: 8%; top: 18%; width: 20%; height: 34%; }
+[data-scene="hub"] .place-grid button[data-place="tavern"] { left: 29%; top: 18%; width: 20%; height: 34%; }
+[data-scene="hub"] .place-grid button[data-place="catalog"] { left: 49%; top: 18%; width: 20%; height: 34%; }
+[data-scene="hub"] .place-grid button[data-place="exchange"] { left: 70%; top: 18%; width: 20%; height: 34%; }
+[data-scene="hub"] .place-grid button[data-place="guild"] { left: 11%; top: 55%; width: 20%; height: 32%; }
+[data-scene="hub"] .place-grid button[data-place="shop"] { left: 36%; top: 55%; width: 20%; height: 32%; }
+[data-scene="hub"] .place-grid button[data-place="museum"] { left: 61%; top: 55%; width: 20%; height: 32%; }
 </style>
 </head>
 <body><main id="app">
@@ -1420,7 +1447,7 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
     <p id="save-guide">저장 슬롯을 선택한 후 이어하기 버튼을 눌러 진행하세요.</p>
     <button id="back-title" class="secondary">타이틀로 돌아가기</button>
   </section>
-  <section class="scene hub" data-scene="hub" hidden><header><div><p class="eyebrow"><span data-bind="day"></span>일차 / 12</p><h2>미지의 도시</h2></div><strong data-bind="cash"></strong></header><div class="hub-stats"><span class="storage-stat">보관칸 <b data-bind="storage"></b></span><span class="stage-stat"><b data-bind="stage"></b>단계 <small>상회 단계</small></span><span class="hub-quests">완료 의뢰 <b data-bind="quests"></b></span><span id="loan-status"></span></div><button id="hub-settings" aria-label="설정">설정</button><div id="market-indices" class="market"></div><div class="place-grid"><button data-place="quests">의뢰소</button><button data-place="tavern">술집</button><button data-place="catalog">경매장</button><button data-place="exchange">거래소</button><button data-place="shop">상회</button><button data-place="guild">조합</button><button data-place="museum">유물 전시관</button></div><button id="download-log" class="secondary">플레이 기록 다운로드</button><p id="hub-message" class="status"></p></section>
+  <section class="scene hub" data-scene="hub" hidden><header><div><p class="eyebrow"><span data-bind="day"></span>일차 / 12</p><h2>미지의 도시</h2></div><strong data-bind="cash"></strong></header><div class="hub-stats"><span class="storage-stat">보관칸 <b data-bind="storage"></b></span><span class="stage-stat"><b data-bind="stage"></b>단계 <small>상회 단계</small></span><span class="hub-quests">완료 의뢰 <b data-bind="quests"></b></span><span id="loan-status"></span></div><button id="hub-settings" aria-label="설정">설정</button><div id="market-indices" class="market"></div><div class="place-grid"><button data-place="quests"><span>의뢰소</span></button><button data-place="tavern"><span>술집</span></button><button data-place="catalog"><span>경매장</span></button><button data-place="exchange"><span>거래소</span></button><button data-place="shop"><span>상회</span></button><button data-place="guild"><span>조합</span></button><button data-place="museum"><span>유물 전시관</span></button></div><button id="download-log" class="secondary">플레이 기록 다운로드</button><p id="hub-message" class="status"></p></section>
   <section class="scene place" data-scene="quests" hidden><header><div><p class="eyebrow">QUEST & APPRAISAL OFFICE · <span data-bind="day"></span>일차</p><h2>의뢰소 · 감정소</h2></div><strong data-bind="cash"></strong></header><div class="office-layout"><section><h3>오늘의 의뢰</h3><div id="quest-offers" class="quest-grid"></div></section><section><h3>의뢰 진행 · 정밀 감정</h3><div id="active-quests" class="inventory-list"></div></section></div><p id="quest-message" class="status"></p><button data-place="city" class="secondary">도시로</button></section>
   <section class="scene place" data-scene="tavern" hidden><header><div><p class="eyebrow">TAVERN · <span data-bind="day"></span>일차</p><h2>술집</h2></div><strong data-bind="cash"></strong></header><div class="info-actions"><button data-info="forecast">수요 동향</button><button data-info="catalog">출품 목록</button><button data-info="competitors">경쟁자 정보</button></div><div id="tavern-owned" class="place-panel"></div><p id="tavern-message" class="status"></p><button data-place="city" class="secondary return-city">도시로</button></section>
   <section class="scene place" data-scene="exchange" hidden><header><div><p class="eyebrow">EXCHANGE · <span data-bind="day"></span>일차</p><h2>거래소</h2></div><strong data-bind="cash"></strong></header><div id="inventory-list" class="inventory-list"></div><aside id="exchange-market" class="market-board" aria-label="오늘의 시세"></aside><div class="actions"><button id="sell-selected">선택 판매</button></div><p id="exchange-message" class="status"></p><button data-place="city" class="secondary return-city">도시로</button></section>
