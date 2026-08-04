@@ -317,6 +317,15 @@ function renderTavern(message = '') {
   const precision = { forecast: ['★★★★☆', '높음'], catalog: ['★★★☆☆', '보통'], competitors: ['★★★☆☆', '보통'] };
   const lots = state.schedule.days[state.day - 1].lots;
   const totalBase = lots.reduce((sum, lot) => sum + lot.pricing.basePrice, 0);
+  document.querySelectorAll('[data-broker]').forEach((broker) => {
+    const kind = broker.dataset.broker;
+    const selectBroker = () => { selectedInfoKind = kind; renderTavern(); };
+    broker.classList.toggle('is-active', kind === selectedInfoKind);
+    broker.setAttribute('aria-pressed', String(kind === selectedInfoKind));
+    broker.querySelector('span').textContent = bought.includes(kind) ? '오늘 구매 완료' : '오늘 구매 가능';
+    broker.onclick = selectBroker;
+    broker.onkeydown = (event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); selectBroker(); } };
+  });
   document.querySelectorAll('[data-info]').forEach((button) => {
     const kind = button.dataset.info;
     const discount = 1 - (balance.shop.infoDiscount?.[state.shopStage] ?? 0);

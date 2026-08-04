@@ -1037,8 +1037,10 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
   min-height: 27%; margin: 7px 0; padding: 5px 9px;
   border: 9px solid transparent;
   border-image: url("./assets/ui/skin-v1/status-card.png") 34 fill / 9px / 0 stretch;
-  background: transparent;
+  background: transparent; cursor: pointer; outline: none;
 }
+[data-scene="tavern"] .tavern-brokers article:hover,
+[data-scene="tavern"] .tavern-brokers article:focus-visible { filter: brightness(1.16) drop-shadow(0 0 4px #b77a2099); }
 [data-scene="tavern"] .tavern-brokers article.is-active {
   border-image-source: url("./assets/ui/skin-v1/tab-active.png");
   filter: drop-shadow(0 0 5px #b77a20aa);
