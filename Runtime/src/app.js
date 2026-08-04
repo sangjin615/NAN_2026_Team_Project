@@ -28,6 +28,7 @@ let selectedSlot = 1;
 let slotMode = 'new';
 let museumReturn = 'city';
 let actionTimer = null;
+let selectedInfoKind = 'competitors';
 
 const GRADE_LABELS = { COMMON: '일반', RARE: '희귀', EPIC: '영웅', LEGENDARY: '전설' };
 const RELIC_TIER_LABELS = { low: '하급', mid: '중급', high: '상급' };
@@ -311,17 +312,40 @@ function renderExchange(message = '') {
 function renderTavern(message = '') {
   clearActionTimer(); audio.playBgm('tavern'); state.phase = 'tavern'; adapter.showScene('tavern'); syncHeader();
   const bought = Object.keys(state.information?.[state.day] || {});
-  const names = { forecast: '수요 동향', catalog: '출품 목록', competitors: '경쟁자 정보' };
-  const descriptions = { forecast: '시장 수요가 높은 계열을 분석합니다.', catalog: '오늘 출품될 물품 목록을 확인합니다.', competitors: '경쟁자들의 예상 입찰 한도를 확인합니다.' };
+  const names = { forecast: '수요 동향', catalog: '출품 명세', competitors: '경쟁자 예산' };
+  const descriptions = { forecast: '현재 시장에서 수요가 높은 계열과 방향을 분석합니다.', catalog: '주요 LOT의 예상 등급과 계열 분포를 알려드립니다.', competitors: '경매 참가자들의 보유 예산 범위를 추정합니다.' };
+  const precision = { forecast: ['★★★★☆', '높음'], catalog: ['★★★☆☆', '보통'], competitors: ['★★★☆☆', '보통'] };
   const lots = state.schedule.days[state.day - 1].lots;
   const totalBase = lots.reduce((sum, lot) => sum + lot.pricing.basePrice, 0);
   document.querySelectorAll('[data-info]').forEach((button) => {
     const kind = button.dataset.info;
     const discount = 1 - (balance.shop.infoDiscount?.[state.shopStage] ?? 0);
     const cost = Math.ceil(totalBase * balance.informationRate[kind] * discount / 100) * 100;
-    button.innerHTML = `<strong>${names[kind]}</strong><small>${descriptions[kind]}</small><span>${bought.includes(kind) ? '구매 완료' : money(cost)}</span>`;
-    button.disabled = bought.includes(kind);
+    button.classList.toggle('is-selected', kind === selectedInfoKind);
+    button.innerHTML = `<span class="info-symbol">${kind === 'competitors' ? '●●●' : kind === 'catalog' ? '▤' : '↗'}</span><span class="info-copy"><strong>${names[kind]}</strong><small>${descriptions[kind]}</small></span><b>${money(cost)}</b><em>${precision[kind][0]}<small>${precision[kind][1]}</small></em><span class="info-state">${bought.includes(kind) ? '구매 완료' : '구매 가능'}</span>`;
+    button.onclick = () => { selectedInfoKind = kind; renderTavern(); };
   });
+  const selected = selectedInfoKind;
+  const discount = 1 - (balance.shop.infoDiscount?.[state.shopStage] ?? 0);
+  const selectedCost = Math.ceil(totalBase * balance.informationRate[selected] * discount / 100) * 100;
+  const categoryNames = { CER: '도자기', CLK: '시계', PNT: '회화', BOK: '고서', MET: '금은세공', JEW: '장신구' };
+  const results = (() => {
+    if (selected === 'forecast') {
+      const ranked = Object.entries(state.marketPath).map(([key, path]) => [key, path[state.day - 1]]).sort((a, b) => b[1] - a[1]).slice(0, 2);
+      return `<ul>${ranked.map(([key, value]) => `<li>${categoryNames[key]} 수요 <b>${Math.round(value * 100)}%</b> · ${value >= 1 ? '상승 우세' : '하락 주의'}</li>`).join('')}</ul>`;
+    }
+    if (selected === 'catalog') {
+      const grades = Object.entries(Object.groupBy(lots, (lot) => lot.grade)).map(([grade, entries]) => `${gradeLabel(grade)} ${entries.length}점`).join(' · ');
+      const families = Object.entries(Object.groupBy(lots, (lot) => lot.category)).map(([key, entries]) => `${categoryNames[key]} ${entries.length}`).join(' · ');
+      return `<p><b>예상 등급</b><br>${grades}</p><p><b>계열 분포</b><br>${families}</p>`;
+    }
+    const estimates = lots.flatMap((lot) => botBidForLot({ lot, day: state.day, balance, marketIndex: state.marketPath[lot.category][state.day - 1], seed: state.seed }));
+    const grouped = Object.groupBy(estimates, (bot) => bot.name);
+    return `<ul>${Object.entries(grouped).map(([name, entries]) => { const values = entries.map((entry) => entry.maxBid); return `<li><b>${name}</b> ${money(Math.min(...values))} ~ ${money(Math.max(...values))}</li>`; }).join('')}</ul>`;
+  })();
+  const owned = bought.includes(selected);
+  document.querySelector('#tavern-detail').innerHTML = `<h3>정보 상세</h3><div class="detail-heading"><span class="detail-symbol">${selected === 'competitors' ? '●●●' : selected === 'catalog' ? '▤' : '↗'}</span><div><h2>${names[selected]}</h2><strong>${precision[selected][0]} <small>(${precision[selected][1]})</small></strong></div></div><p>${descriptions[selected]}</p><section class="info-result"><b>${owned ? '확보한 정보' : '공개 범위'}</b>${owned ? results : '<p>구매하면 추정 범위와 분석 결과가 이곳에 공개됩니다.</p>'}</section><div class="detail-price"><span>가격</span><b>${money(selectedCost)}</b></div><button id="buy-tavern-info" ${owned || state.cash < selectedCost ? 'disabled' : ''}>${owned ? '구매 완료' : '구매하기'}</button>`;
+  document.querySelector('#buy-tavern-info').onclick = () => { const ok = buyInformation(state, balance, selected); if (ok) { audio.playSfx('information'); save(); } renderTavern(ok ? '정보를 구매했습니다.' : '이미 구매했거나 현금이 부족합니다.'); };
   document.querySelector('#tavern-owned').innerHTML = `<h3>오늘 확보한 정보</h3><p>${bought.length ? bought.map((key) => names[key]).join(' · ') : '아직 구매한 정보가 없습니다.'}</p>`;
   document.querySelector('#tavern-message').textContent = message;
 }
@@ -587,7 +611,6 @@ document.querySelector('#sound-toggle').onclick = () => {
 syncSoundToggle();
 document.querySelectorAll('[data-place]').forEach((button) => button.onclick = () => { audio.playSfx('navigate'); placeRenderers[button.dataset.place]?.(); });
 document.querySelector('#sell-selected').onclick = () => { const ids = [...document.querySelectorAll('[data-item-select]:checked')].map((input) => input.dataset.itemSelect); const revenue = sellItems(state, balance, ids); if (revenue) audio.playSfx('sell'); renderExchange(`${money(revenue)}에 처분했습니다.`); };
-document.querySelectorAll('[data-info]').forEach((button) => button.onclick = () => { const ok = buyInformation(state, balance, button.dataset.info); if (ok) audio.playSfx('information'); renderTavern(ok ? '정보를 구매했습니다.' : '이미 구매했거나 현금이 부족합니다.'); });
 document.querySelector('#shop-upgrade').onclick = () => { const ok = upgradeShop(state, balance); if (ok) audio.playSfx('upgrade'); renderShop(ok ? '상회를 승급했습니다.' : '현금 또는 완료 의뢰가 부족합니다.'); };
 document.querySelector('#guild-loan').onclick = () => { const lotId = document.querySelector('#guild-collateral')?.value; const ok = takeLoan(state, balance, lotId); if (ok) audio.playSfx('loan'); renderGuild(ok ? '선택한 물품으로 담보 대출을 실행했습니다.' : '담보 물품을 선택하고 해금 조건을 확인하세요.'); };
 document.querySelector('#guild-repay').onclick = () => { const ok = repayLoanEarly(state, balance); if (ok) audio.playSfx('repay'); renderGuild(ok ? '원금을 중도 상환했습니다.' : '상환할 수 없습니다.'); };
