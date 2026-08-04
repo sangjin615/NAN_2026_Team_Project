@@ -694,8 +694,9 @@ document.querySelector('#hub-settings').onclick = () => document.querySelector('
 document.querySelector('#close-settings').onclick = () => document.querySelector('#settings-dialog').close();
 const syncSoundToggle = () => {
   const button = document.querySelector('#sound-toggle');
-  button.setAttribute('aria-pressed', String(!audio.enabled));
-  button.textContent = audio.enabled ? '소리: 켜짐' : '소리: 꺼짐';
+  button.setAttribute('aria-pressed', String(audio.enabled));
+  button.setAttribute('aria-label', `전체 소리 ${audio.enabled ? '켜짐' : '꺼짐'}`);
+  button.innerHTML = `<span>전체 소리</span><strong>${audio.enabled ? '켜짐' : '꺼짐'}</strong>`;
 };
 document.querySelector('#sound-toggle').onclick = () => {
   audio.setEnabled(!audio.enabled);

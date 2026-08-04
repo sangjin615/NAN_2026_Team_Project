@@ -383,6 +383,53 @@ button.secondary:disabled { background-image: url("./assets/ui/skin-v1/button-se
 #settings-dialog #close-settings { width: 100%; margin-top: 14px; }
 #settings-dialog #sound-toggle[aria-pressed="true"] { filter: saturate(.45) brightness(.72); }
 
+/* Settings modal uses the painted VSL popup and scales from its 914:629 source frame. */
+#settings-dialog {
+  width: min(72vw, calc(82vh * 1.4531), 914px); max-width: calc(100vw - 24px);
+  aspect-ratio: 914 / 629; box-sizing: border-box; padding: 0; overflow: visible;
+  border: 0; border-image: none; outline: 0;
+  background: transparent url("./assets/ui/vsl-v6.4/popups/settings.png") center / 100% 100% no-repeat;
+  color: #382719; filter: drop-shadow(0 18px 24px #000b);
+}
+#settings-dialog::backdrop { background: #090705c7; backdrop-filter: blur(2px); }
+#settings-dialog > h2 {
+  position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap;
+}
+#settings-dialog .settings-lead {
+  position: absolute; left: 17%; right: 17%; top: 25%; margin: 0;
+  color: #745b40; text-align: center; font-size: clamp(11px,1.05vw,17px);
+}
+#settings-dialog #sound-toggle {
+  position: absolute; left: 18%; top: 36%; width: 64%; height: 18%; box-sizing: border-box;
+  display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 10%;
+  margin: 0; padding: 4% 8%; color: #352416; text-shadow: none;
+  border: 12px solid transparent; border-image: url("./assets/ui/skin-v1/popup-frame.png") 40 fill / 12px / 0 stretch;
+  background: #eadbc2cc !important; filter: none !important;
+}
+#settings-dialog #sound-toggle span {
+  color: #f0e4d0; text-align: left; text-shadow: 0 2px 2px #000b;
+  font-size: clamp(15px,1.6vw,26px); font-weight: 900;
+}
+#settings-dialog #sound-toggle strong {
+  min-width: 4.7em; padding: .55em .9em; border: 2px solid #726046; border-radius: 999px;
+  background: #6e2d27; color: #f5ead8; font-size: clamp(12px,1.15vw,19px); text-align: center;
+  box-shadow: inset 0 2px 3px #0005;
+}
+#settings-dialog #sound-toggle[aria-pressed="true"] strong { border-color: #49652f; background: #416c32; }
+#settings-dialog #sound-toggle:hover,
+#settings-dialog #sound-toggle:focus-visible { filter: brightness(1.06) !important; outline: 3px solid #c69332; outline-offset: 2px; }
+#settings-dialog #close-settings {
+  position: absolute; left: 37%; bottom: 12%; width: 26%; height: 10%; min-width: 0; min-height: 0;
+  margin: 0; padding: 0; font-size: clamp(13px,1.25vw,20px);
+}
+@media (max-aspect-ratio: 4/3) {
+  #settings-dialog { width: min(94vw, calc(78vh * 1.4531)); }
+  #settings-dialog .settings-lead { top: 24%; }
+  #settings-dialog #sound-toggle { left: 12%; width: 76%; }
+  #settings-dialog #close-settings { left: 34%; width: 32%; }
+}
+
 /* Interior scenes use the mockup as art direction while live panels replace data. */
 .place { padding-top: 6.5%; }
 .place header { max-width: 48%; }
