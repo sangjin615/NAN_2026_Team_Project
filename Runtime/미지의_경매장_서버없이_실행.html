@@ -1855,6 +1855,98 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
 [data-scene="hub"] .place-grid button[data-place="museum"] > span {
   left: 15.5%; right: 15.5%;
 }
+
+/* Merchant shop: use the mockup's left upgrade sheet and lower-right storage desk. */
+[data-scene="shop"] > header {
+  z-index: 5; left: 35.2% !important; top: 12.6% !important; width: 29% !important; height: 10.5% !important;
+  box-sizing: border-box; display: flex !important; align-items: center; margin: 0; padding: 8px 22px 8px 78px;
+  border: 13px solid transparent; border-image: url("./assets/ui/skin-v1/panel-dark.png") 48 fill / 13px / 0 stretch;
+  color: #f4e8d1;
+}
+[data-scene="shop"] > header::before {
+  content: "🏪"; position: absolute; left: 24px; top: 50%; transform: translateY(-50%);
+  font-size: clamp(28px,3vw,48px); filter: drop-shadow(0 3px 2px #0008);
+}
+[data-scene="shop"] > header .eyebrow { display: block !important; margin: 2px 0 0; color: #d4c5ad; font-size: clamp(8px,.74vw,12px); }
+[data-scene="shop"] > header h2 { display: block; margin: 0; font-size: clamp(23px,2.25vw,38px); }
+[data-scene="shop"] #shop-detail {
+  position: static !important; display: contents !important; margin: 0 !important; padding: 0 !important;
+}
+[data-scene="shop"] #shop-detail > section { box-sizing: border-box; color: #261b10; }
+[data-scene="shop"] .shop-upgrade-panel {
+  position: absolute; z-index: 2; left: 2.5%; top: 14.2%; width: 29.5%; height: 72.5%;
+  overflow: hidden; padding: 3.2% 2.2% 8.8% !important; border: 0 !important; background: transparent !important;
+}
+[data-scene="shop"] .shop-upgrade-panel > header,
+[data-scene="shop"] .shop-inventory-panel > header { position: static; width: auto; height: auto; margin: 0; padding: 0; border: 0; background: transparent; }
+[data-scene="shop"] .shop-upgrade-panel > header { display: flex; align-items: center; gap: 12px; }
+[data-scene="shop"] .shop-building-icon { display: grid; place-items: center; width: 48px; height: 48px; border-radius: 50%; background: #2c1d11; font-size: 28px; }
+[data-scene="shop"] .shop-upgrade-panel h3,
+[data-scene="shop"] .shop-inventory-panel h3 { margin: 0 !important; font-size: clamp(18px,1.7vw,28px) !important; }
+[data-scene="shop"] .shop-upgrade-panel h3 { white-space: nowrap; font-size: clamp(16px,1.45vw,24px) !important; }
+[data-scene="shop"] .shop-upgrade-panel h4 { margin: 12px 0 6px; padding-bottom: 5px; border-bottom: 1px solid #8c7251; font-size: clamp(12px,1.02vw,17px); }
+[data-scene="shop"] .shop-current-stats { display: grid; grid-template-columns: repeat(2,1fr); gap: 8px; margin: 11px 0; }
+[data-scene="shop"] .shop-current-stats > div { display: grid; gap: 3px; padding: 8px; border: 1px solid #a88f6d; background: #ead9bfaa; text-align: center; }
+[data-scene="shop"] .shop-current-stats span { font-size: clamp(9px,.72vw,12px); }
+[data-scene="shop"] .shop-current-stats b { font-size: clamp(14px,1.22vw,20px); }
+[data-scene="shop"] .shop-requirements,
+[data-scene="shop"] .shop-benefits { display: grid; gap: 5px; margin: 0 !important; padding: 0 !important; list-style: none; line-height: 1.25 !important; }
+[data-scene="shop"] .shop-requirements li { display: flex; justify-content: space-between; padding: 6px 8px; background: #b88d6d33; color: #8d3025; font-size: clamp(10px,.78vw,13px); }
+[data-scene="shop"] .shop-requirements li.is-ready { color: #39713d; }
+[data-scene="shop"] .shop-benefits li { padding-left: 16px; font-size: clamp(9px,.74vw,12px); }
+[data-scene="shop"] .shop-benefits li::before { content: "◆"; margin-left: -15px; margin-right: 6px; color: #a87521; }
+[data-scene="shop"] .shop-inventory-panel {
+  position: absolute; z-index: 2; left: 35.5%; top: 45.5%; width: 60.8%; height: 41.3%;
+  overflow: hidden; padding: 1.8% 2.2% 2% !important; border: 0 !important; background: transparent !important;
+}
+[data-scene="shop"] .shop-inventory-panel > header { display: flex; align-items: end; justify-content: space-between; padding-bottom: 7px; border-bottom: 1px solid #8a704d; }
+[data-scene="shop"] .shop-inventory-panel > header small { color: #8a642b; font-weight: 900; }
+[data-scene="shop"] .shop-inventory-panel > header > b { font-size: clamp(14px,1.35vw,22px); }
+[data-scene="shop"] .shop-storage-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); grid-template-rows: repeat(2,minmax(0,1fr)); gap: 8px; height: 68%; margin-top: 9px; }
+[data-scene="shop"] .shop-storage-slot { position: relative; display: grid; grid-template-columns: 42px minmax(0,1fr); align-items: center; gap: 8px; min-width: 0; padding: 7px 9px; border: 1px solid #9c815e; background: #ead8bcaa; overflow: hidden; }
+[data-scene="shop"] .shop-storage-slot img,
+[data-scene="shop"] .storage-placeholder { width: 40px; height: 40px; object-fit: contain; display: grid; place-items: center; font-size: 25px; }
+[data-scene="shop"] .shop-storage-slot b,
+[data-scene="shop"] .shop-storage-slot small { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+[data-scene="shop"] .shop-storage-slot b { font-size: clamp(10px,.83vw,14px); }
+[data-scene="shop"] .shop-storage-slot small { font-size: clamp(8px,.64vw,11px); color: #6f5b43; }
+[data-scene="shop"] .shop-storage-slot.is-locked { filter: grayscale(.6); opacity: .72; }
+[data-scene="shop"] .slot-number { position: absolute; right: 5px; top: 3px; color: #8e6c38; font-size: 9px; font-weight: 900; }
+[data-scene="shop"] .shop-storage-note { margin: 7px 0 0; color: #745b39; font-size: clamp(8px,.68vw,11px); }
+[data-scene="shop"] #shop-upgrade { z-index: 4; left: 7.1% !important; right: auto !important; bottom: 12.4% !important; width: 20% !important; height: 6.2% !important; }
+[data-scene="shop"] #shop-message { z-index: 5; left: 36%; bottom: 1.5%; max-width: 45%; }
+[data-scene="shop"] .return-city { z-index: 5; left: 2.3%; bottom: 1.6%; width: 15%; height: 5.7%; }
+
+/* Museum: lock every relic to its painted case and fill all mockup panels. */
+[data-scene="museum"] .relic-list {
+  left: 31.3% !important; top: 24.6% !important; width: 35.6% !important; height: 61.2% !important;
+  gap: 2.2% 6.8% !important; overflow: visible;
+}
+[data-scene="museum"] .relic-list article { min-width: 0; min-height: 0; width: 100%; height: 100%; padding: 3% 4% 12% !important; overflow: hidden !important; }
+[data-scene="museum"] .relic-list article::before { left: 2%; top: 1%; width: 18%; max-width: 30px; }
+[data-scene="museum"] .relic-list article.is-locked::after {
+  left: 34%; top: 27%; width: 32%; height: 39%; border-width: 2px;
+  font-size: clamp(14px,1.6vw,25px); box-shadow: inset 0 3px 0 #8b7f6a66,0 4px 4px #0004;
+}
+[data-scene="museum"] .relic-list article.is-owned img { width: 68%; height: 66%; max-width: 82px; max-height: 82px; }
+[data-scene="museum"] #relic-detail { left: 74.1%; top: 20.3%; width: 17.7%; height: 28.2%; padding: 2.3%; }
+[data-scene="museum"] #museum-progress { left: 73.8%; top: 52.6%; width: 18.2%; height: 25.2%; padding: 2.2%; }
+[data-scene="museum"] .museum-effects {
+  position: absolute; left: 9.2%; top: 79.5%; width: 31.5%; height: 8.5%; box-sizing: border-box;
+  display: grid; grid-template-columns: repeat(3,1fr); gap: 5px; align-content: center; padding: .3% .5%; color: #2b2015;
+}
+[data-scene="museum"] .museum-effects h3 { grid-column: 1/-1; margin: 0; color: #80591e; font-size: clamp(9px,.82vw,13px); }
+[data-scene="museum"] .museum-effects p { display: grid; gap: 2px; margin: 0; padding: 6px; border-left: 2px solid #ae8240; background: #ead9bd88; }
+[data-scene="museum"] .museum-effects b { font-size: clamp(9px,.78vw,13px); }
+[data-scene="museum"] .museum-effects span { font-size: clamp(7px,.6vw,10px); }
+[data-scene="museum"] > #museum-back { z-index: 5; left: 7.5%; bottom: 4.4%; width: 14.5%; height: 5.8%; }
+
+@media (max-aspect-ratio: 4/3) {
+  [data-scene="shop"] .shop-storage-slot { grid-template-columns: 34px minmax(0,1fr); padding: 4px 6px; }
+  [data-scene="shop"] .shop-storage-slot img,
+  [data-scene="shop"] .storage-placeholder { width: 32px; height: 32px; }
+  [data-scene="museum"] .museum-effects { gap: 3px; }
+}
 [data-scene="hub"] .place-grid button[data-place="quests"] > span { left: 24.5%; right: 6.5%; }
 [data-scene="hub"] .place-grid button[data-place="guild"] > span { left: 8.5%; right: 22.5%; }
 [data-scene="hub"] .place-grid button[data-place="shop"] > span { left: -6.5%; right: 37.5%; }
@@ -1938,9 +2030,9 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
   <section class="scene place" data-scene="quests" hidden><header><div><p class="eyebrow">QUEST & APPRAISAL OFFICE · <span data-bind="day"></span>일차</p><h2>의뢰소 · 감정소</h2></div><strong data-bind="cash"></strong></header><div class="office-layout"><section><h3>오늘의 의뢰</h3><div id="quest-offers" class="quest-grid"></div></section><section><h3>의뢰 진행 · 정밀 감정</h3><div id="active-quests" class="inventory-list"></div></section></div><p id="quest-message" class="status"></p><button data-place="city" class="secondary">도시로</button></section>
   <section class="scene place" data-scene="tavern" hidden><header><div><p class="eyebrow">TAVERN · <span data-bind="day"></span>일차</p><h2>술집</h2></div><strong data-bind="cash"></strong></header><section class="tavern-brokers"><h3>정보상 목록</h3><article data-broker="competitors" role="button" tabindex="0"><img src="./assets/ui/tavern/bartender.png" alt=""><div><b>바텐더</b><small>항구의 소식통</small><span></span></div></article><article data-broker="catalog" role="button" tabindex="0"><img src="./assets/ui/tavern/informant.png" alt=""><div><b>정보상</b><small>도시의 뒷골목 정보망</small><span></span></div></article><article data-broker="forecast" role="button" tabindex="0"><img src="./assets/ui/tavern/traveling-merchant.png" alt=""><div><b>여행 상인</b><small>먼 지역을 오가는 상인</small><span></span></div></article></section><section class="tavern-market"><div id="tavern-detail" aria-live="polite"></div><p class="tavern-rule">오늘은 세 정보 중 하나만 구매할 수 있으며 당일 경매 종료까지 유지됩니다.</p></section><aside id="tavern-owned" aria-live="polite"></aside><p id="tavern-message" class="status"></p><button data-place="city" class="secondary return-city">도시로 돌아가기</button></section>
   <section class="scene place" data-scene="exchange" hidden><header><div><p class="eyebrow">EXCHANGE · <span data-bind="day"></span>일차</p><h2>거래소</h2></div><strong data-bind="cash"></strong></header><div id="inventory-list" class="inventory-list"></div><aside id="exchange-market" class="market-board" aria-label="오늘의 시세"></aside><div class="actions"><button id="sell-selected">선택 판매</button></div><p id="exchange-message" class="status"></p><button data-place="city" class="secondary return-city">도시로</button></section>
-  <section class="scene place" data-scene="shop" hidden><header><div><p class="eyebrow">MERCHANT SHOP · <span data-bind="day"></span>일차</p><h2>상회</h2></div><strong data-bind="cash"></strong></header><div id="shop-detail" class="place-panel"></div><button id="shop-upgrade">상점 확장</button><p id="shop-message" class="status"></p><button data-place="city" class="secondary return-city">도시로</button></section>
+  <section class="scene place" data-scene="shop" hidden><header><div><p class="eyebrow">상회의 성장과 보유품을 관리합니다.</p><h2>상회</h2></div><strong data-bind="cash"></strong></header><div id="shop-detail" class="place-panel"></div><button id="shop-upgrade">상점 확장</button><p id="shop-message" class="status"></p><button data-place="city" class="secondary return-city">도시로</button></section>
   <section class="scene place" data-scene="guild" hidden><div class="guild-heading"><p class="eyebrow">미판매 물품을 담보로 단기 자금을 조달합니다.</p><h2>조합</h2><strong data-bind="cash"></strong></div><div id="guild-detail" class="place-panel"></div><aside id="guild-collateral-list" aria-label="담보 보유품"></aside><div class="actions"><button id="guild-loan">대출 실행</button><button id="guild-repay" class="secondary">대출 상환</button></div><p id="guild-message" class="status"></p><button data-place="city" class="secondary return-city">도시로 돌아가기</button></section>
-  <section class="scene place" data-scene="museum" hidden><p class="eyebrow">RELIC MUSEUM</p><h2>유물 전시관</h2><div id="relic-list" class="relic-list"></div><aside id="relic-detail" class="relic-detail" aria-live="polite"></aside><div id="museum-progress" class="museum-progress"></div><button id="museum-back" class="secondary">돌아가기</button></section>
+  <section class="scene place" data-scene="museum" hidden><p class="eyebrow">RELIC MUSEUM</p><h2>유물 전시관</h2><div id="relic-list" class="relic-list"></div><aside id="relic-detail" class="relic-detail" aria-live="polite"></aside><div id="museum-progress" class="museum-progress"></div><aside class="museum-effects"><h3>수집 효과</h3><p><b>하급 세트</b><span>경매 정보 보조</span></p><p><b>중급 세트</b><span>거래 보너스 강화</span></p><p><b>상급 세트</b><span>최종 여정 보너스</span></p></aside><button id="museum-back" class="secondary">돌아가기</button></section>
   <section class="scene" data-scene="catalog" hidden><header><div><p class="eyebrow">오늘의 카탈로그</p><h2><span data-bind="day"></span>일차 · 8 LOT</h2></div><strong data-bind="cash"></strong></header><div id="catalog-grid" class="catalog-grid"></div><button data-place="city" class="secondary return-city catalog-return">도시로</button><button id="start-auction">경매 시작</button></section>
   <section class="scene" data-scene="auction" hidden>
     <aside id="auction-lot-status"></aside>
@@ -3190,8 +3282,21 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
     const required = maxed ? 0 : balance.shop.questRequirement[next - 1];
     const nextStorage = maxed ? state.storage : balance.shop.storage[next];
     const nextDiscount = maxed ? balance.shop.infoDiscount[state.shopStage] : balance.shop.infoDiscount[next];
-    document.querySelector("#shop-detail").innerHTML = `<section><h3>${state.shopStage}\uB2E8\uACC4 \uC0C1\uD68C</h3><dl><div><dt>\uBCF4\uAD00\uCE78</dt><dd>${state.storage}\uCE78</dd></div><div><dt>\uC815\uBCF4 \uD560\uC778</dt><dd>${Math.round((balance.shop.infoDiscount[state.shopStage] || 0) * 100)}%</dd></div><div><dt>\uC644\uB8CC \uC758\uB8B0</dt><dd>${state.completedQuestCount}\uAC74</dd></div></dl></section>
-    <section><h3>${maxed ? "\uCD5C\uACE0 \uB2E8\uACC4 \uB2EC\uC131" : `${next}\uB2E8\uACC4 \uC2B9\uAE09`}</h3><p>${maxed ? "\uB300\uC0C1\uD68C\uC5D0 \uB3C4\uB2EC\uD588\uC2B5\uB2C8\uB2E4." : `\uBE44\uC6A9 ${money(cost)} \xB7 \uC644\uB8CC \uC758\uB8B0 ${required}\uAC74 \uD544\uC694`}</p><ul><li>\uBCF4\uAD00\uCE78 ${nextStorage}\uCE78</li><li>\uB3D9\uC2DC \uC758\uB8B0 \uBC0F \uBCF4\uC0C1 \uAC15\uD654</li><li>\uC815\uBCF4 \uBE44\uC6A9 ${Math.round((nextDiscount || 0) * 100)}% \uD560\uC778</li>${next >= 3 ? "<li>\uC720\uBB3C \uC804\uC2DC\uAD00 \uC774\uC6A9 \uD655\uB300</li>" : ""}</ul></section>`;
+    const maxStorage = Math.max(...balance.shop.storage);
+    const inventory = ownedItems();
+    const slots = Array.from({ length: maxStorage }, (_, index) => {
+      const item = inventory[index];
+      const unlocked = index < state.storage;
+      if (item) {
+        const lot = scheduledLot(item.lotId);
+        return `<article class="shop-storage-slot is-filled"><span class="slot-number">${index + 1}</span><img src="${lot ? spriteUrl(lot, item.grade) : ""}" alt=""><div><b>${escapeHtml(item.name)}</b><small>${gradeLabel(item.grade)} \xB7 \uAC10\uC815\uAC00 ${money(item.appraisedValue || item.trueValue)}</small></div></article>`;
+      }
+      return `<article class="shop-storage-slot ${unlocked ? "is-empty" : "is-locked"}"><span class="slot-number">${index + 1}</span><div class="storage-placeholder" aria-hidden="true">${unlocked ? "\uFF0B" : "\u{1F512}"}</div><div><b>${unlocked ? "\uBE48 \uBCF4\uAD00\uCE78" : "\uC7A0\uAE34 \uBCF4\uAD00\uCE78"}</b><small>${unlocked ? "\uB099\uCC30\uD55C \uBB3C\uD488\uC744 \uBCF4\uAD00\uD569\uB2C8\uB2E4." : "\uC0C1\uD68C \uC2B9\uAE09 \uC2DC \uD574\uAE08\uB429\uB2C8\uB2E4."}</small></div></article>`;
+    }).join("");
+    const questReady = state.completedQuestCount >= required;
+    const cashReady = state.cash >= cost;
+    document.querySelector("#shop-detail").innerHTML = `<section class="shop-upgrade-panel"><header><span class="shop-building-icon">\u{1F3EA}</span><div><small>\uC0C1\uD68C \uC131\uC7A5</small><h3>${state.shopStage}\uB2E8\uACC4 \uC0C1\uD68C</h3></div></header><div class="shop-current-stats"><div><span>\uBCF4\uAD00\uD568</span><b>${state.storage} / ${maxStorage}</b></div><div><span>\uC815\uBCF4 \uD560\uC778</span><b>${Math.round((balance.shop.infoDiscount[state.shopStage] || 0) * 100)}%</b></div></div><h4>${maxed ? "\uCD5C\uACE0 \uB2E8\uACC4 \uB2EC\uC131" : `${next}\uB2E8\uACC4 \uC2B9\uAE09 \uC870\uAC74`}</h4><ul class="shop-requirements"><li class="${questReady ? "is-ready" : ""}"><span>\uC644\uB8CC \uC758\uB8B0</span><b>${state.completedQuestCount} / ${required}\uAC74</b></li><li class="${cashReady ? "is-ready" : ""}"><span>\uC2B9\uAE09 \uBE44\uC6A9</span><b>${money(cost)}</b></li></ul><h4>\uC2B9\uAE09 \uD6A8\uACFC</h4><ul class="shop-benefits"><li>\uBCF4\uAD00\uD568 ${state.storage} \u2192 ${nextStorage}\uCE78</li><li>\uC815\uBCF4 \uAD6C\uB9E4 \uBE44\uC6A9 ${Math.round((nextDiscount || 0) * 100)}% \uD560\uC778</li>${next >= 3 ? "<li>\uC0C1\uAE09 \uC720\uBB3C \uC804\uC2DC \uC815\uBCF4 \uD574\uAE08</li>" : "<li>\uC758\uB8B0\uC640 \uAC70\uB798 \uAE30\uB2A5 \uAC15\uD654</li>"}</ul></section><section class="shop-inventory-panel"><header><div><small>STORAGE</small><h3>\uBCF4\uC720\uD488 \uAD00\uB9AC</h3></div><b>${inventory.length} / ${state.storage}</b></header><div class="shop-storage-grid">${slots}</div><p class="shop-storage-note">\uC0C1\uD68C \uB2E8\uACC4\uAC00 \uC624\uB974\uBA74 \uBCF4\uAD00\uCE78\uACFC \uC815\uBCF4 \uD560\uC778 \uD61C\uD0DD\uC774 \uB298\uC5B4\uB0A9\uB2C8\uB2E4.</p></section>`;
+    document.querySelector("#shop-upgrade").textContent = maxed ? "\uCD5C\uACE0 \uB2E8\uACC4 \uB2EC\uC131" : `${next}\uB2E8\uACC4\uB85C \uC2B9\uAE09`;
     document.querySelector("#shop-upgrade").disabled = maxed || state.cash < cost || state.completedQuestCount < required;
     document.querySelector("#shop-message").textContent = message;
   }

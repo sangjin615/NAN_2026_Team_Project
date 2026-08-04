@@ -408,8 +408,21 @@ function renderShop(message = '') {
   const required = maxed ? 0 : balance.shop.questRequirement[next - 1];
   const nextStorage = maxed ? state.storage : balance.shop.storage[next];
   const nextDiscount = maxed ? balance.shop.infoDiscount[state.shopStage] : balance.shop.infoDiscount[next];
-  document.querySelector('#shop-detail').innerHTML = `<section><h3>${state.shopStage}단계 상회</h3><dl><div><dt>보관칸</dt><dd>${state.storage}칸</dd></div><div><dt>정보 할인</dt><dd>${Math.round((balance.shop.infoDiscount[state.shopStage] || 0) * 100)}%</dd></div><div><dt>완료 의뢰</dt><dd>${state.completedQuestCount}건</dd></div></dl></section>
-    <section><h3>${maxed ? '최고 단계 달성' : `${next}단계 승급`}</h3><p>${maxed ? '대상회에 도달했습니다.' : `비용 ${money(cost)} · 완료 의뢰 ${required}건 필요`}</p><ul><li>보관칸 ${nextStorage}칸</li><li>동시 의뢰 및 보상 강화</li><li>정보 비용 ${Math.round((nextDiscount || 0) * 100)}% 할인</li>${next >= 3 ? '<li>유물 전시관 이용 확대</li>' : ''}</ul></section>`;
+  const maxStorage = Math.max(...balance.shop.storage);
+  const inventory = ownedItems();
+  const slots = Array.from({ length: maxStorage }, (_, index) => {
+    const item = inventory[index];
+    const unlocked = index < state.storage;
+    if (item) {
+      const lot = scheduledLot(item.lotId);
+      return `<article class="shop-storage-slot is-filled"><span class="slot-number">${index + 1}</span><img src="${lot ? spriteUrl(lot, item.grade) : ''}" alt=""><div><b>${escapeHtml(item.name)}</b><small>${gradeLabel(item.grade)} · 감정가 ${money(item.appraisedValue || item.trueValue)}</small></div></article>`;
+    }
+    return `<article class="shop-storage-slot ${unlocked ? 'is-empty' : 'is-locked'}"><span class="slot-number">${index + 1}</span><div class="storage-placeholder" aria-hidden="true">${unlocked ? '＋' : '🔒'}</div><div><b>${unlocked ? '빈 보관칸' : '잠긴 보관칸'}</b><small>${unlocked ? '낙찰한 물품을 보관합니다.' : '상회 승급 시 해금됩니다.'}</small></div></article>`;
+  }).join('');
+  const questReady = state.completedQuestCount >= required;
+  const cashReady = state.cash >= cost;
+  document.querySelector('#shop-detail').innerHTML = `<section class="shop-upgrade-panel"><header><span class="shop-building-icon">🏪</span><div><small>상회 성장</small><h3>${state.shopStage}단계 상회</h3></div></header><div class="shop-current-stats"><div><span>보관함</span><b>${state.storage} / ${maxStorage}</b></div><div><span>정보 할인</span><b>${Math.round((balance.shop.infoDiscount[state.shopStage] || 0) * 100)}%</b></div></div><h4>${maxed ? '최고 단계 달성' : `${next}단계 승급 조건`}</h4><ul class="shop-requirements"><li class="${questReady ? 'is-ready' : ''}"><span>완료 의뢰</span><b>${state.completedQuestCount} / ${required}건</b></li><li class="${cashReady ? 'is-ready' : ''}"><span>승급 비용</span><b>${money(cost)}</b></li></ul><h4>승급 효과</h4><ul class="shop-benefits"><li>보관함 ${state.storage} → ${nextStorage}칸</li><li>정보 구매 비용 ${Math.round((nextDiscount || 0) * 100)}% 할인</li>${next >= 3 ? '<li>상급 유물 전시 정보 해금</li>' : '<li>의뢰와 거래 기능 강화</li>'}</ul></section><section class="shop-inventory-panel"><header><div><small>STORAGE</small><h3>보유품 관리</h3></div><b>${inventory.length} / ${state.storage}</b></header><div class="shop-storage-grid">${slots}</div><p class="shop-storage-note">상회 단계가 오르면 보관칸과 정보 할인 혜택이 늘어납니다.</p></section>`;
+  document.querySelector('#shop-upgrade').textContent = maxed ? '최고 단계 달성' : `${next}단계로 승급`;
   document.querySelector('#shop-upgrade').disabled = maxed || state.cash < cost || state.completedQuestCount < required;
   document.querySelector('#shop-message').textContent = message;
 }
