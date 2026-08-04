@@ -1859,6 +1859,92 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
 /* Remaining VSL scenes: place live data into the frames painted in each mockup.
    The catalog is intentionally excluded because its final composition is user-owned. */
 
+/* Auction catalog: eight daily LOTs are presented as a two-page auction folio. */
+[data-scene="catalog"]::after { background: #06040238; }
+[data-scene="catalog"] .catalog-grid {
+  position: absolute; left: 15%; right: 15%; top: 9%; bottom: 8%;
+  display: block; margin: 0; padding: 0; overflow: visible;
+  background: transparent url("./assets/ui/auction-catalog-book.png") center / 100% 100% no-repeat;
+  filter: drop-shadow(0 14px 18px #0008);
+}
+[data-scene="catalog"] .lot-card {
+  position: absolute; width: 17.7%; height: 27%; box-sizing: border-box;
+  display: grid; grid-template-rows: 44% auto auto auto; align-content: center; justify-items: center;
+  gap: 1.5%; min-height: 0; margin: 0; padding: 3.5% 4% 2.5%; overflow: visible;
+  border: 0; background: transparent; color: #392719; text-align: center; cursor: help;
+  filter: none; outline: none;
+}
+[data-scene="catalog"] .lot-card:nth-child(1) { left: 3.8%; top: 10.9%; }
+[data-scene="catalog"] .lot-card:nth-child(2) { left: 24.1%; top: 10.9%; }
+[data-scene="catalog"] .lot-card:nth-child(3) { left: 3.8%; top: 50.3%; }
+[data-scene="catalog"] .lot-card:nth-child(4) { left: 24.1%; top: 50.3%; }
+[data-scene="catalog"] .lot-card:nth-child(5) { left: 49%; top: 10.9%; }
+[data-scene="catalog"] .lot-card:nth-child(6) { left: 69.7%; top: 10.9%; }
+[data-scene="catalog"] .lot-card:nth-child(7) { left: 49%; top: 50.3%; }
+[data-scene="catalog"] .lot-card:nth-child(8) { left: 69.7%; top: 50.3%; }
+[data-scene="catalog"] .lot-card::after {
+  content: ""; position: absolute; inset: 2%; pointer-events: none; opacity: 0;
+  border: 2px solid #d49a29; box-shadow: inset 0 0 16px #ffe89a99, 0 0 12px #d49a29aa;
+  transition: opacity .16s ease;
+}
+[data-scene="catalog"] .lot-card:hover::after,
+[data-scene="catalog"] .lot-card:focus-visible::after { opacity: 1; }
+[data-scene="catalog"] .catalog-number {
+  position: absolute; left: 5%; top: 4%; z-index: 2; color: #8a5a22;
+  font: 900 clamp(9px,.8vw,13px)/1 serif;
+}
+[data-scene="catalog"] .catalog-grid .mini-sprite { width: 100%; height: 100%; display: grid; place-items: center; }
+[data-scene="catalog"] .catalog-grid .mini-sprite img {
+  width: min(6.5vw,100px); height: min(6.5vw,100px); max-width: 78%; max-height: 100%; object-fit: contain;
+  filter: drop-shadow(0 5px 4px #3d271c55);
+}
+[data-scene="catalog"] .catalog-grade { color: #8a5a22; font-size: clamp(8px,.68vw,11px); font-weight: 900; }
+[data-scene="catalog"] .lot-card h3 {
+  width: 100%; margin: 0; overflow: hidden; color: #332216;
+  font-size: clamp(10px,.92vw,15px); line-height: 1.15; text-overflow: ellipsis; white-space: nowrap;
+}
+[data-scene="catalog"] .lot-card > .catalog-meta {
+  width: 100%; display: flex; justify-content: space-between; gap: 4px; margin: 0; color: #65482d;
+  font-size: clamp(7px,.62vw,10px); line-height: 1.1;
+}
+[data-scene="catalog"] .catalog-meta strong { color: #4d321d; }
+[data-scene="catalog"] .catalog-tooltip {
+  position: absolute; left: 50%; top: 94%; z-index: 30; width: clamp(220px,18vw,310px); box-sizing: border-box;
+  display: grid; gap: 5px; padding: 16px 18px; visibility: hidden; opacity: 0; pointer-events: none;
+  transform: translate(-50%,8px); color: #eadbc1; text-align: left;
+  border: 14px solid transparent; border-image: url("./assets/ui/skin-v1/panel-dark.png") 46 fill / 14px / 0 stretch;
+  filter: drop-shadow(0 8px 12px #000a); transition: opacity .14s ease, transform .14s ease;
+}
+[data-scene="catalog"] .lot-card:nth-child(n+3):nth-child(-n+4) .catalog-tooltip,
+[data-scene="catalog"] .lot-card:nth-child(n+7) .catalog-tooltip { top: auto; bottom: 94%; transform: translate(-50%,-8px); }
+[data-scene="catalog"] .lot-card:nth-child(1) .catalog-tooltip,
+[data-scene="catalog"] .lot-card:nth-child(3) .catalog-tooltip { left: 0; transform: translate(0,8px); }
+[data-scene="catalog"] .lot-card:nth-child(2) .catalog-tooltip,
+[data-scene="catalog"] .lot-card:nth-child(4) .catalog-tooltip,
+[data-scene="catalog"] .lot-card:nth-child(6) .catalog-tooltip,
+[data-scene="catalog"] .lot-card:nth-child(8) .catalog-tooltip { left: auto; right: 0; transform: translate(0,8px); }
+[data-scene="catalog"] .lot-card:hover .catalog-tooltip,
+[data-scene="catalog"] .lot-card:focus-visible .catalog-tooltip { visibility: visible; opacity: 1; transform: translate(-50%,0); }
+[data-scene="catalog"] .lot-card:nth-child(1):hover .catalog-tooltip,
+[data-scene="catalog"] .lot-card:nth-child(1):focus-visible .catalog-tooltip,
+[data-scene="catalog"] .lot-card:nth-child(2):hover .catalog-tooltip,
+[data-scene="catalog"] .lot-card:nth-child(2):focus-visible .catalog-tooltip,
+[data-scene="catalog"] .lot-card:nth-child(3):hover .catalog-tooltip,
+[data-scene="catalog"] .lot-card:nth-child(3):focus-visible .catalog-tooltip,
+[data-scene="catalog"] .lot-card:nth-child(4):hover .catalog-tooltip,
+[data-scene="catalog"] .lot-card:nth-child(4):focus-visible .catalog-tooltip,
+[data-scene="catalog"] .lot-card:nth-child(6):hover .catalog-tooltip,
+[data-scene="catalog"] .lot-card:nth-child(6):focus-visible .catalog-tooltip,
+[data-scene="catalog"] .lot-card:nth-child(8):hover .catalog-tooltip,
+[data-scene="catalog"] .lot-card:nth-child(8):focus-visible .catalog-tooltip { transform: translate(0,0); }
+[data-scene="catalog"] .catalog-tooltip b { color: #f0c766; font-size: clamp(13px,1.05vw,17px); }
+[data-scene="catalog"] .catalog-tooltip > span { color: #bea77e; font-size: clamp(10px,.76vw,12px); }
+[data-scene="catalog"] .catalog-tooltip p { display: block; margin: 2px 0; color: #eadbc1; font-size: clamp(10px,.78vw,13px); line-height: 1.35; }
+[data-scene="catalog"] .catalog-tooltip em { color: #d2b874; font-size: clamp(9px,.72vw,12px); }
+[data-scene="catalog"] .catalog-tooltip strong { color: #8fd273; text-align: right; }
+[data-scene="catalog"] > .catalog-return { left: 4%; bottom: 2%; }
+[data-scene="catalog"] #start-auction { z-index: 20; bottom: 2%; width: 24%; }
+
 [data-scene="auction"] > header { top: 5.5%; height: 11%; }
 [data-scene="auction"] #auction-feed { left: 6.1%; top: 60%; width: 13.6%; height: 25%; padding: 14px; }
 [data-scene="auction"] > .actions { bottom: 3%; width: 52%; height: 12%; gap: 2%; }
@@ -3598,7 +3684,13 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
     state.phase = "catalog";
     adapter.showScene("catalog");
     syncHeader();
-    document.querySelector("#catalog-grid").innerHTML = state.schedule.days[state.day - 1].lots.map((lot) => `<article class="lot-card"><div class="mini-sprite ${lot.visualEffects.map((effect) => `vfx-${effect}`).join(" ")}"><img src="${spriteUrl(lot, lot.grade)}" alt=""></div><span>${gradeLabel(lot.grade)}</span><h3>${escapeHtml(lot.content.displayName)}</h3><p>${escapeHtml(lot.content.description)}</p></article>`).join("");
+    document.querySelector("#catalog-grid").innerHTML = state.schedule.days[state.day - 1].lots.map((lot, index) => `<article class="lot-card catalog-lot-${index + 1}" tabindex="0" aria-label="LOT ${index + 1} ${escapeHtml(lot.content.displayName)} \uC0C1\uC138 \uC815\uBCF4">
+    <b class="catalog-number">${String(index + 1).padStart(2, "0")}</b>
+    <div class="mini-sprite ${lot.visualEffects.map((effect) => `vfx-${effect}`).join(" ")}"><img src="${spriteUrl(lot, lot.grade)}" alt=""></div>
+    <span class="catalog-grade">${gradeLabel(lot.grade)}</span><h3>${escapeHtml(lot.content.displayName)}</h3>
+    <p class="catalog-meta"><span>${escapeHtml(lot.category)}</span><strong>${money(lot.pricing.basePrice)}</strong></p>
+    <aside class="catalog-tooltip" role="tooltip"><b>${escapeHtml(lot.content.displayName)}</b><span>${gradeLabel(lot.grade)} \xB7 ${escapeHtml(lot.category)}</span><p>${escapeHtml(lot.content.description)}</p>${lot.content.setHint ? `<em>${escapeHtml(lot.content.setHint)}</em>` : ""}<strong>\uAE30\uC900\uAC00 ${money(lot.pricing.basePrice)}</strong></aside>
+  </article>`).join("");
   }
   function renderAuction() {
     const lot = state.schedule.days[state.day - 1].lots[state.lotIndex];

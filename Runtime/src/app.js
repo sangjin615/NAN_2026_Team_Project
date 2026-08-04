@@ -498,7 +498,13 @@ function renderMuseum(returnTo = 'city') {
 
 function renderCatalog() {
   clearActionTimer(); audio.playBgm('workplace'); state.phase = 'catalog'; adapter.showScene('catalog'); syncHeader();
-  document.querySelector('#catalog-grid').innerHTML = state.schedule.days[state.day - 1].lots.map((lot) => `<article class="lot-card"><div class="mini-sprite ${lot.visualEffects.map((effect) => `vfx-${effect}`).join(' ')}"><img src="${spriteUrl(lot, lot.grade)}" alt=""></div><span>${gradeLabel(lot.grade)}</span><h3>${escapeHtml(lot.content.displayName)}</h3><p>${escapeHtml(lot.content.description)}</p></article>`).join('');
+  document.querySelector('#catalog-grid').innerHTML = state.schedule.days[state.day - 1].lots.map((lot, index) => `<article class="lot-card catalog-lot-${index + 1}" tabindex="0" aria-label="LOT ${index + 1} ${escapeHtml(lot.content.displayName)} 상세 정보">
+    <b class="catalog-number">${String(index + 1).padStart(2, '0')}</b>
+    <div class="mini-sprite ${lot.visualEffects.map((effect) => `vfx-${effect}`).join(' ')}"><img src="${spriteUrl(lot, lot.grade)}" alt=""></div>
+    <span class="catalog-grade">${gradeLabel(lot.grade)}</span><h3>${escapeHtml(lot.content.displayName)}</h3>
+    <p class="catalog-meta"><span>${escapeHtml(lot.category)}</span><strong>${money(lot.pricing.basePrice)}</strong></p>
+    <aside class="catalog-tooltip" role="tooltip"><b>${escapeHtml(lot.content.displayName)}</b><span>${gradeLabel(lot.grade)} · ${escapeHtml(lot.category)}</span><p>${escapeHtml(lot.content.description)}</p>${lot.content.setHint ? `<em>${escapeHtml(lot.content.setHint)}</em>` : ''}<strong>기준가 ${money(lot.pricing.basePrice)}</strong></aside>
+  </article>`).join('');
 }
 
 function renderAuction() {
