@@ -183,7 +183,18 @@ function renderHub(message = '') {
       const previous = visible.at(-2) ?? current;
       const trend = current > previous ? 'rise' : current < previous ? 'fall' : 'flat';
       const arrow = trend === 'rise' ? '▲' : trend === 'fall' ? '▼' : '—';
-      return `<span class="market-spark ${trend}"><b>${family}</b><em>${(current * 100).toFixed(0)}</em><i aria-label="${trend === 'rise' ? '상승' : trend === 'fall' ? '하락' : '변동 없음'}">${arrow}</i></span>`;
+      const pointList = visible.map((value, index) => {
+        const x = visible.length === 1 ? 50 : 3 + (index / (visible.length - 1)) * 94;
+        const y = 40 - Math.max(0, Math.min(1, (value - 0.7) / 0.6)) * 32;
+        return `${x.toFixed(1)},${y.toFixed(1)}`;
+      });
+      if (pointList.length === 1) {
+        const y = pointList[0].split(',')[1];
+        pointList.splice(0, 1, `3,${y}`, `97,${y}`);
+      }
+      const points = pointList.join(' ');
+      const [lastX, lastY] = points.split(' ').at(-1).split(',');
+      return `<span class="market-spark ${trend}"><span class="market-quote"><b>${family}</b><em>${(current * 100).toFixed(0)}</em><i aria-label="${trend === 'rise' ? '상승' : trend === 'fall' ? '하락' : '변동 없음'}">${arrow}</i></span><svg viewBox="0 0 100 46" preserveAspectRatio="none" aria-hidden="true"><line x1="0" y1="25" x2="100" y2="25"></line><polyline points="${points}"></polyline><circle cx="${lastX}" cy="${lastY}" r="3.4"></circle></svg></span>`;
     }).join('')}</div>`;
   document.querySelector('#loan-status').textContent = state.loan
     ? `만기 ${state.loan.dueDay}일 · ${money(state.loan.due)}`
