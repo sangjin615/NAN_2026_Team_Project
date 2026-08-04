@@ -314,6 +314,7 @@ function renderTavern(message = '') {
   const bought = Object.keys(state.information?.[state.day] || {});
   const names = { forecast: '수요 동향', catalog: '출품 명세', competitors: '경쟁자 예산' };
   const descriptions = { forecast: '현재 시장에서 수요가 높은 계열과 방향을 분석합니다.', catalog: '주요 LOT의 예상 등급과 계열 분포를 알려드립니다.', competitors: '경매 참가자들의 보유 예산 범위를 추정합니다.' };
+  const icons = { forecast: './assets/ui/tavern/demand-trend.png', catalog: './assets/ui/tavern/lot-specification.png', competitors: './assets/ui/tavern/competitor-budget.png' };
   const precision = { forecast: ['★★★★☆', '높음'], catalog: ['★★★☆☆', '보통'], competitors: ['★★★☆☆', '보통'] };
   const lots = state.schedule.days[state.day - 1].lots;
   const totalBase = lots.reduce((sum, lot) => sum + lot.pricing.basePrice, 0);
@@ -331,7 +332,7 @@ function renderTavern(message = '') {
     const discount = 1 - (balance.shop.infoDiscount?.[state.shopStage] ?? 0);
     const cost = Math.ceil(totalBase * balance.informationRate[kind] * discount / 100) * 100;
     button.classList.toggle('is-selected', kind === selectedInfoKind);
-    button.innerHTML = `<span class="info-symbol">${kind === 'competitors' ? '●●●' : kind === 'catalog' ? '▤' : '↗'}</span><span class="info-copy"><strong>${names[kind]}</strong><small>${descriptions[kind]}</small></span><b>${money(cost)}</b><em>${precision[kind][0]}<small>${precision[kind][1]}</small></em><span class="info-state">${bought.includes(kind) ? '구매 완료' : '구매 가능'}</span>`;
+    button.innerHTML = `<img class="info-symbol" src="${icons[kind]}" alt=""><span class="info-copy"><strong>${names[kind]}</strong><small>${descriptions[kind]}</small></span><b>${money(cost)}</b><em>${precision[kind][0]}<small>${precision[kind][1]}</small></em><span class="info-state">${bought.includes(kind) ? '구매 완료' : '구매 가능'}</span>`;
     button.onclick = () => { selectedInfoKind = kind; renderTavern(); };
   });
   const selected = selectedInfoKind;
@@ -353,7 +354,7 @@ function renderTavern(message = '') {
     return `<ul>${Object.entries(grouped).map(([name, entries]) => { const values = entries.map((entry) => entry.maxBid); return `<li><b>${name}</b> ${money(Math.min(...values))} ~ ${money(Math.max(...values))}</li>`; }).join('')}</ul>`;
   })();
   const owned = bought.includes(selected);
-  document.querySelector('#tavern-detail').innerHTML = `<h3>정보 상세</h3><div class="detail-heading"><span class="detail-symbol">${selected === 'competitors' ? '●●●' : selected === 'catalog' ? '▤' : '↗'}</span><div><h2>${names[selected]}</h2><strong>${precision[selected][0]} <small>(${precision[selected][1]})</small></strong></div></div><p>${descriptions[selected]}</p><section class="info-result"><b>${owned ? '확보한 정보' : '공개 범위'}</b>${owned ? results : '<p>구매하면 추정 범위와 분석 결과가 이곳에 공개됩니다.</p>'}</section><div class="detail-price"><span>가격</span><b>${money(selectedCost)}</b></div><button id="buy-tavern-info" ${owned || state.cash < selectedCost ? 'disabled' : ''}>${owned ? '구매 완료' : '구매하기'}</button>`;
+  document.querySelector('#tavern-detail').innerHTML = `<h3>정보 상세</h3><div class="detail-heading"><img class="detail-symbol" src="${icons[selected]}" alt=""><div><h2>${names[selected]}</h2><strong>${precision[selected][0]} <small>(${precision[selected][1]})</small></strong></div></div><p>${descriptions[selected]}</p><section class="info-result"><b>${owned ? '확보한 정보' : '공개 범위'}</b>${owned ? results : '<p>구매하면 추정 범위와 분석 결과가 이곳에 공개됩니다.</p>'}</section><div class="detail-price"><span>가격</span><b>${money(selectedCost)}</b></div><button id="buy-tavern-info" ${owned || state.cash < selectedCost ? 'disabled' : ''}>${owned ? '구매 완료' : '구매하기'}</button>`;
   document.querySelector('#buy-tavern-info').onclick = () => { const ok = buyInformation(state, balance, selected); if (ok) { audio.playSfx('information'); save(); } renderTavern(ok ? '정보를 구매했습니다.' : '이미 구매했거나 현금이 부족합니다.'); };
   document.querySelector('#tavern-owned').innerHTML = `<h3>오늘 확보한 정보</h3><p>${bought.length ? bought.map((key) => names[key]).join(' · ') : '아직 구매한 정보가 없습니다.'}</p>`;
   document.querySelector('#tavern-message').textContent = message;

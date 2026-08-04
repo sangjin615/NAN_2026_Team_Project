@@ -1079,7 +1079,10 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
   border-image-source: url("./assets/ui/skin-v1/tab-active.png") !important;
   filter: drop-shadow(0 0 5px #b77a20aa);
 }
-[data-scene="tavern"] .info-symbol { color: #e6b841; font-size: 24px; text-align: center; }
+[data-scene="tavern"] .info-symbol {
+  width: 48px; height: 48px; object-fit: contain; justify-self: center;
+  filter: drop-shadow(0 2px 4px #000a); image-rendering: auto;
+}
 [data-scene="tavern"] .info-copy { display: grid; gap: 4px; }
 [data-scene="tavern"] .info-copy strong { font-size: clamp(14px,1.2vw,19px); }
 [data-scene="tavern"] .info-copy small { color: #c8b89d; font-size: clamp(9px,.75vw,12px); line-height: 1.35; }
@@ -1089,7 +1092,10 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
 [data-scene="tavern"] .info-state { color: #9fca67; font-weight: 900; text-align: center; }
 [data-scene="tavern"] .tavern-rule { color: #bcae96; font-size: 11px; }
 [data-scene="tavern"] #tavern-detail .detail-heading { display: flex; align-items: center; gap: 15px; margin: 7px 0 11px; }
-[data-scene="tavern"] #tavern-detail .detail-symbol { color: #e8b93f; font-size: 30px; }
+[data-scene="tavern"] #tavern-detail .detail-symbol {
+  flex: 0 0 auto; width: 76px; height: 76px; object-fit: contain;
+  filter: drop-shadow(0 3px 6px #000b); image-rendering: auto;
+}
 [data-scene="tavern"] #tavern-detail h2 { margin: 0 0 5px; font-size: clamp(19px,1.7vw,27px); }
 [data-scene="tavern"] #tavern-detail small { color: #c8b89d; }
 [data-scene="tavern"] #tavern-detail > p { margin: 8px 0; line-height: 1.45; }
@@ -2787,6 +2793,7 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
     const bought = Object.keys(state.information?.[state.day] || {});
     const names = { forecast: "\uC218\uC694 \uB3D9\uD5A5", catalog: "\uCD9C\uD488 \uBA85\uC138", competitors: "\uACBD\uC7C1\uC790 \uC608\uC0B0" };
     const descriptions = { forecast: "\uD604\uC7AC \uC2DC\uC7A5\uC5D0\uC11C \uC218\uC694\uAC00 \uB192\uC740 \uACC4\uC5F4\uACFC \uBC29\uD5A5\uC744 \uBD84\uC11D\uD569\uB2C8\uB2E4.", catalog: "\uC8FC\uC694 LOT\uC758 \uC608\uC0C1 \uB4F1\uAE09\uACFC \uACC4\uC5F4 \uBD84\uD3EC\uB97C \uC54C\uB824\uB4DC\uB9BD\uB2C8\uB2E4.", competitors: "\uACBD\uB9E4 \uCC38\uAC00\uC790\uB4E4\uC758 \uBCF4\uC720 \uC608\uC0B0 \uBC94\uC704\uB97C \uCD94\uC815\uD569\uB2C8\uB2E4." };
+    const icons = { forecast: "./assets/ui/tavern/demand-trend.png", catalog: "./assets/ui/tavern/lot-specification.png", competitors: "./assets/ui/tavern/competitor-budget.png" };
     const precision = { forecast: ["\u2605\u2605\u2605\u2605\u2606", "\uB192\uC74C"], catalog: ["\u2605\u2605\u2605\u2606\u2606", "\uBCF4\uD1B5"], competitors: ["\u2605\u2605\u2605\u2606\u2606", "\uBCF4\uD1B5"] };
     const lots = state.schedule.days[state.day - 1].lots;
     const totalBase = lots.reduce((sum, lot) => sum + lot.pricing.basePrice, 0);
@@ -2812,7 +2819,7 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
       const discount2 = 1 - (balance.shop.infoDiscount?.[state.shopStage] ?? 0);
       const cost = Math.ceil(totalBase * balance.informationRate[kind] * discount2 / 100) * 100;
       button.classList.toggle("is-selected", kind === selectedInfoKind);
-      button.innerHTML = `<span class="info-symbol">${kind === "competitors" ? "\u25CF\u25CF\u25CF" : kind === "catalog" ? "\u25A4" : "\u2197"}</span><span class="info-copy"><strong>${names[kind]}</strong><small>${descriptions[kind]}</small></span><b>${money(cost)}</b><em>${precision[kind][0]}<small>${precision[kind][1]}</small></em><span class="info-state">${bought.includes(kind) ? "\uAD6C\uB9E4 \uC644\uB8CC" : "\uAD6C\uB9E4 \uAC00\uB2A5"}</span>`;
+      button.innerHTML = `<img class="info-symbol" src="${icons[kind]}" alt=""><span class="info-copy"><strong>${names[kind]}</strong><small>${descriptions[kind]}</small></span><b>${money(cost)}</b><em>${precision[kind][0]}<small>${precision[kind][1]}</small></em><span class="info-state">${bought.includes(kind) ? "\uAD6C\uB9E4 \uC644\uB8CC" : "\uAD6C\uB9E4 \uAC00\uB2A5"}</span>`;
       button.onclick = () => {
         selectedInfoKind = kind;
         renderTavern();
@@ -2840,7 +2847,7 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
       }).join("")}</ul>`;
     })();
     const owned = bought.includes(selected);
-    document.querySelector("#tavern-detail").innerHTML = `<h3>\uC815\uBCF4 \uC0C1\uC138</h3><div class="detail-heading"><span class="detail-symbol">${selected === "competitors" ? "\u25CF\u25CF\u25CF" : selected === "catalog" ? "\u25A4" : "\u2197"}</span><div><h2>${names[selected]}</h2><strong>${precision[selected][0]} <small>(${precision[selected][1]})</small></strong></div></div><p>${descriptions[selected]}</p><section class="info-result"><b>${owned ? "\uD655\uBCF4\uD55C \uC815\uBCF4" : "\uACF5\uAC1C \uBC94\uC704"}</b>${owned ? results : "<p>\uAD6C\uB9E4\uD558\uBA74 \uCD94\uC815 \uBC94\uC704\uC640 \uBD84\uC11D \uACB0\uACFC\uAC00 \uC774\uACF3\uC5D0 \uACF5\uAC1C\uB429\uB2C8\uB2E4.</p>"}</section><div class="detail-price"><span>\uAC00\uACA9</span><b>${money(selectedCost)}</b></div><button id="buy-tavern-info" ${owned || state.cash < selectedCost ? "disabled" : ""}>${owned ? "\uAD6C\uB9E4 \uC644\uB8CC" : "\uAD6C\uB9E4\uD558\uAE30"}</button>`;
+    document.querySelector("#tavern-detail").innerHTML = `<h3>\uC815\uBCF4 \uC0C1\uC138</h3><div class="detail-heading"><img class="detail-symbol" src="${icons[selected]}" alt=""><div><h2>${names[selected]}</h2><strong>${precision[selected][0]} <small>(${precision[selected][1]})</small></strong></div></div><p>${descriptions[selected]}</p><section class="info-result"><b>${owned ? "\uD655\uBCF4\uD55C \uC815\uBCF4" : "\uACF5\uAC1C \uBC94\uC704"}</b>${owned ? results : "<p>\uAD6C\uB9E4\uD558\uBA74 \uCD94\uC815 \uBC94\uC704\uC640 \uBD84\uC11D \uACB0\uACFC\uAC00 \uC774\uACF3\uC5D0 \uACF5\uAC1C\uB429\uB2C8\uB2E4.</p>"}</section><div class="detail-price"><span>\uAC00\uACA9</span><b>${money(selectedCost)}</b></div><button id="buy-tavern-info" ${owned || state.cash < selectedCost ? "disabled" : ""}>${owned ? "\uAD6C\uB9E4 \uC644\uB8CC" : "\uAD6C\uB9E4\uD558\uAE30"}</button>`;
     document.querySelector("#buy-tavern-info").onclick = () => {
       const ok = buyInformation(state, balance, selected);
       if (ok) {

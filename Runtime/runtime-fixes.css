@@ -1071,7 +1071,10 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
   border-image-source: url("./assets/ui/skin-v1/tab-active.png") !important;
   filter: drop-shadow(0 0 5px #b77a20aa);
 }
-[data-scene="tavern"] .info-symbol { color: #e6b841; font-size: 24px; text-align: center; }
+[data-scene="tavern"] .info-symbol {
+  width: 48px; height: 48px; object-fit: contain; justify-self: center;
+  filter: drop-shadow(0 2px 4px #000a); image-rendering: auto;
+}
 [data-scene="tavern"] .info-copy { display: grid; gap: 4px; }
 [data-scene="tavern"] .info-copy strong { font-size: clamp(14px,1.2vw,19px); }
 [data-scene="tavern"] .info-copy small { color: #c8b89d; font-size: clamp(9px,.75vw,12px); line-height: 1.35; }
@@ -1081,7 +1084,10 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
 [data-scene="tavern"] .info-state { color: #9fca67; font-weight: 900; text-align: center; }
 [data-scene="tavern"] .tavern-rule { color: #bcae96; font-size: 11px; }
 [data-scene="tavern"] #tavern-detail .detail-heading { display: flex; align-items: center; gap: 15px; margin: 7px 0 11px; }
-[data-scene="tavern"] #tavern-detail .detail-symbol { color: #e8b93f; font-size: 30px; }
+[data-scene="tavern"] #tavern-detail .detail-symbol {
+  flex: 0 0 auto; width: 76px; height: 76px; object-fit: contain;
+  filter: drop-shadow(0 3px 6px #000b); image-rendering: auto;
+}
 [data-scene="tavern"] #tavern-detail h2 { margin: 0 0 5px; font-size: clamp(19px,1.7vw,27px); }
 [data-scene="tavern"] #tavern-detail small { color: #c8b89d; }
 [data-scene="tavern"] #tavern-detail > p { margin: 8px 0; line-height: 1.45; }
