@@ -965,21 +965,44 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
 }
 [data-scene="auction"] > .actions button { min-width: 0; height: 58%; padding: 0 8px; font-size: clamp(11px, 1vw, 16px); }
 
-/* Shared live HUD for the team place mockups. */
-.place > .scene-hud {
-  position: absolute; left: 3.2%; right: 10.5%; top: 1%; height: 8.5%; z-index: 8;
-  display: grid; grid-template-columns: 1.05fr 1.2fr 1fr 1fr 1.55fr; gap: .55%;
+/* Shared live HUD for every city facility, including the auction catalog. */
+.scene > .scene-hud {
+  position: absolute; left: 2.8%; right: 2.8%; top: 1%; height: 9%; z-index: 12;
+  display: grid; grid-template-columns: 1.05fr 1.25fr .78fr .78fr 1.05fr 46px; gap: .45%;
   pointer-events: none;
 }
-.place > .scene-hud > span {
-  display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 7px;
-  min-width: 0; padding: 0 12px;
+.scene > .scene-hud > span {
+  position: relative; display: flex; align-items: center; justify-content: center; flex-direction: column;
+  min-width: 0; padding: 0 7px 0 clamp(32px, 2.8vw, 44px);
   border: 9px solid transparent;
   border-image: url("./assets/ui/skin-v1/status-card.png") 34 fill / 9px / 0 stretch;
   background: #0a0907ec; color: #f2e6d0; white-space: nowrap;
 }
-.place > .scene-hud small { color: #c59c55; font-size: clamp(9px, .8vw, 12px); }
-.place > .scene-hud b { overflow: hidden; text-overflow: ellipsis; font-size: clamp(12px, 1vw, 17px); }
+.scene > .scene-hud > span::before {
+  content: ""; position: absolute; left: 5px; top: 50%; transform: translateY(-50%);
+  width: clamp(25px, 2.4vw, 37px); height: 82%;
+  background-position: center; background-repeat: no-repeat; background-size: contain;
+  filter: drop-shadow(0 2px 2px #0008);
+}
+.scene > .scene-hud .hud-day::before { background-image: url("./assets/ui/quest-icons/restraint.png"); }
+.scene > .scene-hud .hud-cash::before { background-image: url("./assets/ui/quest-icons/bargain.png"); }
+.scene > .scene-hud .hud-storage::before { background-image: url("./assets/ui/quest-icons/multi.png"); }
+.scene > .scene-hud .hud-stage::before { background-image: url("./assets/ui/quest-icons/block.png"); }
+.scene > .scene-hud .hud-loan::before { background-image: url("./assets/ui/quest-icons/designated.png"); }
+.scene > .scene-hud small { color: #c59c55; font-size: clamp(8px, .68vw, 11px); }
+.scene > .scene-hud b { overflow: hidden; text-overflow: ellipsis; font-size: clamp(10px, .9vw, 15px); }
+.scene > .scene-hud .hud-day b { font-size: clamp(13px, 1.18vw, 19px); }
+.scene > .scene-hud .hud-cash b { font-size: clamp(17px, 1.55vw, 24px); }
+.scene > .scene-hud > .scene-hud-settings {
+  pointer-events: auto; min-width: 0 !important; min-height: 0 !important;
+  width: 46px; height: 46px; align-self: center;
+  overflow: hidden; text-indent: -999px; font-size: 0; padding: 0 !important;
+  border: 0 !important; border-image: none !important;
+  background: transparent url("./assets/ui/vsl-v6.4/buttons/settings.png") center / contain no-repeat !important;
+}
+[data-scene="catalog"] > header,
+[data-scene="exchange"] > header,
+[data-scene="shop"] > header { display: none; }
 
 /* Tavern: the three implemented information channels occupy the painted cards. */
 [data-scene="tavern"] > header { display: none; }

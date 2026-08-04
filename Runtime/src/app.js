@@ -151,7 +151,8 @@ function syncHeader() {
   adapter.setText('day', state.day);
   adapter.setText('cash', money(state.cash));
   const scene = document.querySelector('.scene:not([hidden])');
-  if (scene?.classList.contains('place')) {
+  const facilityScenes = new Set(['quests', 'tavern', 'catalog', 'exchange', 'shop', 'guild', 'museum']);
+  if (scene && facilityScenes.has(scene.dataset.scene)) {
     let hud = scene.querySelector('.scene-hud');
     if (!hud) {
       hud = document.createElement('div');
@@ -159,8 +160,9 @@ function syncHeader() {
       hud.setAttribute('aria-label', '현재 여정 상태');
       scene.prepend(hud);
     }
-    const loan = state.loan ? `${state.loan.dueDay}일 만기` : '없음';
-    hud.innerHTML = `<span><small>여정</small><b>${state.day}일차 / 12</b></span><span><small>자산</small><b>${money(state.cash)}</b></span><span><small>보관칸</small><b>${ownedItems().length} / ${state.storage}</b></span><span><small>상회 단계</small><b>${state.shopStage}단계</b></span><span><small>담보 대출</small><b>${loan}</b></span>`;
+    const loan = state.loan ? `${state.loan.dueDay}일 만기` : '대출 없음';
+    hud.innerHTML = `<span class="hud-day"><b>${state.day}일차 / 12</b></span><span class="hud-cash"><b>${money(state.cash)}</b></span><span class="hud-storage"><small>보관칸</small><b>${ownedItems().length} / ${state.storage}</b></span><span class="hud-stage"><b>${state.shopStage}단계</b><small>상회 단계</small></span><span class="hud-loan"><small>담보 대출</small><b>${loan}</b></span><button class="scene-hud-settings" aria-label="설정">설정</button>`;
+    hud.querySelector('.scene-hud-settings').onclick = () => document.querySelector('#settings-dialog').showModal();
   }
 }
 
