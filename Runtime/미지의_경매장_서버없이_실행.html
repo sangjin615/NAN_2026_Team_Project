@@ -1476,30 +1476,27 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
   color: #eee7d8; background: #21180f; font-size: clamp(8px,.68vw,11px);
 }
 [data-scene="quests"] .appraisal-grid {
-  height: 100%; grid-template-columns: repeat(4,minmax(0,1fr));
-  grid-template-rows: repeat(2,minmax(0,1fr)); gap: 1%;
+  height: 100%; grid-template-columns: repeat(3,minmax(0,1fr));
+  grid-auto-rows: minmax(150px,1fr); gap: 1.5%; overflow: auto;
 }
 [data-scene="quests"] .appraisal-card {
-  grid-template-columns: 1fr; grid-template-rows: 46% 1fr auto;
-  place-items: center; gap: 2%; min-height: 0; padding: 4%;
+  grid-template-columns: 1fr; grid-template-rows: 45% minmax(42px,1fr) 30px;
+  place-items: center; gap: 3px; min-height: 150px; padding: 5px;
   border: 1px solid #a98c68; background: #ead7b9cc; color: #2b2015;
   text-align: center; overflow: hidden;
 }
-[data-scene="quests"] .appraisal-card img { width: 72%; height: 100%; background: transparent; }
+[data-scene="quests"] .appraisal-card img { width: 68%; height: 100%; background: transparent; }
 [data-scene="quests"] .appraisal-card div { min-width: 0; width: 100%; }
+[data-scene="quests"] .appraisal-card div > * { white-space: normal; overflow-wrap: anywhere; line-height: 1.15; }
 [data-scene="quests"] .appraisal-card b { color: #2b2015; font-size: clamp(9px,.8vw,13px); }
 [data-scene="quests"] .appraisal-card small,
 [data-scene="quests"] .appraisal-card span { color: #6d5942; font-size: clamp(7px,.62vw,10px); }
 [data-scene="quests"] .appraisal-card strong { color: #754411; font-size: clamp(8px,.72vw,12px); }
 [data-scene="quests"] .appraisal-card button {
-  min-width: 0 !important; width: 92% !important; max-width: 100%;
-  min-height: 0 !important; height: 30px; padding: 2px 4px !important;
+  min-width: 0 !important; width: 94% !important; max-width: 100%;
+  min-height: 30px !important; height: 30px; padding: 2px 4px !important;
   border-width: 6px !important; border-image-width: 6px !important;
   white-space: nowrap; font-size: clamp(8px,.66vw,10px);
-}
-[data-scene="quests"] .appraisal-card button {
-  width: 90%; height: 25%; min-height: 26px; padding: 0 4px;
-  font-size: clamp(8px,.72vw,12px);
 }
 [data-scene="quests"] .empty-note { color: #6d5942; text-align: center; }
 [data-scene="quests"] #quest-message {
