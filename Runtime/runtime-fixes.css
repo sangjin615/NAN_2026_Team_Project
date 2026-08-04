@@ -1291,6 +1291,14 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
 [data-scene="quests"] .office-layout > section:first-child > h3 {
   background-image: url("./assets/ui/clean-v1/buttons/button-green.png");
 }
+[data-scene="quests"] .office-layout > section > h3::before {
+  content: ""; width: 31px; height: 31px; margin-right: 7px;
+  background: url("./assets/ui/quest-icons/appraisal.png") center / contain no-repeat;
+}
+[data-scene="quests"] .office-layout > section > h3 { display: flex; align-items: center; justify-content: center; }
+[data-scene="quests"] .office-layout > section:first-child > h3::before {
+  background-image: url("./assets/ui/quest-icons/quest-board.png");
+}
 [data-scene="quests"] .office-layout .quest-grid,
 [data-scene="quests"] .office-layout .inventory-list {
   left: 1.5%; right: 1.5%; top: 7%; bottom: 1.5%;
@@ -1441,3 +1449,13 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
 [data-scene="hub"] .place-grid button[data-place="shop"] > span,
 [data-scene="hub"] .place-grid button[data-place="museum"] > span { bottom: -1%; }
 [data-scene="hub"] .place-grid button[data-place="museum"] > span { right: 20%; }
+
+/* Normalized quest artwork replaces the temporary glyphs. */
+[data-scene="quests"] .quest-grid article::before { display: none; }
+[data-scene="quests"] .quest-icon {
+  position: absolute; left: 2.6%; top: 50%; transform: translateY(-50%);
+  width: 13%; height: 72%; object-fit: contain;
+  filter: drop-shadow(0 2px 3px #2b160866);
+}
+[data-scene="quests"] .accepted-quests > article { position: relative; padding-left: 13%; }
+[data-scene="quests"] .accepted-quests .quest-icon { left: 1.5%; width: 10%; height: 76%; }
