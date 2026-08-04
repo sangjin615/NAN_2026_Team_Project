@@ -1,0 +1,39 @@
+{
+  "id": "popup-loan-overdue",
+  "type": "blocking-popup",
+  "scope": "scenes",
+  "global": false,
+  "title": "대출 만기·담보 압류",
+  "description": "다음 날 개시 시 자동 판정하며 닫기 전 원인을 확인하게 한다.",
+  "hostSceneIds": [
+    "scene-city",
+    "scene-guild",
+    "scene-summary"
+  ],
+  "bindings": [],
+  "returnMode": "opener",
+  "blocksInput": true,
+  "closeOnBackdrop": false,
+  "closeOnEscape": false,
+  "reusable": false,
+  "referencePath": "V5 씬별 UI 정리 v1.5",
+  "image": "",
+  "referenceImage": "",
+  "imageRole": "none",
+  "runtimeBackground": "",
+  "requirements": [
+    "미상환 금액",
+    "압류 담보",
+    "조합 거래 제한",
+    "확인"
+  ],
+  "implementationStatus": "spec-only",
+  "priority": "A",
+  "annotations": [],
+  "openActionRef": "act-process-loan-due",
+  "confirmActionRef": "act-close-loan-overdue",
+  "cancelActionRef": "",
+  "closeActionRef": "",
+  "actionContractMode": "explicit",
+  "dismissPolicy": "confirm-only"
+}

@@ -1,0 +1,498 @@
+{
+  "id": "scene-auction",
+  "type": "scene",
+  "title": "경매 세션",
+  "groupId": "g-auction",
+  "x": 1080,
+  "y": 190,
+  "description": "계열·등급·기준가가 공개된 8출품을 경쟁자 3인과 공개 호가로 진행한다.",
+  "requirements": [
+    "출품 8점",
+    "경쟁자 3인",
+    "시작가 기준가×0.5",
+    "최소 인상 현재 호가 10%",
+    "보관칸 초과 입찰 봉쇄",
+    "점핑 비드 없음",
+    "추천 입찰가 금지"
+  ],
+  "referencePath": "V5 §4, §8",
+  "image": "assets/reference/scene-mockups/auction.png",
+  "annotations": [
+    {
+      "id": "scene-auction-topbar",
+      "type": "area",
+      "xPercent": 50,
+      "yPercent": 5,
+      "coordinateSpace": "image",
+      "title": "[공통] 여정 상태 표시",
+      "requirement": "현재 일차·자금·상회 단계·보관칸을 표시한다. 대출 활성 시 만기 잔여 일수·상환 총액·담보 처분가 합계를 함께 표시한다.",
+      "acceptanceCriteria": [
+        "일차는 현재 값과 12일을 함께 표시한다.",
+        "플레이어 자금은 예산이라고 부르지 않는다.",
+        "대출이 없으면 대출 관련 값은 숨긴다."
+      ],
+      "refType": "data",
+      "actionRef": "",
+      "dataRefs": [
+        "run.day",
+        "run.totalDays",
+        "player.cash",
+        "shop.stage",
+        "player.inventory",
+        "player.storageCapacity",
+        "loan.dueDay",
+        "loan.repay",
+        "loan.collateralDisposalValue"
+      ],
+      "navTargetSceneId": "",
+      "modalName": "",
+      "commonKey": "global-topbar",
+      "failureSlot": false,
+      "sourceBasis": "V5 §0.5.2, §5, §12",
+      "implementationStatus": "implemented",
+      "widthPercent": 92,
+      "heightPercent": 8
+    },
+    {
+      "id": "auction-lot",
+      "type": "area",
+      "xPercent": 35,
+      "yPercent": 24,
+      "coordinateSpace": "image",
+      "title": "현재 출품 정보",
+      "requirement": "출품 이름·계열·등급·기준가와 구매한 감정 범위를 표시한다.",
+      "acceptanceCriteria": [
+        "품질과 실가치는 직접 표시하지 않는다.",
+        "등급은 기대수익이 아니라 분산 클래스다."
+      ],
+      "refType": "data",
+      "actionRef": "",
+      "dataRefs": [
+        "auction.currentLot",
+        "daily.appraisals"
+      ],
+      "navTargetSceneId": "",
+      "modalName": "",
+      "commonKey": "item-card",
+      "failureSlot": false,
+      "sourceBasis": "V5 §6, §8.1",
+      "implementationStatus": "implemented",
+      "widthPercent": 54,
+      "heightPercent": 26
+    },
+    {
+      "id": "auction-current-bid",
+      "type": "area",
+      "xPercent": 48,
+      "yPercent": 48,
+      "coordinateSpace": "image",
+      "title": "현재 호가·최소 인상",
+      "requirement": "현재 호가와 현재 호가의 10%인 최소 인상폭을 표시한다.",
+      "acceptanceCriteria": [
+        "손익분기선·안전선·추천가는 표시하지 않는다."
+      ],
+      "refType": "data",
+      "actionRef": "",
+      "dataRefs": [
+        "auction.currentBid",
+        "auction.minimumRaise"
+      ],
+      "navTargetSceneId": "",
+      "modalName": "",
+      "commonKey": "",
+      "failureSlot": false,
+      "sourceBasis": "V5 §8.2 + 사용자 확정 2026-07-30",
+      "implementationStatus": "implemented",
+      "widthPercent": 32,
+      "heightPercent": 14
+    },
+    {
+      "id": "auction-place-bid",
+      "type": "pin",
+      "xPercent": 48,
+      "yPercent": 79,
+      "coordinateSpace": "image",
+      "title": "입찰",
+      "requirement": "직접 입력한 호가를 제출한다.",
+      "acceptanceCriteria": [
+        "최소 인상·자금·보관칸을 모두 검증한다."
+      ],
+      "refType": "action",
+      "actionRef": "act-place-bid",
+      "dataRefs": [
+        "auction.currentBid",
+        "auction.minimumRaise",
+        "auction.playerPassed",
+        "player.cash",
+        "player.inventory",
+        "player.storageCapacity",
+        "shop.stage"
+      ],
+      "navTargetSceneId": "",
+      "modalName": "",
+      "commonKey": "",
+      "failureSlot": false,
+      "sourceBasis": "V5 §8.2",
+      "implementationStatus": "implemented",
+      "soundCue": "sfx-bid-place"
+    },
+    {
+      "id": "auction-pass",
+      "type": "pin",
+      "xPercent": 63,
+      "yPercent": 79,
+      "coordinateSpace": "image",
+      "title": "물러나기",
+      "requirement": "이번 출품에서 물러난다.",
+      "acceptanceCriteria": [
+        "화면 표시어는 PASS가 아니라 물러나기다."
+      ],
+      "refType": "action",
+      "actionRef": "act-pass-lot",
+      "dataRefs": [],
+      "navTargetSceneId": "",
+      "modalName": "",
+      "commonKey": "",
+      "failureSlot": false,
+      "sourceBasis": "V5 §0.5.2, §8.2",
+      "implementationStatus": "implemented",
+      "soundCue": "sfx-pass"
+    },
+    {
+      "id": "auction-bots",
+      "type": "area",
+      "xPercent": 83,
+      "yPercent": 30,
+      "coordinateSpace": "image",
+      "title": "경쟁자 3인",
+      "requirement": "1일차는 약한 뜨내기 3인, 2일차 이후 베넷 1인과 뜨내기 2인을 표시한다.",
+      "acceptanceCriteria": [
+        "경쟁자는 플레이어 망설임을 읽지 않는다.",
+        "예산 정보 미구매 시 예산은 비공개다."
+      ],
+      "refType": "data",
+      "actionRef": "",
+      "dataRefs": [
+        "auction.bots",
+        "information.competitors",
+        "competitor.bennett"
+      ],
+      "navTargetSceneId": "",
+      "modalName": "",
+      "commonKey": "participant-card",
+      "failureSlot": false,
+      "sourceBasis": "V5 §8.3",
+      "implementationStatus": "implemented",
+      "widthPercent": 26,
+      "heightPercent": 38
+    },
+    {
+      "id": "auction-log",
+      "type": "area",
+      "xPercent": 83,
+      "yPercent": 68,
+      "coordinateSpace": "image",
+      "title": "입찰 기록",
+      "requirement": "입찰자·호가·물러남 기록을 표시한다.",
+      "acceptanceCriteria": [
+        "최신 기록을 구분할 수 있다."
+      ],
+      "refType": "data",
+      "actionRef": "",
+      "dataRefs": [
+        "auction.bidLog"
+      ],
+      "navTargetSceneId": "",
+      "modalName": "",
+      "commonKey": "bid-log",
+      "failureSlot": false,
+      "sourceBasis": "V5 §8.2",
+      "implementationStatus": "implemented",
+      "widthPercent": 26,
+      "heightPercent": 28
+    },
+    {
+      "id": "auction-order",
+      "type": "area",
+      "xPercent": 15,
+      "yPercent": 69,
+      "coordinateSpace": "image",
+      "title": "구매한 출품 목록",
+      "requirement": "출품 목록 정보를 구매한 경우에만 8출품 목록를 표시한다.",
+      "acceptanceCriteria": [
+        "미구매 시 순서를 노출하지 않는다."
+      ],
+      "refType": "data",
+      "actionRef": "",
+      "dataRefs": [
+        "information.lotCatalog",
+        "daily.lots"
+      ],
+      "navTargetSceneId": "",
+      "modalName": "",
+      "commonKey": "",
+      "failureSlot": false,
+      "sourceBasis": "V5 §9",
+      "implementationStatus": "implemented",
+      "widthPercent": 25,
+      "heightPercent": 25
+    },
+    {
+      "id": "auction-quest-tracker",
+      "type": "area",
+      "xPercent": 16,
+      "yPercent": 38,
+      "coordinateSpace": "image",
+      "title": "의뢰 진행 트래커",
+      "requirement": "수주 의뢰의 현재 달성 상태와 실패 위험을 경매 중 상시 표시한다.",
+      "acceptanceCriteria": [
+        "각 의뢰의 잠긴 축과 현재 진행을 표시한다."
+      ],
+      "refType": "data",
+      "actionRef": "",
+      "dataRefs": [
+        "daily.acceptedQuests",
+        "quests.progress"
+      ],
+      "navTargetSceneId": "",
+      "modalName": "",
+      "commonKey": "",
+      "failureSlot": false,
+      "sourceBasis": "V5 §10",
+      "implementationStatus": "spec-only",
+      "widthPercent": 25,
+      "heightPercent": 23
+    },
+    {
+      "id": "auction-result-modal",
+      "type": "pin",
+      "xPercent": 50,
+      "yPercent": 91,
+      "coordinateSpace": "image",
+      "title": "출품 결과 팝업",
+      "requirement": "출품 결과 확정 시 낙찰자·낙찰가·수수료를 표시하고 다음 출품으로 진행한다.",
+      "acceptanceCriteria": [
+        "팝업 확인 전 다음 출품으로 넘어가지 않는다."
+      ],
+      "refType": "modal",
+      "actionRef": "act-finalize-lot",
+      "dataRefs": [
+        "auction.currentBid",
+        "auction.currentLot",
+        "auction.leader",
+        "player.cash",
+        "shop.stage"
+      ],
+      "navTargetSceneId": "",
+      "modalName": "popup-lot-result",
+      "commonKey": "",
+      "failureSlot": false,
+      "sourceBasis": "V5 §8.2",
+      "implementationStatus": "implemented",
+      "soundCue": "sfx-gavel"
+    }
+  ],
+  "actionRefs": [
+    "act-place-bid",
+    "act-pass-lot",
+    "act-run-bot-turn",
+    "act-finalize-lot",
+    "act-next-lot",
+    "act-save-game",
+    "act-open-settings"
+  ],
+  "implementationStatus": "implemented",
+  "referenceImage": "assets/reference/scene-mockups/auction.png",
+  "runtimeBackground": "assets/runtime/backgrounds/auction.png",
+  "imageRole": "reference-mockup",
+  "assetStatus": "pure-background-and-mockup",
+  "uiRequirements": [
+    {
+      "id": "auction-topbar",
+      "name": "일차·자금·상회 단계·보관칸",
+      "kind": "global-status",
+      "priority": "A",
+      "implementationStatus": "implemented",
+      "dataRefs": [],
+      "actionRefs": [],
+      "notes": ""
+    },
+    {
+      "id": "auction-progress",
+      "name": "현재 출품 순번 1/8",
+      "kind": "progress",
+      "priority": "A",
+      "implementationStatus": "implemented",
+      "dataRefs": [],
+      "actionRefs": [],
+      "notes": ""
+    },
+    {
+      "id": "auction-current-bid",
+      "name": "현재 호가·최소 인상폭",
+      "kind": "display",
+      "priority": "A",
+      "implementationStatus": "implemented",
+      "dataRefs": [],
+      "actionRefs": [],
+      "notes": ""
+    },
+    {
+      "id": "auction-lot-card",
+      "name": "계열·등급·기준가·감정 범위",
+      "kind": "item-card",
+      "priority": "A",
+      "implementationStatus": "implemented",
+      "dataRefs": [],
+      "actionRefs": [],
+      "notes": ""
+    },
+    {
+      "id": "auction-participants",
+      "name": "플레이어+경쟁자 3인 상태",
+      "kind": "participant-list",
+      "priority": "A",
+      "implementationStatus": "implemented",
+      "dataRefs": [],
+      "actionRefs": [],
+      "notes": ""
+    },
+    {
+      "id": "auction-bid-log",
+      "name": "공개 호가 기록",
+      "kind": "log",
+      "priority": "A",
+      "implementationStatus": "implemented",
+      "dataRefs": [],
+      "actionRefs": [],
+      "notes": ""
+    },
+    {
+      "id": "auction-order",
+      "name": "구매한 출품 목록",
+      "kind": "info-panel",
+      "priority": "B",
+      "implementationStatus": "implemented",
+      "dataRefs": [],
+      "actionRefs": [],
+      "notes": ""
+    },
+    {
+      "id": "auction-quest-tracker",
+      "name": "경매 중 의뢰 진행 트래커",
+      "kind": "tracker",
+      "priority": "A",
+      "implementationStatus": "spec-only",
+      "dataRefs": [],
+      "actionRefs": [],
+      "notes": ""
+    },
+    {
+      "id": "auction-bid-input",
+      "name": "직접 호가 입력",
+      "kind": "input",
+      "priority": "A",
+      "implementationStatus": "implemented",
+      "dataRefs": [],
+      "actionRefs": [],
+      "notes": ""
+    },
+    {
+      "id": "auction-bid",
+      "name": "입찰 버튼",
+      "kind": "button",
+      "priority": "A",
+      "implementationStatus": "implemented",
+      "dataRefs": [],
+      "actionRefs": [],
+      "notes": ""
+    },
+    {
+      "id": "auction-pass",
+      "name": "물러나기 버튼",
+      "kind": "button",
+      "priority": "A",
+      "implementationStatus": "implemented",
+      "dataRefs": [],
+      "actionRefs": [],
+      "notes": ""
+    },
+    {
+      "id": "auction-storage-warning",
+      "name": "보관칸 부족 경고",
+      "kind": "notice",
+      "priority": "A",
+      "implementationStatus": "implemented",
+      "dataRefs": [],
+      "actionRefs": [],
+      "notes": ""
+    },
+    {
+      "id": "auction-timer",
+      "name": "출품 제한 시간",
+      "kind": "timer",
+      "priority": "C",
+      "implementationStatus": "pending-design",
+      "dataRefs": [],
+      "actionRefs": [],
+      "notes": "V5에서 정확한 제한 시간이 미결이므로 확정 UI로 고정하지 않는다."
+    }
+  ],
+  "popupRefs": [
+    "popup-lot-result",
+    "toast-global",
+    "modal-settings",
+    "popup-global-failure"
+  ],
+  "mockupCorrections": [
+    "목업의 명성 표시를 삭제한다.",
+    "자동 예상 가치 표시는 숨은 값을 자동 평가하므로 삭제한다.",
+    "점핑 비드는 V5에서 기각됐으므로 삭제한다.",
+    "+100/+500/+1,000/+5,000 버튼은 필수 기능이 아니다. 직접 입력과 최소 인상 검증을 원본으로 둔다.",
+    "PASS 표시는 물러나기로 변경한다."
+  ],
+  "backgroundPolicy": {
+    "source": "runtime",
+    "path": "assets/runtime/backgrounds/auction.png",
+    "fit": "contain",
+    "contentRect": {
+      "x": 0.0,
+      "y": 0.0,
+      "width": 1536.0,
+      "height": 1024.0,
+      "xPercent": 0.0,
+      "yPercent": 0.0,
+      "widthPercent": 100.0,
+      "heightPercent": 100.0
+    },
+    "sourceImageSize": {
+      "width": 1536,
+      "height": 1024
+    },
+    "sceneTransform": {
+      "scale": 1.0,
+      "offsetXPercent": 0.0,
+      "offsetYPercent": 0.0,
+      "anchor": "center",
+      "appliesTo": "background-and-scene-ui",
+      "editable": true
+    },
+    "onMissingAsset": "show-error-placeholder"
+  },
+  "runtimeBackgroundSource": "runtime",
+  "temporaryRuntimeUse": false,
+  "layoutCanvas": {
+    "width": 1536,
+    "height": 1024
+  },
+  "failureFeedbackRef": "popup-global-failure",
+  "failureFeedbackPolicy": "global-popup",
+  "sound": {
+    "bgm": "bgm-03-auction",
+    "layers": [
+      "L1"
+    ],
+    "layersOnSuccess": null,
+    "restart": true
+  }
+}

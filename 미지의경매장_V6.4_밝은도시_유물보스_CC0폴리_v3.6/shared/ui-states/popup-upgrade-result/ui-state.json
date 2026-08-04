@@ -1,0 +1,38 @@
+{
+  "id": "popup-upgrade-result",
+  "type": "result-popup",
+  "scope": "scenes",
+  "global": false,
+  "title": "상회 승급 결과",
+  "description": "별도 브랜치 선택 화면은 만들지 않는다.",
+  "hostSceneIds": [
+    "scene-merchant"
+  ],
+  "bindings": [],
+  "returnMode": "opener",
+  "blocksInput": false,
+  "closeOnBackdrop": false,
+  "closeOnEscape": true,
+  "reusable": false,
+  "referencePath": "V5 씬별 UI 정리 v1.5",
+  "image": "",
+  "referenceImage": "",
+  "imageRole": "none",
+  "runtimeBackground": "",
+  "requirements": [
+    "새 상회 단계",
+    "보관칸 변화",
+    "새 거점 해금",
+    "정보/거래/보관/연줄 효과 변화",
+    "확인"
+  ],
+  "implementationStatus": "spec-only",
+  "priority": "A",
+  "annotations": [],
+  "openActionRef": "act-upgrade-shop",
+  "confirmActionRef": "act-close-upgrade-result",
+  "cancelActionRef": "",
+  "closeActionRef": "act-close-upgrade-result",
+  "actionContractMode": "explicit",
+  "dismissPolicy": "confirm-or-escape"
+}

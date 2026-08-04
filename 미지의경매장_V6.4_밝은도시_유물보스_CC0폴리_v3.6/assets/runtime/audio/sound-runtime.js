@@ -1,0 +1,3251 @@
+window.UNKNOWN_AUCTION_SOUND = {
+  "schemaVersion": "sound-contract-2.0",
+  "version": "6.4-sound-3.6-bright-city-relic-boss-foley",
+  "generatedFor": "미지의 경매장 V6.4 장부 실내악 리디자인 HTML/Web",
+  "ownership": {
+    "principle": "이 파일이 사운드의 단일 기준이다. balance.json이 수치를 소유하듯 sound.json이 사운드를 소유한다.",
+    "rules": [
+      "큐 ID·파일명·음량·길이를 코드나 HTML에 상수로 굳히지 않는다.",
+      "재생 코드는 항상 이 파일을 읽어 큐 ID로 참조한다.",
+      "flow.json은 수정하지 않는다. 결착은 actionSfxMap·uiStateSfxMap의 ID 참조로만 한다.",
+      "deprecated 목록에 있는 행동에는 큐를 만들지 않는다."
+    ],
+    "basis": {
+      "flow": "flow.json @ v6.3",
+      "document": "V6 통합기획서 §20.2 · §6.2 · §11.4 · §15",
+      "invariantsRespected": [
+        "불변 9 — 손익반영 수치를 소리로도 알려주지 않는다"
+      ]
+    }
+  },
+  "toneAndManner": {
+    "coreImage": "태엽이 돌아가는 빈티지 고물상. 낡았지만 고급스럽고, 모든 소리에 기계식 질감과 먼지가 앉아 있다.",
+    "materialPalette": [
+      "황동",
+      "태엽·톱니",
+      "목재",
+      "유리",
+      "종이·양피지",
+      "밀랍",
+      "먼지"
+    ],
+    "recordingCharacter": {
+      "stereoWidth": "좁게. 화면 안의 물건에서 나는 소리다.",
+      "saturation": "아날로그 테이프 새추레이션 약하게",
+      "highEnd": "12kHz 이상은 완만히 감쇠. 디지털적인 반짝임을 만들지 않는다.",
+      "lowEnd": "60Hz 이하 컷. 서브베이스는 유물 경매에만 허용."
+    },
+    "forbidden": [
+      "디지털 비프·신스 블립",
+      "리버스 신스 스윕",
+      "현대적 UI 클릭(맥/윈도우 시스템음 계열)",
+      "광대역 홀 리버브 — 일반 씬에서는 실내 짧은 잔향만",
+      "코믹한 만화 효과음",
+      "음정이 뚜렷한 멜로디를 가진 효과음(족보 성립·승급·유물 획득 3종만 예외)"
+    ]
+  },
+  "buses": {
+    "master": {
+      "default": 1.0,
+      "boundTo": "modal-settings / 마스터 음량"
+    },
+    "bgm": {
+      "default": 0.65,
+      "boundTo": "modal-settings / BGM 음량"
+    },
+    "sfx": {
+      "default": 0.85,
+      "boundTo": "modal-settings / SFX 음량"
+    },
+    "ambience": {
+      "default": 0.35,
+      "parent": "bgm",
+      "boundTo": "BGM 음량에 종속"
+    }
+  },
+  "mixRules": {
+    "ducking": [
+      {
+        "trigger": "sfx-gavel",
+        "target": "bgm",
+        "amount": -4,
+        "attack": 0.05,
+        "hold": 0.6,
+        "release": 0.8,
+        "unit": "dB"
+      },
+      {
+        "trigger": "sfx-relic-gavel",
+        "target": "bgm",
+        "amount": -6,
+        "attack": 0.05,
+        "hold": 1.2,
+        "release": 1.5,
+        "unit": "dB"
+      },
+      {
+        "trigger": "sfx-hanbo-complete",
+        "target": "bgm",
+        "amount": -3,
+        "attack": 0.05,
+        "hold": 0.8,
+        "release": 0.9,
+        "unit": "dB"
+      },
+      {
+        "trigger": "sfx-result-bankruptcy",
+        "target": "bgm",
+        "amount": -7,
+        "attack": 0.02,
+        "hold": 2.0,
+        "release": 2.0,
+        "unit": "dB"
+      }
+    ],
+    "polyphony": {
+      "default": 3,
+      "overrides": {
+        "sfx-ui-hover": 1,
+        "sfx-ledger-line": 8,
+        "sfx-bid-bot": 2
+      }
+    },
+    "retriggerGuardMs": {
+      "default": 40,
+      "sfx-ui-hover": 120,
+      "sfx-ui-click": 60
+    },
+    "loudnessTarget": {
+      "bgm": "-20 LUFS integrated",
+      "sfxTypical": "-18 LUFS short-term",
+      "sfxAccent": "-14 LUFS short-term (gavel · hanbo · relic · bankruptcy)",
+      "truePeakCeiling": "-1.0 dBTP"
+    }
+  },
+  "bgm": [
+    {
+      "id": "bgm-01-title",
+      "name": "황금빛 창문 너머",
+      "character": "따뜻한 항구 상회의 첫인상. 밝고 품위 있지만 영웅적이지 않은 상인 모험의 주제.",
+      "key": "F major",
+      "bpm": 84,
+      "instrumentation": [
+        "피치카토 현악",
+        "클라리넷",
+        "스피넷",
+        "작은 프레임 드럼"
+      ],
+      "structure": {
+        "intro": "4~8마디 · 원샷 · 루프 제외",
+        "loop": "64마디 또는 90~150초 seamless loop"
+      },
+      "durationSec": {
+        "intro": 14,
+        "loop": 112
+      },
+      "layers": null,
+      "adaptiveRole": "static",
+      "scenes": [
+        "scene-title"
+      ],
+      "generationPrompt": "Art-led music for a warm illustrated European port merchant game. 따뜻한 항구 상회의 첫인상. 밝고 품위 있지만 영웅적이지 않은 상인 모험의 주제. Tempo 84 BPM, key F major. Instruments: 피치카토 현악, 클라리넷, 스피넷, 작은 프레임 드럼. Low density, tactile acoustic timbres, restrained melody, clear midrange for UI. No vocals, EDM, modern synths, trailer percussion, pirate shanty, comedy, glossy fantasy sparkle or hidden-value telegraphing. Seamless loop.",
+      "notes": "Audio v3.2 selected-source edit: Blue Harbor Ledger · 36초 레벨 매칭 루프. 완성 믹스 보호를 위해 추가 적응 레이어는 무음 슬롯으로 유지.",
+      "selectedSource": {
+        "programId": "01_title",
+        "title": "Blue Harbor Ledger",
+        "author": "User-provided source",
+        "license": "User-provided; rights confirmation required before public release",
+        "sourcePage": null
+      }
+    },
+    {
+      "id": "bgm-02-city",
+      "name": "푸른 항구의 장날",
+      "character": "밝은 섬 항구 도시를 오래 돌아다녀도 피로하지 않게 미는 성숙한 운영 실내악. 빠르지만 코믹하거나 민속 축제처럼 들리지 않는다.",
+      "key": "F major, bright acoustic color",
+      "bpm": 104,
+      "instrumentation": [
+        "피치카토 첼로",
+        "바순",
+        "스피넷",
+        "작은 프레임 드럼",
+        "목재 셰이커"
+      ],
+      "structure": {
+        "intro": null,
+        "loop": "64마디 또는 90~150초 seamless loop"
+      },
+      "durationSec": {
+        "loop": 126
+      },
+      "layers": null,
+      "adaptiveRole": "static",
+      "scenes": [
+        "scene-city"
+      ],
+      "generationPrompt": "Art-led music for a warm illustrated European port merchant game. 푸른 하늘과 붉은 지붕이 보이는 항구 도시. 일과 이동을 가볍게 밀어 주는 저밀도 실내악. Tempo 92 BPM, key F major. Instruments: 피치카토 첼로, 바순, 스피넷, 가벼운 탬버린. Low density, tactile acoustic timbres, restrained melody, clear midrange for UI. No vocals, EDM, modern synths, trailer percussion, pirate shanty, comedy, glossy fantasy sparkle or hidden-value telegraphing. Seamless loop.",
+      "notes": "Audio v3.6 scene-role refit: Thatched Villagers · 36초 루프. v3.6 bright city refit: active middle passage, +7% playback ratio, clear acoustic midrange, restrained melody",
+      "selectedSource": {
+        "programId": "02_city",
+        "title": "Thatched Villagers",
+        "author": "Kevin MacLeod",
+        "license": "Creative Commons Attribution 4.0",
+        "sourcePage": "https://incompetech.com/music/royalty-free/index.html?Search=Search&isrc=USUAN1100720",
+        "editProfile": "v3.6 bright city refit: active middle passage, +7% playback ratio, clear acoustic midrange, restrained melody"
+      }
+    },
+    {
+      "id": "bgm-03-auction",
+      "name": "첫 번째 호가",
+      "character": "일반 경매의 절제된 살롱 누아르. 베이스가 주도하고 관악은 짧게만 개입한다.",
+      "key": "D dorian",
+      "bpm": 74,
+      "instrumentation": [
+        "콘트라베이스",
+        "브러시 스네어",
+        "뮤트 피아노",
+        "베이스 클라리넷"
+      ],
+      "structure": {
+        "intro": null,
+        "loop": "64마디 또는 90~150초 seamless loop"
+      },
+      "durationSec": {
+        "loop": 144
+      },
+      "layers": [
+        {
+          "id": "L1",
+          "name": "base",
+          "content": "콘트라베이스와 브러시만",
+          "trigger": "경매 진입 시 항상",
+          "fadeSec": 2.0
+        },
+        {
+          "id": "L2",
+          "name": "pressure",
+          "content": "비브라폰·뮤트 피아노의 얇은 코드",
+          "trigger": "공개 호가가 시작가의 2배 초과",
+          "fadeSec": 2.0
+        },
+        {
+          "id": "L3",
+          "name": "closing",
+          "content": "색소폰 또는 베이스클라리넷 2~3음",
+          "trigger": "마지막 LOT 또는 공개된 시간 임박",
+          "fadeSec": 2.0
+        }
+      ],
+      "adaptiveRole": "auction",
+      "scenes": [
+        "scene-auction"
+      ],
+      "generationPrompt": "Art-led music for a warm illustrated European port merchant game. 일반 경매의 절제된 살롱 누아르. 베이스가 주도하고 관악은 짧게만 개입한다. Tempo 74 BPM, key D dorian. Instruments: 콘트라베이스, 브러시 스네어, 뮤트 피아노, 베이스 클라리넷. Low density, tactile acoustic timbres, restrained melody, clear midrange for UI. No vocals, EDM, modern synths, trailer percussion, pirate shanty, comedy, glossy fantasy sparkle or hidden-value telegraphing. Seamless loop.",
+      "notes": "Audio v3.2 selected-source edit: I Knew a Guy · 36초 레벨 매칭 루프. 완성 믹스 보호를 위해 추가 적응 레이어는 무음 슬롯으로 유지.",
+      "selectedSource": {
+        "programId": "05_auction",
+        "title": "I Knew a Guy",
+        "author": "Kevin MacLeod",
+        "license": "Creative Commons Attribution 4.0",
+        "sourcePage": "https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100199"
+      }
+    },
+    {
+      "id": "bgm-04-relic",
+      "name": "황금 망치의 마지막 호가",
+      "character": "일반 경매의 콘트라베이스 모티프가 큰 홀과 낮은 박동으로 확장되는 최종 보스 경매.",
+      "key": "auction motif, lowered register",
+      "bpm": 86,
+      "instrumentation": [
+        "콘트라베이스",
+        "브러시",
+        "뮤트 피아노",
+        "낮은 프레임 드럼",
+        "넓은 홀 반사"
+      ],
+      "structure": {
+        "intro": "4~8마디 · 원샷 · 루프 제외",
+        "loop": "64마디 또는 90~150초 seamless loop"
+      },
+      "durationSec": {
+        "intro": 14,
+        "loop": 168
+      },
+      "layers": [
+        {
+          "id": "L1",
+          "name": "하급",
+          "content": "비올 다 감바·포지티브 오르간·낮은 홀 공기",
+          "trigger": "라운드 1",
+          "fadeSec": 2.0
+        },
+        {
+          "id": "L2",
+          "name": "중급",
+          "content": "유리 하모닉과 낮은 바순 추가",
+          "trigger": "라운드 2",
+          "fadeSec": 2.0
+        },
+        {
+          "id": "L3",
+          "name": "상급",
+          "content": "단일 유리종과 넓어진 음역 추가",
+          "trigger": "라운드 3",
+          "fadeSec": 2.0
+        }
+      ],
+      "adaptiveRole": "relic",
+      "scenes": [
+        "scene-final"
+      ],
+      "generationPrompt": "Art-led music for a warm illustrated European port merchant game. 금빛 특별 경매의 격식과 긴장. 일반 경매 재즈의 어휘를 귀족적 챔버 왈츠로 확장한다. Tempo 72 BPM, key D minor to F major. Instruments: 콘트라베이스, 비올라, 비브라폰, 뮤트 피아노, 유리종. Low density, tactile acoustic timbres, restrained melody, clear midrange for UI. No vocals, EDM, modern synths, trailer percussion, pirate shanty, comedy, glossy fantasy sparkle or hidden-value telegraphing. Seamless loop.",
+      "notes": "Audio v3.6 scene-role refit: I Knew a Guy — Relic Boss Reprise · 36초 루프. v3.6 relic boss: auction motif, slower low register, wider hall, sparse low drum pulse",
+      "selectedSource": {
+        "programId": "06_relic_boss",
+        "title": "I Knew a Guy — Relic Boss Reprise",
+        "author": "Kevin MacLeod",
+        "license": "Creative Commons Attribution 4.0",
+        "sourcePage": "https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100199",
+        "editProfile": "v3.6 relic boss: auction motif, slower low register, wider hall, sparse low drum pulse"
+      }
+    },
+    {
+      "id": "bgm-05-settlement",
+      "name": "장부에 남은 하루",
+      "character": "하루의 성패를 차분히 복기하는 장부 음악. 축하보다 정리와 다음 선택에 집중한다.",
+      "key": "D minor with F major",
+      "bpm": 68,
+      "instrumentation": [
+        "스피넷",
+        "첼로",
+        "비올라",
+        "연필 리듬"
+      ],
+      "structure": {
+        "intro": null,
+        "loop": "64마디 또는 90~150초 seamless loop"
+      },
+      "durationSec": {
+        "loop": 108
+      },
+      "layers": [
+        {
+          "id": "L1",
+          "name": "ledger",
+          "content": "스피넷·첼로·연필 리듬",
+          "trigger": "결산 진입",
+          "fadeSec": 2.0
+        },
+        {
+          "id": "L2",
+          "name": "reflection",
+          "content": "비올라 대선율 추가",
+          "trigger": "결과가 화면에 모두 공개된 뒤",
+          "fadeSec": 2.0
+        }
+      ],
+      "adaptiveRole": "settlement",
+      "scenes": [
+        "scene-summary"
+      ],
+      "generationPrompt": "Art-led music for a warm illustrated European port merchant game. 하루의 성패를 차분히 복기하는 장부 음악. 축하보다 정리와 다음 선택에 집중한다. Tempo 68 BPM, key D minor with F major. Instruments: 스피넷, 첼로, 비올라, 연필 리듬. Low density, tactile acoustic timbres, restrained melody, clear midrange for UI. No vocals, EDM, modern synths, trailer percussion, pirate shanty, comedy, glossy fantasy sparkle or hidden-value telegraphing. Seamless loop.",
+      "notes": "Audio v3.2 selected-source edit: Peaceful Desolation · 36초 레벨 매칭 루프. 완성 믹스 보호를 위해 추가 적응 레이어는 무음 슬롯으로 유지.",
+      "selectedSource": {
+        "programId": "07_settlement_result",
+        "title": "Peaceful Desolation",
+        "author": "Kevin MacLeod",
+        "license": "Creative Commons Attribution 4.0",
+        "sourcePage": "https://incompetech.com/music/royalty-free/index.html?Search=Search&isrc=USUAN1200017"
+      }
+    },
+    {
+      "id": "bgm-06-archive",
+      "name": "상회의 푸른 창문",
+      "character": "타이틀 주제를 다른 구간과 작업 리듬으로 되받는 플레이어 상회의 본거점 음악.",
+      "key": "F major reprise",
+      "bpm": 88,
+      "instrumentation": [
+        "피치카토 현악",
+        "클라리넷",
+        "스피넷",
+        "작은 목재 퍼커션"
+      ],
+      "structure": {
+        "intro": null,
+        "loop": "64마디 또는 90~150초 seamless loop"
+      },
+      "durationSec": {
+        "loop": 96
+      },
+      "layers": null,
+      "adaptiveRole": "static",
+      "scenes": [
+        "scene-continue"
+      ],
+      "generationPrompt": "Art-led music for a warm illustrated European port merchant game. 저장된 여정을 다시 펼치는 따뜻한 기억. 향수는 있으나 쓸쓸하지 않다. Tempo 64 BPM, key Bb major. Instruments: 뮤직박스, 클라리넷, 부드러운 현악. Low density, tactile acoustic timbres, restrained melody, clear midrange for UI. No vocals, EDM, modern synths, trailer percussion, pirate shanty, comedy, glossy fantasy sparkle or hidden-value telegraphing. Seamless loop.",
+      "notes": "Audio v3.6 scene-role refit: Blue Harbor Ledger — Merchant Reprise · 36초 루프. v3.6 merchant reprise: alternate middle passage, +2.5% movement, closer wood-and-brass room",
+      "selectedSource": {
+        "programId": "08_merchant_reprise",
+        "title": "Blue Harbor Ledger — Merchant Reprise",
+        "author": "User-provided source",
+        "license": "User-provided; rights confirmation required before public release",
+        "sourcePage": null,
+        "editProfile": "v3.6 merchant reprise: alternate middle passage, +2.5% movement, closer wood-and-brass room"
+      }
+    },
+    {
+      "id": "bgm-07-loading-workshop",
+      "name": "도시가 준비되는 동안",
+      "character": "지도와 상점이 차례로 배치되는 짧은 작업곡. 무거운 공장 대신 정돈된 수공업의 리듬.",
+      "key": "F major",
+      "bpm": 96,
+      "instrumentation": [
+        "스피넷",
+        "피치카토 현악",
+        "나무 블록",
+        "작은 황동 기어"
+      ],
+      "structure": {
+        "intro": null,
+        "loop": "64마디 또는 90~150초 seamless loop"
+      },
+      "durationSec": {
+        "loop": 84
+      },
+      "layers": null,
+      "adaptiveRole": "static",
+      "scenes": [
+        "scene-loading"
+      ],
+      "generationPrompt": "Art-led music for a warm illustrated European port merchant game. 지도와 상점이 차례로 배치되는 짧은 작업곡. 무거운 공장 대신 정돈된 수공업의 리듬. Tempo 96 BPM, key F major. Instruments: 스피넷, 피치카토 현악, 나무 블록, 작은 황동 기어. Low density, tactile acoustic timbres, restrained melody, clear midrange for UI. No vocals, EDM, modern synths, trailer percussion, pirate shanty, comedy, glossy fantasy sparkle or hidden-value telegraphing. Seamless loop.",
+      "notes": "Audio v3.2 selected-source edit: March of the Spoons · 36초 레벨 매칭 루프. 완성 믹스 보호를 위해 추가 적응 레이어는 무음 슬롯으로 유지.",
+      "selectedSource": {
+        "programId": "03_workplace",
+        "title": "March of the Spoons",
+        "author": "Kevin MacLeod",
+        "license": "Creative Commons Attribution 4.0",
+        "sourcePage": "https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1700008"
+      }
+    },
+    {
+      "id": "bgm-08-city-growth",
+      "name": "분주해진 상회의 거리",
+      "character": "성장한 상회의 활기. 타이틀 모티프를 더 풍성하게 변주하되 멜로디 밀도는 낮게 유지한다.",
+      "key": "Bb major",
+      "bpm": 102,
+      "instrumentation": [
+        "피치카토 현악",
+        "클라리넷",
+        "스피넷",
+        "프레임 드럼"
+      ],
+      "structure": {
+        "intro": null,
+        "loop": "64마디 또는 90~150초 seamless loop"
+      },
+      "durationSec": {
+        "loop": 132
+      },
+      "layers": null,
+      "adaptiveRole": "static",
+      "scenes": [
+        "scene-city"
+      ],
+      "generationPrompt": "Art-led music for a warm illustrated European port merchant game. 성장한 상회의 활기. 타이틀 모티프를 더 풍성하게 변주하되 멜로디 밀도는 낮게 유지한다. Tempo 102 BPM, key Bb major. Instruments: 피치카토 현악, 클라리넷, 스피넷, 프레임 드럼. Low density, tactile acoustic timbres, restrained melody, clear midrange for UI. No vocals, EDM, modern synths, trailer percussion, pirate shanty, comedy, glossy fantasy sparkle or hidden-value telegraphing. Seamless loop.",
+      "notes": "Audio v3.6 scene-role refit: Thatched Villagers · 36초 루프. v3.6 bright city refit: active middle passage, +7% playback ratio, clear acoustic midrange, restrained melody",
+      "selectedSource": {
+        "programId": "02_city",
+        "title": "Thatched Villagers",
+        "author": "Kevin MacLeod",
+        "license": "Creative Commons Attribution 4.0",
+        "sourcePage": "https://incompetech.com/music/royalty-free/index.html?Search=Search&isrc=USUAN1100720",
+        "editProfile": "v3.6 bright city refit: active middle passage, +7% playback ratio, clear acoustic midrange, restrained melody"
+      }
+    },
+    {
+      "id": "bgm-09-city-deadline",
+      "name": "마감 전의 항구",
+      "character": "마감이 가까운 도시. 희망을 잃지 않은 채 시계의 압박만 조용히 더한다.",
+      "key": "G minor with Bb major",
+      "bpm": 96,
+      "instrumentation": [
+        "피치카토 첼로",
+        "바순",
+        "스피넷",
+        "작은 시계 펄스"
+      ],
+      "structure": {
+        "intro": null,
+        "loop": "64마디 또는 90~150초 seamless loop"
+      },
+      "durationSec": {
+        "loop": 128
+      },
+      "layers": null,
+      "adaptiveRole": "static",
+      "scenes": [
+        "scene-city"
+      ],
+      "generationPrompt": "Art-led music for a warm illustrated European port merchant game. 마감이 가까운 도시. 희망을 잃지 않은 채 시계의 압박만 조용히 더한다. Tempo 96 BPM, key G minor with Bb major. Instruments: 피치카토 첼로, 바순, 스피넷, 작은 시계 펄스. Low density, tactile acoustic timbres, restrained melody, clear midrange for UI. No vocals, EDM, modern synths, trailer percussion, pirate shanty, comedy, glossy fantasy sparkle or hidden-value telegraphing. Seamless loop.",
+      "notes": "Audio v3.6 scene-role refit: Thatched Villagers · 36초 루프. v3.6 bright city refit: active middle passage, +7% playback ratio, clear acoustic midrange, restrained melody",
+      "selectedSource": {
+        "programId": "02_city",
+        "title": "Thatched Villagers",
+        "author": "Kevin MacLeod",
+        "license": "Creative Commons Attribution 4.0",
+        "sourcePage": "https://incompetech.com/music/royalty-free/index.html?Search=Search&isrc=USUAN1100720",
+        "editProfile": "v3.6 bright city refit: active middle passage, +7% playback ratio, clear acoustic midrange, restrained melody"
+      }
+    },
+    {
+      "id": "bgm-10-office-appraisal",
+      "name": "햇빛 아래의 감정서",
+      "character": "밝고 정갈한 의뢰소. 학구적이고 친절하며 미스터리보다 관찰과 판단을 강조한다.",
+      "key": "A minor with C major",
+      "bpm": 78,
+      "instrumentation": [
+        "클라리넷",
+        "플루트",
+        "피치카토 비올라",
+        "스피넷"
+      ],
+      "structure": {
+        "intro": null,
+        "loop": "64마디 또는 90~150초 seamless loop"
+      },
+      "durationSec": {
+        "loop": 110
+      },
+      "layers": null,
+      "adaptiveRole": "static",
+      "scenes": [
+        "scene-office"
+      ],
+      "generationPrompt": "Art-led music for a warm illustrated European port merchant game. 밝고 정갈한 의뢰소. 학구적이고 친절하며 미스터리보다 관찰과 판단을 강조한다. Tempo 78 BPM, key A minor with C major. Instruments: 클라리넷, 플루트, 피치카토 비올라, 스피넷. Low density, tactile acoustic timbres, restrained melody, clear midrange for UI. No vocals, EDM, modern synths, trailer percussion, pirate shanty, comedy, glossy fantasy sparkle or hidden-value telegraphing. Seamless loop.",
+      "notes": "Audio v3.2 selected-source edit: March of the Spoons · 36초 레벨 매칭 루프. 완성 믹스 보호를 위해 추가 적응 레이어는 무음 슬롯으로 유지.",
+      "selectedSource": {
+        "programId": "03_workplace",
+        "title": "March of the Spoons",
+        "author": "Kevin MacLeod",
+        "license": "Creative Commons Attribution 4.0",
+        "sourcePage": "https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1700008"
+      }
+    },
+    {
+      "id": "bgm-11-tavern-whispers",
+      "name": "호박빛 소문의 값",
+      "character": "술집의 정보 거래. 경매 재즈와 겹치지 않는 저밀도 포크 누아르로 은밀함을 만든다.",
+      "key": "E minor",
+      "bpm": 70,
+      "instrumentation": [
+        "플럭 기타",
+        "콘트라베이스",
+        "베이스 클라리넷",
+        "부드러운 하모니움"
+      ],
+      "structure": {
+        "intro": null,
+        "loop": "64마디 또는 90~150초 seamless loop"
+      },
+      "durationSec": {
+        "loop": 142
+      },
+      "layers": null,
+      "adaptiveRole": "static",
+      "scenes": [
+        "scene-tavern"
+      ],
+      "generationPrompt": "Art-led music for a warm illustrated European port merchant game. 술집의 정보 거래. 경매 재즈와 겹치지 않는 저밀도 포크 누아르로 은밀함을 만든다. Tempo 70 BPM, key E minor. Instruments: 플럭 기타, 콘트라베이스, 베이스 클라리넷, 부드러운 하모니움. Low density, tactile acoustic timbres, restrained melody, clear midrange for UI. No vocals, EDM, modern synths, trailer percussion, pirate shanty, comedy, glossy fantasy sparkle or hidden-value telegraphing. Seamless loop.",
+      "notes": "Audio v3.2 selected-source edit: Midnight Tale · 36초 레벨 매칭 루프. 완성 믹스 보호를 위해 추가 적응 레이어는 무음 슬롯으로 유지.",
+      "selectedSource": {
+        "programId": "04_tavern_guild",
+        "title": "Midnight Tale",
+        "author": "Kevin MacLeod",
+        "license": "Creative Commons Attribution 4.0",
+        "sourcePage": "https://incompetech.com/music/royalty-free/index.html?Search=Search&isrc=USUAN1900004"
+      }
+    },
+    {
+      "id": "bgm-12-exchange-ledger",
+      "name": "저울과 주판의 오후",
+      "character": "거래소의 빠르고 명료한 상업 리듬. 카지노처럼 반짝이지 않고 일하는 손의 속도를 표현한다.",
+      "key": "C major with mixolydian color",
+      "bpm": 98,
+      "instrumentation": [
+        "스피넷",
+        "피치카토 첼로",
+        "침발롬",
+        "나무 블록"
+      ],
+      "structure": {
+        "intro": null,
+        "loop": "64마디 또는 90~150초 seamless loop"
+      },
+      "durationSec": {
+        "loop": 120
+      },
+      "layers": null,
+      "adaptiveRole": "static",
+      "scenes": [
+        "scene-exchange"
+      ],
+      "generationPrompt": "Art-led music for a warm illustrated European port merchant game. 거래소의 빠르고 명료한 상업 리듬. 카지노처럼 반짝이지 않고 일하는 손의 속도를 표현한다. Tempo 98 BPM, key C major with mixolydian color. Instruments: 스피넷, 피치카토 첼로, 침발롬, 나무 블록. Low density, tactile acoustic timbres, restrained melody, clear midrange for UI. No vocals, EDM, modern synths, trailer percussion, pirate shanty, comedy, glossy fantasy sparkle or hidden-value telegraphing. Seamless loop.",
+      "notes": "Audio v3.6 scene-role refit: March of the Spoons — Exchange Cut · 36초 루프. v3.6 exchange cut: active alternate passage, compact stereo, dry working rhythm",
+      "selectedSource": {
+        "programId": "09_exchange",
+        "title": "March of the Spoons — Exchange Cut",
+        "author": "Kevin MacLeod",
+        "license": "Creative Commons Attribution 4.0",
+        "sourcePage": "https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1700008",
+        "editProfile": "v3.6 exchange cut: active alternate passage, compact stereo, dry working rhythm"
+      }
+    },
+    {
+      "id": "bgm-13-guild-vault",
+      "name": "도장 아래의 금빛 계약",
+      "character": "계약과 담보를 다루는 중개인 조합의 정중한 권위. 위협보다 격식과 책임의 무게를 강조한다.",
+      "key": "C minor with Eb major",
+      "bpm": 62,
+      "instrumentation": [
+        "첼로",
+        "바순",
+        "하모니움",
+        "낮은 스피넷"
+      ],
+      "structure": {
+        "intro": null,
+        "loop": "64마디 또는 90~150초 seamless loop"
+      },
+      "durationSec": {
+        "loop": 118
+      },
+      "layers": null,
+      "adaptiveRole": "static",
+      "scenes": [
+        "scene-guild"
+      ],
+      "generationPrompt": "Art-led music for a warm illustrated European port merchant game. 중개인 조합의 계약과 담보. 위협적 악당 음악이 아니라 무게 있고 정중한 실내악. Tempo 62 BPM, key C minor with Eb major. Instruments: 첼로, 바순, 하모니움, 낮은 스피넷. Low density, tactile acoustic timbres, restrained melody, clear midrange for UI. No vocals, EDM, modern synths, trailer percussion, pirate shanty, comedy, glossy fantasy sparkle or hidden-value telegraphing. Seamless loop.",
+      "notes": "Audio v3.6 scene-role refit: Court of the Queen — Guild Chamber · 36초 루프. v3.6 guild chamber: formal chamber-waltz source reassigned from relic auction",
+      "selectedSource": {
+        "programId": "10_guild_chamber",
+        "title": "Court of the Queen — Guild Chamber",
+        "author": "Kevin MacLeod",
+        "license": "Creative Commons Attribution 4.0",
+        "sourcePage": "https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100728",
+        "editProfile": "v3.6 guild chamber: formal chamber-waltz source reassigned from relic auction"
+      }
+    },
+    {
+      "id": "bgm-14-merchant-workshop",
+      "name": "저울과 기어의 오후",
+      "character": "거래소의 빠르고 명료한 작업 리듬. 주판·저울·장부가 돌아가는 활기를 건조하게 받친다.",
+      "key": "F major",
+      "bpm": 88,
+      "instrumentation": [
+        "피치카토 현악",
+        "클라리넷",
+        "스피넷",
+        "작은 목재 퍼커션"
+      ],
+      "structure": {
+        "intro": null,
+        "loop": "64마디 또는 90~150초 seamless loop"
+      },
+      "durationSec": {
+        "loop": 116
+      },
+      "layers": null,
+      "adaptiveRole": "static",
+      "scenes": [
+        "scene-merchant"
+      ],
+      "generationPrompt": "Art-led music for a warm illustrated European port merchant game. 진열장과 설비가 확장되는 만족감. 작업실의 규칙성과 성장의 온기를 함께 담는다. Tempo 88 BPM, key F major. Instruments: 피치카토 현악, 클라리넷, 스피넷, 작은 목재 퍼커션. Low density, tactile acoustic timbres, restrained melody, clear midrange for UI. No vocals, EDM, modern synths, trailer percussion, pirate shanty, comedy, glossy fantasy sparkle or hidden-value telegraphing. Seamless loop.",
+      "notes": "Audio v3.6 scene-role refit: March of the Spoons — Exchange Cut · 36초 루프. v3.6 exchange cut: active alternate passage, compact stereo, dry working rhythm",
+      "selectedSource": {
+        "programId": "09_exchange",
+        "title": "March of the Spoons — Exchange Cut",
+        "author": "Kevin MacLeod",
+        "license": "Creative Commons Attribution 4.0",
+        "sourcePage": "https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1700008",
+        "editProfile": "v3.6 exchange cut: active alternate passage, compact stereo, dry working rhythm"
+      }
+    },
+    {
+      "id": "bgm-15-auction-noir",
+      "name": "벨벳 위의 눈치",
+      "character": "중반 경매. 베이스 보행을 조금 늘리고 색소폰은 드문 문장 끝에만 낮게 대답한다.",
+      "key": "E dorian",
+      "bpm": 76,
+      "instrumentation": [
+        "콘트라베이스",
+        "브러시 스네어",
+        "뮤트 피아노",
+        "바리톤 색소폰"
+      ],
+      "structure": {
+        "intro": null,
+        "loop": "64마디 또는 90~150초 seamless loop"
+      },
+      "durationSec": {
+        "loop": 150
+      },
+      "layers": [
+        {
+          "id": "L1",
+          "name": "base",
+          "content": "콘트라베이스와 브러시만",
+          "trigger": "경매 진입 시 항상",
+          "fadeSec": 2.0
+        },
+        {
+          "id": "L2",
+          "name": "pressure",
+          "content": "비브라폰·뮤트 피아노의 얇은 코드",
+          "trigger": "공개 호가가 시작가의 2배 초과",
+          "fadeSec": 2.0
+        },
+        {
+          "id": "L3",
+          "name": "closing",
+          "content": "색소폰 또는 베이스클라리넷 2~3음",
+          "trigger": "마지막 LOT 또는 공개된 시간 임박",
+          "fadeSec": 2.0
+        }
+      ],
+      "adaptiveRole": "auction",
+      "scenes": [
+        "scene-auction"
+      ],
+      "generationPrompt": "Art-led music for a warm illustrated European port merchant game. 중반 경매. 베이스 보행을 조금 늘리고 색소폰은 드문 문장 끝에만 낮게 대답한다. Tempo 76 BPM, key E dorian. Instruments: 콘트라베이스, 브러시 스네어, 뮤트 피아노, 바리톤 색소폰. Low density, tactile acoustic timbres, restrained melody, clear midrange for UI. No vocals, EDM, modern synths, trailer percussion, pirate shanty, comedy, glossy fantasy sparkle or hidden-value telegraphing. Seamless loop.",
+      "notes": "Audio v3.2 selected-source edit: I Knew a Guy · 36초 레벨 매칭 루프. 완성 믹스 보호를 위해 추가 적응 레이어는 무음 슬롯으로 유지.",
+      "selectedSource": {
+        "programId": "05_auction",
+        "title": "I Knew a Guy",
+        "author": "Kevin MacLeod",
+        "license": "Creative Commons Attribution 4.0",
+        "sourcePage": "https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100199"
+      }
+    },
+    {
+      "id": "bgm-16-auction-pressure",
+      "name": "마지막 여덟 점",
+      "character": "후반 경매. 같은 살롱 재즈의 밀도를 유지하면서 호가 압박과 마감감만 높인다.",
+      "key": "C dorian",
+      "bpm": 80,
+      "instrumentation": [
+        "콘트라베이스",
+        "브러시 스네어",
+        "뮤트 피아노",
+        "베이스 클라리넷",
+        "약한 시계 펄스"
+      ],
+      "structure": {
+        "intro": null,
+        "loop": "64마디 또는 90~150초 seamless loop"
+      },
+      "durationSec": {
+        "loop": 150
+      },
+      "layers": [
+        {
+          "id": "L1",
+          "name": "base",
+          "content": "콘트라베이스와 브러시만",
+          "trigger": "경매 진입 시 항상",
+          "fadeSec": 2.0
+        },
+        {
+          "id": "L2",
+          "name": "pressure",
+          "content": "비브라폰·뮤트 피아노의 얇은 코드",
+          "trigger": "공개 호가가 시작가의 2배 초과",
+          "fadeSec": 2.0
+        },
+        {
+          "id": "L3",
+          "name": "closing",
+          "content": "색소폰 또는 베이스클라리넷 2~3음",
+          "trigger": "마지막 LOT 또는 공개된 시간 임박",
+          "fadeSec": 2.0
+        }
+      ],
+      "adaptiveRole": "auction",
+      "scenes": [
+        "scene-auction"
+      ],
+      "generationPrompt": "Art-led music for a warm illustrated European port merchant game. 후반 경매. 같은 살롱 재즈의 밀도를 유지하면서 호가 압박과 마감감만 높인다. Tempo 80 BPM, key C dorian. Instruments: 콘트라베이스, 브러시 스네어, 뮤트 피아노, 베이스 클라리넷, 약한 시계 펄스. Low density, tactile acoustic timbres, restrained melody, clear midrange for UI. No vocals, EDM, modern synths, trailer percussion, pirate shanty, comedy, glossy fantasy sparkle or hidden-value telegraphing. Seamless loop.",
+      "notes": "Audio v3.2 selected-source edit: I Knew a Guy · 36초 레벨 매칭 루프. 완성 믹스 보호를 위해 추가 적응 레이어는 무음 슬롯으로 유지.",
+      "selectedSource": {
+        "programId": "05_auction",
+        "title": "I Knew a Guy",
+        "author": "Kevin MacLeod",
+        "license": "Creative Commons Attribution 4.0",
+        "sourcePage": "https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100199"
+      }
+    },
+    {
+      "id": "bgm-17-settlement-loss",
+      "name": "붉은 잉크가 마를 때",
+      "character": "적자 결산. 실패를 조롱하지 않고 숫자를 다시 살피게 하는 절제된 변주.",
+      "key": "C minor",
+      "bpm": 64,
+      "instrumentation": [
+        "스피넷",
+        "첼로",
+        "비올라",
+        "연필 리듬"
+      ],
+      "structure": {
+        "intro": null,
+        "loop": "64마디 또는 90~150초 seamless loop"
+      },
+      "durationSec": {
+        "loop": 104
+      },
+      "layers": [
+        {
+          "id": "L1",
+          "name": "ledger",
+          "content": "스피넷·첼로·연필 리듬",
+          "trigger": "결산 진입",
+          "fadeSec": 2.0
+        },
+        {
+          "id": "L2",
+          "name": "reflection",
+          "content": "비올라 대선율 추가",
+          "trigger": "결과가 화면에 모두 공개된 뒤",
+          "fadeSec": 2.0
+        }
+      ],
+      "adaptiveRole": "settlement",
+      "scenes": [
+        "scene-summary"
+      ],
+      "generationPrompt": "Art-led music for a warm illustrated European port merchant game. 적자 결산. 실패를 조롱하지 않고 숫자를 다시 살피게 하는 절제된 변주. Tempo 64 BPM, key C minor. Instruments: 스피넷, 첼로, 비올라, 연필 리듬. Low density, tactile acoustic timbres, restrained melody, clear midrange for UI. No vocals, EDM, modern synths, trailer percussion, pirate shanty, comedy, glossy fantasy sparkle or hidden-value telegraphing. Seamless loop.",
+      "notes": "Audio v3.2 selected-source edit: Peaceful Desolation · 36초 레벨 매칭 루프. 완성 믹스 보호를 위해 추가 적응 레이어는 무음 슬롯으로 유지.",
+      "selectedSource": {
+        "programId": "07_settlement_result",
+        "title": "Peaceful Desolation",
+        "author": "Kevin MacLeod",
+        "license": "Creative Commons Attribution 4.0",
+        "sourcePage": "https://incompetech.com/music/royalty-free/index.html?Search=Search&isrc=USUAN1200017"
+      }
+    },
+    {
+      "id": "bgm-18-ending-verdict",
+      "name": "열두 번째 장부 앞에서",
+      "character": "엔딩 판정 직전의 정적과 기대. 결과를 미리 말하지 않는 열린 화성.",
+      "key": "D minor",
+      "bpm": 58,
+      "instrumentation": [
+        "첼로",
+        "비올라",
+        "하모니움",
+        "낮은 유리종"
+      ],
+      "structure": {
+        "intro": null,
+        "loop": "64마디 또는 90~150초 seamless loop"
+      },
+      "durationSec": {
+        "loop": 92
+      },
+      "layers": null,
+      "adaptiveRole": "static",
+      "scenes": [
+        "scene-ending"
+      ],
+      "generationPrompt": "Art-led music for a warm illustrated European port merchant game. 엔딩 판정 직전의 정적과 기대. 결과를 미리 말하지 않는 열린 화성. Tempo 58 BPM, key D minor. Instruments: 첼로, 비올라, 하모니움, 낮은 유리종. Low density, tactile acoustic timbres, restrained melody, clear midrange for UI. No vocals, EDM, modern synths, trailer percussion, pirate shanty, comedy, glossy fantasy sparkle or hidden-value telegraphing. Seamless loop.",
+      "notes": "Audio v3.2 selected-source edit: Peaceful Desolation · 36초 레벨 매칭 루프. 완성 믹스 보호를 위해 추가 적응 레이어는 무음 슬롯으로 유지.",
+      "selectedSource": {
+        "programId": "07_settlement_result",
+        "title": "Peaceful Desolation",
+        "author": "Kevin MacLeod",
+        "license": "Creative Commons Attribution 4.0",
+        "sourcePage": "https://incompetech.com/music/royalty-free/index.html?Search=Search&isrc=USUAN1200017"
+      }
+    },
+    {
+      "id": "bgm-19-result-success",
+      "name": "다음 장부의 첫 줄",
+      "character": "성공 결과. 타이틀 주제를 따뜻하게 회수하되 승리 팡파르로 과장하지 않는다.",
+      "key": "F major add6",
+      "bpm": 76,
+      "instrumentation": [
+        "클라리넷",
+        "피치카토 현악",
+        "스피넷",
+        "작은 종"
+      ],
+      "structure": {
+        "intro": null,
+        "loop": "64마디 또는 90~150초 seamless loop"
+      },
+      "durationSec": {
+        "loop": 104
+      },
+      "layers": null,
+      "adaptiveRole": "static",
+      "scenes": [
+        "scene-result"
+      ],
+      "generationPrompt": "Art-led music for a warm illustrated European port merchant game. 성공 결과. 타이틀 주제를 따뜻하게 회수하되 승리 팡파르로 과장하지 않는다. Tempo 76 BPM, key F major add6. Instruments: 클라리넷, 피치카토 현악, 스피넷, 작은 종. Low density, tactile acoustic timbres, restrained melody, clear midrange for UI. No vocals, EDM, modern synths, trailer percussion, pirate shanty, comedy, glossy fantasy sparkle or hidden-value telegraphing. Seamless loop.",
+      "notes": "Audio v3.2 selected-source edit: Peaceful Desolation · 36초 레벨 매칭 루프. 완성 믹스 보호를 위해 추가 적응 레이어는 무음 슬롯으로 유지.",
+      "selectedSource": {
+        "programId": "07_settlement_result",
+        "title": "Peaceful Desolation",
+        "author": "Kevin MacLeod",
+        "license": "Creative Commons Attribution 4.0",
+        "sourcePage": "https://incompetech.com/music/royalty-free/index.html?Search=Search&isrc=USUAN1200017"
+      }
+    },
+    {
+      "id": "bgm-20-result-bankruptcy",
+      "name": "불이 꺼진 계산대",
+      "character": "파산 결과. 공포나 희극 없이 존엄한 마침표와 다시 시작할 여백을 남긴다.",
+      "key": "D minor",
+      "bpm": 52,
+      "instrumentation": [
+        "첼로",
+        "베이스 클라리넷",
+        "하모니움",
+        "마른 종이"
+      ],
+      "structure": {
+        "intro": null,
+        "loop": "64마디 또는 90~150초 seamless loop"
+      },
+      "durationSec": {
+        "loop": 88
+      },
+      "layers": null,
+      "adaptiveRole": "static",
+      "scenes": [
+        "scene-result"
+      ],
+      "generationPrompt": "Art-led music for a warm illustrated European port merchant game. 파산 결과. 공포나 희극 없이 존엄한 마침표와 다시 시작할 여백을 남긴다. Tempo 52 BPM, key D minor. Instruments: 첼로, 베이스 클라리넷, 하모니움, 마른 종이. Low density, tactile acoustic timbres, restrained melody, clear midrange for UI. No vocals, EDM, modern synths, trailer percussion, pirate shanty, comedy, glossy fantasy sparkle or hidden-value telegraphing. Seamless loop.",
+      "notes": "Audio v3.2 selected-source edit: Peaceful Desolation · 36초 레벨 매칭 루프. 완성 믹스 보호를 위해 추가 적응 레이어는 무음 슬롯으로 유지.",
+      "selectedSource": {
+        "programId": "07_settlement_result",
+        "title": "Peaceful Desolation",
+        "author": "Kevin MacLeod",
+        "license": "Creative Commons Attribution 4.0",
+        "sourcePage": "https://incompetech.com/music/royalty-free/index.html?Search=Search&isrc=USUAN1200017"
+      }
+    },
+    {
+      "id": "bgm-21-museum-memory",
+      "name": "유리장 안의 항해",
+      "character": "유물 전시관. 획득한 물건이 모험의 기억으로 남는 맑고 조용한 실내악.",
+      "key": "Bb major add6",
+      "bpm": 60,
+      "instrumentation": [
+        "글라스 하모니카",
+        "비올라",
+        "클라리넷",
+        "뮤직박스"
+      ],
+      "structure": {
+        "intro": null,
+        "loop": "64마디 또는 90~150초 seamless loop"
+      },
+      "durationSec": {
+        "loop": 124
+      },
+      "layers": null,
+      "adaptiveRole": "static",
+      "scenes": [
+        "scene-museum"
+      ],
+      "generationPrompt": "Art-led music for a warm illustrated European port merchant game. 유물 전시관. 획득한 물건이 모험의 기억으로 남는 맑고 조용한 실내악. Tempo 60 BPM, key Bb major add6. Instruments: 글라스 하모니카, 비올라, 클라리넷, 뮤직박스. Low density, tactile acoustic timbres, restrained melody, clear midrange for UI. No vocals, EDM, modern synths, trailer percussion, pirate shanty, comedy, glossy fantasy sparkle or hidden-value telegraphing. Seamless loop.",
+      "notes": "Audio v3.2 selected-source edit: Peaceful Desolation · 36초 레벨 매칭 루프. 완성 믹스 보호를 위해 추가 적응 레이어는 무음 슬롯으로 유지.",
+      "selectedSource": {
+        "programId": "07_settlement_result",
+        "title": "Peaceful Desolation",
+        "author": "Kevin MacLeod",
+        "license": "Creative Commons Attribution 4.0",
+        "sourcePage": "https://incompetech.com/music/royalty-free/index.html?Search=Search&isrc=USUAN1200017"
+      }
+    }
+  ],
+  "sceneAmbienceMap": {
+    "scene-loading": "amb-loading-gears",
+    "scene-city": "amb-city-harbor",
+    "scene-office": "amb-office-paper",
+    "scene-tavern": "amb-tavern-hearth",
+    "scene-exchange": "amb-exchange-floor",
+    "scene-guild": "amb-guild-vault",
+    "scene-merchant": "amb-merchant-workshop",
+    "scene-auction": "amb-auction-crowd",
+    "scene-final": "amb-relic-hall",
+    "scene-museum": "amb-museum-room"
+  },
+  "sceneBgmMap": {
+    "scene-title": {
+      "bgm": "bgm-01-title"
+    },
+    "scene-continue": {
+      "bgm": "bgm-01-title"
+    },
+    "scene-loading": {
+      "bgm": "bgm-07-loading-workshop"
+    },
+    "scene-city": {
+      "bgm": "bgm-02-city",
+      "variants": [
+        {
+          "bgm": "bgm-02-city",
+          "when": {
+            "dayMax": 3
+          }
+        },
+        {
+          "bgm": "bgm-08-city-growth",
+          "when": {
+            "dayMin": 4,
+            "dayMax": 8
+          }
+        },
+        {
+          "bgm": "bgm-09-city-deadline",
+          "when": {
+            "dayMin": 9
+          }
+        }
+      ]
+    },
+    "scene-office": {
+      "bgm": "bgm-10-office-appraisal"
+    },
+    "scene-tavern": {
+      "bgm": "bgm-11-tavern-whispers"
+    },
+    "scene-exchange": {
+      "bgm": "bgm-14-merchant-workshop",
+      "variants": [
+        {
+          "bgm": "bgm-12-exchange-ledger",
+          "when": {
+            "mode": "market-detail"
+          }
+        }
+      ]
+    },
+    "scene-guild": {
+      "bgm": "bgm-13-guild-vault"
+    },
+    "scene-merchant": {
+      "bgm": "bgm-06-archive"
+    },
+    "scene-auction": {
+      "bgm": "bgm-03-auction",
+      "layers": [
+        "L1"
+      ],
+      "variants": [
+        {
+          "bgm": "bgm-03-auction",
+          "layers": [
+            "L1"
+          ],
+          "when": {
+            "dayMax": 4
+          }
+        },
+        {
+          "bgm": "bgm-15-auction-noir",
+          "layers": [
+            "L1"
+          ],
+          "when": {
+            "dayMin": 5,
+            "dayMax": 8
+          }
+        },
+        {
+          "bgm": "bgm-16-auction-pressure",
+          "layers": [
+            "L1"
+          ],
+          "when": {
+            "dayMin": 9
+          }
+        }
+      ]
+    },
+    "scene-summary": {
+      "bgm": "bgm-05-settlement",
+      "layers": [
+        "L1",
+        "L2"
+      ],
+      "variants": [
+        {
+          "bgm": "bgm-17-settlement-loss",
+          "layers": [
+            "L1",
+            "L2"
+          ],
+          "when": {
+            "net": "negative"
+          }
+        }
+      ]
+    },
+    "scene-ending": {
+      "bgm": "bgm-18-ending-verdict"
+    },
+    "scene-final": {
+      "bgm": "bgm-04-relic",
+      "layers": [
+        "L1"
+      ]
+    },
+    "scene-result": {
+      "bgm": "bgm-19-result-success",
+      "variants": [
+        {
+          "bgm": "bgm-20-result-bankruptcy",
+          "when": {
+            "endingNot": "relic"
+          }
+        }
+      ]
+    },
+    "scene-museum": {
+      "bgm": "bgm-21-museum-memory"
+    }
+  },
+  "layerFallback": {
+    "note": "무료 음원은 스템을 주지 않는다. 레이어 정의는 그대로 두고 재생 쪽에서 런타임 필터로 구현한다. 나중에 진짜 스템이 생기면 재생 코드만 바꾸고 이 명세는 손대지 않는다.",
+    "method": "Web Audio API — BiquadFilterNode(lowpass) + GainNode",
+    "rationale": "악기가 쌓이는 것과는 다르지만 「긴장이 오른다」는 정보 전달은 동일하다. 필터가 열리면서 음악이 다가오는 느낌이 난다.",
+    "intensitySteps": [
+      {
+        "layers": [
+          "L1"
+        ],
+        "lowpassHz": 500,
+        "gainDb": -6
+      },
+      {
+        "layers": [
+          "L1",
+          "L2"
+        ],
+        "lowpassHz": 2000,
+        "gainDb": -3
+      },
+      {
+        "layers": [
+          "L1",
+          "L2",
+          "L3"
+        ],
+        "lowpassHz": 20000,
+        "gainDb": 0
+      }
+    ],
+    "bgm05Failure": {
+      "lowpassHz": 700,
+      "gainDb": -8,
+      "note": "L2 제외와 같은 효과"
+    },
+    "rampSec": 0.6,
+    "reference": "FREE-SOURCES.md §4"
+  },
+  "sceneTransition": {
+    "sameBgmDifferentScene": "재시작하지 않고 재생 위치 유지",
+    "differentBgm": {
+      "crossfadeSec": 1.8,
+      "curve": "equal-power"
+    },
+    "toResultOnFailure": {
+      "crossfadeSec": 0.6,
+      "note": "실패는 급격히 끊는다"
+    }
+  },
+  "clockworkSystem": {
+    "rationale": "태엽시계를 장식이 아니라 12일 구조의 표현으로 쓴다. §6.2 일차 마감이 이 게임의 주된 실패 원인(마감 실패 33.2%)이므로 그 압박을 소리가 함께 진다.",
+    "invariantCompliance": "불변 9 준수 — 새로운 정보를 주지 않는다. amb-deadline-tick은 이미 상단바 일차 표시와 scene-summary 「마감 잔여 경고」 핀이 화면에 보여주고 있는 사실의 정서적 보강일 뿐이며, 손익분기선·안전 입찰가·추천 입찰가를 소리로 암시하지 않는다.",
+    "cues": [
+      {
+        "cue": "sfx-day-advance",
+        "when": "act-next-day — 날짜가 넘어갈 때마다 태엽을 한 번 감는다"
+      },
+      {
+        "cue": "amb-deadline-tick",
+        "when": "마감 일차(4·7·10일차) 개시 전날부터 도시 페이즈에 초침 레이어를 아주 얕게 깐다",
+        "gain": -24,
+        "unit": "dB"
+      },
+      {
+        "cue": "sfx-result-bankruptcy",
+        "when": "파산 — 태엽이 풀리다 멈추는 소리. 12일 태엽 모티프의 종착점."
+      }
+    ]
+  },
+  "sfx": [
+    {
+      "id": "sfx-ui-hover",
+      "group": "ui",
+      "name": "호버",
+      "desc": "금빛 테두리에 작은 황동 포인터가 닿는 아주 얕은 소리",
+      "durationSec": 0.07,
+      "bus": "sfx",
+      "gain": -20,
+      "accent": false,
+      "prompt": "호버: 금빛 테두리에 작은 황동 포인터가 닿는 아주 얕은 소리 짙은 목재 버튼, 둥근 황동 핀, 양피지 패널. 짧고 명확하며 현대 전자 클릭과 고역 반짝임 없음. Stylized but physically legible pixel-game sound, warm close microphone, short dry wooden room, gentle high-frequency rolloff, no synth, no modern UI beep, no hiss, no cartoon exaggeration.",
+      "artMaterial": "짙은 목재 버튼, 둥근 황동 핀, 양피지 패널. 짧고 명확하며 현대 전자 클릭과 고역 반짝임 없음.",
+      "prototypeSourceFamily": "ui"
+    },
+    {
+      "id": "sfx-ui-click",
+      "group": "ui",
+      "name": "기본 클릭",
+      "desc": "두꺼운 목재 버튼이 눌리고 작은 황동 접점이 붙는 소리",
+      "durationSec": 0.13,
+      "bus": "sfx",
+      "gain": -15,
+      "accent": false,
+      "prompt": "기본 클릭: 두꺼운 목재 버튼이 눌리고 작은 황동 접점이 붙는 소리 짙은 목재 버튼, 둥근 황동 핀, 양피지 패널. 짧고 명확하며 현대 전자 클릭과 고역 반짝임 없음. Stylized but physically legible pixel-game sound, warm close microphone, short dry wooden room, gentle high-frequency rolloff, no synth, no modern UI beep, no hiss, no cartoon exaggeration.",
+      "artMaterial": "짙은 목재 버튼, 둥근 황동 핀, 양피지 패널. 짧고 명확하며 현대 전자 클릭과 고역 반짝임 없음.",
+      "prototypeSourceFamily": "ui"
+    },
+    {
+      "id": "sfx-ui-back",
+      "group": "ui",
+      "name": "되돌아가기",
+      "desc": "목재 메뉴 패가 레일을 따라 짧게 뒤로 미끄러짐",
+      "durationSec": 0.18,
+      "bus": "sfx",
+      "gain": -16,
+      "accent": false,
+      "prompt": "되돌아가기: 목재 메뉴 패가 레일을 따라 짧게 뒤로 미끄러짐 짙은 목재 버튼, 둥근 황동 핀, 양피지 패널. 짧고 명확하며 현대 전자 클릭과 고역 반짝임 없음. Stylized but physically legible pixel-game sound, warm close microphone, short dry wooden room, gentle high-frequency rolloff, no synth, no modern UI beep, no hiss, no cartoon exaggeration.",
+      "artMaterial": "짙은 목재 버튼, 둥근 황동 핀, 양피지 패널. 짧고 명확하며 현대 전자 클릭과 고역 반짝임 없음.",
+      "prototypeSourceFamily": "ui"
+    },
+    {
+      "id": "sfx-ui-tab",
+      "group": "ui",
+      "name": "탭 전환",
+      "desc": "목재 서랍 레일이 짧게 미끄러짐",
+      "durationSec": 0.2,
+      "bus": "sfx",
+      "gain": -13,
+      "accent": false,
+      "prompt": "탭 전환: 목재 서랍 레일이 짧게 미끄러짐 짙은 목재 버튼, 둥근 황동 핀, 양피지 패널. 짧고 명확하며 현대 전자 클릭과 고역 반짝임 없음. Stylized but physically legible pixel-game sound, warm close microphone, short dry wooden room, gentle high-frequency rolloff, no synth, no modern UI beep, no hiss, no cartoon exaggeration.",
+      "artMaterial": "짙은 목재 버튼, 둥근 황동 핀, 양피지 패널. 짧고 명확하며 현대 전자 클릭과 고역 반짝임 없음.",
+      "prototypeSourceFamily": "ui"
+    },
+    {
+      "id": "sfx-ui-disabled",
+      "group": "ui",
+      "name": "잠금·불가",
+      "desc": "작은 목재 걸쇠가 잠긴 홈에 둥글게 걸림",
+      "durationSec": 0.12,
+      "bus": "sfx",
+      "gain": -17,
+      "accent": false,
+      "prompt": "잠금·불가: 작은 목재 걸쇠가 잠긴 홈에 둥글게 걸림 짙은 목재 버튼, 둥근 황동 핀, 양피지 패널. 짧고 명확하며 현대 전자 클릭과 고역 반짝임 없음. Stylized but physically legible pixel-game sound, warm close microphone, short dry wooden room, gentle high-frequency rolloff, no synth, no modern UI beep, no hiss, no cartoon exaggeration.",
+      "artMaterial": "짙은 목재 버튼, 둥근 황동 핀, 양피지 패널. 짧고 명확하며 현대 전자 클릭과 고역 반짝임 없음.",
+      "prototypeSourceFamily": "lock"
+    },
+    {
+      "id": "sfx-popup-open",
+      "group": "ui",
+      "name": "팝업 열림",
+      "desc": "유리 진열장 뚜껑이 들리며 새는 공기",
+      "durationSec": 0.4,
+      "bus": "sfx",
+      "gain": -13,
+      "accent": false,
+      "prompt": "팝업 열림: 유리 진열장 뚜껑이 들리며 새는 공기 짙은 목재 버튼, 둥근 황동 핀, 양피지 패널. 짧고 명확하며 현대 전자 클릭과 고역 반짝임 없음. Stylized but physically legible pixel-game sound, warm close microphone, short dry wooden room, gentle high-frequency rolloff, no synth, no modern UI beep, no hiss, no cartoon exaggeration.",
+      "artMaterial": "짙은 목재 버튼, 둥근 황동 핀, 양피지 패널. 짧고 명확하며 현대 전자 클릭과 고역 반짝임 없음.",
+      "prototypeSourceFamily": "ui"
+    },
+    {
+      "id": "sfx-popup-close",
+      "group": "ui",
+      "name": "팝업 닫힘",
+      "desc": "유리 뚜껑이 덮이며 나는 낮은 접촉음",
+      "durationSec": 0.3,
+      "bus": "sfx",
+      "gain": -14,
+      "accent": false,
+      "prompt": "팝업 닫힘: 유리 뚜껑이 덮이며 나는 낮은 접촉음 짙은 목재 버튼, 둥근 황동 핀, 양피지 패널. 짧고 명확하며 현대 전자 클릭과 고역 반짝임 없음. Stylized but physically legible pixel-game sound, warm close microphone, short dry wooden room, gentle high-frequency rolloff, no synth, no modern UI beep, no hiss, no cartoon exaggeration.",
+      "artMaterial": "짙은 목재 버튼, 둥근 황동 핀, 양피지 패널. 짧고 명확하며 현대 전자 클릭과 고역 반짝임 없음.",
+      "prototypeSourceFamily": "ui"
+    },
+    {
+      "id": "sfx-modal-confirm",
+      "group": "ui",
+      "name": "확인",
+      "desc": "밀랍 봉인에 도장이 찍힘",
+      "durationSec": 0.35,
+      "bus": "sfx",
+      "gain": -11,
+      "accent": false,
+      "prompt": "확인: 밀랍 봉인에 도장이 찍힘 짙은 목재 버튼, 둥근 황동 핀, 양피지 패널. 짧고 명확하며 현대 전자 클릭과 고역 반짝임 없음. Stylized but physically legible pixel-game sound, warm close microphone, short dry wooden room, gentle high-frequency rolloff, no synth, no modern UI beep, no hiss, no cartoon exaggeration.",
+      "artMaterial": "짙은 목재 버튼, 둥근 황동 핀, 양피지 패널. 짧고 명확하며 현대 전자 클릭과 고역 반짝임 없음.",
+      "prototypeSourceFamily": "ui"
+    },
+    {
+      "id": "sfx-modal-cancel",
+      "group": "ui",
+      "name": "취소",
+      "desc": "종이 한 장이 접힘",
+      "durationSec": 0.25,
+      "bus": "sfx",
+      "gain": -14,
+      "accent": false,
+      "prompt": "취소: 종이 한 장이 접힘 짙은 목재 버튼, 둥근 황동 핀, 양피지 패널. 짧고 명확하며 현대 전자 클릭과 고역 반짝임 없음. Stylized but physically legible pixel-game sound, warm close microphone, short dry wooden room, gentle high-frequency rolloff, no synth, no modern UI beep, no hiss, no cartoon exaggeration.",
+      "artMaterial": "짙은 목재 버튼, 둥근 황동 핀, 양피지 패널. 짧고 명확하며 현대 전자 클릭과 고역 반짝임 없음.",
+      "prototypeSourceFamily": "ui"
+    },
+    {
+      "id": "sfx-toast",
+      "group": "ui",
+      "name": "안내 토스트",
+      "desc": "작은 황동 종 1회, 짧은 감쇠",
+      "durationSec": 0.5,
+      "bus": "sfx",
+      "gain": -13,
+      "accent": false,
+      "boundUiState": "toast-global",
+      "prompt": "안내 토스트: 작은 황동 종 1회, 짧은 감쇠 짙은 목재 버튼, 둥근 황동 핀, 양피지 패널. 짧고 명확하며 현대 전자 클릭과 고역 반짝임 없음. Stylized but physically legible pixel-game sound, warm close microphone, short dry wooden room, gentle high-frequency rolloff, no synth, no modern UI beep, no hiss, no cartoon exaggeration.",
+      "artMaterial": "짙은 목재 버튼, 둥근 황동 핀, 양피지 패널. 짧고 명확하며 현대 전자 클릭과 고역 반짝임 없음.",
+      "prototypeSourceFamily": "ui"
+    },
+    {
+      "id": "sfx-failure",
+      "group": "ui",
+      "name": "행동 실패",
+      "desc": "톱니가 걸려 기어가 헛도는 소리",
+      "durationSec": 0.45,
+      "bus": "sfx",
+      "gain": -11,
+      "accent": false,
+      "boundUiState": "popup-global-failure",
+      "prompt": "행동 실패: 톱니가 걸려 기어가 헛도는 소리 짙은 목재 버튼, 둥근 황동 핀, 양피지 패널. 짧고 명확하며 현대 전자 클릭과 고역 반짝임 없음. Stylized but physically legible pixel-game sound, warm close microphone, short dry wooden room, gentle high-frequency rolloff, no synth, no modern UI beep, no hiss, no cartoon exaggeration.",
+      "artMaterial": "짙은 목재 버튼, 둥근 황동 핀, 양피지 패널. 짧고 명확하며 현대 전자 클릭과 고역 반짝임 없음.",
+      "prototypeSourceFamily": "ui"
+    },
+    {
+      "id": "sfx-coin-gain",
+      "group": "ui",
+      "name": "자금 획득",
+      "desc": "동전 여러 개가 쏟아짐",
+      "durationSec": 0.6,
+      "bus": "sfx",
+      "gain": -12,
+      "accent": false,
+      "prompt": "자금 획득: 동전 여러 개가 쏟아짐 짙은 목재 버튼, 둥근 황동 핀, 양피지 패널. 짧고 명확하며 현대 전자 클릭과 고역 반짝임 없음. Stylized but physically legible pixel-game sound, warm close microphone, short dry wooden room, gentle high-frequency rolloff, no synth, no modern UI beep, no hiss, no cartoon exaggeration.",
+      "artMaterial": "짙은 목재 버튼, 둥근 황동 핀, 양피지 패널. 짧고 명확하며 현대 전자 클릭과 고역 반짝임 없음.",
+      "prototypeSourceFamily": "coin"
+    },
+    {
+      "id": "sfx-coin-spend",
+      "group": "ui",
+      "name": "자금 지출",
+      "desc": "동전을 밀어 건넴",
+      "durationSec": 0.4,
+      "bus": "sfx",
+      "gain": -13,
+      "accent": false,
+      "prompt": "자금 지출: 동전을 밀어 건넴 짙은 목재 버튼, 둥근 황동 핀, 양피지 패널. 짧고 명확하며 현대 전자 클릭과 고역 반짝임 없음. Stylized but physically legible pixel-game sound, warm close microphone, short dry wooden room, gentle high-frequency rolloff, no synth, no modern UI beep, no hiss, no cartoon exaggeration.",
+      "artMaterial": "짙은 목재 버튼, 둥근 황동 핀, 양피지 패널. 짧고 명확하며 현대 전자 클릭과 고역 반짝임 없음.",
+      "prototypeSourceFamily": "coin"
+    },
+    {
+      "id": "sfx-scene-in",
+      "group": "ui",
+      "name": "씬 진입",
+      "desc": "큰 목재 문이 열리고 공간의 낮은 공기가 짧게 바뀜",
+      "durationSec": 0.58,
+      "bus": "sfx",
+      "gain": -15,
+      "accent": false,
+      "prompt": "씬 진입: 큰 목재 문이 열리고 공간의 낮은 공기가 짧게 바뀜 짙은 목재 버튼, 둥근 황동 핀, 양피지 패널. 짧고 명확하며 현대 전자 클릭과 고역 반짝임 없음. Stylized but physically legible pixel-game sound, warm close microphone, short dry wooden room, gentle high-frequency rolloff, no synth, no modern UI beep, no hiss, no cartoon exaggeration.",
+      "artMaterial": "짙은 목재 버튼, 둥근 황동 핀, 양피지 패널. 짧고 명확하며 현대 전자 클릭과 고역 반짝임 없음.",
+      "prototypeSourceFamily": "door"
+    },
+    {
+      "id": "sfx-save",
+      "group": "ui",
+      "name": "저장",
+      "desc": "장부를 덮고 걸쇠를 잠금",
+      "durationSec": 0.7,
+      "bus": "sfx",
+      "gain": -12,
+      "accent": false,
+      "prompt": "저장: 장부를 덮고 걸쇠를 잠금 짙은 목재 버튼, 둥근 황동 핀, 양피지 패널. 짧고 명확하며 현대 전자 클릭과 고역 반짝임 없음. Stylized but physically legible pixel-game sound, warm close microphone, short dry wooden room, gentle high-frequency rolloff, no synth, no modern UI beep, no hiss, no cartoon exaggeration.",
+      "artMaterial": "짙은 목재 버튼, 둥근 황동 핀, 양피지 패널. 짧고 명확하며 현대 전자 클릭과 고역 반짝임 없음.",
+      "prototypeSourceFamily": "paper"
+    },
+    {
+      "id": "sfx-settings-tick",
+      "group": "ui",
+      "name": "설정 조작",
+      "desc": "다이얼 노치 한 칸",
+      "durationSec": 0.06,
+      "bus": "sfx",
+      "gain": -18,
+      "accent": false,
+      "prompt": "설정 조작: 다이얼 노치 한 칸 짙은 목재 버튼, 둥근 황동 핀, 양피지 패널. 짧고 명확하며 현대 전자 클릭과 고역 반짝임 없음. Stylized but physically legible pixel-game sound, warm close microphone, short dry wooden room, gentle high-frequency rolloff, no synth, no modern UI beep, no hiss, no cartoon exaggeration.",
+      "artMaterial": "짙은 목재 버튼, 둥근 황동 핀, 양피지 패널. 짧고 명확하며 현대 전자 클릭과 고역 반짝임 없음.",
+      "prototypeSourceFamily": "mechanical"
+    },
+    {
+      "id": "sfx-title-logo",
+      "group": "entry",
+      "name": "타이틀 로고",
+      "desc": "장부 표지가 열리고 목재 잠금장치와 눌린 황동 문장이 건조하게 맞물림",
+      "durationSec": 1.35,
+      "bus": "sfx",
+      "gain": -14,
+      "accent": true,
+      "prompt": "타이틀 로고: 샹들리에 아래 시계 장치가 세 칸 맞물리고 낮은 황동 종이 울림 여행 가방, 가죽 장부, 항구 지도, 목재 서랍. 따뜻하고 기대감 있는 작은 상승 제스처. Stylized but physically legible pixel-game sound, warm close microphone, short dry wooden room, gentle high-frequency rolloff, no synth, no modern UI beep, no hiss, no cartoon exaggeration.",
+      "artMaterial": "여행 가방, 가죽 장부, 항구 지도, 목재 서랍. 따뜻하고 기대감 있는 작은 상승 제스처.",
+      "prototypeSourceFamily": "wood"
+    },
+    {
+      "id": "sfx-new-run",
+      "group": "entry",
+      "name": "새 여정",
+      "desc": "목재 걸쇠가 열리고 새 장부 한 장이 넘어가는 짧고 담백한 시작음",
+      "durationSec": 0.82,
+      "bus": "sfx",
+      "gain": -11,
+      "accent": false,
+      "prompt": "새 여정: 목재 간판 걸쇠가 열리고 따뜻한 황동 3음이 짧게 상승 여행 가방, 가죽 장부, 항구 지도, 목재 서랍. 따뜻하고 기대감 있는 작은 상승 제스처. Stylized but physically legible pixel-game sound, warm close microphone, short dry wooden room, gentle high-frequency rolloff, no synth, no modern UI beep, no hiss, no cartoon exaggeration.",
+      "artMaterial": "여행 가방, 가죽 장부, 항구 지도, 목재 서랍. 따뜻하고 기대감 있는 작은 상승 제스처.",
+      "prototypeSourceFamily": "wood"
+    },
+    {
+      "id": "sfx-slot-select",
+      "group": "entry",
+      "name": "슬롯 선택",
+      "desc": "카드 인덱스를 손끝으로 톡 침",
+      "durationSec": 0.2,
+      "bus": "sfx",
+      "gain": -14,
+      "accent": false,
+      "prompt": "슬롯 선택: 카드 인덱스를 손끝으로 톡 침 여행 가방, 가죽 장부, 항구 지도, 목재 서랍. 따뜻하고 기대감 있는 작은 상승 제스처. Stylized but physically legible pixel-game sound, warm close microphone, short dry wooden room, gentle high-frequency rolloff, no synth, no modern UI beep, no hiss, no cartoon exaggeration.",
+      "artMaterial": "여행 가방, 가죽 장부, 항구 지도, 목재 서랍. 따뜻하고 기대감 있는 작은 상승 제스처.",
+      "prototypeSourceFamily": "wood"
+    },
+    {
+      "id": "sfx-slot-delete",
+      "group": "entry",
+      "name": "슬롯 삭제",
+      "desc": "종이가 찢어짐",
+      "durationSec": 0.6,
+      "bus": "sfx",
+      "gain": -11,
+      "accent": false,
+      "prompt": "슬롯 삭제: 종이가 찢어짐 여행 가방, 가죽 장부, 항구 지도, 목재 서랍. 따뜻하고 기대감 있는 작은 상승 제스처. Stylized but physically legible pixel-game sound, warm close microphone, short dry wooden room, gentle high-frequency rolloff, no synth, no modern UI beep, no hiss, no cartoon exaggeration.",
+      "artMaterial": "여행 가방, 가죽 장부, 항구 지도, 목재 서랍. 따뜻하고 기대감 있는 작은 상승 제스처.",
+      "prototypeSourceFamily": "wood"
+    },
+    {
+      "id": "sfx-load-complete",
+      "group": "entry",
+      "name": "불러오기 완료",
+      "desc": "장부가 펼쳐지고 걸쇠가 풀림",
+      "durationSec": 0.9,
+      "bus": "sfx",
+      "gain": -12,
+      "accent": false,
+      "prompt": "불러오기 완료: 장부가 펼쳐지고 걸쇠가 풀림 여행 가방, 가죽 장부, 항구 지도, 목재 서랍. 따뜻하고 기대감 있는 작은 상승 제스처. Stylized but physically legible pixel-game sound, warm close microphone, short dry wooden room, gentle high-frequency rolloff, no synth, no modern UI beep, no hiss, no cartoon exaggeration.",
+      "artMaterial": "여행 가방, 가죽 장부, 항구 지도, 목재 서랍. 따뜻하고 기대감 있는 작은 상승 제스처.",
+      "prototypeSourceFamily": "wood"
+    },
+    {
+      "id": "amb-loading-gears",
+      "group": "loading",
+      "name": "여정 생성 앰비언스",
+      "desc": "태엽 장치가 도는 루프",
+      "durationSec": 8.0,
+      "bus": "ambience",
+      "gain": -24,
+      "accent": false,
+      "loop": true,
+      "prompt": "여정 생성 앰비언스: 태엽 장치가 도는 루프 작은 목재 톱니와 황동 캠, 카드와 지도가 정돈되는 수공업적 기계음. 공장 소음 금지. Stylized but physically legible pixel-game sound, warm close microphone, short dry wooden room, gentle high-frequency rolloff, no synth, no modern UI beep, no hiss, no cartoon exaggeration.",
+      "artMaterial": "작은 목재 톱니와 황동 캠, 카드와 지도가 정돈되는 수공업적 기계음. 공장 소음 금지.",
+      "prototypeSourceFamily": "clock"
+    },
+    {
+      "id": "sfx-loading-done",
+      "group": "loading",
+      "name": "생성 완료",
+      "desc": "태엽이 멎고 종이 한 번",
+      "durationSec": 1.0,
+      "bus": "sfx",
+      "gain": -11,
+      "accent": false,
+      "prompt": "생성 완료: 태엽이 멎고 종이 한 번 작은 목재 톱니와 황동 캠, 카드와 지도가 정돈되는 수공업적 기계음. 공장 소음 금지. Stylized but physically legible pixel-game sound, warm close microphone, short dry wooden room, gentle high-frequency rolloff, no synth, no modern UI beep, no hiss, no cartoon exaggeration.",
+      "artMaterial": "작은 목재 톱니와 황동 캠, 카드와 지도가 정돈되는 수공업적 기계음. 공장 소음 금지.",
+      "prototypeSourceFamily": "mechanical"
+    },
+    {
+      "id": "sfx-venue-enter",
+      "group": "city",
+      "name": "거점 진입",
+      "desc": "낮은 목재 문과 펠트 걸쇠가 맞물리는 짧은 입장음. 멜로디 없음.",
+      "durationSec": 0.42,
+      "bus": "sfx",
+      "gain": -15,
+      "accent": false,
+      "variants": {
+        "method": "pitch-shift",
+        "cents": {
+          "scene-office": 0,
+          "scene-tavern": -120,
+          "scene-exchange": 90,
+          "scene-guild": -200,
+          "scene-merchant": 60,
+          "scene-museum": -80
+        }
+      },
+      "prompt": "거점 진입: 도시 건물의 둥근 목재 문고리와 짧은 문 열림 항구의 문, 지도, 마차 바퀴, 낮은 시계종. 밝은 야외 공기와 실내 UI의 따뜻함을 함께 유지. Stylized but physically legible pixel-game sound, warm close microphone, short dry wooden room, gentle high-frequency rolloff, no synth, no modern UI beep, no hiss, no cartoon exaggeration.",
+      "artMaterial": "항구의 문, 지도, 마차 바퀴, 낮은 시계종. 밝은 야외 공기와 실내 UI의 따뜻함을 함께 유지.",
+      "prototypeSourceFamily": "door"
+    },
+    {
+      "id": "sfx-day-advance",
+      "group": "city",
+      "name": "날짜 전환",
+      "desc": "태엽을 한 번 감는 소리. 12일 구조의 기본 박자.",
+      "durationSec": 1.6,
+      "bus": "sfx",
+      "gain": -12,
+      "accent": true,
+      "prompt": "날짜 전환: 태엽을 한 번 감는 소리. 12일 구조의 기본 박자. 항구의 문, 지도, 마차 바퀴, 낮은 시계종. 밝은 야외 공기와 실내 UI의 따뜻함을 함께 유지. Stylized but physically legible pixel-game sound, warm close microphone, short dry wooden room, gentle high-frequency rolloff, no synth, no modern UI beep, no hiss, no cartoon exaggeration.",
+      "artMaterial": "항구의 문, 지도, 마차 바퀴, 낮은 시계종. 밝은 야외 공기와 실내 UI의 따뜻함을 함께 유지.",
+      "prototypeSourceFamily": "mechanical"
+    },
+    {
+      "id": "amb-deadline-tick",
+      "group": "city",
+      "name": "마감 임박 초침",
+      "desc": "초침이 도는 루프. 아주 얕게만 깐다.",
+      "durationSec": 4.0,
+      "bus": "ambience",
+      "gain": -24,
+      "accent": false,
+      "loop": true,
+      "prompt": "마감 임박 초침: 초침이 도는 루프. 아주 얕게만 깐다. 항구의 문, 지도, 마차 바퀴, 낮은 시계종. 밝은 야외 공기와 실내 UI의 따뜻함을 함께 유지. Stylized but physically legible pixel-game sound, warm close microphone, short dry wooden room, gentle high-frequency rolloff, no synth, no modern UI beep, no hiss, no cartoon exaggeration.",
+      "artMaterial": "항구의 문, 지도, 마차 바퀴, 낮은 시계종. 밝은 야외 공기와 실내 UI의 따뜻함을 함께 유지.",
+      "prototypeSourceFamily": "clock"
+    },
+    {
+      "id": "sfx-market-event",
+      "group": "city",
+      "name": "오늘 시장 사건",
+      "desc": "게시판 종이와 작은 장부 기어가 두세 칸 움직이는 비음정 변동 알림",
+      "durationSec": 0.7,
+      "bus": "sfx",
+      "gain": -13,
+      "accent": false,
+      "prompt": "오늘 시장 사건: 게시판에 종이가 붙는 소리 항구의 문, 지도, 마차 바퀴, 낮은 시계종. 밝은 야외 공기와 실내 UI의 따뜻함을 함께 유지. Stylized but physically legible pixel-game sound, warm close microphone, short dry wooden room, gentle high-frequency rolloff, no synth, no modern UI beep, no hiss, no cartoon exaggeration.",
+      "artMaterial": "항구의 문, 지도, 마차 바퀴, 낮은 시계종. 밝은 야외 공기와 실내 UI의 따뜻함을 함께 유지.",
+      "prototypeSourceFamily": "mechanical"
+    },
+    {
+      "id": "sfx-quest-accept",
+      "group": "office",
+      "name": "의뢰 수주",
+      "desc": "도장이 찍히고 종이가 넘어감",
+      "durationSec": 0.6,
+      "bus": "sfx",
+      "gain": -11,
+      "accent": false,
+      "prompt": "의뢰 수주: 도장이 찍히고 종이가 넘어감 두꺼운 감정서, 왁스 도장, 유리 확대경, 작은 캘리퍼. 깨끗하고 학구적인 촉감. Stylized but physically legible pixel-game sound, warm close microphone, short dry wooden room, gentle high-frequency rolloff, no synth, no modern UI beep, no hiss, no cartoon exaggeration.",
+      "artMaterial": "두꺼운 감정서, 왁스 도장, 유리 확대경, 작은 캘리퍼. 깨끗하고 학구적인 촉감.",
+      "prototypeSourceFamily": "paper"
+    },
+    {
+      "id": "sfx-appraise-start",
+      "group": "office",
+      "name": "감정 개시",
+      "desc": "천 위에 렌즈를 조심스럽게 놓고 종이 감정표를 짧게 여는 낮은 소리",
+      "durationSec": 1.0,
+      "bus": "sfx",
+      "gain": -14,
+      "accent": false,
+      "prompt": "감정 개시: 돋보기 렌즈를 유리에 대고 문지름 두꺼운 감정서, 왁스 도장, 유리 확대경, 작은 캘리퍼. 깨끗하고 학구적인 촉감. Stylized but physically legible pixel-game sound, warm close microphone, short dry wooden room, gentle high-frequency rolloff, no synth, no modern UI beep, no hiss, no cartoon exaggeration.",
+      "artMaterial": "두꺼운 감정서, 왁스 도장, 유리 확대경, 작은 캘리퍼. 깨끗하고 학구적인 촉감.",
+      "prototypeSourceFamily": "metal"
+    },
+    {
+      "id": "sfx-appraise-reveal",
+      "group": "office",
+      "name": "감정 결과",
+      "desc": "감정표를 짧게 밀고 낮은 목재 받침에 렌즈를 내려놓음. 결과 감정은 소리로 구분하지 않음.",
+      "durationSec": 0.8,
+      "bus": "sfx",
+      "gain": -14,
+      "accent": false,
+      "boundUiState": "popup-appraisal-result",
+      "invariantNote": "품질을 소리로 누설하지 않는다. 감정 결과 큐는 항상 동일하다.",
+      "prompt": "감정 결과: 렌즈를 내려놓고 짧은 숨. 결과의 좋고 나쁨을 소리로 구분하지 않는다. 두꺼운 감정서, 왁스 도장, 유리 확대경, 작은 캘리퍼. 깨끗하고 학구적인 촉감. Stylized but physically legible pixel-game sound, warm close microphone, short dry wooden room, gentle high-frequency rolloff, no synth, no modern UI beep, no hiss, no cartoon exaggeration.",
+      "artMaterial": "두꺼운 감정서, 왁스 도장, 유리 확대경, 작은 캘리퍼. 깨끗하고 학구적인 촉감.",
+      "prototypeSourceFamily": "metal"
+    },
+    {
+      "id": "sfx-info-buy",
+      "group": "tavern",
+      "name": "정보 구매",
+      "desc": "동전을 건네고 낮게 속삭이는 질감",
+      "durationSec": 0.8,
+      "bus": "sfx",
+      "gain": -12,
+      "accent": false,
+      "prompt": "정보 구매: 동전을 건네고 낮게 속삭이는 질감 가죽 의자, 접힌 쪽지, 나무 탁자, 묵직한 동전, 잔. 호박빛의 은밀함과 낮은 밀도. Stylized but physically legible pixel-game sound, warm close microphone, short dry wooden room, gentle high-frequency rolloff, no synth, no modern UI beep, no hiss, no cartoon exaggeration.",
+      "artMaterial": "가죽 의자, 접힌 쪽지, 나무 탁자, 묵직한 동전, 잔. 호박빛의 은밀함과 낮은 밀도.",
+      "prototypeSourceFamily": "coin"
+    },
+    {
+      "id": "sfx-info-reveal",
+      "group": "tavern",
+      "name": "정보 펼침",
+      "desc": "접힌 종이를 펼침",
+      "durationSec": 0.5,
+      "bus": "sfx",
+      "gain": -13,
+      "accent": false,
+      "boundUiState": "popup-information-result",
+      "prompt": "정보 펼침: 접힌 종이를 펼침 가죽 의자, 접힌 쪽지, 나무 탁자, 묵직한 동전, 잔. 호박빛의 은밀함과 낮은 밀도. Stylized but physically legible pixel-game sound, warm close microphone, short dry wooden room, gentle high-frequency rolloff, no synth, no modern UI beep, no hiss, no cartoon exaggeration.",
+      "artMaterial": "가죽 의자, 접힌 쪽지, 나무 탁자, 묵직한 동전, 잔. 호박빛의 은밀함과 낮은 밀도.",
+      "prototypeSourceFamily": "paper"
+    },
+    {
+      "id": "sfx-sell",
+      "group": "exchange",
+      "name": "즉시 처분",
+      "desc": "주판알을 튕기고 동전을 쓸어담음",
+      "durationSec": 0.9,
+      "bus": "sfx",
+      "gain": -11,
+      "accent": false,
+      "prompt": "즉시 처분: 주판알을 튕기고 동전을 쓸어담음 주판, 저울, 목재 거래 토큰, 무게 있는 동전, 펜촉. 카지노식 코인 샤워 금지. Stylized but physically legible pixel-game sound, warm close microphone, short dry wooden room, gentle high-frequency rolloff, no synth, no modern UI beep, no hiss, no cartoon exaggeration.",
+      "artMaterial": "주판, 저울, 목재 거래 토큰, 무게 있는 동전, 펜촉. 카지노식 코인 샤워 금지.",
+      "prototypeSourceFamily": "coin"
+    },
+    {
+      "id": "sfx-hanbo-complete",
+      "group": "exchange",
+      "name": "족보 성립",
+      "desc": "족보 조각이 맞물린 뒤 눌린 황동 두 음만 남는 절제된 핵심 보상음",
+      "durationSec": 1.4,
+      "bus": "sfx",
+      "gain": -10,
+      "accent": true,
+      "designNote": "§11.4 「지금 팔까 짝이 올 때까지 들고 있을까」가 핵심 판단이므로, 짝이 맞는 순간이 청각적으로 가장 큰 보상이어야 한다.",
+      "prompt": "족보 성립: 유리 조각 여러 점이 제자리에 맞물리고 상승하는 3음. 이 게임에서 가장 중요한 효과음. 주판, 저울, 목재 거래 토큰, 무게 있는 동전, 펜촉. 카지노식 코인 샤워 금지. Stylized but physically legible pixel-game sound, warm close microphone, short dry wooden room, gentle high-frequency rolloff, no synth, no modern UI beep, no hiss, no cartoon exaggeration.",
+      "artMaterial": "주판, 저울, 목재 거래 토큰, 무게 있는 동전, 펜촉. 카지노식 코인 샤워 금지.",
+      "prototypeSourceFamily": "wood"
+    },
+    {
+      "id": "sfx-settlement-open",
+      "group": "exchange",
+      "name": "정산 창",
+      "desc": "무거운 장부가 탁자에 놓임",
+      "durationSec": 1.0,
+      "bus": "sfx",
+      "gain": -11,
+      "accent": false,
+      "prompt": "정산 창: 무거운 장부가 탁자에 놓임 주판, 저울, 목재 거래 토큰, 무게 있는 동전, 펜촉. 카지노식 코인 샤워 금지. Stylized but physically legible pixel-game sound, warm close microphone, short dry wooden room, gentle high-frequency rolloff, no synth, no modern UI beep, no hiss, no cartoon exaggeration.",
+      "artMaterial": "주판, 저울, 목재 거래 토큰, 무게 있는 동전, 펜촉. 카지노식 코인 샤워 금지.",
+      "prototypeSourceFamily": "wood"
+    },
+    {
+      "id": "sfx-loan-take",
+      "group": "guild",
+      "name": "대출 실행",
+      "desc": "금고 문이 열리고 무거운 체인이 풀림",
+      "durationSec": 1.3,
+      "bus": "sfx",
+      "gain": -10,
+      "accent": false,
+      "prompt": "대출 실행: 금고 문이 열리고 무거운 체인이 풀림 계약서, 황동 클립, 금고 레버, 짧은 체인, 왁스 도장. 무겁지만 위협적이지 않음. Stylized but physically legible pixel-game sound, warm close microphone, short dry wooden room, gentle high-frequency rolloff, no synth, no modern UI beep, no hiss, no cartoon exaggeration.",
+      "artMaterial": "계약서, 황동 클립, 금고 레버, 짧은 체인, 왁스 도장. 무겁지만 위협적이지 않음.",
+      "prototypeSourceFamily": "lock"
+    },
+    {
+      "id": "sfx-loan-repay",
+      "group": "guild",
+      "name": "대출 상환",
+      "desc": "체인이 걷히고 걸쇠가 열림",
+      "durationSec": 1.0,
+      "bus": "sfx",
+      "gain": -11,
+      "accent": false,
+      "prompt": "대출 상환: 체인이 걷히고 걸쇠가 열림 계약서, 황동 클립, 금고 레버, 짧은 체인, 왁스 도장. 무겁지만 위협적이지 않음. Stylized but physically legible pixel-game sound, warm close microphone, short dry wooden room, gentle high-frequency rolloff, no synth, no modern UI beep, no hiss, no cartoon exaggeration.",
+      "artMaterial": "계약서, 황동 클립, 금고 레버, 짧은 체인, 왁스 도장. 무겁지만 위협적이지 않음.",
+      "prototypeSourceFamily": "lock"
+    },
+    {
+      "id": "sfx-loan-overdue",
+      "group": "guild",
+      "name": "연체·담보 압류",
+      "desc": "낮은 종 한 번과 자물쇠가 채워지는 소리",
+      "durationSec": 1.5,
+      "bus": "sfx",
+      "gain": -11,
+      "accent": true,
+      "boundUiState": "popup-loan-overdue",
+      "prompt": "연체·담보 압류: 낮은 종 한 번과 자물쇠가 채워지는 소리 계약서, 황동 클립, 금고 레버, 짧은 체인, 왁스 도장. 무겁지만 위협적이지 않음. Stylized but physically legible pixel-game sound, warm close microphone, short dry wooden room, gentle high-frequency rolloff, no synth, no modern UI beep, no hiss, no cartoon exaggeration.",
+      "artMaterial": "계약서, 황동 클립, 금고 레버, 짧은 체인, 왁스 도장. 무겁지만 위협적이지 않음.",
+      "prototypeSourceFamily": "lock"
+    },
+    {
+      "id": "sfx-upgrade",
+      "group": "merchant",
+      "name": "상회 승급",
+      "desc": "작업 기어가 체결되고 눌린 황동 두 음만 남는 짧은 성장 보상음",
+      "durationSec": 2.0,
+      "bus": "sfx",
+      "gain": -9,
+      "accent": true,
+      "boundUiState": "popup-upgrade-result",
+      "prompt": "상회 승급: 황동 명판이 벽에 부착되고 상승 아르페지오 펠트 진열장, 목재 서랍, 작은 황동 기어, 도자기와 유리. 성장의 정돈된 만족감. Stylized but physically legible pixel-game sound, warm close microphone, short dry wooden room, gentle high-frequency rolloff, no synth, no modern UI beep, no hiss, no cartoon exaggeration.",
+      "artMaterial": "펠트 진열장, 목재 서랍, 작은 황동 기어, 도자기와 유리. 성장의 정돈된 만족감.",
+      "prototypeSourceFamily": "mechanical"
+    },
+    {
+      "id": "sfx-bid-place",
+      "group": "auction",
+      "name": "내 입찰",
+      "desc": "목재 입찰패가 올라가고 황동 호가 래칫이 두 단계 상승",
+      "durationSec": 0.48,
+      "bus": "sfx",
+      "gain": -9,
+      "accent": false,
+      "prompt": "Player bid: a wooden auction paddle lifts, followed by two rising brass ratchet steps; compact, dry and decisive.",
+      "artMaterial": "목재 입찰패, 황동 호가 계수기, 가죽 의자, 장부 펜, 경매봉. 건조하고 절제된 살롱 공간.",
+      "prototypeSourceFamily": "wood+mechanical+muted-brass"
+    },
+    {
+      "id": "sfx-bid-bot",
+      "group": "auction",
+      "name": "봇 입찰",
+      "desc": "같은 계열이지만 더 둔하고 멀리서 나는 톤",
+      "durationSec": 0.35,
+      "bus": "sfx",
+      "gain": -14,
+      "accent": false,
+      "prompt": "봇 입찰: 같은 계열이지만 더 둔하고 멀리서 나는 톤 목재 입찰패, 황동 호가 계수기, 가죽 의자, 장부 펜, 경매봉. 건조하고 절제된 살롱 공간. Stylized but physically legible pixel-game sound, warm close microphone, short dry wooden room, gentle high-frequency rolloff, no synth, no modern UI beep, no hiss, no cartoon exaggeration.",
+      "artMaterial": "목재 입찰패, 황동 호가 계수기, 가죽 의자, 장부 펜, 경매봉. 건조하고 절제된 살롱 공간.",
+      "prototypeSourceFamily": "wood"
+    },
+    {
+      "id": "sfx-outbid",
+      "group": "auction",
+      "name": "상회당함",
+      "desc": "짧은 긴장 스팅. 콘트라베이스 반음 상행 2음.",
+      "durationSec": 0.5,
+      "bus": "sfx",
+      "gain": -12,
+      "accent": false,
+      "prompt": "상회당함: 짧은 긴장 스팅. 콘트라베이스 반음 상행 2음. 목재 입찰패, 황동 호가 계수기, 가죽 의자, 장부 펜, 경매봉. 건조하고 절제된 살롱 공간. Stylized but physically legible pixel-game sound, warm close microphone, short dry wooden room, gentle high-frequency rolloff, no synth, no modern UI beep, no hiss, no cartoon exaggeration.",
+      "artMaterial": "목재 입찰패, 황동 호가 계수기, 가죽 의자, 장부 펜, 경매봉. 건조하고 절제된 살롱 공간.",
+      "prototypeSourceFamily": "wood"
+    },
+    {
+      "id": "sfx-pass",
+      "group": "auction",
+      "name": "물러나기",
+      "desc": "천 덮인 입찰패가 아래로 미끄러져 받침에 조용히 눕는 소리",
+      "durationSec": 0.7,
+      "bus": "sfx",
+      "gain": -12,
+      "accent": false,
+      "prompt": "Pass: a felt-covered paddle slides downward, then rests softly on a wooden stand; no click, no success tone.",
+      "artMaterial": "목재 입찰패, 황동 호가 계수기, 가죽 의자, 장부 펜, 경매봉. 건조하고 절제된 살롱 공간.",
+      "prototypeSourceFamily": "cloth+low-wood"
+    },
+    {
+      "id": "sfx-gavel",
+      "group": "auction",
+      "name": "낙찰 망치",
+      "desc": "간격이 분명한 목재 망치 3타. 마지막 타만 짧은 실내 잔향",
+      "durationSec": 1.45,
+      "bus": "sfx",
+      "gain": -6,
+      "accent": true,
+      "boundUiState": "popup-lot-result",
+      "prompt": "Auction sold: three clearly spaced wooden gavel strikes, with a short dry room tail only on the final strike.",
+      "artMaterial": "목재 입찰패, 황동 호가 계수기, 가죽 의자, 장부 펜, 경매봉. 건조하고 절제된 살롱 공간.",
+      "prototypeSourceFamily": "gavel+wood-room"
+    },
+    {
+      "id": "sfx-lot-next",
+      "group": "auction",
+      "name": "다음 출품",
+      "desc": "덮개천이 걷히고 받침대가 돌아감",
+      "durationSec": 0.5,
+      "bus": "sfx",
+      "gain": -13,
+      "accent": false,
+      "prompt": "다음 출품: 덮개천이 걷히고 받침대가 돌아감 목재 입찰패, 황동 호가 계수기, 가죽 의자, 장부 펜, 경매봉. 건조하고 절제된 살롱 공간. Stylized but physically legible pixel-game sound, warm close microphone, short dry wooden room, gentle high-frequency rolloff, no synth, no modern UI beep, no hiss, no cartoon exaggeration.",
+      "artMaterial": "목재 입찰패, 황동 호가 계수기, 가죽 의자, 장부 펜, 경매봉. 건조하고 절제된 살롱 공간.",
+      "prototypeSourceFamily": "wood"
+    },
+    {
+      "id": "amb-auction-crowd",
+      "group": "auction",
+      "name": "경매장 군중",
+      "desc": "낮게 웅성거리는 실내 군중. 말소리는 알아들을 수 없어야 한다.",
+      "durationSec": 12.0,
+      "bus": "ambience",
+      "gain": -22,
+      "accent": false,
+      "loop": true,
+      "prompt": "경매장 군중: 낮게 웅성거리는 실내 군중. 말소리는 알아들을 수 없어야 한다. 목재 입찰패, 황동 호가 계수기, 가죽 의자, 장부 펜, 경매봉. 건조하고 절제된 살롱 공간. Stylized but physically legible pixel-game sound, warm close microphone, short dry wooden room, gentle high-frequency rolloff, no synth, no modern UI beep, no hiss, no cartoon exaggeration.",
+      "artMaterial": "목재 입찰패, 황동 호가 계수기, 가죽 의자, 장부 펜, 경매봉. 건조하고 절제된 살롱 공간.",
+      "prototypeSourceFamily": "wood"
+    },
+    {
+      "id": "sfx-summary-open",
+      "group": "summary",
+      "name": "결산 장부 펼침",
+      "desc": "두꺼운 장부가 펼쳐짐",
+      "durationSec": 0.9,
+      "bus": "sfx",
+      "gain": -12,
+      "accent": false,
+      "prompt": "결산 장부 펼침: 두꺼운 장부가 펼쳐짐 넓은 양피지 장부, 연필, 잉크, 금속 탭, 저울. 숫자 판독을 방해하지 않는 짧은 피드백. Stylized but physically legible pixel-game sound, warm close microphone, short dry wooden room, gentle high-frequency rolloff, no synth, no modern UI beep, no hiss, no cartoon exaggeration.",
+      "artMaterial": "넓은 양피지 장부, 연필, 잉크, 금속 탭, 저울. 숫자 판독을 방해하지 않는 짧은 피드백.",
+      "prototypeSourceFamily": "paper"
+    },
+    {
+      "id": "sfx-ledger-line",
+      "group": "summary",
+      "name": "항목 기입",
+      "desc": "펜이 한 줄을 긋는 짧은 소리. 항목 수만큼 연속 재생.",
+      "durationSec": 0.15,
+      "bus": "sfx",
+      "gain": -16,
+      "accent": false,
+      "prompt": "항목 기입: 펜이 한 줄을 긋는 짧은 소리. 항목 수만큼 연속 재생. 넓은 양피지 장부, 연필, 잉크, 금속 탭, 저울. 숫자 판독을 방해하지 않는 짧은 피드백. Stylized but physically legible pixel-game sound, warm close microphone, short dry wooden room, gentle high-frequency rolloff, no synth, no modern UI beep, no hiss, no cartoon exaggeration.",
+      "artMaterial": "넓은 양피지 장부, 연필, 잉크, 금속 탭, 저울. 숫자 판독을 방해하지 않는 짧은 피드백.",
+      "prototypeSourceFamily": "paper"
+    },
+    {
+      "id": "sfx-profit",
+      "group": "summary",
+      "name": "흑자 마감",
+      "desc": "동전이 저울 한쪽으로 기울며 안착",
+      "durationSec": 1.0,
+      "bus": "sfx",
+      "gain": -11,
+      "accent": false,
+      "prompt": "흑자 마감: 동전이 저울 한쪽으로 기울며 안착 넓은 양피지 장부, 연필, 잉크, 금속 탭, 저울. 숫자 판독을 방해하지 않는 짧은 피드백. Stylized but physically legible pixel-game sound, warm close microphone, short dry wooden room, gentle high-frequency rolloff, no synth, no modern UI beep, no hiss, no cartoon exaggeration.",
+      "artMaterial": "넓은 양피지 장부, 연필, 잉크, 금속 탭, 저울. 숫자 판독을 방해하지 않는 짧은 피드백.",
+      "prototypeSourceFamily": "wood"
+    },
+    {
+      "id": "sfx-loss",
+      "group": "summary",
+      "name": "적자 마감",
+      "desc": "저울이 반대로 기울고 낮게 삐걱임",
+      "durationSec": 1.0,
+      "bus": "sfx",
+      "gain": -11,
+      "accent": false,
+      "prompt": "적자 마감: 저울이 반대로 기울고 낮게 삐걱임 넓은 양피지 장부, 연필, 잉크, 금속 탭, 저울. 숫자 판독을 방해하지 않는 짧은 피드백. Stylized but physically legible pixel-game sound, warm close microphone, short dry wooden room, gentle high-frequency rolloff, no synth, no modern UI beep, no hiss, no cartoon exaggeration.",
+      "artMaterial": "넓은 양피지 장부, 연필, 잉크, 금속 탭, 저울. 숫자 판독을 방해하지 않는 짧은 피드백.",
+      "prototypeSourceFamily": "wood"
+    },
+    {
+      "id": "sfx-relic-reveal",
+      "group": "relic",
+      "name": "유물 공개",
+      "desc": "덮개천이 벗겨지고 낮은 울림이 퍼짐",
+      "durationSec": 1.8,
+      "bus": "sfx",
+      "gain": -10,
+      "accent": true,
+      "prompt": "유물 공개: 덮개천이 벗겨지고 낮은 울림이 퍼짐 벨벳, 무거운 입찰패, 커튼 링, 유리 진열, 낮은 홀 종. 금빛 격식은 크되 판타지 폭발음 금지. Stylized but physically legible pixel-game sound, warm close microphone, short dry wooden room, gentle high-frequency rolloff, no synth, no modern UI beep, no hiss, no cartoon exaggeration.",
+      "artMaterial": "벨벳, 무거운 입찰패, 커튼 링, 유리 진열, 낮은 홀 종. 금빛 격식은 크되 판타지 폭발음 금지.",
+      "prototypeSourceFamily": "metal"
+    },
+    {
+      "id": "sfx-relic-bid",
+      "group": "relic",
+      "name": "유물 입찰",
+      "desc": "일반 입찰보다 무겁고 잔향이 김",
+      "durationSec": 0.5,
+      "bus": "sfx",
+      "gain": -9,
+      "accent": false,
+      "prompt": "유물 입찰: 일반 입찰보다 무겁고 잔향이 김 벨벳, 무거운 입찰패, 커튼 링, 유리 진열, 낮은 홀 종. 금빛 격식은 크되 판타지 폭발음 금지. Stylized but physically legible pixel-game sound, warm close microphone, short dry wooden room, gentle high-frequency rolloff, no synth, no modern UI beep, no hiss, no cartoon exaggeration.",
+      "artMaterial": "벨벳, 무거운 입찰패, 커튼 링, 유리 진열, 낮은 홀 종. 금빛 격식은 크되 판타지 폭발음 금지.",
+      "prototypeSourceFamily": "metal"
+    },
+    {
+      "id": "sfx-relic-gavel",
+      "group": "relic",
+      "name": "유물 낙찰 망치",
+      "desc": "무거운 목재 망치 3타. 긴 홀 잔향 대신 벨벳 공간감만 짧게 남는다.",
+      "durationSec": 2.4,
+      "bus": "sfx",
+      "gain": -8,
+      "accent": true,
+      "prompt": "유물 낙찰 망치: 망치 3타. 홀 잔향이 길게 남는다. 벨벳, 무거운 입찰패, 커튼 링, 유리 진열, 낮은 홀 종. 금빛 격식은 크되 판타지 폭발음 금지. Stylized but physically legible pixel-game sound, warm close microphone, short dry wooden room, gentle high-frequency rolloff, no synth, no modern UI beep, no hiss, no cartoon exaggeration.",
+      "artMaterial": "벨벳, 무거운 입찰패, 커튼 링, 유리 진열, 낮은 홀 종. 금빛 격식은 크되 판타지 폭발음 금지.",
+      "prototypeSourceFamily": "gavel"
+    },
+    {
+      "id": "sfx-relic-acquire",
+      "group": "relic",
+      "name": "유물 획득",
+      "desc": "목재 봉인이 채워지고 낮은 봉인 종 두 음과 벨벳 마찰만 드물게 남음",
+      "durationSec": 2.6,
+      "bus": "sfx",
+      "gain": -9,
+      "accent": true,
+      "prompt": "유물 획득: 봉인이 채워지고 워드리스 합창이 낮게 한 번 벨벳, 무거운 입찰패, 커튼 링, 유리 진열, 낮은 홀 종. 금빛 격식은 크되 판타지 폭발음 금지. Stylized but physically legible pixel-game sound, warm close microphone, short dry wooden room, gentle high-frequency rolloff, no synth, no modern UI beep, no hiss, no cartoon exaggeration.",
+      "artMaterial": "벨벳, 무거운 입찰패, 커튼 링, 유리 진열, 낮은 홀 종. 금빛 격식은 크되 판타지 폭발음 금지.",
+      "prototypeSourceFamily": "metal"
+    },
+    {
+      "id": "sfx-result-success",
+      "group": "result",
+      "name": "여정 성공",
+      "desc": "장부 표지를 덮고 성공 봉인을 한 번 찍는 비멜로디 결과음",
+      "durationSec": 2.4,
+      "bus": "sfx",
+      "gain": -8,
+      "accent": true,
+      "prompt": "여정 성공: 태엽이 끝까지 감기고 종이 세 번 장부를 덮는 목재·종이·작은 종. 성공과 실패 모두 과장하지 않고 여정의 무게를 존중. Stylized but physically legible pixel-game sound, warm close microphone, short dry wooden room, gentle high-frequency rolloff, no synth, no modern UI beep, no hiss, no cartoon exaggeration.",
+      "artMaterial": "장부를 덮는 목재·종이·작은 종. 성공과 실패 모두 과장하지 않고 여정의 무게를 존중.",
+      "prototypeSourceFamily": "paper"
+    },
+    {
+      "id": "sfx-result-bankruptcy",
+      "group": "result",
+      "name": "파산",
+      "desc": "태엽이 풀리다 멈춘다. 마지막에 스프링이 늘어지는 소리.",
+      "durationSec": 2.8,
+      "bus": "sfx",
+      "gain": -7,
+      "accent": true,
+      "boundUiState": "state-result-bankruptcy",
+      "prompt": "파산: 태엽이 풀리다 멈춘다. 마지막에 스프링이 늘어지는 소리. 장부를 덮는 목재·종이·작은 종. 성공과 실패 모두 과장하지 않고 여정의 무게를 존중. Stylized but physically legible pixel-game sound, warm close microphone, short dry wooden room, gentle high-frequency rolloff, no synth, no modern UI beep, no hiss, no cartoon exaggeration.",
+      "artMaterial": "장부를 덮는 목재·종이·작은 종. 성공과 실패 모두 과장하지 않고 여정의 무게를 존중.",
+      "prototypeSourceFamily": "paper"
+    },
+    {
+      "id": "sfx-campaign-complete",
+      "group": "result",
+      "name": "완전한 결말",
+      "desc": "큰 장부가 정리되고 마지막 봉인과 서명이 차분히 남는 완결음",
+      "durationSec": 3.2,
+      "bus": "sfx",
+      "gain": -8,
+      "accent": true,
+      "boundUiState": "popup-campaign-complete",
+      "prompt": "완전한 결말: 여러 태엽이 동시에 맞물려 돌기 시작함 장부를 덮는 목재·종이·작은 종. 성공과 실패 모두 과장하지 않고 여정의 무게를 존중. Stylized but physically legible pixel-game sound, warm close microphone, short dry wooden room, gentle high-frequency rolloff, no synth, no modern UI beep, no hiss, no cartoon exaggeration.",
+      "artMaterial": "장부를 덮는 목재·종이·작은 종. 성공과 실패 모두 과장하지 않고 여정의 무게를 존중.",
+      "prototypeSourceFamily": "wood"
+    },
+    {
+      "id": "sfx-museum-inspect",
+      "group": "meta",
+      "name": "유물 살펴보기",
+      "desc": "유리 핑 대신 진열대의 눌린 황동 걸쇠와 목재 받침이 짧게 반응",
+      "durationSec": 0.6,
+      "bus": "sfx",
+      "gain": -14,
+      "accent": false,
+      "boundUiState": "popup-relic-detail",
+      "prompt": "유물 살펴보기: 유리 진열장에 손이 닿음 유리 전시문, 펠트 받침, 작은 갤러리 조명 스위치. 맑지만 마법 반짝임처럼 들리지 않음. Stylized but physically legible pixel-game sound, warm close microphone, short dry wooden room, gentle high-frequency rolloff, no synth, no modern UI beep, no hiss, no cartoon exaggeration.",
+      "artMaterial": "유리 전시문, 펠트 받침, 작은 갤러리 조명 스위치. 맑지만 마법 반짝임처럼 들리지 않음.",
+      "prototypeSourceFamily": "wood"
+    },
+    {
+      "id": "sfx-ui-toggle-on",
+      "group": "ui",
+      "name": "토글 켜짐",
+      "desc": "작은 황동 접점이 맞물림",
+      "durationSec": 0.14,
+      "bus": "sfx",
+      "gain": -14,
+      "accent": false,
+      "prompt": "토글 켜짐: 작은 황동 접점이 맞물림 짙은 목재 버튼, 둥근 황동 핀, 양피지 패널. 짧고 명확하며 현대 전자 클릭과 고역 반짝임 없음. Stylized but physically legible pixel-game sound, warm close microphone, short dry wooden room, gentle high-frequency rolloff, no synth, no modern UI beep, no hiss, no cartoon exaggeration.",
+      "artMaterial": "짙은 목재 버튼, 둥근 황동 핀, 양피지 패널. 짧고 명확하며 현대 전자 클릭과 고역 반짝임 없음.",
+      "prototypeSourceFamily": "mechanical"
+    },
+    {
+      "id": "sfx-ui-toggle-off",
+      "group": "ui",
+      "name": "토글 꺼짐",
+      "desc": "황동 접점이 풀리며 낮게 돌아옴",
+      "durationSec": 0.15,
+      "bus": "sfx",
+      "gain": -15,
+      "accent": false,
+      "prompt": "토글 꺼짐: 황동 접점이 풀리며 낮게 돌아옴 짙은 목재 버튼, 둥근 황동 핀, 양피지 패널. 짧고 명확하며 현대 전자 클릭과 고역 반짝임 없음. Stylized but physically legible pixel-game sound, warm close microphone, short dry wooden room, gentle high-frequency rolloff, no synth, no modern UI beep, no hiss, no cartoon exaggeration.",
+      "artMaterial": "짙은 목재 버튼, 둥근 황동 핀, 양피지 패널. 짧고 명확하며 현대 전자 클릭과 고역 반짝임 없음.",
+      "prototypeSourceFamily": "mechanical"
+    },
+    {
+      "id": "sfx-ui-focus",
+      "group": "ui",
+      "name": "입력 포커스",
+      "desc": "연필이 장부 위에 놓임",
+      "durationSec": 0.12,
+      "bus": "sfx",
+      "gain": -17,
+      "accent": false,
+      "prompt": "입력 포커스: 연필이 장부 위에 놓임 짙은 목재 버튼, 둥근 황동 핀, 양피지 패널. 짧고 명확하며 현대 전자 클릭과 고역 반짝임 없음. Stylized but physically legible pixel-game sound, warm close microphone, short dry wooden room, gentle high-frequency rolloff, no synth, no modern UI beep, no hiss, no cartoon exaggeration.",
+      "artMaterial": "짙은 목재 버튼, 둥근 황동 핀, 양피지 패널. 짧고 명확하며 현대 전자 클릭과 고역 반짝임 없음.",
+      "prototypeSourceFamily": "ui"
+    },
+    {
+      "id": "sfx-ui-number-step",
+      "group": "ui",
+      "name": "숫자 증감",
+      "desc": "소형 계수기 한 칸 이동",
+      "durationSec": 0.09,
+      "bus": "sfx",
+      "gain": -16,
+      "accent": false,
+      "prompt": "숫자 증감: 소형 계수기 한 칸 이동 짙은 목재 버튼, 둥근 황동 핀, 양피지 패널. 짧고 명확하며 현대 전자 클릭과 고역 반짝임 없음. Stylized but physically legible pixel-game sound, warm close microphone, short dry wooden room, gentle high-frequency rolloff, no synth, no modern UI beep, no hiss, no cartoon exaggeration.",
+      "artMaterial": "짙은 목재 버튼, 둥근 황동 핀, 양피지 패널. 짧고 명확하며 현대 전자 클릭과 고역 반짝임 없음.",
+      "prototypeSourceFamily": "mechanical"
+    },
+    {
+      "id": "sfx-page-turn",
+      "group": "ui",
+      "name": "페이지 넘김",
+      "desc": "두꺼운 장부 한 장 넘김",
+      "durationSec": 0.34,
+      "bus": "sfx",
+      "gain": -15,
+      "accent": false,
+      "prompt": "페이지 넘김: 두꺼운 장부 한 장 넘김 짙은 목재 버튼, 둥근 황동 핀, 양피지 패널. 짧고 명확하며 현대 전자 클릭과 고역 반짝임 없음. Stylized but physically legible pixel-game sound, warm close microphone, short dry wooden room, gentle high-frequency rolloff, no synth, no modern UI beep, no hiss, no cartoon exaggeration.",
+      "artMaterial": "짙은 목재 버튼, 둥근 황동 핀, 양피지 패널. 짧고 명확하며 현대 전자 클릭과 고역 반짝임 없음.",
+      "prototypeSourceFamily": "paper"
+    },
+    {
+      "id": "sfx-tooltip-open",
+      "group": "ui",
+      "name": "도움말 펼침",
+      "desc": "작은 종이 탭이 빠져나옴",
+      "durationSec": 0.18,
+      "bus": "sfx",
+      "gain": -18,
+      "accent": false,
+      "prompt": "도움말 펼침: 작은 종이 탭이 빠져나옴 짙은 목재 버튼, 둥근 황동 핀, 양피지 패널. 짧고 명확하며 현대 전자 클릭과 고역 반짝임 없음. Stylized but physically legible pixel-game sound, warm close microphone, short dry wooden room, gentle high-frequency rolloff, no synth, no modern UI beep, no hiss, no cartoon exaggeration.",
+      "artMaterial": "짙은 목재 버튼, 둥근 황동 핀, 양피지 패널. 짧고 명확하며 현대 전자 클릭과 고역 반짝임 없음.",
+      "prototypeSourceFamily": "ui"
+    },
+    {
+      "id": "amb-city-harbor",
+      "group": "city",
+      "name": "도시 항구 공기",
+      "desc": "먼 항구·바람·수레가 섞인 낮은 도시 루프",
+      "durationSec": 18.0,
+      "bus": "ambience",
+      "gain": -27,
+      "accent": false,
+      "loop": true,
+      "prompt": "도시 항구 공기: 먼 항구·바람·수레가 섞인 낮은 도시 루프 항구의 문, 지도, 마차 바퀴, 낮은 시계종. 밝은 야외 공기와 실내 UI의 따뜻함을 함께 유지. Stylized but physically legible pixel-game sound, warm close microphone, short dry wooden room, gentle high-frequency rolloff, no synth, no modern UI beep, no hiss, no cartoon exaggeration.",
+      "artMaterial": "항구의 문, 지도, 마차 바퀴, 낮은 시계종. 밝은 야외 공기와 실내 UI의 따뜻함을 함께 유지.",
+      "prototypeSourceFamily": "wood"
+    },
+    {
+      "id": "amb-office-paper",
+      "group": "office",
+      "name": "의뢰소 실내",
+      "desc": "종이·깃펜·작은 벽시계의 실내 루프",
+      "durationSec": 16.0,
+      "bus": "ambience",
+      "gain": -29,
+      "accent": false,
+      "loop": true,
+      "prompt": "의뢰소 실내: 종이·깃펜·작은 벽시계의 실내 루프 두꺼운 감정서, 왁스 도장, 유리 확대경, 작은 캘리퍼. 깨끗하고 학구적인 촉감. Stylized but physically legible pixel-game sound, warm close microphone, short dry wooden room, gentle high-frequency rolloff, no synth, no modern UI beep, no hiss, no cartoon exaggeration.",
+      "artMaterial": "두꺼운 감정서, 왁스 도장, 유리 확대경, 작은 캘리퍼. 깨끗하고 학구적인 촉감.",
+      "prototypeSourceFamily": "paper"
+    },
+    {
+      "id": "amb-tavern-hearth",
+      "group": "tavern",
+      "name": "술집 화로",
+      "desc": "벽난로·잔·알아들을 수 없는 낮은 웅성거림",
+      "durationSec": 18.0,
+      "bus": "ambience",
+      "gain": -27,
+      "accent": false,
+      "loop": true,
+      "prompt": "술집 화로: 벽난로·잔·알아들을 수 없는 낮은 웅성거림 가죽 의자, 접힌 쪽지, 나무 탁자, 묵직한 동전, 잔. 호박빛의 은밀함과 낮은 밀도. Stylized but physically legible pixel-game sound, warm close microphone, short dry wooden room, gentle high-frequency rolloff, no synth, no modern UI beep, no hiss, no cartoon exaggeration.",
+      "artMaterial": "가죽 의자, 접힌 쪽지, 나무 탁자, 묵직한 동전, 잔. 호박빛의 은밀함과 낮은 밀도.",
+      "prototypeSourceFamily": "ui"
+    },
+    {
+      "id": "amb-exchange-floor",
+      "group": "exchange",
+      "name": "거래소 장부실",
+      "desc": "펜·주판·저울이 드문드문 들리는 루프",
+      "durationSec": 18.0,
+      "bus": "ambience",
+      "gain": -29,
+      "accent": false,
+      "loop": true,
+      "prompt": "거래소 장부실: 펜·주판·저울이 드문드문 들리는 루프 주판, 저울, 목재 거래 토큰, 무게 있는 동전, 펜촉. 카지노식 코인 샤워 금지. Stylized but physically legible pixel-game sound, warm close microphone, short dry wooden room, gentle high-frequency rolloff, no synth, no modern UI beep, no hiss, no cartoon exaggeration.",
+      "artMaterial": "주판, 저울, 목재 거래 토큰, 무게 있는 동전, 펜촉. 카지노식 코인 샤워 금지.",
+      "prototypeSourceFamily": "wood"
+    },
+    {
+      "id": "amb-guild-vault",
+      "group": "guild",
+      "name": "조합 금고실",
+      "desc": "돌방 공기·체인·멀리서 잠금장치가 움직이는 루프",
+      "durationSec": 20.0,
+      "bus": "ambience",
+      "gain": -30,
+      "accent": false,
+      "loop": true,
+      "prompt": "조합 금고실: 돌방 공기·체인·멀리서 잠금장치가 움직이는 루프 계약서, 황동 클립, 금고 레버, 짧은 체인, 왁스 도장. 무겁지만 위협적이지 않음. Stylized but physically legible pixel-game sound, warm close microphone, short dry wooden room, gentle high-frequency rolloff, no synth, no modern UI beep, no hiss, no cartoon exaggeration.",
+      "artMaterial": "계약서, 황동 클립, 금고 레버, 짧은 체인, 왁스 도장. 무겁지만 위협적이지 않음.",
+      "prototypeSourceFamily": "mechanical"
+    },
+    {
+      "id": "amb-merchant-workshop",
+      "group": "merchant",
+      "name": "상회 작업실",
+      "desc": "목재 작업대와 저속 톱니의 루프",
+      "durationSec": 18.0,
+      "bus": "ambience",
+      "gain": -28,
+      "accent": false,
+      "loop": true,
+      "prompt": "상회 작업실: 목재 작업대와 저속 톱니의 루프 펠트 진열장, 목재 서랍, 작은 황동 기어, 도자기와 유리. 성장의 정돈된 만족감. Stylized but physically legible pixel-game sound, warm close microphone, short dry wooden room, gentle high-frequency rolloff, no synth, no modern UI beep, no hiss, no cartoon exaggeration.",
+      "artMaterial": "펠트 진열장, 목재 서랍, 작은 황동 기어, 도자기와 유리. 성장의 정돈된 만족감.",
+      "prototypeSourceFamily": "mechanical"
+    },
+    {
+      "id": "amb-relic-hall",
+      "group": "relic",
+      "name": "유물 경매 홀",
+      "desc": "큰 홀의 공기와 옷감·의자 움직임",
+      "durationSec": 20.0,
+      "bus": "ambience",
+      "gain": -29,
+      "accent": false,
+      "loop": true,
+      "prompt": "유물 경매 홀: 큰 홀의 공기와 옷감·의자 움직임 벨벳, 무거운 입찰패, 커튼 링, 유리 진열, 낮은 홀 종. 금빛 격식은 크되 판타지 폭발음 금지. Stylized but physically legible pixel-game sound, warm close microphone, short dry wooden room, gentle high-frequency rolloff, no synth, no modern UI beep, no hiss, no cartoon exaggeration.",
+      "artMaterial": "벨벳, 무거운 입찰패, 커튼 링, 유리 진열, 낮은 홀 종. 금빛 격식은 크되 판타지 폭발음 금지.",
+      "prototypeSourceFamily": "metal"
+    },
+    {
+      "id": "amb-museum-room",
+      "group": "meta",
+      "name": "유물 전시관 공기",
+      "desc": "유리 진열장과 조용한 목재 전시실",
+      "durationSec": 22.0,
+      "bus": "ambience",
+      "gain": -31,
+      "accent": false,
+      "loop": true,
+      "prompt": "유물 전시관 공기: 유리 진열장과 조용한 목재 전시실 유리 전시문, 펠트 받침, 작은 갤러리 조명 스위치. 맑지만 마법 반짝임처럼 들리지 않음. Stylized but physically legible pixel-game sound, warm close microphone, short dry wooden room, gentle high-frequency rolloff, no synth, no modern UI beep, no hiss, no cartoon exaggeration.",
+      "artMaterial": "유리 전시문, 펠트 받침, 작은 갤러리 조명 스위치. 맑지만 마법 반짝임처럼 들리지 않음.",
+      "prototypeSourceFamily": "wood"
+    },
+    {
+      "id": "sfx-city-map-open",
+      "group": "city",
+      "name": "도시 지도 펼침",
+      "desc": "큰 양피지 지도를 테이블에 펼침",
+      "durationSec": 0.55,
+      "bus": "sfx",
+      "gain": -13,
+      "accent": false,
+      "prompt": "도시 지도 펼침: 큰 양피지 지도를 테이블에 펼침 항구의 문, 지도, 마차 바퀴, 낮은 시계종. 밝은 야외 공기와 실내 UI의 따뜻함을 함께 유지. Stylized but physically legible pixel-game sound, warm close microphone, short dry wooden room, gentle high-frequency rolloff, no synth, no modern UI beep, no hiss, no cartoon exaggeration.",
+      "artMaterial": "항구의 문, 지도, 마차 바퀴, 낮은 시계종. 밝은 야외 공기와 실내 UI의 따뜻함을 함께 유지.",
+      "prototypeSourceFamily": "wood"
+    },
+    {
+      "id": "sfx-city-location-lock",
+      "group": "city",
+      "name": "잠긴 거점",
+      "desc": "문 손잡이가 잠긴 채 짧게 걸림",
+      "durationSec": 0.22,
+      "bus": "sfx",
+      "gain": -15,
+      "accent": false,
+      "prompt": "잠긴 거점: 문 손잡이가 잠긴 채 짧게 걸림 항구의 문, 지도, 마차 바퀴, 낮은 시계종. 밝은 야외 공기와 실내 UI의 따뜻함을 함께 유지. Stylized but physically legible pixel-game sound, warm close microphone, short dry wooden room, gentle high-frequency rolloff, no synth, no modern UI beep, no hiss, no cartoon exaggeration.",
+      "artMaterial": "항구의 문, 지도, 마차 바퀴, 낮은 시계종. 밝은 야외 공기와 실내 UI의 따뜻함을 함께 유지.",
+      "prototypeSourceFamily": "lock"
+    },
+    {
+      "id": "sfx-market-rise",
+      "group": "city",
+      "name": "시세 상승 표시",
+      "desc": "시세판 핀이 위 칸으로 이동",
+      "durationSec": 0.28,
+      "bus": "sfx",
+      "gain": -14,
+      "accent": false,
+      "prompt": "시세 상승 표시: 시세판 핀이 위 칸으로 이동 항구의 문, 지도, 마차 바퀴, 낮은 시계종. 밝은 야외 공기와 실내 UI의 따뜻함을 함께 유지. Stylized but physically legible pixel-game sound, warm close microphone, short dry wooden room, gentle high-frequency rolloff, no synth, no modern UI beep, no hiss, no cartoon exaggeration.",
+      "artMaterial": "항구의 문, 지도, 마차 바퀴, 낮은 시계종. 밝은 야외 공기와 실내 UI의 따뜻함을 함께 유지.",
+      "prototypeSourceFamily": "mechanical"
+    },
+    {
+      "id": "sfx-market-fall",
+      "group": "city",
+      "name": "시세 하락 표시",
+      "desc": "시세판 핀이 아래 칸으로 이동",
+      "durationSec": 0.3,
+      "bus": "sfx",
+      "gain": -14,
+      "accent": false,
+      "prompt": "시세 하락 표시: 시세판 핀이 아래 칸으로 이동 항구의 문, 지도, 마차 바퀴, 낮은 시계종. 밝은 야외 공기와 실내 UI의 따뜻함을 함께 유지. Stylized but physically legible pixel-game sound, warm close microphone, short dry wooden room, gentle high-frequency rolloff, no synth, no modern UI beep, no hiss, no cartoon exaggeration.",
+      "artMaterial": "항구의 문, 지도, 마차 바퀴, 낮은 시계종. 밝은 야외 공기와 실내 UI의 따뜻함을 함께 유지.",
+      "prototypeSourceFamily": "mechanical"
+    },
+    {
+      "id": "sfx-deadline-warning",
+      "group": "city",
+      "name": "마감 임박",
+      "desc": "낮은 벽시계 목재 몸통과 마감 공문. 종이나 멜로디 없음.",
+      "durationSec": 1.0,
+      "bus": "sfx",
+      "gain": -11,
+      "accent": false,
+      "prompt": "마감 임박: 낮은 벽시계 종 한 번과 태엽 장력 항구의 문, 지도, 마차 바퀴, 낮은 시계종. 밝은 야외 공기와 실내 UI의 따뜻함을 함께 유지. Stylized but physically legible pixel-game sound, warm close microphone, short dry wooden room, gentle high-frequency rolloff, no synth, no modern UI beep, no hiss, no cartoon exaggeration.",
+      "artMaterial": "항구의 문, 지도, 마차 바퀴, 낮은 시계종. 밝은 야외 공기와 실내 UI의 따뜻함을 함께 유지.",
+      "prototypeSourceFamily": "wood"
+    },
+    {
+      "id": "sfx-quest-select",
+      "group": "office",
+      "name": "의뢰 선택",
+      "desc": "의뢰 카드가 목재 레일에 꽂힘",
+      "durationSec": 0.24,
+      "bus": "sfx",
+      "gain": -14,
+      "accent": false,
+      "prompt": "의뢰 선택: 의뢰 카드가 목재 레일에 꽂힘 두꺼운 감정서, 왁스 도장, 유리 확대경, 작은 캘리퍼. 깨끗하고 학구적인 촉감. Stylized but physically legible pixel-game sound, warm close microphone, short dry wooden room, gentle high-frequency rolloff, no synth, no modern UI beep, no hiss, no cartoon exaggeration.",
+      "artMaterial": "두꺼운 감정서, 왁스 도장, 유리 확대경, 작은 캘리퍼. 깨끗하고 학구적인 촉감.",
+      "prototypeSourceFamily": "paper"
+    },
+    {
+      "id": "sfx-quest-success",
+      "group": "office",
+      "name": "의뢰 성공",
+      "desc": "밀랍 봉인과 작은 황동 체결",
+      "durationSec": 0.58,
+      "bus": "sfx",
+      "gain": -10,
+      "accent": true,
+      "prompt": "의뢰 성공: 밀랍 봉인과 작은 황동 체결 두꺼운 감정서, 왁스 도장, 유리 확대경, 작은 캘리퍼. 깨끗하고 학구적인 촉감. Stylized but physically legible pixel-game sound, warm close microphone, short dry wooden room, gentle high-frequency rolloff, no synth, no modern UI beep, no hiss, no cartoon exaggeration.",
+      "artMaterial": "두꺼운 감정서, 왁스 도장, 유리 확대경, 작은 캘리퍼. 깨끗하고 학구적인 촉감.",
+      "prototypeSourceFamily": "paper"
+    },
+    {
+      "id": "sfx-quest-fail",
+      "group": "office",
+      "name": "의뢰 실패",
+      "desc": "봉인이 깨지고 종이가 접힘",
+      "durationSec": 0.48,
+      "bus": "sfx",
+      "gain": -12,
+      "accent": false,
+      "prompt": "의뢰 실패: 봉인이 깨지고 종이가 접힘 두꺼운 감정서, 왁스 도장, 유리 확대경, 작은 캘리퍼. 깨끗하고 학구적인 촉감. Stylized but physically legible pixel-game sound, warm close microphone, short dry wooden room, gentle high-frequency rolloff, no synth, no modern UI beep, no hiss, no cartoon exaggeration.",
+      "artMaterial": "두꺼운 감정서, 왁스 도장, 유리 확대경, 작은 캘리퍼. 깨끗하고 학구적인 촉감.",
+      "prototypeSourceFamily": "paper"
+    },
+    {
+      "id": "sfx-appraise-tool",
+      "group": "office",
+      "name": "감정 도구 교체",
+      "desc": "펠트 위에 작은 캘리퍼를 가볍게 내려놓는 짧고 눌린 접촉음",
+      "durationSec": 0.36,
+      "bus": "sfx",
+      "gain": -17,
+      "accent": false,
+      "prompt": "감정 도구 교체: 렌즈와 황동 캘리퍼를 내려놓음 두꺼운 감정서, 왁스 도장, 유리 확대경, 작은 캘리퍼. 깨끗하고 학구적인 촉감. Stylized but physically legible pixel-game sound, warm close microphone, short dry wooden room, gentle high-frequency rolloff, no synth, no modern UI beep, no hiss, no cartoon exaggeration.",
+      "artMaterial": "두꺼운 감정서, 왁스 도장, 유리 확대경, 작은 캘리퍼. 깨끗하고 학구적인 촉감.",
+      "prototypeSourceFamily": "metal"
+    },
+    {
+      "id": "sfx-rumor-select",
+      "group": "tavern",
+      "name": "정보상 선택",
+      "desc": "가죽 의자를 당기고 동전 한 닢을 놓음",
+      "durationSec": 0.42,
+      "bus": "sfx",
+      "gain": -15,
+      "accent": false,
+      "prompt": "정보상 선택: 가죽 의자를 당기고 동전 한 닢을 놓음 가죽 의자, 접힌 쪽지, 나무 탁자, 묵직한 동전, 잔. 호박빛의 은밀함과 낮은 밀도. Stylized but physically legible pixel-game sound, warm close microphone, short dry wooden room, gentle high-frequency rolloff, no synth, no modern UI beep, no hiss, no cartoon exaggeration.",
+      "artMaterial": "가죽 의자, 접힌 쪽지, 나무 탁자, 묵직한 동전, 잔. 호박빛의 은밀함과 낮은 밀도.",
+      "prototypeSourceFamily": "ui"
+    },
+    {
+      "id": "sfx-rumor-card",
+      "group": "tavern",
+      "name": "정보 카드 확인",
+      "desc": "접힌 쪽지가 손가락 사이에서 열림",
+      "durationSec": 0.3,
+      "bus": "sfx",
+      "gain": -16,
+      "accent": false,
+      "prompt": "정보 카드 확인: 접힌 쪽지가 손가락 사이에서 열림 가죽 의자, 접힌 쪽지, 나무 탁자, 묵직한 동전, 잔. 호박빛의 은밀함과 낮은 밀도. Stylized but physically legible pixel-game sound, warm close microphone, short dry wooden room, gentle high-frequency rolloff, no synth, no modern UI beep, no hiss, no cartoon exaggeration.",
+      "artMaterial": "가죽 의자, 접힌 쪽지, 나무 탁자, 묵직한 동전, 잔. 호박빛의 은밀함과 낮은 밀도.",
+      "prototypeSourceFamily": "ui"
+    },
+    {
+      "id": "sfx-exchange-item-select",
+      "group": "exchange",
+      "name": "판매품 선택",
+      "desc": "목재 거래 토큰이 칸에 놓임",
+      "durationSec": 0.16,
+      "bus": "sfx",
+      "gain": -15,
+      "accent": false,
+      "prompt": "판매품 선택: 목재 거래 토큰이 칸에 놓임 주판, 저울, 목재 거래 토큰, 무게 있는 동전, 펜촉. 카지노식 코인 샤워 금지. Stylized but physically legible pixel-game sound, warm close microphone, short dry wooden room, gentle high-frequency rolloff, no synth, no modern UI beep, no hiss, no cartoon exaggeration.",
+      "artMaterial": "주판, 저울, 목재 거래 토큰, 무게 있는 동전, 펜촉. 카지노식 코인 샤워 금지.",
+      "prototypeSourceFamily": "wood"
+    },
+    {
+      "id": "sfx-sale-confirm",
+      "group": "exchange",
+      "name": "판매 확정",
+      "desc": "주판 알이 이동하고 동전이 안착",
+      "durationSec": 0.55,
+      "bus": "sfx",
+      "gain": -10,
+      "accent": false,
+      "prompt": "판매 확정: 주판 알이 이동하고 동전이 안착 주판, 저울, 목재 거래 토큰, 무게 있는 동전, 펜촉. 카지노식 코인 샤워 금지. Stylized but physically legible pixel-game sound, warm close microphone, short dry wooden room, gentle high-frequency rolloff, no synth, no modern UI beep, no hiss, no cartoon exaggeration.",
+      "artMaterial": "주판, 저울, 목재 거래 토큰, 무게 있는 동전, 펜촉. 카지노식 코인 샤워 금지.",
+      "prototypeSourceFamily": "coin"
+    },
+    {
+      "id": "sfx-hanbo-piece-fit",
+      "group": "exchange",
+      "name": "족보 조각 결합",
+      "desc": "여러 목재·황동 조각 중 하나가 홈에 맞음",
+      "durationSec": 0.22,
+      "bus": "sfx",
+      "gain": -13,
+      "accent": false,
+      "prompt": "족보 조각 결합: 여러 목재·황동 조각 중 하나가 홈에 맞음 주판, 저울, 목재 거래 토큰, 무게 있는 동전, 펜촉. 카지노식 코인 샤워 금지. Stylized but physically legible pixel-game sound, warm close microphone, short dry wooden room, gentle high-frequency rolloff, no synth, no modern UI beep, no hiss, no cartoon exaggeration.",
+      "artMaterial": "주판, 저울, 목재 거래 토큰, 무게 있는 동전, 펜촉. 카지노식 코인 샤워 금지.",
+      "prototypeSourceFamily": "wood"
+    },
+    {
+      "id": "sfx-market-graph-draw",
+      "group": "exchange",
+      "name": "시세선 그리기",
+      "desc": "펜이 그래프 선을 길게 긋고 핀을 꽂음",
+      "durationSec": 0.7,
+      "bus": "sfx",
+      "gain": -15,
+      "accent": false,
+      "prompt": "시세선 그리기: 펜이 그래프 선을 길게 긋고 핀을 꽂음 주판, 저울, 목재 거래 토큰, 무게 있는 동전, 펜촉. 카지노식 코인 샤워 금지. Stylized but physically legible pixel-game sound, warm close microphone, short dry wooden room, gentle high-frequency rolloff, no synth, no modern UI beep, no hiss, no cartoon exaggeration.",
+      "artMaterial": "주판, 저울, 목재 거래 토큰, 무게 있는 동전, 펜촉. 카지노식 코인 샤워 금지.",
+      "prototypeSourceFamily": "mechanical"
+    },
+    {
+      "id": "sfx-collateral-select",
+      "group": "guild",
+      "name": "담보 선택",
+      "desc": "물건표에 무거운 황동 클립을 채움",
+      "durationSec": 0.32,
+      "bus": "sfx",
+      "gain": -13,
+      "accent": false,
+      "prompt": "담보 선택: 물건표에 무거운 황동 클립을 채움 계약서, 황동 클립, 금고 레버, 짧은 체인, 왁스 도장. 무겁지만 위협적이지 않음. Stylized but physically legible pixel-game sound, warm close microphone, short dry wooden room, gentle high-frequency rolloff, no synth, no modern UI beep, no hiss, no cartoon exaggeration.",
+      "artMaterial": "계약서, 황동 클립, 금고 레버, 짧은 체인, 왁스 도장. 무겁지만 위협적이지 않음.",
+      "prototypeSourceFamily": "lock"
+    },
+    {
+      "id": "sfx-loan-seal",
+      "group": "guild",
+      "name": "대출 계약 체결",
+      "desc": "금고 레버·체인·밀랍 봉인이 순서대로 체결",
+      "durationSec": 1.15,
+      "bus": "sfx",
+      "gain": -10,
+      "accent": true,
+      "prompt": "대출 계약 체결: 금고 레버·체인·밀랍 봉인이 순서대로 체결 계약서, 황동 클립, 금고 레버, 짧은 체인, 왁스 도장. 무겁지만 위협적이지 않음. Stylized but physically legible pixel-game sound, warm close microphone, short dry wooden room, gentle high-frequency rolloff, no synth, no modern UI beep, no hiss, no cartoon exaggeration.",
+      "artMaterial": "계약서, 황동 클립, 금고 레버, 짧은 체인, 왁스 도장. 무겁지만 위협적이지 않음.",
+      "prototypeSourceFamily": "lock"
+    },
+    {
+      "id": "sfx-loan-warning",
+      "group": "guild",
+      "name": "대출 만기 경고",
+      "desc": "낮은 금고 종과 자물쇠 장력",
+      "durationSec": 0.85,
+      "bus": "sfx",
+      "gain": -11,
+      "accent": false,
+      "prompt": "대출 만기 경고: 낮은 금고 종과 자물쇠 장력 계약서, 황동 클립, 금고 레버, 짧은 체인, 왁스 도장. 무겁지만 위협적이지 않음. Stylized but physically legible pixel-game sound, warm close microphone, short dry wooden room, gentle high-frequency rolloff, no synth, no modern UI beep, no hiss, no cartoon exaggeration.",
+      "artMaterial": "계약서, 황동 클립, 금고 레버, 짧은 체인, 왁스 도장. 무겁지만 위협적이지 않음.",
+      "prototypeSourceFamily": "lock"
+    },
+    {
+      "id": "sfx-inventory-pick",
+      "group": "merchant",
+      "name": "보유품 집기",
+      "desc": "펠트 위 물건을 들어 올림",
+      "durationSec": 0.2,
+      "bus": "sfx",
+      "gain": -16,
+      "accent": false,
+      "prompt": "보유품 집기: 펠트 위 물건을 들어 올림 펠트 진열장, 목재 서랍, 작은 황동 기어, 도자기와 유리. 성장의 정돈된 만족감. Stylized but physically legible pixel-game sound, warm close microphone, short dry wooden room, gentle high-frequency rolloff, no synth, no modern UI beep, no hiss, no cartoon exaggeration.",
+      "artMaterial": "펠트 진열장, 목재 서랍, 작은 황동 기어, 도자기와 유리. 성장의 정돈된 만족감.",
+      "prototypeSourceFamily": "cloth"
+    },
+    {
+      "id": "sfx-capacity-full",
+      "group": "merchant",
+      "name": "보관칸 가득 참",
+      "desc": "서랍이 걸려 더 닫히지 않음",
+      "durationSec": 0.32,
+      "bus": "sfx",
+      "gain": -13,
+      "accent": false,
+      "prompt": "보관칸 가득 참: 서랍이 걸려 더 닫히지 않음 펠트 진열장, 목재 서랍, 작은 황동 기어, 도자기와 유리. 성장의 정돈된 만족감. Stylized but physically legible pixel-game sound, warm close microphone, short dry wooden room, gentle high-frequency rolloff, no synth, no modern UI beep, no hiss, no cartoon exaggeration.",
+      "artMaterial": "펠트 진열장, 목재 서랍, 작은 황동 기어, 도자기와 유리. 성장의 정돈된 만족감.",
+      "prototypeSourceFamily": "lock"
+    },
+    {
+      "id": "sfx-upgrade-ready",
+      "group": "merchant",
+      "name": "승급 가능",
+      "desc": "세 개의 작은 기어가 차례로 맞물림",
+      "durationSec": 0.72,
+      "bus": "sfx",
+      "gain": -11,
+      "accent": false,
+      "prompt": "승급 가능: 세 개의 작은 기어가 차례로 맞물림 펠트 진열장, 목재 서랍, 작은 황동 기어, 도자기와 유리. 성장의 정돈된 만족감. Stylized but physically legible pixel-game sound, warm close microphone, short dry wooden room, gentle high-frequency rolloff, no synth, no modern UI beep, no hiss, no cartoon exaggeration.",
+      "artMaterial": "펠트 진열장, 목재 서랍, 작은 황동 기어, 도자기와 유리. 성장의 정돈된 만족감.",
+      "prototypeSourceFamily": "mechanical"
+    },
+    {
+      "id": "sfx-bid-increment",
+      "group": "auction",
+      "name": "입찰 증액 버튼",
+      "desc": "입찰 계수기 한 칸 증가",
+      "durationSec": 0.1,
+      "bus": "sfx",
+      "gain": -15,
+      "accent": false,
+      "prompt": "입찰 증액 버튼: 입찰 계수기 한 칸 증가 목재 입찰패, 황동 호가 계수기, 가죽 의자, 장부 펜, 경매봉. 건조하고 절제된 살롱 공간. Stylized but physically legible pixel-game sound, warm close microphone, short dry wooden room, gentle high-frequency rolloff, no synth, no modern UI beep, no hiss, no cartoon exaggeration.",
+      "artMaterial": "목재 입찰패, 황동 호가 계수기, 가죽 의자, 장부 펜, 경매봉. 건조하고 절제된 살롱 공간.",
+      "prototypeSourceFamily": "mechanical"
+    },
+    {
+      "id": "sfx-bid-direct-input",
+      "group": "auction",
+      "name": "직접 입찰 입력",
+      "desc": "기계식 숫자 다이얼이 빠르게 정렬",
+      "durationSec": 0.28,
+      "bus": "sfx",
+      "gain": -14,
+      "accent": false,
+      "prompt": "직접 입찰 입력: 기계식 숫자 다이얼이 빠르게 정렬 목재 입찰패, 황동 호가 계수기, 가죽 의자, 장부 펜, 경매봉. 건조하고 절제된 살롱 공간. Stylized but physically legible pixel-game sound, warm close microphone, short dry wooden room, gentle high-frequency rolloff, no synth, no modern UI beep, no hiss, no cartoon exaggeration.",
+      "artMaterial": "목재 입찰패, 황동 호가 계수기, 가죽 의자, 장부 펜, 경매봉. 건조하고 절제된 살롱 공간.",
+      "prototypeSourceFamily": "wood"
+    },
+    {
+      "id": "sfx-auction-countdown",
+      "group": "auction",
+      "name": "경매 마감 초읽기",
+      "desc": "나무 시계의 얕은 초침 1회",
+      "durationSec": 0.12,
+      "bus": "sfx",
+      "gain": -17,
+      "accent": false,
+      "prompt": "경매 마감 초읽기: 나무 시계의 얕은 초침 1회 목재 입찰패, 황동 호가 계수기, 가죽 의자, 장부 펜, 경매봉. 건조하고 절제된 살롱 공간. Stylized but physically legible pixel-game sound, warm close microphone, short dry wooden room, gentle high-frequency rolloff, no synth, no modern UI beep, no hiss, no cartoon exaggeration.",
+      "artMaterial": "목재 입찰패, 황동 호가 계수기, 가죽 의자, 장부 펜, 경매봉. 건조하고 절제된 살롱 공간.",
+      "prototypeSourceFamily": "wood"
+    },
+    {
+      "id": "sfx-lot-win",
+      "group": "auction",
+      "name": "플레이어 낙찰",
+      "desc": "망치 이후 황동 소유 태그가 잠기고 장부에 짧게 기입",
+      "durationSec": 0.72,
+      "bus": "sfx",
+      "gain": -8,
+      "accent": true,
+      "prompt": "Player lot won: a small brass ownership tag clips shut, a mechanism locks, then a brief ledger mark; no gavel or fanfare.",
+      "artMaterial": "목재 입찰패, 황동 호가 계수기, 가죽 의자, 장부 펜, 경매봉. 건조하고 절제된 살롱 공간.",
+      "prototypeSourceFamily": "metal+mechanical+paper"
+    },
+    {
+      "id": "sfx-lot-lose",
+      "group": "auction",
+      "name": "경쟁자 낙찰",
+      "desc": "먼 입찰패와 장부 기입",
+      "durationSec": 0.55,
+      "bus": "sfx",
+      "gain": -14,
+      "accent": false,
+      "prompt": "경쟁자 낙찰: 먼 입찰패와 장부 기입 목재 입찰패, 황동 호가 계수기, 가죽 의자, 장부 펜, 경매봉. 건조하고 절제된 살롱 공간. Stylized but physically legible pixel-game sound, warm close microphone, short dry wooden room, gentle high-frequency rolloff, no synth, no modern UI beep, no hiss, no cartoon exaggeration.",
+      "artMaterial": "목재 입찰패, 황동 호가 계수기, 가죽 의자, 장부 펜, 경매봉. 건조하고 절제된 살롱 공간.",
+      "prototypeSourceFamily": "wood"
+    },
+    {
+      "id": "sfx-bot-pass",
+      "group": "auction",
+      "name": "경쟁자 패스",
+      "desc": "먼 의자와 입찰패가 조용히 내려감",
+      "durationSec": 0.45,
+      "bus": "sfx",
+      "gain": -17,
+      "accent": false,
+      "prompt": "경쟁자 패스: 먼 의자와 입찰패가 조용히 내려감 목재 입찰패, 황동 호가 계수기, 가죽 의자, 장부 펜, 경매봉. 건조하고 절제된 살롱 공간. Stylized but physically legible pixel-game sound, warm close microphone, short dry wooden room, gentle high-frequency rolloff, no synth, no modern UI beep, no hiss, no cartoon exaggeration.",
+      "artMaterial": "목재 입찰패, 황동 호가 계수기, 가죽 의자, 장부 펜, 경매봉. 건조하고 절제된 살롱 공간.",
+      "prototypeSourceFamily": "cloth"
+    },
+    {
+      "id": "sfx-bid-jump",
+      "group": "auction",
+      "name": "큰 폭의 호가 상승",
+      "desc": "무거운 계수기가 여러 칸 빠르게 이동",
+      "durationSec": 0.38,
+      "bus": "sfx",
+      "gain": -12,
+      "accent": false,
+      "prompt": "큰 폭의 호가 상승: 무거운 계수기가 여러 칸 빠르게 이동 목재 입찰패, 황동 호가 계수기, 가죽 의자, 장부 펜, 경매봉. 건조하고 절제된 살롱 공간. Stylized but physically legible pixel-game sound, warm close microphone, short dry wooden room, gentle high-frequency rolloff, no synth, no modern UI beep, no hiss, no cartoon exaggeration.",
+      "artMaterial": "목재 입찰패, 황동 호가 계수기, 가죽 의자, 장부 펜, 경매봉. 건조하고 절제된 살롱 공간.",
+      "prototypeSourceFamily": "wood"
+    },
+    {
+      "id": "sfx-summary-quest-success",
+      "group": "summary",
+      "name": "결산 의뢰 성공",
+      "desc": "장부 초록 탭과 밀랍 도장",
+      "durationSec": 0.52,
+      "bus": "sfx",
+      "gain": -11,
+      "accent": false,
+      "prompt": "결산 의뢰 성공: 장부 초록 탭과 밀랍 도장 넓은 양피지 장부, 연필, 잉크, 금속 탭, 저울. 숫자 판독을 방해하지 않는 짧은 피드백. Stylized but physically legible pixel-game sound, warm close microphone, short dry wooden room, gentle high-frequency rolloff, no synth, no modern UI beep, no hiss, no cartoon exaggeration.",
+      "artMaterial": "넓은 양피지 장부, 연필, 잉크, 금속 탭, 저울. 숫자 판독을 방해하지 않는 짧은 피드백.",
+      "prototypeSourceFamily": "paper"
+    },
+    {
+      "id": "sfx-summary-quest-fail",
+      "group": "summary",
+      "name": "결산 의뢰 실패",
+      "desc": "장부 붉은 탭과 부러진 봉인",
+      "durationSec": 0.52,
+      "bus": "sfx",
+      "gain": -12,
+      "accent": false,
+      "prompt": "결산 의뢰 실패: 장부 붉은 탭과 부러진 봉인 넓은 양피지 장부, 연필, 잉크, 금속 탭, 저울. 숫자 판독을 방해하지 않는 짧은 피드백. Stylized but physically legible pixel-game sound, warm close microphone, short dry wooden room, gentle high-frequency rolloff, no synth, no modern UI beep, no hiss, no cartoon exaggeration.",
+      "artMaterial": "넓은 양피지 장부, 연필, 잉크, 금속 탭, 저울. 숫자 판독을 방해하지 않는 짧은 피드백.",
+      "prototypeSourceFamily": "paper"
+    },
+    {
+      "id": "sfx-deadline-cleared",
+      "group": "summary",
+      "name": "마감 통과",
+      "desc": "큰 기어가 다음 홈에 안전하게 걸림",
+      "durationSec": 0.82,
+      "bus": "sfx",
+      "gain": -9,
+      "accent": true,
+      "prompt": "마감 통과: 큰 기어가 다음 홈에 안전하게 걸림 넓은 양피지 장부, 연필, 잉크, 금속 탭, 저울. 숫자 판독을 방해하지 않는 짧은 피드백. Stylized but physically legible pixel-game sound, warm close microphone, short dry wooden room, gentle high-frequency rolloff, no synth, no modern UI beep, no hiss, no cartoon exaggeration.",
+      "artMaterial": "넓은 양피지 장부, 연필, 잉크, 금속 탭, 저울. 숫자 판독을 방해하지 않는 짧은 피드백.",
+      "prototypeSourceFamily": "wood"
+    },
+    {
+      "id": "sfx-relic-round-intro",
+      "group": "relic",
+      "name": "유물 라운드 개시",
+      "desc": "커튼과 전시대가 열리고 눌린 황동 봉인이 짧게 맞물림",
+      "durationSec": 1.15,
+      "bus": "sfx",
+      "gain": -10,
+      "accent": true,
+      "prompt": "유물 라운드 개시: 커튼 고리와 낮은 홀 종 벨벳, 무거운 입찰패, 커튼 링, 유리 진열, 낮은 홀 종. 금빛 격식은 크되 판타지 폭발음 금지. Stylized but physically legible pixel-game sound, warm close microphone, short dry wooden room, gentle high-frequency rolloff, no synth, no modern UI beep, no hiss, no cartoon exaggeration.",
+      "artMaterial": "벨벳, 무거운 입찰패, 커튼 링, 유리 진열, 낮은 홀 종. 금빛 격식은 크되 판타지 폭발음 금지.",
+      "prototypeSourceFamily": "metal"
+    },
+    {
+      "id": "sfx-tycoon-bid",
+      "group": "relic",
+      "name": "거물 입찰",
+      "desc": "먼 대형 입찰패와 넓은 홀 잔향",
+      "durationSec": 0.68,
+      "bus": "sfx",
+      "gain": -11,
+      "accent": false,
+      "prompt": "거물 입찰: 먼 대형 입찰패와 넓은 홀 잔향 벨벳, 무거운 입찰패, 커튼 링, 유리 진열, 낮은 홀 종. 금빛 격식은 크되 판타지 폭발음 금지. Stylized but physically legible pixel-game sound, warm close microphone, short dry wooden room, gentle high-frequency rolloff, no synth, no modern UI beep, no hiss, no cartoon exaggeration.",
+      "artMaterial": "벨벳, 무거운 입찰패, 커튼 링, 유리 진열, 낮은 홀 종. 금빛 격식은 크되 판타지 폭발음 금지.",
+      "prototypeSourceFamily": "ui"
+    },
+    {
+      "id": "sfx-relic-pass",
+      "group": "relic",
+      "name": "유물 경매 패스",
+      "desc": "두꺼운 장갑과 무거운 입찰패가 내려감",
+      "durationSec": 0.62,
+      "bus": "sfx",
+      "gain": -13,
+      "accent": false,
+      "prompt": "유물 경매 패스: 두꺼운 장갑과 무거운 입찰패가 내려감 벨벳, 무거운 입찰패, 커튼 링, 유리 진열, 낮은 홀 종. 금빛 격식은 크되 판타지 폭발음 금지. Stylized but physically legible pixel-game sound, warm close microphone, short dry wooden room, gentle high-frequency rolloff, no synth, no modern UI beep, no hiss, no cartoon exaggeration.",
+      "artMaterial": "벨벳, 무거운 입찰패, 커튼 링, 유리 진열, 낮은 홀 종. 금빛 격식은 크되 판타지 폭발음 금지.",
+      "prototypeSourceFamily": "metal"
+    },
+    {
+      "id": "sfx-relic-lost",
+      "group": "relic",
+      "name": "유물 낙찰 실패",
+      "desc": "금속 봉인이 다른 쪽에서 닫히는 먼 울림",
+      "durationSec": 1.0,
+      "bus": "sfx",
+      "gain": -11,
+      "accent": false,
+      "prompt": "유물 낙찰 실패: 금속 봉인이 다른 쪽에서 닫히는 먼 울림 벨벳, 무거운 입찰패, 커튼 링, 유리 진열, 낮은 홀 종. 금빛 격식은 크되 판타지 폭발음 금지. Stylized but physically legible pixel-game sound, warm close microphone, short dry wooden room, gentle high-frequency rolloff, no synth, no modern UI beep, no hiss, no cartoon exaggeration.",
+      "artMaterial": "벨벳, 무거운 입찰패, 커튼 링, 유리 진열, 낮은 홀 종. 금빛 격식은 크되 판타지 폭발음 금지.",
+      "prototypeSourceFamily": "metal"
+    },
+    {
+      "id": "sfx-next-journey",
+      "group": "result",
+      "name": "다음 여정",
+      "desc": "태엽 열쇠를 다시 꽂아 반 바퀴 감음",
+      "durationSec": 0.72,
+      "bus": "sfx",
+      "gain": -10,
+      "accent": false,
+      "prompt": "다음 여정: 태엽 열쇠를 다시 꽂아 반 바퀴 감음 장부를 덮는 목재·종이·작은 종. 성공과 실패 모두 과장하지 않고 여정의 무게를 존중. Stylized but physically legible pixel-game sound, warm close microphone, short dry wooden room, gentle high-frequency rolloff, no synth, no modern UI beep, no hiss, no cartoon exaggeration.",
+      "artMaterial": "장부를 덮는 목재·종이·작은 종. 성공과 실패 모두 과장하지 않고 여정의 무게를 존중.",
+      "prototypeSourceFamily": "wood"
+    },
+    {
+      "id": "sfx-museum-unlock",
+      "group": "meta",
+      "name": "전시관 해금",
+      "desc": "유리문 잠금과 조명이 차례로 켜짐",
+      "durationSec": 1.25,
+      "bus": "sfx",
+      "gain": -8,
+      "accent": true,
+      "prompt": "전시관 해금: 유리문 잠금과 조명이 차례로 켜짐 유리 전시문, 펠트 받침, 작은 갤러리 조명 스위치. 맑지만 마법 반짝임처럼 들리지 않음. Stylized but physically legible pixel-game sound, warm close microphone, short dry wooden room, gentle high-frequency rolloff, no synth, no modern UI beep, no hiss, no cartoon exaggeration.",
+      "artMaterial": "유리 전시문, 펠트 받침, 작은 갤러리 조명 스위치. 맑지만 마법 반짝임처럼 들리지 않음.",
+      "prototypeSourceFamily": "lock"
+    },
+    {
+      "id": "sfx-relic-display-set",
+      "group": "meta",
+      "name": "유물 전시",
+      "desc": "펠트 받침에 유물을 놓고 유리문을 닫음",
+      "durationSec": 0.95,
+      "bus": "sfx",
+      "gain": -11,
+      "accent": false,
+      "prompt": "유물 전시: 펠트 받침에 유물을 놓고 유리문을 닫음 유리 전시문, 펠트 받침, 작은 갤러리 조명 스위치. 맑지만 마법 반짝임처럼 들리지 않음. Stylized but physically legible pixel-game sound, warm close microphone, short dry wooden room, gentle high-frequency rolloff, no synth, no modern UI beep, no hiss, no cartoon exaggeration.",
+      "artMaterial": "유리 전시문, 펠트 받침, 작은 갤러리 조명 스위치. 맑지만 마법 반짝임처럼 들리지 않음.",
+      "prototypeSourceFamily": "metal"
+    }
+  ],
+  "actionSfxMap": {
+    "act-start-new-run": "sfx-new-run",
+    "act-open-continue": "sfx-ui-click",
+    "act-load-save": "sfx-load-complete",
+    "act-delete-save": "sfx-slot-delete",
+    "act-save-game": "sfx-save",
+    "act-open-settings": "sfx-popup-open",
+    "act-apply-settings": "sfx-modal-confirm",
+    "act-exit-game": "sfx-ui-back",
+    "act-complete-loading": "sfx-loading-done",
+    "act-enter-office": "sfx-venue-enter",
+    "act-enter-tavern": "sfx-venue-enter",
+    "act-enter-exchange": "sfx-venue-enter",
+    "act-enter-guild": "sfx-venue-enter",
+    "act-enter-merchant": "sfx-venue-enter",
+    "act-enter-auction": "sfx-scene-in",
+    "act-enter-museum": "sfx-venue-enter",
+    "act-return-city": "sfx-ui-back",
+    "act-switch-office-tab": "sfx-page-turn",
+    "act-accept-quest": "sfx-quest-select",
+    "act-appraise-lot": "sfx-appraise-start",
+    "act-buy-market-forecast": "sfx-info-buy",
+    "act-buy-competitor-info": "sfx-info-buy",
+    "act-switch-exchange-tab": "sfx-page-turn",
+    "act-sell-immediate": "sfx-sale-confirm",
+    "act-finish-settlement": "sfx-settlement-open",
+    "act-take-loan": "sfx-loan-seal",
+    "act-repay-loan": "sfx-loan-repay",
+    "act-process-loan-due": "sfx-loan-overdue",
+    "act-upgrade-shop": "sfx-upgrade",
+    "act-place-bid": "sfx-bid-place",
+    "act-pass-lot": "sfx-pass",
+    "act-run-bot-turn": "sfx-bid-bot",
+    "act-finalize-lot": "sfx-gavel",
+    "act-next-lot": "sfx-lot-next",
+    "act-next-day": "sfx-day-advance",
+    "act-open-day12-settlement": "sfx-settlement-open",
+    "act-check-final-qualification": "sfx-ui-click",
+    "act-start-relic-auction": "sfx-scene-in",
+    "act-place-relic-bid": "sfx-relic-bid",
+    "act-pass-relic": "sfx-relic-pass",
+    "act-run-tycoon-turn": "sfx-tycoon-bid",
+    "act-next-relic-round": "sfx-relic-round-intro",
+    "act-finish-relic-auction": "sfx-relic-gavel",
+    "act-start-next-journey": "sfx-next-journey",
+    "act-request-delete-save": "sfx-popup-open",
+    "act-close-settings": "sfx-popup-close",
+    "act-close-confirm": "sfx-modal-cancel",
+    "act-open-first-day": "sfx-popup-open",
+    "act-complete-first-day-tutorial": "sfx-modal-confirm",
+    "act-skip-first-day-tutorial": "sfx-modal-cancel",
+    "act-open-result-bankruptcy": "sfx-result-bankruptcy",
+    "act-return-title-from-bankruptcy": "sfx-ui-back",
+    "act-close-appraisal-result": "sfx-popup-close",
+    "act-open-information-result": "sfx-info-reveal",
+    "act-close-information-result": "sfx-popup-close",
+    "act-close-loan-overdue": "sfx-popup-close",
+    "act-close-upgrade-result": "sfx-popup-close",
+    "act-open-relic-round-result": "sfx-popup-open",
+    "act-open-relic-detail": "sfx-museum-inspect",
+    "act-close-relic-detail": "sfx-popup-close",
+    "act-open-campaign-complete": "sfx-campaign-complete",
+    "act-open-museum-from-campaign": "sfx-museum-unlock",
+    "act-return-title-from-campaign": "sfx-ui-back",
+    "act-show-toast": "sfx-toast",
+    "act-close-toast": null,
+    "act-show-failure-popup": "sfx-failure",
+    "act-close-failure-popup": "sfx-popup-close",
+    "act-buy-lot-catalog": "sfx-info-buy",
+    "act-form-hanbo": "sfx-hanbo-complete",
+    "act-reveal-appraisal": "sfx-appraise-reveal",
+    "act-close-hanbo-result": "sfx-popup-close"
+  },
+  "uiStateSfxMap": {
+    "note": "18개 UI 상태의 열림·닫힘 큐. 고유 큐가 없는 상태는 공용 팝업 큐를 쓴다.",
+    "modal-settings": {
+      "open": "sfx-popup-open",
+      "close": "sfx-popup-close"
+    },
+    "modal-confirm": {
+      "open": "sfx-popup-open",
+      "close": "sfx-modal-cancel"
+    },
+    "popup-lot-result": {
+      "open": "sfx-gavel",
+      "close": "sfx-lot-next"
+    },
+    "tutorial-first-day": {
+      "open": "sfx-popup-open",
+      "close": "sfx-modal-confirm"
+    },
+    "state-exchange-settlement": {
+      "open": "sfx-settlement-open",
+      "close": "sfx-popup-close"
+    },
+    "state-result-bankruptcy": {
+      "open": "sfx-result-bankruptcy",
+      "close": null
+    },
+    "panel-office-appraisal": {
+      "open": "sfx-ui-tab",
+      "close": null
+    },
+    "panel-exchange-market": {
+      "open": "sfx-ui-tab",
+      "close": null
+    },
+    "popup-appraisal-result": {
+      "open": "sfx-appraise-reveal",
+      "close": "sfx-popup-close"
+    },
+    "popup-information-result": {
+      "open": "sfx-info-reveal",
+      "close": "sfx-popup-close"
+    },
+    "popup-loan-overdue": {
+      "open": "sfx-loan-overdue",
+      "close": "sfx-popup-close"
+    },
+    "popup-upgrade-result": {
+      "open": "sfx-upgrade",
+      "close": "sfx-popup-close"
+    },
+    "popup-relic-round-result": {
+      "open": "sfx-relic-gavel",
+      "close": "sfx-popup-close"
+    },
+    "popup-relic-detail": {
+      "open": "sfx-museum-inspect",
+      "close": "sfx-popup-close"
+    },
+    "popup-campaign-complete": {
+      "open": "sfx-campaign-complete",
+      "close": null
+    },
+    "toast-global": {
+      "open": "sfx-toast",
+      "close": null
+    },
+    "popup-global-failure": {
+      "open": "sfx-failure",
+      "close": "sfx-popup-close"
+    },
+    "popup-hanbo-result": {
+      "open": "sfx-hanbo-complete",
+      "close": "sfx-popup-close"
+    }
+  },
+  "conditionalCues": [
+    {
+      "cue": "sfx-outbid",
+      "when": "act-run-bot-turn 결과로 내가 최고 호가를 잃었을 때",
+      "playAfter": "sfx-bid-bot",
+      "delaySec": 0.15
+    },
+    {
+      "cue": "sfx-coin-spend",
+      "when": "player.cash가 감소하는 모든 행동",
+      "layerWith": "해당 행동의 고유 큐"
+    },
+    {
+      "cue": "sfx-coin-gain",
+      "when": "player.cash가 증가하는 모든 행동",
+      "layerWith": "해당 행동의 고유 큐"
+    },
+    {
+      "cue": "sfx-ui-disabled",
+      "when": "핀이 비활성 상태일 때의 클릭. 보관칸 초과로 입찰 봉쇄된 경우 포함."
+    },
+    {
+      "cue": "sfx-profit",
+      "when": "scene-summary 진입 시 오늘 순이익 ≥ 0"
+    },
+    {
+      "cue": "sfx-loss",
+      "when": "scene-summary 진입 시 오늘 순이익 < 0"
+    },
+    {
+      "cue": "sfx-relic-acquire",
+      "when": "act-finish-relic-auction 결과가 낙찰일 때",
+      "playAfter": "sfx-relic-gavel",
+      "delaySec": 0.9
+    },
+    {
+      "cue": "sfx-ui-hover",
+      "when": "모든 활성 버튼 첫 호버. 120ms 재트리거 방지"
+    },
+    {
+      "cue": "sfx-market-rise",
+      "when": "scene-city에서 공개된 오늘 시장 사건이 상승일 때"
+    },
+    {
+      "cue": "sfx-market-fall",
+      "when": "scene-city에서 공개된 오늘 시장 사건이 하락일 때"
+    },
+    {
+      "cue": "sfx-deadline-warning",
+      "when": "공개된 마감 전날 도시 진입 시 1회"
+    },
+    {
+      "cue": "sfx-auction-countdown",
+      "when": "화면에 표시된 경매 타이머 마지막 3초"
+    },
+    {
+      "cue": "sfx-lot-win",
+      "when": "popup-lot-result가 플레이어 낙찰을 공개한 뒤"
+    },
+    {
+      "cue": "sfx-lot-lose",
+      "when": "popup-lot-result가 경쟁자 낙찰 또는 유찰을 공개한 뒤"
+    },
+    {
+      "cue": "sfx-summary-quest-success",
+      "when": "결산 의뢰 성공 행이 나타날 때"
+    },
+    {
+      "cue": "sfx-summary-quest-fail",
+      "when": "결산 의뢰 실패 행이 나타날 때"
+    },
+    {
+      "cue": "sfx-deadline-cleared",
+      "when": "결산에서 공개된 승급 마감을 통과했을 때"
+    },
+    {
+      "cue": "sfx-relic-lost",
+      "when": "유물 라운드 결과가 경쟁자 낙찰로 공개된 뒤"
+    },
+    {
+      "cue": "sfx-relic-display-set",
+      "when": "새 영구 유물이 전시관에 처음 표시될 때"
+    }
+  ],
+  "deprecated": {
+    "note": "V6.4 정합성 반영으로 폐기 행동과 UI 상태를 계약에서 제거했다.",
+    "actions": [],
+    "uiStates": []
+  },
+  "proposedActions": {
+    "note": "V6.4에서 이전 제안 행동 3종을 정식 행동으로 반영했다.",
+    "items": []
+  },
+  "channelRenameNote": {
+    "note": "flow.json v6.3의 정보 채널 명칭이 V5 기준이다. V6 §10.1 기준으로 화면 문구를 갱신할 때 큐는 그대로 유지된다.",
+    "map": [
+      {
+        "flowAction": "act-buy-market-forecast",
+        "v5Label": "시장 예보 구매",
+        "v6Channel": "수요 동향",
+        "v6Price": "총 기준가 0.4%"
+      },
+      {
+        "flowAction": "act-buy-competitor-info",
+        "v5Label": "경쟁자 정보 구매",
+        "v6Channel": "경쟁자 예산",
+        "v6Price": "총 기준가 0.8%"
+      }
+    ]
+  },
+  "files": {
+    "root": "assets/runtime/audio/",
+    "layout": {
+      "bgm": "assets/runtime/audio/bgm/<bgm-id>[__<layer>].wav",
+      "sfx": "assets/runtime/audio/sfx/<sfx-id>.wav",
+      "ambience": "assets/runtime/audio/ambience/<cue-id>.ogg"
+    },
+    "formats": {
+      "bgm": {
+        "container": "wav",
+        "bitDepth": 16,
+        "sampleRate": 44100,
+        "channels": 2,
+        "note": "Selected-source 36-second loop edits; L2/L3 may be silent compatibility slots."
+      },
+      "sfx": {
+        "container": "wav",
+        "bitDepth": 16,
+        "sampleRate": 44100,
+        "channels": 1,
+        "note": "모노. 공간감은 재생 시 팬으로 준다."
+      },
+      "ambience": {
+        "container": "ogg vorbis",
+        "quality": "q4",
+        "sampleRate": 44100,
+        "channels": 2,
+        "note": "루프 이음매 필수"
+      }
+    },
+    "expectedCount": {
+      "bgmCompositions": 21,
+      "bgmFiles": 33,
+      "sfxFiles": 99,
+      "ambienceFiles": 11,
+      "total": 143
+    }
+  },
+  "generation": {
+    "sfx": {
+      "service": "ElevenLabs Sound Effects API (fallback: Stable Audio)",
+      "styleAnchor": "Recorded close-mic in a small wood-panelled antique shop. Warm analog tape character, narrow stereo, no digital sheen, gentle rolloff above 12kHz. Aged brass and worn wood timbre. Dry, short room tail. No music, no synth, no cartoon exaggeration.",
+      "note": "프롬프트는 inject-prompts.py의 PROMPTS가 소유한다. 고친 뒤 다시 실행해 주입한다."
+    },
+    "bgm": {
+      "recommended": "AI 초안 2~3테이크 → 인간 선택/편집 → 루프·라우드니스 마스터링",
+      "promptSource": "각 bgm[].generationPrompt",
+      "negative": "No vocals, no trailer braams, no EDM drums, no glossy modern synths, no heroic or maritime-adventure fanfare, no tourist-postcard folk, no busy lead melody, no comedy, no magical sparkle cliché, no hidden-value telegraphing. Keep the middle register open for UI sounds and preserve a seamless loop ending.",
+      "delivery": "44.1kHz stereo WAV master + OGG q6 web copy"
+    },
+    "prototype": {
+      "engine": "deterministic art-directed procedural renderer v3.0",
+      "status": "interactive prototype; replace with licensed/AI/composer masters for commercial release",
+      "sampleRate": 44100
+    },
+    "engine": "selected-source loop renderer v3.6 bright city / merchant reprise / relic boss",
+    "musicSourceCount": 7,
+    "adaptiveLayerPolicy": "L1 complete mix; L2/L3 silent compatibility slots"
+  },
+  "musicProgram": {
+    "principle": "밝은 항구 도시의 장기 운영 리듬을 중심에 두고, 타이틀 모티프는 상회에서만 변주한다. 일반 경매는 저밀도 누아르 재즈, 유물 경매는 같은 모티프의 보스 버전, 조합은 귀족적 계약 실내악, 거래소는 건조한 작업 리듬으로 역할을 분리한다.",
+    "selectionInputs": [
+      "scene",
+      "공개된 일차",
+      "공개된 현재 호가/시작가 비율",
+      "공개된 LOT 순서",
+      "공개된 유물 라운드",
+      "이미 공개된 결산 결과"
+    ],
+    "forbiddenInputs": [
+      "숨은 품질",
+      "경쟁자 상한",
+      "미공개 유물 가치",
+      "미공개 시세 결과"
+    ],
+    "continuity": "타이틀의 4음 장부 모티프를 도시·결산·결과·전시관에서 변형한다. 같은 씬의 변주는 진입 시 고정하며 입찰 도중에는 곡을 교체하지 않고 레이어만 페이드한다.",
+    "retainedDirection": "일반 경매 3곡의 저밀도 재즈만 유지한다. 콘트라베이스·브러시·드문 저음 목관 킥이 중심이다.",
+    "discardedDirection": [
+      "영웅적 상인 모험곡",
+      "관광지풍 항구 음악",
+      "과도한 스팀펑크 공장 리듬",
+      "유물 경매의 블록버스터 웅장함",
+      "술집 재즈"
+    ],
+    "leitmotif": "장부 모티프: 짧은 4음 질문형. 타이틀에서는 미해결, 도시에서는 반복, 결산에서는 분해, 성공 결과에서만 부분 해결, 전시관에서는 기억 조각으로 재등장.",
+    "families": {
+      "ledgerChamber": [
+        "bgm-01-title",
+        "bgm-02-city",
+        "bgm-08-city-growth",
+        "bgm-09-city-deadline",
+        "bgm-05-settlement",
+        "bgm-17-settlement-loss",
+        "bgm-19-result-success"
+      ],
+      "workAndInference": [
+        "bgm-06-archive",
+        "bgm-07-loading-workshop",
+        "bgm-10-office-appraisal",
+        "bgm-11-tavern-whispers",
+        "bgm-12-exchange-ledger",
+        "bgm-13-guild-vault",
+        "bgm-14-merchant-workshop"
+      ],
+      "auctionNoir": [
+        "bgm-03-auction",
+        "bgm-15-auction-noir",
+        "bgm-16-auction-pressure"
+      ],
+      "relicMemory": [
+        "bgm-04-relic",
+        "bgm-18-ending-verdict",
+        "bgm-20-result-bankruptcy",
+        "bgm-21-museum-memory"
+      ]
+    }
+  },
+  "artAudioDirection": {
+    "referenceRoot": "_보관_기존자료/02_UI_목업과_구에셋/",
+    "identity": "따뜻한 유럽 항구의 상업 모험 · 픽셀 스토리북 · 양피지와 목재, 광택 있는 황동",
+    "notThis": [
+      "녹슨 중공업 스팀펑크",
+      "전자식 현대 UI",
+      "관광 엽서형 해적 음악",
+      "코미디 재즈",
+      "과장된 판타지 트레일러"
+    ],
+    "sfxPrinciple": "실물 재질을 알아볼 수 있게 하되 게임 피드백에 맞춰 짧고 둥글게 정리한다.",
+    "musicPrinciple": "친근한 챔버 포크를 중심으로 장면마다 직업과 공간의 색을 주고, 일반 경매만 저밀도 살롱 누아르 재즈를 유지·발전시킨다."
+  },
+  "sfxRefitProgram": {
+    "version": "3.6",
+    "direction": "빈티지 항구·골동품·태엽 장치의 실물 어택을 선명하게, 합성 몸통은 짧고 낮게 보조",
+    "mixPolicy": "CC0 Foley 70~80% + procedural support 20~30%; accent cues keep more body, no modern UI beep",
+    "sourceFamilies": [
+      {
+        "title": "100 CC0 metal and wood SFX",
+        "author": "rubberduck",
+        "license": "CC0",
+        "sourcePage": "https://opengameart.org/content/100-cc0-metal-and-wood-sfx"
+      },
+      {
+        "title": "Book Flip Sounds",
+        "author": "Voltiment555",
+        "license": "CC0",
+        "sourcePage": "https://opengameart.org/content/book-flip-sounds"
+      },
+      {
+        "title": "RPG Sound Pack",
+        "author": "artisticdude",
+        "license": "CC0",
+        "sourcePage": "https://opengameart.org/content/rpg-sound-pack"
+      },
+      {
+        "title": "Mechanical Sounds",
+        "author": "BMacZero",
+        "license": "CC0",
+        "sourcePage": "https://opengameart.org/content/mechanical-sounds"
+      },
+      {
+        "title": "Various Sound Effects",
+        "author": "laleksic",
+        "license": "CC0",
+        "sourcePage": "https://opengameart.org/content/various-sound-effects"
+      },
+      {
+        "title": "Ticking clock",
+        "author": "bart",
+        "license": "CC0",
+        "sourcePage": "https://opengameart.org/content/ticking-clock"
+      }
+    ],
+    "banks": {
+      "ui": 7,
+      "paper": 14,
+      "wood": 18,
+      "gavel": 6,
+      "mechanical": 17,
+      "metal": 8,
+      "coin": 5,
+      "door": 7,
+      "lock": 6,
+      "cloth": 2
+    },
+    "coreAuctionRevision": "3.6.1",
+    "coreAuctionDirection": "패스=하강 마찰, 입찰=상승 황동 래칫, 낙찰=목재 망치 3타, 획득=황동 태그+장부로 기능 실루엣 분리",
+    "coreAuctionCues": [
+      "sfx-bid-place",
+      "sfx-pass",
+      "sfx-gavel",
+      "sfx-lot-win"
+    ]
+  },
+  "selectedBgmProgram": {
+    "version": "3.6",
+    "loopSeconds": 36.0,
+    "crossfadeSeconds": 3.5,
+    "targetRmsDbfs": -22.5,
+    "peakCeilingDbfs": -1.5,
+    "tracks": [
+      {
+        "programId": "01_title",
+        "file": "01_title_blue_harbor_ledger.wav",
+        "title": "Blue Harbor Ledger",
+        "author": "User-provided source",
+        "license": "User-provided; rights confirmation required before public release",
+        "sourcePage": null,
+        "role": "타이틀 · 이어하기",
+        "logicalBgmIds": [
+          "bgm-01-title"
+        ]
+      },
+      {
+        "programId": "02_city",
+        "file": "02_city_thatched_villagers.mp3",
+        "title": "Thatched Villagers",
+        "author": "Kevin MacLeod",
+        "license": "Creative Commons Attribution 4.0",
+        "sourcePage": "https://incompetech.com/music/royalty-free/index.html?Search=Search&isrc=USUAN1100720",
+        "role": "도시 · 성장 · 마감",
+        "editProfile": "v3.6 bright city refit: active middle passage, +7% playback ratio, clear acoustic midrange, restrained melody",
+        "logicalBgmIds": [
+          "bgm-02-city",
+          "bgm-08-city-growth",
+          "bgm-09-city-deadline"
+        ]
+      },
+      {
+        "programId": "03_workplace",
+        "file": "03_workplace_march_of_the_spoons.mp3",
+        "title": "March of the Spoons",
+        "author": "Kevin MacLeod",
+        "license": "Creative Commons Attribution 4.0",
+        "sourcePage": "https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1700008",
+        "role": "로딩 · 의뢰소",
+        "logicalBgmIds": [
+          "bgm-07-loading-workshop",
+          "bgm-10-office-appraisal"
+        ]
+      },
+      {
+        "programId": "04_tavern_guild",
+        "file": "04_tavern_midnight_tale.mp3",
+        "title": "Midnight Tale",
+        "author": "Kevin MacLeod",
+        "license": "Creative Commons Attribution 4.0",
+        "sourcePage": "https://incompetech.com/music/royalty-free/index.html?Search=Search&isrc=USUAN1900004",
+        "role": "술집 · 정보 거래",
+        "logicalBgmIds": [
+          "bgm-11-tavern-whispers"
+        ]
+      },
+      {
+        "programId": "05_auction",
+        "file": "05_auction_i_knew_a_guy.mp3",
+        "title": "I Knew a Guy",
+        "author": "Kevin MacLeod",
+        "license": "Creative Commons Attribution 4.0",
+        "sourcePage": "https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100199",
+        "role": "일반 경매 전 구간",
+        "logicalBgmIds": [
+          "bgm-03-auction",
+          "bgm-15-auction-noir",
+          "bgm-16-auction-pressure"
+        ]
+      },
+      {
+        "programId": "06_relic_boss",
+        "file": "05_auction_i_knew_a_guy.mp3",
+        "title": "I Knew a Guy — Relic Boss Reprise",
+        "author": "Kevin MacLeod",
+        "license": "Creative Commons Attribution 4.0",
+        "sourcePage": "https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100199",
+        "role": "유물 경매 · 일반 경매 모티프의 보스 변주",
+        "editProfile": "v3.6 relic boss: auction motif, slower low register, wider hall, sparse low drum pulse",
+        "logicalBgmIds": [
+          "bgm-04-relic"
+        ]
+      },
+      {
+        "programId": "07_settlement_result",
+        "file": "07_settlement_peaceful_desolation.mp3",
+        "title": "Peaceful Desolation",
+        "author": "Kevin MacLeod",
+        "license": "Creative Commons Attribution 4.0",
+        "sourcePage": "https://incompetech.com/music/royalty-free/index.html?Search=Search&isrc=USUAN1200017",
+        "role": "결산 · 엔딩 판정 · 결과 · 전시관",
+        "logicalBgmIds": [
+          "bgm-05-settlement",
+          "bgm-17-settlement-loss",
+          "bgm-18-ending-verdict",
+          "bgm-19-result-success",
+          "bgm-20-result-bankruptcy",
+          "bgm-21-museum-memory"
+        ]
+      },
+      {
+        "programId": "08_merchant_reprise",
+        "file": "01_title_blue_harbor_ledger.wav",
+        "title": "Blue Harbor Ledger — Merchant Reprise",
+        "author": "User-provided source",
+        "license": "User-provided; rights confirmation required before public release",
+        "sourcePage": null,
+        "role": "상회 · 플레이어 본거점",
+        "editProfile": "v3.6 merchant reprise: alternate middle passage, +2.5% movement, closer wood-and-brass room",
+        "logicalBgmIds": [
+          "bgm-06-archive"
+        ]
+      },
+      {
+        "programId": "09_exchange",
+        "file": "03_workplace_march_of_the_spoons.mp3",
+        "title": "March of the Spoons — Exchange Cut",
+        "author": "Kevin MacLeod",
+        "license": "Creative Commons Attribution 4.0",
+        "sourcePage": "https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1700008",
+        "role": "거래소 · 주판과 저울의 작업 리듬",
+        "editProfile": "v3.6 exchange cut: active alternate passage, compact stereo, dry working rhythm",
+        "logicalBgmIds": [
+          "bgm-12-exchange-ledger",
+          "bgm-14-merchant-workshop"
+        ]
+      },
+      {
+        "programId": "10_guild_chamber",
+        "file": "06_relic_court_of_the_queen.mp3",
+        "title": "Court of the Queen — Guild Chamber",
+        "author": "Kevin MacLeod",
+        "license": "Creative Commons Attribution 4.0",
+        "sourcePage": "https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100728",
+        "role": "중개인 조합 · 계약과 담보의 격식",
+        "editProfile": "v3.6 guild chamber: formal chamber-waltz source reassigned from relic auction",
+        "logicalBgmIds": [
+          "bgm-13-guild-vault"
+        ]
+      }
+    ]
+  }
+};

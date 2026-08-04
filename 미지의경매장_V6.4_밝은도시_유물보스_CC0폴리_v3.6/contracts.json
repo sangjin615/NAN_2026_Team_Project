@@ -1,0 +1,2146 @@
+{
+  "systems": [
+    {
+      "id": "sys-run",
+      "title": "여정 · 저장",
+      "description": "12일 여정의 생애와 슬롯 저장을 맡는다"
+    },
+    {
+      "id": "sys-city",
+      "title": "도시 이동",
+      "description": "거점 7곳 사이의 이동과 페이즈"
+    },
+    {
+      "id": "sys-quest",
+      "title": "의뢰",
+      "description": "지정 · 다중 · 차익 · 절제 · 견제 다섯. 축이 갈려 동시 수행이 제한된다"
+    },
+    {
+      "id": "sys-appraisal",
+      "title": "감정",
+      "description": "숨은 품질의 범위를 좁힌다. 값을 사는 행동이다"
+    },
+    {
+      "id": "sys-information",
+      "title": "정보 채널",
+      "description": "수요 동향 · 출품 목록 · 경쟁자 예산 · 유물 정보"
+    },
+    {
+      "id": "sys-auction",
+      "title": "경매 진행",
+      "description": "하루 8점을 공개 호가로 붙인다"
+    },
+    {
+      "id": "sys-bots",
+      "title": "경쟁자",
+      "description": "숙적 베넷 상시 + 뜨내기 2인 교체. 자금은 플레이어와 무관한 절대값이다"
+    },
+    {
+      "id": "sys-inventory",
+      "title": "보유 · 처분",
+      "description": "보관칸이 한도다. 담보로 잡히면 잠긴다"
+    },
+    {
+      "id": "sys-set",
+      "title": "족보 판매",
+      "description": "같은 물건을 의뢰와 세트에 두 번 못 쓴다"
+    },
+    {
+      "id": "sys-loan",
+      "title": "채권",
+      "description": "재고를 담보로 잡는다. 현금은 담보가 아니다"
+    },
+    {
+      "id": "sys-shop",
+      "title": "상회",
+      "description": "단계는 의무다. 기한까지 못 올리면 게임 오버"
+    },
+    {
+      "id": "sys-market",
+      "title": "시세",
+      "description": "계열별 지수가 처분가를 흔든다"
+    },
+    {
+      "id": "sys-relic",
+      "title": "유물 경매 · 전시관",
+      "description": "12일차 이후. 거물 3인은 절대 자금이다"
+    },
+    {
+      "id": "sys-meta",
+      "title": "영구 · 캠페인",
+      "description": "여정을 넘어 남는 것"
+    },
+    {
+      "id": "sys-ui",
+      "title": "설정 · 모달 · 튜토리얼",
+      "description": "판정에 안 들어가는 표시 계층"
+    }
+  ],
+  "types": [
+    {
+      "id": "Lot",
+      "title": "출품 물건",
+      "description": "기저가는 공개, 품질은 감춤. 그 차이가 정보의 값어치다",
+      "fields": [
+        "id",
+        "order",
+        "name",
+        "family",
+        "grade",
+        "basePrice(공개)",
+        "startingPrice(공개)",
+        "quality(감춤)",
+        "appraisal",
+        "wonBy",
+        "finalPrice"
+      ]
+    },
+    {
+      "id": "Bot",
+      "title": "일반 경매 경쟁자",
+      "description": "자금은 경쟁자 정보 채널로만 보인다",
+      "fields": [
+        "id",
+        "name",
+        "nemesis",
+        "target",
+        "cash(감춤)",
+        "bidCap",
+        "passed",
+        "spent"
+      ]
+    },
+    {
+      "id": "Tycoon",
+      "title": "유물 경매 거물",
+      "description": "플레이어 자금과 무관한 절대값. 여정 시작 시 생성되어 저장된다",
+      "fields": [
+        "id",
+        "name",
+        "cash",
+        "intent",
+        "alloc[3]",
+        "passed",
+        "spent"
+      ]
+    },
+    {
+      "id": "Appraisal",
+      "title": "감정 결과",
+      "description": "범위이지 확정값이 아니다",
+      "fields": [
+        "type(quick|deep)",
+        "low",
+        "high",
+        "cost"
+      ]
+    },
+    {
+      "id": "InventoryItem",
+      "title": "보유품",
+      "description": "locked 는 담보로 잡힌 상태다 - 팔 수 없다",
+      "fields": [
+        "...Lot",
+        "buyPrice",
+        "fee",
+        "acquiredDay",
+        "locked",
+        "sold",
+        "seized"
+      ]
+    },
+    {
+      "id": "Quest",
+      "title": "의뢰",
+      "description": "인도형은 물건을 넘기고 조건형은 안 넘긴다",
+      "fields": [
+        "id",
+        "name",
+        "fee",
+        "reward",
+        "targetFamily",
+        "targetBot",
+        "acceptedDay",
+        "completed"
+      ]
+    },
+    {
+      "id": "HanboPattern",
+      "title": "족보 판매",
+      "description": "기한이 있다. 못 채우면 소멸한다",
+      "fields": [
+        "id",
+        "name",
+        "mult",
+        "need",
+        "acceptedDay",
+        "deadline",
+        "completed"
+      ]
+    },
+    {
+      "id": "Loan",
+      "title": "담보 대출",
+      "description": "담보는 재고다",
+      "fields": [
+        "principal",
+        "repay",
+        "dueDay",
+        "collateralId"
+      ]
+    },
+    {
+      "id": "Relic",
+      "title": "유물",
+      "description": "영구 효과다",
+      "fields": [
+        "id",
+        "tier(low|mid|high)",
+        "name",
+        "desc",
+        "icon"
+      ]
+    },
+    {
+      "id": "MarketEvent",
+      "title": "시장 사건",
+      "description": "하루에 한 계열을 흔든다",
+      "fields": [
+        "day",
+        "family",
+        "delta",
+        "text"
+      ]
+    },
+    {
+      "id": "SaveSlot",
+      "title": "저장 슬롯",
+      "description": "",
+      "fields": [
+        "slot",
+        "day",
+        "cash",
+        "shopStage",
+        "savedAt"
+      ]
+    },
+    {
+      "id": "BidLogEntry",
+      "title": "입찰 기록",
+      "description": "",
+      "fields": [
+        "bidder",
+        "amount",
+        "text"
+      ]
+    },
+    {
+      "id": "AuctionResult",
+      "title": "출품 결과",
+      "description": "",
+      "fields": [
+        "lotId",
+        "name",
+        "winner",
+        "price",
+        "fee"
+      ]
+    },
+    {
+      "id": "Ending",
+      "title": "종료",
+      "description": "파산 · 개시 마감 · 유물 경매 빈손 · 여정 성공",
+      "fields": [
+        "type",
+        "reason"
+      ]
+    },
+    {
+      "id": "Settings",
+      "title": "설정",
+      "description": "",
+      "fields": [
+        "contrast",
+        "textScale",
+        "tutorial",
+        "qa"
+      ]
+    }
+  ],
+  "data": [
+    {
+      "id": "run.scene",
+      "title": "현재 씬",
+      "typeRef": "String",
+      "sourceMode": "engine",
+      "ownerSystemRef": "sys-run",
+      "generatorRef": "",
+      "description": "현재 씬 id. 전이의 결과이지 원인이 아니다"
+    },
+    {
+      "id": "run.day",
+      "title": "현재 일차",
+      "typeRef": "Number",
+      "sourceMode": "engine",
+      "ownerSystemRef": "sys-run",
+      "generatorRef": "",
+      "description": "1~12. 감정 정밀도·봇 자금·물가가 전부 이 값에서 파생된다"
+    },
+    {
+      "id": "run.totalDays",
+      "title": "전체 일수",
+      "typeRef": "Number",
+      "sourceMode": "engine",
+      "ownerSystemRef": "sys-run",
+      "generatorRef": "",
+      "description": "12 고정"
+    },
+    {
+      "id": "run.slot",
+      "title": "저장 슬롯",
+      "typeRef": "Number",
+      "sourceMode": "user",
+      "ownerSystemRef": "sys-run",
+      "generatorRef": "",
+      "description": "저장 슬롯 3개 중 하나"
+    },
+    {
+      "id": "run.ended",
+      "title": "여정 종료 여부",
+      "typeRef": "Boolean",
+      "sourceMode": "engine",
+      "ownerSystemRef": "sys-run",
+      "generatorRef": "",
+      "description": ""
+    },
+    {
+      "id": "run.ending.type",
+      "title": "종료 유형",
+      "typeRef": "String",
+      "sourceMode": "engine",
+      "ownerSystemRef": "sys-run",
+      "generatorRef": "",
+      "description": "파산 · 개시 마감 · 유물 경매 빈손 · 여정 성공"
+    },
+    {
+      "id": "run.ending.reason",
+      "title": "종료 이유",
+      "typeRef": "String",
+      "sourceMode": "engine",
+      "ownerSystemRef": "sys-run",
+      "generatorRef": "",
+      "description": "사람이 읽는 사유. 판정에 쓰지 않는다"
+    },
+    {
+      "id": "run.startCash",
+      "title": "여정 시작 자금",
+      "typeRef": "Number",
+      "sourceMode": "engine",
+      "ownerSystemRef": "sys-run",
+      "generatorRef": "",
+      "description": "20,000G. 절제 의뢰의 기준이라 여정 내내 불변이어야 한다"
+    },
+    {
+      "id": "player.cash",
+      "title": "현재 자금",
+      "typeRef": "Number",
+      "sourceMode": "engine",
+      "ownerSystemRef": "sys-inventory",
+      "generatorRef": "",
+      "description": "0 이하면 파산(sys-run 이 판정)"
+    },
+    {
+      "id": "player.inventory",
+      "title": "보유품 목록",
+      "typeRef": "InventoryItem[]",
+      "sourceMode": "engine",
+      "ownerSystemRef": "sys-inventory",
+      "generatorRef": "",
+      "description": "locked 인 것은 담보라 못 판다"
+    },
+    {
+      "id": "player.storageCapacity",
+      "title": "보관칸",
+      "typeRef": "Number",
+      "sourceMode": "derived",
+      "ownerSystemRef": "sys-inventory",
+      "generatorRef": "",
+      "description": "shop.stage 에서 파생. 4 / 5 / 6 / 7"
+    },
+    {
+      "id": "shop.stage",
+      "title": "상회 단계",
+      "typeRef": "Number",
+      "sourceMode": "engine",
+      "ownerSystemRef": "sys-shop",
+      "generatorRef": "",
+      "description": "1~4. 수수료 5→3→1→0% · 정보할인·세트배수·의뢰보상이 전부 여기서 파생된다"
+    },
+    {
+      "id": "shop.displayName",
+      "title": "상회 화면 표시명",
+      "typeRef": "String",
+      "sourceMode": "derived",
+      "ownerSystemRef": "sys-shop",
+      "generatorRef": "",
+      "description": "표시용"
+    },
+    {
+      "id": "shop.completedQuestsTotal",
+      "title": "누적 의뢰 완료",
+      "typeRef": "Number",
+      "sourceMode": "engine",
+      "ownerSystemRef": "sys-quest",
+      "generatorRef": "",
+      "description": "승급 자격 조건. 누적이라 줄지 않는다"
+    },
+    {
+      "id": "shop.upgradeCost",
+      "title": "다음 승급비",
+      "typeRef": "Number",
+      "sourceMode": "derived",
+      "ownerSystemRef": "sys-shop",
+      "generatorRef": "",
+      "description": "7,000 / 11,000 / 16,500 (합 34,500, 6.9). 6.6 이 곡선 자체는 미결로 두었으므로 잠정이다"
+    },
+    {
+      "id": "shop.deadlineRequiredStage",
+      "title": "현재 마감 요구 단계",
+      "typeRef": "Number",
+      "sourceMode": "derived",
+      "ownerSystemRef": "sys-shop",
+      "generatorRef": "",
+      "description": "run.day 에서 파생. 4일차 전 2단계 · 7일차 전 3단계 · 10일차 전 4단계"
+    },
+    {
+      "id": "daily.phase",
+      "title": "하루 페이즈",
+      "typeRef": "String",
+      "sourceMode": "engine",
+      "ownerSystemRef": "sys-city",
+      "generatorRef": "",
+      "description": "city | auction | settlement"
+    },
+    {
+      "id": "daily.event",
+      "title": "오늘 시장 사건",
+      "typeRef": "MarketEvent",
+      "sourceMode": "engine",
+      "ownerSystemRef": "sys-market",
+      "generatorRef": "",
+      "description": "오늘 한 계열을 흔든다"
+    },
+    {
+      "id": "daily.lots",
+      "title": "오늘 출품 8점",
+      "typeRef": "Lot[]",
+      "sourceMode": "engine",
+      "ownerSystemRef": "sys-auction",
+      "generatorRef": "",
+      "description": "8점. 기저가는 12일 내내 고정이다 - 난이도는 물가가 아니라 봇 자본 곡선이 만든다"
+    },
+    {
+      "id": "daily.lotIndex",
+      "title": "현재 출품 순번",
+      "typeRef": "Number",
+      "sourceMode": "engine",
+      "ownerSystemRef": "sys-auction",
+      "generatorRef": "",
+      "description": "0~8. 8이면 하루 경매가 끝났다"
+    },
+    {
+      "id": "daily.acceptedQuests",
+      "title": "수주 의뢰",
+      "typeRef": "Quest[]",
+      "sourceMode": "engine",
+      "ownerSystemRef": "sys-quest",
+      "generatorRef": "",
+      "description": "축이 갈려 절반이 서로 충돌한다"
+    },
+    {
+      "id": "daily.appraisals",
+      "title": "감정 결과",
+      "typeRef": "Map<lotId, Appraisal>",
+      "sourceMode": "engine",
+      "ownerSystemRef": "sys-appraisal",
+      "generatorRef": "",
+      "description": "범위다. 확정 품질이 아니다"
+    },
+    {
+      "id": "daily.info",
+      "title": "구매 정보",
+      "typeRef": "Map<channel, Boolean>",
+      "sourceMode": "engine",
+      "ownerSystemRef": "sys-information",
+      "generatorRef": "",
+      "description": "오늘 산 채널"
+    },
+    {
+      "id": "hanbo.patterns",
+      "title": "족보 6종 패턴",
+      "typeRef": "HanboPattern[]",
+      "sourceMode": "engine",
+      "ownerSystemRef": "sys-set",
+      "generatorRef": "",
+      "description": "수락·기한 없이 보유품 조합이 성립할 때 즉시 판매할 수 있다."
+    },
+    {
+      "id": "daily.auctionResults",
+      "title": "오늘 경매 결과",
+      "typeRef": "AuctionResult[]",
+      "sourceMode": "engine",
+      "ownerSystemRef": "sys-auction",
+      "generatorRef": "",
+      "description": ""
+    },
+    {
+      "id": "daily.expense",
+      "title": "오늘 지출",
+      "typeRef": "Number",
+      "sourceMode": "engine",
+      "ownerSystemRef": "sys-inventory",
+      "generatorRef": "",
+      "description": "절제 의뢰의 판정 입력"
+    },
+    {
+      "id": "daily.income",
+      "title": "오늘 수입",
+      "typeRef": "Number",
+      "sourceMode": "engine",
+      "ownerSystemRef": "sys-inventory",
+      "generatorRef": "",
+      "description": ""
+    },
+    {
+      "id": "daily.settlement",
+      "title": "12일차 정산 상태",
+      "typeRef": "Boolean",
+      "sourceMode": "engine",
+      "ownerSystemRef": "sys-run",
+      "generatorRef": "",
+      "description": "12일차에만 열린다"
+    },
+    {
+      "id": "market.indexByFamily",
+      "title": "계열별 시세 지수",
+      "typeRef": "Map<family, Number>",
+      "sourceMode": "engine",
+      "ownerSystemRef": "sys-market",
+      "generatorRef": "",
+      "description": "계열 6종. AR(1) 평균회귀 phi=0.7 · 충격 sd 0.0761 (6.13)"
+    },
+    {
+      "id": "market.schedule",
+      "title": "시장 사건 일정",
+      "typeRef": "MarketEvent[]",
+      "sourceMode": "engine",
+      "ownerSystemRef": "sys-market",
+      "generatorRef": "",
+      "description": "12일치. 여정 시작 시 생성되어 고정된다"
+    },
+    {
+      "id": "market.history",
+      "title": "과거 시세 기록",
+      "typeRef": "Number[][]",
+      "sourceMode": "engine",
+      "ownerSystemRef": "sys-market",
+      "generatorRef": "",
+      "description": "수요 동향 채널이 읽는다"
+    },
+    {
+      "id": "auction.currentLot",
+      "title": "현재 출품",
+      "typeRef": "Lot",
+      "sourceMode": "derived",
+      "ownerSystemRef": "sys-auction",
+      "generatorRef": "",
+      "description": "daily.lots[daily.lotIndex]"
+    },
+    {
+      "id": "auction.currentBid",
+      "title": "현재 호가",
+      "typeRef": "Number",
+      "sourceMode": "engine",
+      "ownerSystemRef": "sys-auction",
+      "generatorRef": "",
+      "description": "낙찰가는 플레이어가 쓴 값이 아니라 이 값이다"
+    },
+    {
+      "id": "auction.minimumRaise",
+      "title": "최소 인상폭",
+      "typeRef": "Number",
+      "sourceMode": "derived",
+      "ownerSystemRef": "sys-auction",
+      "generatorRef": "",
+      "description": "currentBid 에서 파생. 공개 호가의 그라인딩 문제가 여기 걸려 있다"
+    },
+    {
+      "id": "auction.leader",
+      "title": "최고 입찰자",
+      "typeRef": "String",
+      "sourceMode": "engine",
+      "ownerSystemRef": "sys-auction",
+      "generatorRef": "",
+      "description": "'player' 또는 봇 id"
+    },
+    {
+      "id": "auction.playerPassed",
+      "title": "플레이어 물러남",
+      "typeRef": "Boolean",
+      "sourceMode": "engine",
+      "ownerSystemRef": "sys-auction",
+      "generatorRef": "",
+      "description": "한 번 물러나면 이 출품에는 다시 못 붙는다"
+    },
+    {
+      "id": "auction.bidLog",
+      "title": "입찰 기록",
+      "typeRef": "BidLogEntry[]",
+      "sourceMode": "engine",
+      "ownerSystemRef": "sys-auction",
+      "generatorRef": "",
+      "description": "패찰 사유를 사람이 알 수 있게 하는 유일한 자리다"
+    },
+    {
+      "id": "auction.bots",
+      "title": "일반 경매 경쟁자",
+      "typeRef": "Bot[]",
+      "sourceMode": "engine",
+      "ownerSystemRef": "sys-bots",
+      "generatorRef": "",
+      "description": "숙적 1 + 뜨내기 2. 숙적 자본 = 25,000 x 1.155^day (1일차 28,875 · 12일차 140,904). 입찰 상한은 자본의 15%"
+    },
+    {
+      "id": "auction.lastResult",
+      "title": "직전 출품 결과",
+      "typeRef": "AuctionResult",
+      "sourceMode": "engine",
+      "ownerSystemRef": "sys-auction",
+      "generatorRef": "",
+      "description": "출품 결과 팝업이 읽는다"
+    },
+    {
+      "id": "quests.available",
+      "title": "오늘 제시 의뢰",
+      "typeRef": "Quest[]",
+      "sourceMode": "engine",
+      "ownerSystemRef": "sys-quest",
+      "generatorRef": "",
+      "description": "하루 3종(왕실 인가장이 있으면 5종)"
+    },
+    {
+      "id": "quests.progress",
+      "title": "경매 중 의뢰 진행",
+      "typeRef": "Map<questId, Number>",
+      "sourceMode": "engine",
+      "ownerSystemRef": "sys-quest",
+      "generatorRef": "",
+      "description": "경매 중 실시간 갱신"
+    },
+    {
+      "id": "quests.results",
+      "title": "하루 의뢰 판정",
+      "typeRef": "Object[]",
+      "sourceMode": "engine",
+      "ownerSystemRef": "sys-quest",
+      "generatorRef": "",
+      "description": "하루 끝 판정"
+    },
+    {
+      "id": "information.marketForecast",
+      "title": "수요 동향",
+      "typeRef": "Object",
+      "sourceMode": "engine",
+      "ownerSystemRef": "sys-information",
+      "generatorRef": "",
+      "description": "앞으로 3일 사건 방향"
+    },
+    {
+      "id": "information.lotCatalog",
+      "title": "출품 목록",
+      "typeRef": "Boolean",
+      "sourceMode": "engine",
+      "ownerSystemRef": "sys-information",
+      "generatorRef": "",
+      "description": "오늘 출품 8점의 계열·등급·기준가를 미리 본다."
+    },
+    {
+      "id": "information.competitors",
+      "title": "경쟁자 예산·표적",
+      "typeRef": "Object",
+      "sourceMode": "engine",
+      "ownerSystemRef": "sys-information",
+      "generatorRef": "",
+      "description": "봇 예산·표적. **\"딸 수 있나\"를 알아야 감정을 아낀다**(6.11)"
+    },
+    {
+      "id": "loan.principal",
+      "title": "대출 원금",
+      "typeRef": "Number",
+      "sourceMode": "engine",
+      "ownerSystemRef": "sys-loan",
+      "generatorRef": "",
+      "description": "담보 처분가의 60%(6.10). 현금은 담보가 아니다"
+    },
+    {
+      "id": "loan.repay",
+      "title": "상환 총액",
+      "typeRef": "Number",
+      "sourceMode": "derived",
+      "ownerSystemRef": "sys-loan",
+      "generatorRef": "",
+      "description": "원금 x 1.45(6.10). 일당 이자 13.19% 가 필요 성장률과 거의 같아 차익이 0에 가깝다 - 돈 버는 수단이 아니라 유동성 수단이다"
+    },
+    {
+      "id": "loan.dueDay",
+      "title": "만기 일차",
+      "typeRef": "Number",
+      "sourceMode": "derived",
+      "ownerSystemRef": "sys-loan",
+      "generatorRef": "",
+      "description": "실행일 + 3"
+    },
+    {
+      "id": "loan.collateralId",
+      "title": "담보 보유품",
+      "typeRef": "String",
+      "sourceMode": "engine",
+      "ownerSystemRef": "sys-loan",
+      "generatorRef": "",
+      "description": "이 보유품이 locked 가 된다"
+    },
+    {
+      "id": "loan.guildLocked",
+      "title": "조합 거래 제한",
+      "typeRef": "Boolean",
+      "sourceMode": "engine",
+      "ownerSystemRef": "sys-loan",
+      "generatorRef": "",
+      "description": "미상환 이후 조합 거래 제한"
+    },
+    {
+      "id": "loan.collateralDisposalValue",
+      "title": "담보 처분가 합계",
+      "typeRef": "Number",
+      "sourceMode": "derived",
+      "ownerSystemRef": "sys-loan",
+      "generatorRef": "",
+      "description": "한도 계산의 입력. 화면 표시와 실제 계산이 같은 값을 써야 한다"
+    },
+    {
+      "id": "competitor.bennett",
+      "title": "숙적 베넷 상태",
+      "typeRef": "Bot",
+      "sourceMode": "engine",
+      "ownerSystemRef": "sys-bots",
+      "generatorRef": "",
+      "description": "런 내내 같은 인물. 교체되지 않는다"
+    },
+    {
+      "id": "competitor.bennettRumor",
+      "title": "베넷 성장 소문",
+      "typeRef": "String",
+      "sourceMode": "engine",
+      "ownerSystemRef": "sys-bots",
+      "generatorRef": "",
+      "description": "**소문이 없으면 갑자기 낙찰이 안 되는 이유를 알 수 없다**(6.15)"
+    },
+    {
+      "id": "competitor.tycoons",
+      "title": "거물 3인 절대 데이터",
+      "typeRef": "Tycoon[]",
+      "sourceMode": "engine",
+      "ownerSystemRef": "sys-relic",
+      "generatorRef": "",
+      "description": "여정 시작 시 생성·저장. 플레이어 자금과 무관하다"
+    },
+    {
+      "id": "relicAuction.round",
+      "title": "유물 경매 라운드",
+      "typeRef": "Number",
+      "sourceMode": "engine",
+      "ownerSystemRef": "sys-relic",
+      "generatorRef": "",
+      "description": "0~2. 하급 · 중급 · 상급"
+    },
+    {
+      "id": "relicAuction.currentBid",
+      "title": "유물 현재 호가",
+      "typeRef": "Number",
+      "sourceMode": "engine",
+      "ownerSystemRef": "sys-relic",
+      "generatorRef": "",
+      "description": ""
+    },
+    {
+      "id": "relicAuction.currentRelic",
+      "title": "현재 유물",
+      "typeRef": "Relic",
+      "sourceMode": "engine",
+      "ownerSystemRef": "sys-relic",
+      "generatorRef": "",
+      "description": ""
+    },
+    {
+      "id": "relicAuction.bidLog",
+      "title": "유물 입찰 기록",
+      "typeRef": "BidLogEntry[]",
+      "sourceMode": "engine",
+      "ownerSystemRef": "sys-relic",
+      "generatorRef": "",
+      "description": ""
+    },
+    {
+      "id": "relicAuction.wins",
+      "title": "이번 여정 낙찰 유물",
+      "typeRef": "Relic[]",
+      "sourceMode": "engine",
+      "ownerSystemRef": "sys-relic",
+      "generatorRef": "",
+      "description": "빈손이면 여정 실패다"
+    },
+    {
+      "id": "meta.relics",
+      "title": "영구 유물 목록",
+      "typeRef": "String[]",
+      "sourceMode": "engine",
+      "ownerSystemRef": "sys-meta",
+      "generatorRef": "",
+      "description": "여정을 넘어 남는다"
+    },
+    {
+      "id": "meta.carry",
+      "title": "다음 여정 이월 자금",
+      "typeRef": "Number",
+      "sourceMode": "engine",
+      "ownerSystemRef": "sys-meta",
+      "generatorRef": "",
+      "description": "이월률 40%(대상인의 금고가 있으면 60%)"
+    },
+    {
+      "id": "meta.runs",
+      "title": "완료 여정 수",
+      "typeRef": "Number",
+      "sourceMode": "engine",
+      "ownerSystemRef": "sys-meta",
+      "generatorRef": "",
+      "description": ""
+    },
+    {
+      "id": "campaign.journeyIndex",
+      "title": "캠페인 여정 순번",
+      "typeRef": "Number",
+      "sourceMode": "engine",
+      "ownerSystemRef": "sys-meta",
+      "generatorRef": "",
+      "description": "3여정 캠페인의 순번"
+    },
+    {
+      "id": "campaign.highTierWins",
+      "title": "상급 유물 성공 기록",
+      "typeRef": "Number",
+      "sourceMode": "engine",
+      "ownerSystemRef": "sys-meta",
+      "generatorRef": "",
+      "description": ""
+    },
+    {
+      "id": "campaign.status",
+      "title": "캠페인 상태",
+      "typeRef": "String",
+      "sourceMode": "engine",
+      "ownerSystemRef": "sys-meta",
+      "generatorRef": "",
+      "description": ""
+    },
+    {
+      "id": "settings.contrast",
+      "title": "고대비 설정",
+      "typeRef": "Boolean",
+      "sourceMode": "user",
+      "ownerSystemRef": "sys-ui",
+      "generatorRef": "",
+      "description": ""
+    },
+    {
+      "id": "settings.textScale",
+      "title": "글자 크기",
+      "typeRef": "Number",
+      "sourceMode": "user",
+      "ownerSystemRef": "sys-ui",
+      "generatorRef": "",
+      "description": ""
+    },
+    {
+      "id": "settings.tutorial",
+      "title": "튜토리얼 설정",
+      "typeRef": "Boolean",
+      "sourceMode": "user",
+      "ownerSystemRef": "sys-ui",
+      "generatorRef": "",
+      "description": ""
+    },
+    {
+      "id": "settings.qa",
+      "title": "QA 설정",
+      "typeRef": "Boolean",
+      "sourceMode": "user",
+      "ownerSystemRef": "sys-ui",
+      "generatorRef": "",
+      "description": ""
+    },
+    {
+      "id": "ui.lastMessage",
+      "title": "최근 실패·안내 문구",
+      "typeRef": "String",
+      "sourceMode": "engine",
+      "ownerSystemRef": "sys-ui",
+      "generatorRef": "",
+      "description": "실패 사유. 판정에 쓰지 않는다"
+    },
+    {
+      "id": "ui.modal",
+      "title": "현재 모달",
+      "typeRef": "String",
+      "sourceMode": "engine",
+      "ownerSystemRef": "sys-ui",
+      "generatorRef": "",
+      "description": "열린 모달 id"
+    },
+    {
+      "id": "tutorial.step",
+      "title": "튜토리얼 단계",
+      "typeRef": "Number",
+      "sourceMode": "engine",
+      "ownerSystemRef": "sys-ui",
+      "generatorRef": "",
+      "description": ""
+    },
+    {
+      "id": "tutorial.seen",
+      "title": "첫날 튜토리얼 완료 여부",
+      "typeRef": "Boolean",
+      "sourceMode": "user",
+      "ownerSystemRef": "sys-ui",
+      "generatorRef": "",
+      "description": "완료 또는 건너뛰기 후 true. 새 여정에서도 다시 표시하지 않는다."
+    }
+  ],
+  "actions": [
+    {
+      "id": "act-start-new-run",
+      "title": "새 여정 시작",
+      "ownerSystemRef": "sys-run",
+      "inputTypeRef": "",
+      "outputTypeRef": "",
+      "readRefs": [
+        "run.slot"
+      ],
+      "writeRefs": [
+        "competitor.bennett",
+        "competitor.tycoons",
+        "market.history",
+        "market.schedule",
+        "player.cash",
+        "run.day",
+        "run.ended",
+        "run.scene",
+        "run.startCash",
+        "run.totalDays",
+        "shop.displayName",
+        "shop.stage"
+      ],
+      "description": "저장 슬롯"
+    },
+    {
+      "id": "act-open-continue",
+      "title": "이어하기 열기",
+      "ownerSystemRef": "sys-run",
+      "inputTypeRef": "",
+      "outputTypeRef": "",
+      "readRefs": [],
+      "writeRefs": [
+        "run.scene"
+      ],
+      "description": "없음"
+    },
+    {
+      "id": "act-load-save",
+      "title": "저장 불러오기",
+      "ownerSystemRef": "sys-run",
+      "inputTypeRef": "",
+      "outputTypeRef": "",
+      "readRefs": [
+        "run.slot"
+      ],
+      "writeRefs": [
+        "competitor.bennett",
+        "market.indexByFamily",
+        "player.cash",
+        "player.inventory",
+        "run.day",
+        "run.scene",
+        "shop.stage"
+      ],
+      "description": "슬롯 번호"
+    },
+    {
+      "id": "act-delete-save",
+      "title": "저장 삭제",
+      "ownerSystemRef": "sys-ui",
+      "inputTypeRef": "",
+      "outputTypeRef": "",
+      "readRefs": [
+        "run.slot"
+      ],
+      "writeRefs": [],
+      "description": "슬롯 번호"
+    },
+    {
+      "id": "act-save-game",
+      "title": "현재 여정 저장",
+      "ownerSystemRef": "sys-run",
+      "inputTypeRef": "",
+      "outputTypeRef": "",
+      "readRefs": [
+        "player.cash",
+        "player.inventory",
+        "run.day",
+        "shop.stage"
+      ],
+      "writeRefs": [
+        "run.slot"
+      ],
+      "description": "현재 전체 상태"
+    },
+    {
+      "id": "act-open-settings",
+      "title": "설정 열기",
+      "ownerSystemRef": "sys-ui",
+      "inputTypeRef": "",
+      "outputTypeRef": "",
+      "readRefs": [
+        "settings.contrast",
+        "settings.qa",
+        "settings.textScale",
+        "settings.tutorial"
+      ],
+      "writeRefs": [
+        "ui.modal"
+      ],
+      "description": "없음"
+    },
+    {
+      "id": "act-apply-settings",
+      "title": "설정 적용",
+      "ownerSystemRef": "sys-ui",
+      "inputTypeRef": "",
+      "outputTypeRef": "",
+      "readRefs": [],
+      "writeRefs": [
+        "settings.contrast",
+        "settings.qa",
+        "settings.textScale",
+        "settings.tutorial",
+        "ui.modal"
+      ],
+      "description": "고대비·글자 크기·튜토리얼·QA"
+    },
+    {
+      "id": "act-exit-game",
+      "title": "게임 종료",
+      "ownerSystemRef": "sys-ui",
+      "inputTypeRef": "",
+      "outputTypeRef": "",
+      "readRefs": [],
+      "writeRefs": [],
+      "description": "없음"
+    },
+    {
+      "id": "act-complete-loading",
+      "title": "여정 생성 완료",
+      "ownerSystemRef": "sys-quest",
+      "inputTypeRef": "",
+      "outputTypeRef": "",
+      "readRefs": [
+        "run.day"
+      ],
+      "writeRefs": [
+        "auction.bots",
+        "hanbo.patterns",
+        "daily.event",
+        "daily.lots",
+        "daily.phase",
+        "quests.available",
+        "run.scene"
+      ],
+      "description": "고정 엔진 초기 상태"
+    },
+    {
+      "id": "act-enter-office",
+      "title": "의뢰소 입장",
+      "ownerSystemRef": "sys-run",
+      "inputTypeRef": "",
+      "outputTypeRef": "",
+      "readRefs": [
+        "daily.phase"
+      ],
+      "writeRefs": [
+        "run.scene"
+      ],
+      "description": "없음"
+    },
+    {
+      "id": "act-enter-tavern",
+      "title": "술집 입장",
+      "ownerSystemRef": "sys-run",
+      "inputTypeRef": "",
+      "outputTypeRef": "",
+      "readRefs": [
+        "daily.phase"
+      ],
+      "writeRefs": [
+        "run.scene"
+      ],
+      "description": "없음"
+    },
+    {
+      "id": "act-enter-exchange",
+      "title": "거래소 입장",
+      "ownerSystemRef": "sys-run",
+      "inputTypeRef": "",
+      "outputTypeRef": "",
+      "readRefs": [
+        "daily.phase"
+      ],
+      "writeRefs": [
+        "run.scene"
+      ],
+      "description": "없음"
+    },
+    {
+      "id": "act-enter-guild",
+      "title": "조합 입장",
+      "ownerSystemRef": "sys-run",
+      "inputTypeRef": "",
+      "outputTypeRef": "",
+      "readRefs": [
+        "daily.phase",
+        "loan.guildLocked"
+      ],
+      "writeRefs": [
+        "run.scene"
+      ],
+      "description": "없음"
+    },
+    {
+      "id": "act-enter-merchant",
+      "title": "상회 입장",
+      "ownerSystemRef": "sys-run",
+      "inputTypeRef": "",
+      "outputTypeRef": "",
+      "readRefs": [
+        "daily.phase"
+      ],
+      "writeRefs": [
+        "run.scene"
+      ],
+      "description": "없음"
+    },
+    {
+      "id": "act-enter-auction",
+      "title": "경매장 입장",
+      "ownerSystemRef": "sys-auction",
+      "inputTypeRef": "",
+      "outputTypeRef": "",
+      "readRefs": [
+        "daily.lots",
+        "daily.phase"
+      ],
+      "writeRefs": [
+        "auction.bots",
+        "auction.currentBid",
+        "auction.currentLot",
+        "daily.lotIndex",
+        "daily.phase",
+        "run.scene"
+      ],
+      "description": "없음"
+    },
+    {
+      "id": "act-enter-museum",
+      "title": "유물 전시관 입장",
+      "ownerSystemRef": "sys-run",
+      "inputTypeRef": "",
+      "outputTypeRef": "",
+      "readRefs": [
+        "meta.relics"
+      ],
+      "writeRefs": [
+        "run.scene"
+      ],
+      "description": "진입 맥락"
+    },
+    {
+      "id": "act-return-city",
+      "title": "도시로 돌아가기",
+      "ownerSystemRef": "sys-run",
+      "inputTypeRef": "",
+      "outputTypeRef": "",
+      "readRefs": [],
+      "writeRefs": [
+        "run.scene"
+      ],
+      "description": "없음"
+    },
+    {
+      "id": "act-switch-office-tab",
+      "title": "의뢰·감정 탭 전환",
+      "ownerSystemRef": "sys-ui",
+      "inputTypeRef": "",
+      "outputTypeRef": "",
+      "readRefs": [],
+      "writeRefs": [
+        "ui.modal"
+      ],
+      "description": "탭 종류"
+    },
+    {
+      "id": "act-accept-quest",
+      "title": "의뢰 수주",
+      "ownerSystemRef": "sys-inventory",
+      "inputTypeRef": "",
+      "outputTypeRef": "",
+      "readRefs": [
+        "player.cash",
+        "quests.available"
+      ],
+      "writeRefs": [
+        "daily.acceptedQuests",
+        "daily.expense",
+        "player.cash"
+      ],
+      "description": "의뢰 ID"
+    },
+    {
+      "id": "act-appraise-lot",
+      "title": "출품 감정",
+      "ownerSystemRef": "sys-inventory",
+      "inputTypeRef": "",
+      "outputTypeRef": "",
+      "readRefs": [
+        "auction.currentLot",
+        "player.cash",
+        "run.day",
+        "shop.stage"
+      ],
+      "writeRefs": [
+        "daily.appraisals",
+        "daily.expense",
+        "player.cash"
+      ],
+      "description": "출품 ID·감정 상품"
+    },
+    {
+      "id": "act-buy-market-forecast",
+      "title": "수요 동향 구매",
+      "ownerSystemRef": "sys-information",
+      "inputTypeRef": "",
+      "outputTypeRef": "",
+      "readRefs": [
+        "daily.lots",
+        "player.cash",
+        "shop.stage"
+      ],
+      "writeRefs": [
+        "daily.expense",
+        "daily.info",
+        "information.marketForecast",
+        "player.cash"
+      ],
+      "description": "수요 동향 상품"
+    },
+    {
+      "id": "act-buy-lot-catalog",
+      "title": "출품 목록 구매",
+      "ownerSystemRef": "sys-information",
+      "inputTypeRef": "",
+      "outputTypeRef": "",
+      "readRefs": [
+        "daily.lots",
+        "player.cash",
+        "shop.stage"
+      ],
+      "writeRefs": [
+        "daily.info",
+        "daily.expense",
+        "information.lotCatalog",
+        "player.cash"
+      ],
+      "description": "오늘 출품 목록 정보"
+    },
+    {
+      "id": "act-buy-competitor-info",
+      "title": "경쟁자 정보 구매",
+      "ownerSystemRef": "sys-information",
+      "inputTypeRef": "",
+      "outputTypeRef": "",
+      "readRefs": [
+        "auction.bots",
+        "daily.lots",
+        "player.cash",
+        "shop.stage"
+      ],
+      "writeRefs": [
+        "daily.expense",
+        "daily.info",
+        "information.competitors",
+        "player.cash"
+      ],
+      "description": "경쟁자 예산·표적 상품"
+    },
+    {
+      "id": "act-switch-exchange-tab",
+      "title": "거래소 탭 전환",
+      "ownerSystemRef": "sys-ui",
+      "inputTypeRef": "",
+      "outputTypeRef": "",
+      "readRefs": [],
+      "writeRefs": [
+        "ui.modal"
+      ],
+      "description": "즉시 처분·족보 판매·시세판"
+    },
+    {
+      "id": "act-sell-immediate",
+      "title": "즉시 처분",
+      "ownerSystemRef": "sys-inventory",
+      "inputTypeRef": "",
+      "outputTypeRef": "",
+      "readRefs": [
+        "market.indexByFamily",
+        "player.inventory"
+      ],
+      "writeRefs": [
+        "daily.income",
+        "player.cash",
+        "player.inventory"
+      ],
+      "description": "보유품 ID"
+    },
+    {
+      "id": "act-form-hanbo",
+      "title": "족보 판매",
+      "ownerSystemRef": "sys-set",
+      "inputTypeRef": "",
+      "outputTypeRef": "",
+      "readRefs": [
+        "hanbo.patterns",
+        "player.inventory",
+        "market.indexByFamily",
+        "shop.stage"
+      ],
+      "writeRefs": [
+        "player.cash",
+        "player.inventory",
+        "daily.income",
+        "ui.modal"
+      ],
+      "description": "성립 가능한 족보와 보유품"
+    },
+    {
+      "id": "act-finish-settlement",
+      "title": "12일차 정산 종료",
+      "ownerSystemRef": "sys-run",
+      "inputTypeRef": "",
+      "outputTypeRef": "",
+      "readRefs": [
+        "market.indexByFamily",
+        "player.inventory"
+      ],
+      "writeRefs": [
+        "daily.settlement",
+        "player.cash",
+        "player.inventory",
+        "run.scene"
+      ],
+      "description": "없음"
+    },
+    {
+      "id": "act-take-loan",
+      "title": "담보 대출 실행",
+      "ownerSystemRef": "sys-loan",
+      "inputTypeRef": "",
+      "outputTypeRef": "",
+      "readRefs": [
+        "player.inventory",
+        "run.day"
+      ],
+      "writeRefs": [
+        "daily.income",
+        "loan.collateralDisposalValue",
+        "loan.collateralId",
+        "loan.dueDay",
+        "loan.principal",
+        "loan.repay",
+        "player.cash",
+        "player.inventory"
+      ],
+      "description": "담보 보유품"
+    },
+    {
+      "id": "act-repay-loan",
+      "title": "대출 상환",
+      "ownerSystemRef": "sys-loan",
+      "inputTypeRef": "",
+      "outputTypeRef": "",
+      "readRefs": [
+        "loan.repay",
+        "player.cash"
+      ],
+      "writeRefs": [
+        "daily.expense",
+        "loan.collateralId",
+        "loan.dueDay",
+        "loan.principal",
+        "loan.repay",
+        "player.cash",
+        "player.inventory"
+      ],
+      "description": "활성 대출"
+    },
+    {
+      "id": "act-process-loan-due",
+      "title": "대출 만기 처리",
+      "ownerSystemRef": "sys-run",
+      "inputTypeRef": "",
+      "outputTypeRef": "",
+      "readRefs": [
+        "loan.collateralId",
+        "loan.dueDay",
+        "player.cash",
+        "run.day"
+      ],
+      "writeRefs": [
+        "loan.guildLocked",
+        "loan.principal",
+        "player.inventory",
+        "run.ended",
+        "run.ending.reason",
+        "run.ending.type"
+      ],
+      "description": "활성 대출"
+    },
+    {
+      "id": "act-upgrade-shop",
+      "title": "상회 승급",
+      "ownerSystemRef": "sys-inventory",
+      "inputTypeRef": "",
+      "outputTypeRef": "",
+      "readRefs": [
+        "player.cash",
+        "shop.completedQuestsTotal",
+        "shop.deadlineRequiredStage",
+        "shop.stage",
+        "shop.upgradeCost"
+      ],
+      "writeRefs": [
+        "daily.expense",
+        "player.cash",
+        "player.storageCapacity",
+        "shop.displayName",
+        "shop.stage"
+      ],
+      "description": "현재 상회 단계"
+    },
+    {
+      "id": "act-place-bid",
+      "title": "입찰",
+      "ownerSystemRef": "sys-auction",
+      "inputTypeRef": "",
+      "outputTypeRef": "",
+      "readRefs": [
+        "auction.currentBid",
+        "auction.minimumRaise",
+        "auction.playerPassed",
+        "player.cash",
+        "player.inventory",
+        "player.storageCapacity",
+        "shop.stage"
+      ],
+      "writeRefs": [
+        "auction.bidLog",
+        "auction.currentBid",
+        "auction.leader",
+        "auction.minimumRaise"
+      ],
+      "description": "입찰 금액"
+    },
+    {
+      "id": "act-pass-lot",
+      "title": "물러나기",
+      "ownerSystemRef": "sys-auction",
+      "inputTypeRef": "",
+      "outputTypeRef": "",
+      "readRefs": [],
+      "writeRefs": [
+        "auction.bidLog",
+        "auction.playerPassed"
+      ],
+      "description": "없음"
+    },
+    {
+      "id": "act-run-bot-turn",
+      "title": "경쟁자 입찰 판정",
+      "ownerSystemRef": "sys-auction",
+      "inputTypeRef": "",
+      "outputTypeRef": "",
+      "readRefs": [
+        "auction.bots",
+        "auction.currentBid",
+        "auction.currentLot",
+        "auction.minimumRaise",
+        "competitor.bennett"
+      ],
+      "writeRefs": [
+        "auction.bidLog",
+        "auction.bots",
+        "auction.currentBid",
+        "auction.leader"
+      ],
+      "description": "경쟁자 시장축·독립 사정축·예산"
+    },
+    {
+      "id": "act-finalize-lot",
+      "title": "출품 결과 확정",
+      "ownerSystemRef": "sys-inventory",
+      "inputTypeRef": "",
+      "outputTypeRef": "",
+      "readRefs": [
+        "auction.currentBid",
+        "auction.currentLot",
+        "auction.leader",
+        "player.cash",
+        "shop.stage"
+      ],
+      "writeRefs": [
+        "auction.lastResult",
+        "daily.auctionResults",
+        "daily.expense",
+        "player.cash",
+        "player.inventory",
+        "quests.progress"
+      ],
+      "description": "최종 최고 입찰자·호가"
+    },
+    {
+      "id": "act-next-lot",
+      "title": "다음 출품 진행",
+      "ownerSystemRef": "sys-auction",
+      "inputTypeRef": "",
+      "outputTypeRef": "",
+      "readRefs": [
+        "daily.lotIndex",
+        "daily.lots"
+      ],
+      "writeRefs": [
+        "auction.bidLog",
+        "auction.currentBid",
+        "auction.currentLot",
+        "auction.leader",
+        "auction.playerPassed",
+        "daily.lotIndex"
+      ],
+      "description": "출품 결과 확인"
+    },
+    {
+      "id": "act-next-day",
+      "title": "다음 날 진행",
+      "ownerSystemRef": "sys-run",
+      "inputTypeRef": "",
+      "outputTypeRef": "",
+      "readRefs": [
+        "daily.acceptedQuests",
+        "loan.dueDay",
+        "player.cash",
+        "run.day",
+        "shop.deadlineRequiredStage",
+        "shop.stage"
+      ],
+      "writeRefs": [
+        "auction.bots",
+        "competitor.bennettRumor",
+        "daily.event",
+        "daily.lots",
+        "daily.phase",
+        "market.history",
+        "market.indexByFamily",
+        "quests.results",
+        "run.day",
+        "run.ended",
+        "run.ending.reason",
+        "run.ending.type",
+        "shop.completedQuestsTotal",
+        "shop.deadlineRequiredStage"
+      ],
+      "description": "하루 결산 결과"
+    },
+    {
+      "id": "act-open-day12-settlement",
+      "title": "12일차 정산 열기",
+      "ownerSystemRef": "sys-run",
+      "inputTypeRef": "",
+      "outputTypeRef": "",
+      "readRefs": [
+        "player.inventory",
+        "run.day"
+      ],
+      "writeRefs": [
+        "daily.settlement",
+        "run.scene"
+      ],
+      "description": "없음"
+    },
+    {
+      "id": "act-check-final-qualification",
+      "title": "유물 경매 자격 판정",
+      "ownerSystemRef": "sys-run",
+      "inputTypeRef": "",
+      "outputTypeRef": "",
+      "readRefs": [
+        "loan.principal",
+        "player.cash",
+        "run.totalDays",
+        "shop.stage"
+      ],
+      "writeRefs": [
+        "run.ended",
+        "run.ending.reason",
+        "run.ending.type",
+        "run.scene"
+      ],
+      "description": "상회 단계"
+    },
+    {
+      "id": "act-start-relic-auction",
+      "title": "유물 경매 입장",
+      "ownerSystemRef": "sys-relic",
+      "inputTypeRef": "",
+      "outputTypeRef": "",
+      "readRefs": [
+        "competitor.tycoons",
+        "meta.relics"
+      ],
+      "writeRefs": [
+        "relicAuction.currentBid",
+        "relicAuction.currentRelic",
+        "relicAuction.round",
+        "run.scene"
+      ],
+      "description": "없음"
+    },
+    {
+      "id": "act-place-relic-bid",
+      "title": "유물 입찰",
+      "ownerSystemRef": "sys-relic",
+      "inputTypeRef": "",
+      "outputTypeRef": "",
+      "readRefs": [
+        "player.cash",
+        "relicAuction.currentBid"
+      ],
+      "writeRefs": [
+        "relicAuction.bidLog",
+        "relicAuction.currentBid"
+      ],
+      "description": "입찰 금액"
+    },
+    {
+      "id": "act-pass-relic",
+      "title": "유물 경매 물러나기",
+      "ownerSystemRef": "sys-relic",
+      "inputTypeRef": "",
+      "outputTypeRef": "",
+      "readRefs": [],
+      "writeRefs": [
+        "relicAuction.bidLog"
+      ],
+      "description": "없음"
+    },
+    {
+      "id": "act-run-tycoon-turn",
+      "title": "거물 입찰 판정",
+      "ownerSystemRef": "sys-relic",
+      "inputTypeRef": "",
+      "outputTypeRef": "",
+      "readRefs": [
+        "competitor.tycoons",
+        "relicAuction.currentBid",
+        "relicAuction.round"
+      ],
+      "writeRefs": [
+        "competitor.tycoons",
+        "relicAuction.bidLog",
+        "relicAuction.currentBid"
+      ],
+      "description": "거물 절대 자금·의중·라운드 배분"
+    },
+    {
+      "id": "act-next-relic-round",
+      "title": "다음 유물 라운드",
+      "ownerSystemRef": "sys-relic",
+      "inputTypeRef": "",
+      "outputTypeRef": "",
+      "readRefs": [
+        "relicAuction.currentBid",
+        "relicAuction.currentRelic",
+        "relicAuction.round"
+      ],
+      "writeRefs": [
+        "relicAuction.bidLog",
+        "relicAuction.currentBid",
+        "relicAuction.currentRelic",
+        "relicAuction.round",
+        "relicAuction.wins"
+      ],
+      "description": "라운드 결과"
+    },
+    {
+      "id": "act-finish-relic-auction",
+      "title": "유물 경매 정산",
+      "ownerSystemRef": "sys-run",
+      "inputTypeRef": "",
+      "outputTypeRef": "",
+      "readRefs": [
+        "player.cash",
+        "relicAuction.wins"
+      ],
+      "writeRefs": [
+        "campaign.highTierWins",
+        "meta.carry",
+        "meta.relics",
+        "meta.runs",
+        "run.ended",
+        "run.ending.reason",
+        "run.ending.type",
+        "run.scene"
+      ],
+      "description": "3라운드 낙찰 결과"
+    },
+    {
+      "id": "act-start-next-journey",
+      "title": "다음 여정 시작",
+      "ownerSystemRef": "sys-meta",
+      "inputTypeRef": "",
+      "outputTypeRef": "",
+      "readRefs": [
+        "campaign.journeyIndex",
+        "meta.carry",
+        "meta.relics"
+      ],
+      "writeRefs": [
+        "campaign.journeyIndex",
+        "campaign.status",
+        "player.cash",
+        "run.scene"
+      ],
+      "description": "메타 유물·이월 자금"
+    },
+    {
+      "id": "act-request-delete-save",
+      "title": "저장 삭제 확인 열기",
+      "ownerSystemRef": "sys-ui",
+      "inputTypeRef": "",
+      "outputTypeRef": "",
+      "readRefs": [
+        "run.slot"
+      ],
+      "writeRefs": [
+        "ui.modal"
+      ],
+      "description": "현재 UI 상태",
+      "scope": "ui"
+    },
+    {
+      "id": "act-close-settings",
+      "title": "설정 닫기",
+      "ownerSystemRef": "sys-ui",
+      "inputTypeRef": "",
+      "outputTypeRef": "",
+      "readRefs": [
+        "settings.contrast",
+        "settings.qa",
+        "settings.textScale",
+        "settings.tutorial"
+      ],
+      "writeRefs": [
+        "ui.modal"
+      ],
+      "description": "현재 UI 상태",
+      "scope": "ui"
+    },
+    {
+      "id": "act-close-confirm",
+      "title": "확인 모달 닫기",
+      "ownerSystemRef": "sys-ui",
+      "inputTypeRef": "",
+      "outputTypeRef": "",
+      "readRefs": [
+        "ui.modal"
+      ],
+      "writeRefs": [
+        "ui.modal"
+      ],
+      "description": "현재 UI 상태",
+      "scope": "ui"
+    },
+    {
+      "id": "act-open-first-day",
+      "title": "첫날 튜토리얼 열기",
+      "ownerSystemRef": "sys-ui",
+      "inputTypeRef": "",
+      "outputTypeRef": "",
+      "readRefs": [
+        "run.day",
+        "settings.tutorial",
+        "tutorial.seen"
+      ],
+      "writeRefs": [
+        "ui.modal",
+        "tutorial.step"
+      ],
+      "description": "현재 UI 상태",
+      "scope": "ui"
+    },
+    {
+      "id": "act-complete-first-day-tutorial",
+      "title": "첫날 튜토리얼 완료",
+      "ownerSystemRef": "sys-ui",
+      "inputTypeRef": "",
+      "outputTypeRef": "",
+      "readRefs": [
+        "tutorial.step"
+      ],
+      "writeRefs": [
+        "tutorial.seen",
+        "ui.modal"
+      ],
+      "description": "현재 UI 상태",
+      "scope": "ui"
+    },
+    {
+      "id": "act-skip-first-day-tutorial",
+      "title": "첫날 튜토리얼 건너뛰기",
+      "ownerSystemRef": "sys-ui",
+      "inputTypeRef": "",
+      "outputTypeRef": "",
+      "readRefs": [
+        "tutorial.step"
+      ],
+      "writeRefs": [
+        "tutorial.seen",
+        "ui.modal"
+      ],
+      "description": "현재 UI 상태",
+      "scope": "ui"
+    },
+    {
+      "id": "act-open-result-bankruptcy",
+      "title": "파산 결과 열기",
+      "ownerSystemRef": "sys-ui",
+      "inputTypeRef": "",
+      "outputTypeRef": "",
+      "readRefs": [
+        "run.ending.type",
+        "run.ending.reason"
+      ],
+      "writeRefs": [
+        "ui.modal"
+      ],
+      "description": "현재 UI 상태",
+      "scope": "ui"
+    },
+    {
+      "id": "act-return-title-from-bankruptcy",
+      "title": "파산 결과에서 타이틀로",
+      "ownerSystemRef": "sys-ui",
+      "inputTypeRef": "",
+      "outputTypeRef": "",
+      "readRefs": [
+        "run.ending.type"
+      ],
+      "writeRefs": [
+        "run.scene",
+        "ui.modal"
+      ],
+      "description": "현재 UI 상태",
+      "scope": "ui"
+    },
+    {
+      "id": "act-close-appraisal-result",
+      "title": "감정 결과 닫기",
+      "ownerSystemRef": "sys-ui",
+      "inputTypeRef": "",
+      "outputTypeRef": "",
+      "readRefs": [
+        "daily.appraisals"
+      ],
+      "writeRefs": [
+        "ui.modal"
+      ],
+      "description": "현재 UI 상태",
+      "scope": "ui"
+    },
+    {
+      "id": "act-open-information-result",
+      "title": "정보 획득 결과 열기",
+      "ownerSystemRef": "sys-ui",
+      "inputTypeRef": "",
+      "outputTypeRef": "",
+      "readRefs": [
+        "daily.info"
+      ],
+      "writeRefs": [
+        "ui.modal"
+      ],
+      "description": "현재 UI 상태",
+      "scope": "ui"
+    },
+    {
+      "id": "act-close-information-result",
+      "title": "정보 획득 결과 닫기",
+      "ownerSystemRef": "sys-ui",
+      "inputTypeRef": "",
+      "outputTypeRef": "",
+      "readRefs": [
+        "daily.info"
+      ],
+      "writeRefs": [
+        "ui.modal"
+      ],
+      "description": "현재 UI 상태",
+      "scope": "ui"
+    },
+    {
+      "id": "act-close-hanbo-result",
+      "title": "족보 판매 결과 닫기",
+      "ownerSystemRef": "sys-ui",
+      "inputTypeRef": "",
+      "outputTypeRef": "",
+      "readRefs": [
+        "ui.modal"
+      ],
+      "writeRefs": [
+        "ui.modal"
+      ],
+      "description": "없음",
+      "scope": "ui"
+    },
+    {
+      "id": "act-close-loan-overdue",
+      "title": "대출 만기 결과 확인",
+      "ownerSystemRef": "sys-ui",
+      "inputTypeRef": "",
+      "outputTypeRef": "",
+      "readRefs": [
+        "loan.principal",
+        "loan.guildLocked"
+      ],
+      "writeRefs": [
+        "ui.modal"
+      ],
+      "description": "현재 UI 상태",
+      "scope": "ui"
+    },
+    {
+      "id": "act-close-upgrade-result",
+      "title": "상회 승급 결과 닫기",
+      "ownerSystemRef": "sys-ui",
+      "inputTypeRef": "",
+      "outputTypeRef": "",
+      "readRefs": [
+        "shop.stage",
+        "player.storageCapacity"
+      ],
+      "writeRefs": [
+        "ui.modal"
+      ],
+      "description": "현재 UI 상태",
+      "scope": "ui"
+    },
+    {
+      "id": "act-open-relic-round-result",
+      "title": "유물 라운드 결과 열기",
+      "ownerSystemRef": "sys-ui",
+      "inputTypeRef": "",
+      "outputTypeRef": "",
+      "readRefs": [
+        "relicAuction.round",
+        "relicAuction.currentRelic",
+        "relicAuction.currentBid"
+      ],
+      "writeRefs": [
+        "ui.modal"
+      ],
+      "description": "현재 UI 상태",
+      "scope": "ui"
+    },
+    {
+      "id": "act-open-relic-detail",
+      "title": "유물 상세 열기",
+      "ownerSystemRef": "sys-ui",
+      "inputTypeRef": "",
+      "outputTypeRef": "",
+      "readRefs": [
+        "meta.relics"
+      ],
+      "writeRefs": [
+        "ui.modal"
+      ],
+      "description": "현재 UI 상태",
+      "scope": "ui"
+    },
+    {
+      "id": "act-close-relic-detail",
+      "title": "유물 상세 닫기",
+      "ownerSystemRef": "sys-ui",
+      "inputTypeRef": "",
+      "outputTypeRef": "",
+      "readRefs": [
+        "meta.relics"
+      ],
+      "writeRefs": [
+        "ui.modal"
+      ],
+      "description": "현재 UI 상태",
+      "scope": "ui"
+    },
+    {
+      "id": "act-open-campaign-complete",
+      "title": "완전한 결말 열기",
+      "ownerSystemRef": "sys-ui",
+      "inputTypeRef": "",
+      "outputTypeRef": "",
+      "readRefs": [
+        "campaign.highTierWins",
+        "campaign.status",
+        "meta.relics"
+      ],
+      "writeRefs": [
+        "ui.modal"
+      ],
+      "description": "현재 UI 상태",
+      "scope": "ui"
+    },
+    {
+      "id": "act-open-museum-from-campaign",
+      "title": "완전한 결말에서 전시관으로",
+      "ownerSystemRef": "sys-ui",
+      "inputTypeRef": "",
+      "outputTypeRef": "",
+      "readRefs": [
+        "meta.relics"
+      ],
+      "writeRefs": [
+        "run.scene",
+        "ui.modal"
+      ],
+      "description": "현재 UI 상태",
+      "scope": "ui"
+    },
+    {
+      "id": "act-return-title-from-campaign",
+      "title": "완전한 결말에서 타이틀로",
+      "ownerSystemRef": "sys-ui",
+      "inputTypeRef": "",
+      "outputTypeRef": "",
+      "readRefs": [
+        "campaign.status"
+      ],
+      "writeRefs": [
+        "run.scene",
+        "ui.modal"
+      ],
+      "description": "현재 UI 상태",
+      "scope": "ui"
+    },
+    {
+      "id": "act-show-toast",
+      "title": "전역 토스트 표시",
+      "ownerSystemRef": "sys-ui",
+      "inputTypeRef": "",
+      "outputTypeRef": "",
+      "readRefs": [
+        "ui.lastMessage"
+      ],
+      "writeRefs": [
+        "ui.modal"
+      ],
+      "description": "현재 UI 상태",
+      "scope": "ui"
+    },
+    {
+      "id": "act-close-toast",
+      "title": "전역 토스트 닫기",
+      "ownerSystemRef": "sys-ui",
+      "inputTypeRef": "",
+      "outputTypeRef": "",
+      "readRefs": [
+        "ui.lastMessage"
+      ],
+      "writeRefs": [
+        "ui.modal"
+      ],
+      "description": "현재 UI 상태",
+      "scope": "ui"
+    },
+    {
+      "id": "act-show-failure-popup",
+      "title": "행동 실패 안내 열기",
+      "ownerSystemRef": "sys-ui",
+      "inputTypeRef": "",
+      "outputTypeRef": "",
+      "readRefs": [
+        "ui.lastMessage",
+        "run.ending.type"
+      ],
+      "writeRefs": [
+        "ui.modal"
+      ],
+      "description": "현재 실패 안내 상태",
+      "scope": "ui"
+    },
+    {
+      "id": "act-close-failure-popup",
+      "title": "행동 실패 안내 닫기",
+      "ownerSystemRef": "sys-ui",
+      "inputTypeRef": "",
+      "outputTypeRef": "",
+      "readRefs": [
+        "ui.lastMessage"
+      ],
+      "writeRefs": [
+        "ui.modal"
+      ],
+      "description": "현재 실패 안내 상태",
+      "scope": "ui"
+    },
+    {
+      "id": "act-reveal-appraisal",
+      "title": "감정 결과 공개",
+      "ownerSystemRef": "sys-appraisal",
+      "inputTypeRef": "",
+      "outputTypeRef": "",
+      "readRefs": [
+        "daily.lots",
+        "run.day"
+      ],
+      "writeRefs": [
+        "daily.appraisals",
+        "ui.modal"
+      ],
+      "description": "감정된 출품"
+    }
+  ],
+  "apiJobs": []
+}

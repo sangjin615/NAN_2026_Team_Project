@@ -1,0 +1,54 @@
+<meta charset="utf-8"><title>미지의 경매장 — 밸런싱 랩</title>
+<style>
+:root{--line:#999;--bg:#fff;--fg:#111;--dim:#666;--box:#f5f5f5;--hi:#ffe9a8;--ok:#2a7;--no:#c33;--warn:#c93}
+@media(prefers-color-scheme:dark){:root{--line:#555;--bg:#15171b;--fg:#e8e8e8;--dim:#999;--box:#212429;--hi:#5a4a1e}}
+*{box-sizing:border-box}
+body{margin:0;padding:14px;background:var(--bg);color:var(--fg);font:13px/1.55 system-ui,'Malgun Gothic',sans-serif}
+.wrap{max-width:1240px;margin:0 auto}
+h1{font-size:15px;margin:0 0 3px}
+.note{color:var(--dim);font-size:11px;margin-bottom:10px}
+.grid{display:grid;grid-template-columns:1fr 420px;gap:12px;align-items:start}
+@media(max-width:1000px){.grid{grid-template-columns:1fr}}
+.box{border:1px solid var(--line);background:var(--box);padding:8px 10px;margin-bottom:10px}
+.box h2{font-size:11px;margin:0 0 7px;color:var(--dim);font-weight:600;letter-spacing:.4px}
+button{font:inherit;padding:5px 12px;border:1px solid var(--line);background:var(--bg);color:var(--fg);cursor:pointer;margin:0 5px 5px 0}
+button.p{border-width:2px;font-weight:600}
+button:disabled{opacity:.35;cursor:default}
+input[type=number],input[type=text]{font:inherit;width:110px;padding:3px 6px;border:1px solid var(--line);background:var(--bg);color:var(--fg);text-align:right;font-variant-numeric:tabular-nums}
+input.chg{border-color:var(--warn);background:var(--hi);font-weight:600}
+table{border-collapse:collapse;width:100%;font-size:12px}
+td,th{border-bottom:1px solid var(--line);padding:3px 5px;text-align:right;vertical-align:middle}
+td:first-child,th:first-child{text-align:left}
+th{color:var(--dim);font-weight:600;font-size:11px}
+.sec td{background:var(--box);font-weight:600;color:var(--dim);font-size:11px}
+.was{color:var(--dim);font-size:11px;font-variant-numeric:tabular-nums}
+.ok{color:var(--ok)}.no{color:var(--no)}.warn{color:var(--warn)}.m{color:var(--dim);font-size:11px}
+.banner{border:2px solid var(--warn);background:var(--hi);color:#111;padding:7px 10px;margin-bottom:10px;font-weight:600}
+.res{font-size:20px;font-variant-numeric:tabular-nums;letter-spacing:-.3px}
+.bar{height:9px;border:1px solid var(--line);background:var(--bg);position:relative;margin:3px 0 8px}
+.bar i{position:absolute;top:0;bottom:0;background:var(--ok);opacity:.35}
+.bar u{position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--fg)}
+.drop{border:2px dashed var(--line);padding:18px;text-align:center;color:var(--dim)}
+.drop.over{border-color:var(--ok);color:var(--fg)}
+</style>
+<div class="wrap">
+<h1>미지의 경매장 — 밸런싱 랩</h1>
+<div class="note">수치를 바꾸고 <b>다시 잰다</b>. 시뮬은 그레이박스·시뮬과 <b>같은 코드</b>(<code>sim/v6-sim.js</code>)를 쓴다 —
+여기서 나온 수는 <code>remeasure.js</code> 와 같은 씨앗이면 같은 값이다.</div>
+
+<div id="banner"></div>
+
+<div class="grid">
+<div>
+  <div class="box"><h2>데이터 팩</h2><div id="pack"></div></div>
+  <div class="box"><h2>수치</h2><div id="fields"></div></div>
+</div>
+<div>
+  <div class="box"><h2>측정</h2><div id="run"></div><div id="result"></div></div>
+  <div class="box"><h2>바꾼 것</h2><div id="diff"></div></div>
+</div>
+</div>
+</div>
+<script src="../sim/from-balance.js"></script>
+<script src="../sim/v6-sim.js"></script>
+<script src="lab.js"></script>

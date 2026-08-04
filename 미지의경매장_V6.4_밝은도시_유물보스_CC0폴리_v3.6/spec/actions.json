@@ -1,0 +1,2604 @@
+[
+  {
+    "id": "act-start-new-run",
+    "name": "START_NEW_RUN",
+    "label": "새 여정 시작",
+    "triggerType": "button",
+    "input": "저장 슬롯",
+    "preconditions": [
+      "타이틀 화면이다."
+    ],
+    "successResults": [
+      "12일 여정 상태를 초기화한다.",
+      "시작 자금 20,000G와 상회 1단계를 설정한다.",
+      "여정 생성 화면으로 이동한다."
+    ],
+    "failureResults": [
+      "저장 실패 또는 초기화 실패 시 타이틀에 남고 사유를 표시한다."
+    ],
+    "sourceBasis": "V5 §2.1, §3, §5.1, §17.1",
+    "implementationStatus": "implemented",
+    "runtimeBindings": [
+      "Game.newRun",
+      "newRun"
+    ],
+    "notes": "",
+    "readRefs": [
+      "run.slot"
+    ],
+    "writeRefs": [
+      "competitor.bennett",
+      "competitor.tycoons",
+      "market.history",
+      "market.schedule",
+      "player.cash",
+      "run.day",
+      "run.ended",
+      "run.scene",
+      "run.startCash",
+      "run.totalDays",
+      "shop.displayName",
+      "shop.stage"
+    ],
+    "failurePresentation": {
+      "mode": "global-popup",
+      "uiStateRef": "popup-global-failure",
+      "messageDataRef": "ui.lastMessage"
+    }
+  },
+  {
+    "id": "act-open-continue",
+    "name": "OPEN_CONTINUE",
+    "label": "이어하기 열기",
+    "triggerType": "button",
+    "input": "없음",
+    "preconditions": [
+      "타이틀 화면이다."
+    ],
+    "successResults": [
+      "저장 슬롯 화면으로 이동한다."
+    ],
+    "failureResults": [
+      "이동 실패 시 타이틀에 남는다."
+    ],
+    "sourceBasis": "앱 셸 구현",
+    "implementationStatus": "implemented",
+    "runtimeBindings": [
+      "Game.openContinue",
+      "openContinue"
+    ],
+    "notes": "",
+    "readRefs": [],
+    "writeRefs": [
+      "run.scene"
+    ],
+    "failurePresentation": {
+      "mode": "global-popup",
+      "uiStateRef": "popup-global-failure",
+      "messageDataRef": "ui.lastMessage"
+    }
+  },
+  {
+    "id": "act-load-save",
+    "name": "LOAD_SAVE",
+    "label": "저장 불러오기",
+    "triggerType": "button",
+    "input": "슬롯 번호",
+    "preconditions": [
+      "선택 슬롯에 유효한 저장 데이터가 있다."
+    ],
+    "successResults": [
+      "저장 상태를 복원한다.",
+      "저장된 씬과 여정 상태를 유지한다."
+    ],
+    "failureResults": [
+      "손상되거나 없는 저장이면 상태를 바꾸지 않고 안내한다."
+    ],
+    "sourceBasis": "앱 셸 구현 + V5 여정 상태",
+    "implementationStatus": "implemented",
+    "runtimeBindings": [
+      "Game.loadSlot",
+      "loadState"
+    ],
+    "notes": "",
+    "readRefs": [
+      "run.slot"
+    ],
+    "writeRefs": [
+      "competitor.bennett",
+      "market.indexByFamily",
+      "player.cash",
+      "player.inventory",
+      "run.day",
+      "run.scene",
+      "shop.stage"
+    ],
+    "failurePresentation": {
+      "mode": "global-popup",
+      "uiStateRef": "popup-global-failure",
+      "messageDataRef": "ui.lastMessage"
+    }
+  },
+  {
+    "id": "act-delete-save",
+    "name": "DELETE_SAVE",
+    "label": "저장 삭제",
+    "triggerType": "button",
+    "input": "슬롯 번호",
+    "preconditions": [
+      "삭제 확인 팝업에서 확인한다."
+    ],
+    "successResults": [
+      "해당 슬롯 데이터를 삭제한다."
+    ],
+    "failureResults": [
+      "취소하거나 삭제 실패 시 슬롯을 유지한다."
+    ],
+    "sourceBasis": "앱 셸 구현",
+    "implementationStatus": "implemented",
+    "runtimeBindings": [
+      "Game.askDelete",
+      "deleteState"
+    ],
+    "notes": "",
+    "readRefs": [
+      "run.slot"
+    ],
+    "writeRefs": [],
+    "failurePresentation": {
+      "mode": "global-popup",
+      "uiStateRef": "popup-global-failure",
+      "messageDataRef": "ui.lastMessage"
+    }
+  },
+  {
+    "id": "act-save-game",
+    "name": "SAVE_GAME",
+    "label": "현재 여정 저장",
+    "triggerType": "button",
+    "input": "현재 전체 상태",
+    "preconditions": [
+      "여정 상태가 존재한다."
+    ],
+    "successResults": [
+      "현재 슬롯에 상태를 저장한다."
+    ],
+    "failureResults": [
+      "저장 실패 시 상태를 유지하고 안내한다."
+    ],
+    "sourceBasis": "앱 셸 구현",
+    "implementationStatus": "implemented",
+    "runtimeBindings": [
+      "Game.saveCurrent",
+      "saveState"
+    ],
+    "notes": "",
+    "readRefs": [
+      "player.cash",
+      "player.inventory",
+      "run.day",
+      "shop.stage"
+    ],
+    "writeRefs": [
+      "run.slot"
+    ],
+    "failurePresentation": {
+      "mode": "global-popup",
+      "uiStateRef": "popup-global-failure",
+      "messageDataRef": "ui.lastMessage"
+    }
+  },
+  {
+    "id": "act-open-settings",
+    "name": "OPEN_SETTINGS",
+    "label": "설정 열기",
+    "triggerType": "button",
+    "input": "없음",
+    "preconditions": [
+      "전체 화면 또는 타이틀이다."
+    ],
+    "successResults": [
+      "전역 설정 팝업을 연다."
+    ],
+    "failureResults": [
+      "실패 시 현재 화면을 유지한다."
+    ],
+    "sourceBasis": "앱 셸 구현",
+    "implementationStatus": "implemented",
+    "runtimeBindings": [
+      "Game.openSettings",
+      "openSettings"
+    ],
+    "notes": "",
+    "readRefs": [
+      "settings.contrast",
+      "settings.qa",
+      "settings.textScale",
+      "settings.tutorial"
+    ],
+    "writeRefs": [
+      "ui.modal"
+    ],
+    "failurePresentation": {
+      "mode": "global-popup",
+      "uiStateRef": "popup-global-failure",
+      "messageDataRef": "ui.lastMessage"
+    }
+  },
+  {
+    "id": "act-apply-settings",
+    "name": "APPLY_SETTINGS",
+    "label": "설정 적용",
+    "triggerType": "button",
+    "input": "고대비·글자 크기·튜토리얼·QA",
+    "preconditions": [
+      "설정 팝업이 열려 있다."
+    ],
+    "successResults": [
+      "설정값을 저장하고 즉시 반영한다."
+    ],
+    "failureResults": [
+      "입력값이 유효하지 않으면 기존 설정을 유지한다."
+    ],
+    "sourceBasis": "앱 셸 구현",
+    "implementationStatus": "implemented",
+    "runtimeBindings": [
+      "Game.applySettingsModal",
+      "saveSettings"
+    ],
+    "notes": "",
+    "readRefs": [],
+    "writeRefs": [
+      "settings.contrast",
+      "settings.qa",
+      "settings.textScale",
+      "settings.tutorial",
+      "ui.modal"
+    ],
+    "failurePresentation": {
+      "mode": "global-popup",
+      "uiStateRef": "popup-global-failure",
+      "messageDataRef": "ui.lastMessage"
+    }
+  },
+  {
+    "id": "act-exit-game",
+    "name": "EXIT_GAME",
+    "label": "게임 종료",
+    "triggerType": "button",
+    "input": "없음",
+    "preconditions": [
+      "타이틀 화면이다."
+    ],
+    "successResults": [
+      "실행 환경이 지원하면 게임을 종료한다."
+    ],
+    "failureResults": [
+      "브라우저에서는 탭을 닫으라는 안내를 표시한다."
+    ],
+    "sourceBasis": "앱 셸 구현",
+    "implementationStatus": "implemented",
+    "runtimeBindings": [
+      "Game.exitGame",
+      "exitGame"
+    ],
+    "notes": "",
+    "readRefs": [],
+    "writeRefs": [],
+    "failurePresentation": {
+      "mode": "global-popup",
+      "uiStateRef": "popup-global-failure",
+      "messageDataRef": "ui.lastMessage"
+    }
+  },
+  {
+    "id": "act-complete-loading",
+    "name": "COMPLETE_LOADING",
+    "label": "여정 생성 완료",
+    "triggerType": "auto",
+    "input": "고정 엔진 초기 상태",
+    "preconditions": [
+      "여정의 수치·사건·출품·경쟁자 상태가 생성되었다."
+    ],
+    "successResults": [
+      "1일차 마감을 검사한다.",
+      "도시 페이즈로 이동한다."
+    ],
+    "failureResults": [
+      "생성 실패 시 사전 생성 폴백을 사용하고 API 없이 진행 가능해야 한다."
+    ],
+    "sourceBasis": "V5 §3 불변 3·4, §5.3",
+    "implementationStatus": "partial",
+    "runtimeBindings": [
+      "runLoading",
+      "startDay"
+    ],
+    "notes": "현재 HTML은 로컬 생성만 사용하며 외부 생성 호출은 연결되지 않았다.",
+    "readRefs": [
+      "run.day"
+    ],
+    "writeRefs": [
+      "auction.bots",
+      "hanbo.patterns",
+      "daily.event",
+      "daily.lots",
+      "daily.phase",
+      "quests.available",
+      "run.scene"
+    ],
+    "failurePresentation": {
+      "mode": "global-popup",
+      "uiStateRef": "popup-global-failure",
+      "messageDataRef": "ui.lastMessage"
+    }
+  },
+  {
+    "id": "act-enter-office",
+    "name": "ENTER_OFFICE",
+    "label": "의뢰소 입장",
+    "triggerType": "button",
+    "input": "없음",
+    "preconditions": [
+      "상회 1단계 이상이다.",
+      "도시 페이즈다."
+    ],
+    "successResults": [
+      "의뢰소 화면으로 이동한다."
+    ],
+    "failureResults": [
+      "잠금 상태면 이동하지 않고 조건을 표시한다."
+    ],
+    "sourceBasis": "V5 §13",
+    "implementationStatus": "implemented",
+    "runtimeBindings": [
+      "Game.enterLocation"
+    ],
+    "notes": "",
+    "readRefs": [
+      "daily.phase"
+    ],
+    "writeRefs": [
+      "run.scene"
+    ],
+    "failurePresentation": {
+      "mode": "global-popup",
+      "uiStateRef": "popup-global-failure",
+      "messageDataRef": "ui.lastMessage"
+    }
+  },
+  {
+    "id": "act-enter-tavern",
+    "name": "ENTER_TAVERN",
+    "label": "술집 입장",
+    "triggerType": "button",
+    "input": "없음",
+    "preconditions": [
+      "상회 1단계 이상이다.",
+      "도시 페이즈다."
+    ],
+    "successResults": [
+      "술집 화면으로 이동한다."
+    ],
+    "failureResults": [
+      "오늘 이용 불가 상태면 사유를 표시한다."
+    ],
+    "sourceBasis": "V5 §9.4, §13",
+    "implementationStatus": "implemented",
+    "runtimeBindings": [
+      "Game.enterLocation"
+    ],
+    "notes": "",
+    "readRefs": [
+      "daily.phase"
+    ],
+    "writeRefs": [
+      "run.scene"
+    ],
+    "failurePresentation": {
+      "mode": "global-popup",
+      "uiStateRef": "popup-global-failure",
+      "messageDataRef": "ui.lastMessage"
+    }
+  },
+  {
+    "id": "act-enter-exchange",
+    "name": "ENTER_EXCHANGE",
+    "label": "거래소 입장",
+    "triggerType": "button",
+    "input": "없음",
+    "preconditions": [
+      "상회 1단계 이상이다.",
+      "도시 페이즈다."
+    ],
+    "successResults": [
+      "거래소 화면으로 이동한다."
+    ],
+    "failureResults": [
+      "이동 불가 시 사유를 표시한다."
+    ],
+    "sourceBasis": "V5 §11, §13",
+    "implementationStatus": "implemented",
+    "runtimeBindings": [
+      "Game.enterLocation"
+    ],
+    "notes": "",
+    "readRefs": [
+      "daily.phase"
+    ],
+    "writeRefs": [
+      "run.scene"
+    ],
+    "failurePresentation": {
+      "mode": "global-popup",
+      "uiStateRef": "popup-global-failure",
+      "messageDataRef": "ui.lastMessage"
+    }
+  },
+  {
+    "id": "act-enter-guild",
+    "name": "ENTER_GUILD",
+    "label": "조합 입장",
+    "triggerType": "button",
+    "input": "없음",
+    "preconditions": [
+      "상회 2단계 이상이다.",
+      "조합 거래 제한 상태가 아니다."
+    ],
+    "successResults": [
+      "조합 화면으로 이동한다."
+    ],
+    "failureResults": [
+      "잠금 또는 거래 제한 사유를 표시한다."
+    ],
+    "sourceBasis": "V5 §12, §13",
+    "implementationStatus": "implemented",
+    "runtimeBindings": [
+      "Game.enterLocation"
+    ],
+    "notes": "",
+    "readRefs": [
+      "daily.phase",
+      "loan.guildLocked"
+    ],
+    "writeRefs": [
+      "run.scene"
+    ],
+    "failurePresentation": {
+      "mode": "global-popup",
+      "uiStateRef": "popup-global-failure",
+      "messageDataRef": "ui.lastMessage"
+    }
+  },
+  {
+    "id": "act-enter-merchant",
+    "name": "ENTER_MERCHANT",
+    "label": "상회 입장",
+    "triggerType": "button",
+    "input": "없음",
+    "preconditions": [
+      "상회 1단계 이상이다."
+    ],
+    "successResults": [
+      "상회 화면으로 이동한다."
+    ],
+    "failureResults": [
+      "이동 실패 시 도시 화면을 유지한다."
+    ],
+    "sourceBasis": "V5 §14",
+    "implementationStatus": "implemented",
+    "runtimeBindings": [
+      "Game.enterLocation"
+    ],
+    "notes": "",
+    "readRefs": [
+      "daily.phase"
+    ],
+    "writeRefs": [
+      "run.scene"
+    ],
+    "failurePresentation": {
+      "mode": "global-popup",
+      "uiStateRef": "popup-global-failure",
+      "messageDataRef": "ui.lastMessage"
+    }
+  },
+  {
+    "id": "act-enter-auction",
+    "name": "ENTER_AUCTION",
+    "label": "경매장 입장",
+    "triggerType": "button",
+    "input": "없음",
+    "preconditions": [
+      "오늘 경매가 남아 있다.",
+      "도시 페이즈다."
+    ],
+    "successResults": [
+      "8출품 경매 세션을 시작한다.",
+      "경매 중 추가 자금 조달을 할 수 없다."
+    ],
+    "failureResults": [
+      "오늘 경매가 끝났으면 진입하지 않고 안내한다."
+    ],
+    "sourceBasis": "V5 §5.3, §8",
+    "implementationStatus": "implemented",
+    "runtimeBindings": [
+      "Game.enterLocation",
+      "prepareAuction"
+    ],
+    "notes": "",
+    "readRefs": [
+      "daily.lots",
+      "daily.phase"
+    ],
+    "writeRefs": [
+      "auction.bots",
+      "auction.currentBid",
+      "auction.currentLot",
+      "daily.lotIndex",
+      "daily.phase",
+      "run.scene"
+    ],
+    "failurePresentation": {
+      "mode": "global-popup",
+      "uiStateRef": "popup-global-failure",
+      "messageDataRef": "ui.lastMessage"
+    }
+  },
+  {
+    "id": "act-enter-museum",
+    "name": "ENTER_MUSEUM",
+    "label": "유물 전시관 입장",
+    "triggerType": "button",
+    "input": "진입 맥락",
+    "preconditions": [
+      "도시에서는 상회 3단계 이상이다.",
+      "타이틀에서는 메타 기록을 열 수 있다."
+    ],
+    "successResults": [
+      "유물 전시관을 연다."
+    ],
+    "failureResults": [
+      "잠금 상태면 3단계 해금 조건을 표시한다."
+    ],
+    "sourceBasis": "V5 §13, §16",
+    "implementationStatus": "implemented",
+    "runtimeBindings": [
+      "Game.openMuseumFromTitle",
+      "Game.enterLocation"
+    ],
+    "notes": "",
+    "readRefs": [
+      "meta.relics"
+    ],
+    "writeRefs": [
+      "run.scene"
+    ],
+    "failurePresentation": {
+      "mode": "global-popup",
+      "uiStateRef": "popup-global-failure",
+      "messageDataRef": "ui.lastMessage"
+    }
+  },
+  {
+    "id": "act-return-city",
+    "name": "RETURN_CITY",
+    "label": "도시로 돌아가기",
+    "triggerType": "button",
+    "input": "없음",
+    "preconditions": [
+      "진행 중인 여정이 있다.",
+      "12일차 정산을 강제로 끝내지 않는다."
+    ],
+    "successResults": [
+      "구매·판매·대출·승급 상태를 유지하고 도시로 이동한다."
+    ],
+    "failureResults": [
+      "정산 중이면 거래소 정산 화면을 유지한다."
+    ],
+    "sourceBasis": "V5 §5.3",
+    "implementationStatus": "implemented",
+    "runtimeBindings": [
+      "Game.goCity",
+      "goCity"
+    ],
+    "notes": "",
+    "readRefs": [],
+    "writeRefs": [
+      "run.scene"
+    ],
+    "failurePresentation": {
+      "mode": "global-popup",
+      "uiStateRef": "popup-global-failure",
+      "messageDataRef": "ui.lastMessage"
+    }
+  },
+  {
+    "id": "act-switch-office-tab",
+    "name": "SWITCH_OFFICE_TAB",
+    "label": "의뢰·감정 탭 전환",
+    "triggerType": "button",
+    "input": "탭 종류",
+    "preconditions": [
+      "의뢰소 화면이다."
+    ],
+    "successResults": [
+      "선택한 탭 내용을 표시한다."
+    ],
+    "failureResults": [
+      "탭 전환만으로 자금과 상태가 변하지 않는다."
+    ],
+    "sourceBasis": "V5 §9.1, §10, §13",
+    "implementationStatus": "implemented",
+    "runtimeBindings": [
+      "Game.renderOffice"
+    ],
+    "notes": "",
+    "readRefs": [],
+    "writeRefs": [
+      "ui.modal"
+    ],
+    "failurePresentation": {
+      "mode": "global-popup",
+      "uiStateRef": "popup-global-failure",
+      "messageDataRef": "ui.lastMessage"
+    }
+  },
+  {
+    "id": "act-accept-quest",
+    "name": "ACCEPT_QUEST",
+    "label": "의뢰 수주",
+    "triggerType": "button",
+    "input": "의뢰 ID",
+    "preconditions": [
+      "수주 비용을 지불할 수 있다.",
+      "오늘 제시된 의뢰다.",
+      "동일 의뢰를 이미 수주하지 않았다."
+    ],
+    "successResults": [
+      "수주 비용을 차감한다.",
+      "이번 경매 규칙 변형으로 등록한다."
+    ],
+    "failureResults": [
+      "조건 미달 시 상태를 변경하지 않고 사유를 표시한다."
+    ],
+    "sourceBasis": "V5 §10, §17.5",
+    "implementationStatus": "implemented",
+    "runtimeBindings": [
+      "Game.acceptQuest",
+      "acceptQuest"
+    ],
+    "notes": "",
+    "readRefs": [
+      "player.cash",
+      "quests.available"
+    ],
+    "writeRefs": [
+      "daily.acceptedQuests",
+      "daily.expense",
+      "player.cash"
+    ],
+    "failurePresentation": {
+      "mode": "global-popup",
+      "uiStateRef": "popup-global-failure",
+      "messageDataRef": "ui.lastMessage"
+    }
+  },
+  {
+    "id": "act-appraise-lot",
+    "name": "APPRAISE_LOT",
+    "label": "출품 감정",
+    "triggerType": "button",
+    "input": "출품 ID·감정 상품",
+    "preconditions": [
+      "대상이 오늘 감정 상품에 포함된다.",
+      "감정비를 지불할 수 있다.",
+      "이미 감정하지 않았다."
+    ],
+    "successResults": [
+      "품질의 확정 범위를 표시한다.",
+      "실가치 중심을 직접 누설하지 않는다."
+    ],
+    "failureResults": [
+      "비용 부족 또는 중복 구매 시 상태를 변경하지 않는다."
+    ],
+    "sourceBasis": "V5 §6.2, §9.1",
+    "implementationStatus": "implemented",
+    "runtimeBindings": [
+      "Game.appraise",
+      "appraise"
+    ],
+    "notes": "",
+    "readRefs": [
+      "auction.currentLot",
+      "player.cash",
+      "run.day",
+      "shop.stage"
+    ],
+    "writeRefs": [
+      "daily.appraisals",
+      "daily.expense",
+      "player.cash"
+    ],
+    "failurePresentation": {
+      "mode": "global-popup",
+      "uiStateRef": "popup-global-failure",
+      "messageDataRef": "ui.lastMessage"
+    }
+  },
+  {
+    "id": "act-buy-market-forecast",
+    "name": "BUY_MARKET_FORECAST",
+    "label": "수요 동향 구매",
+    "triggerType": "button",
+    "input": "수요 동향 상품",
+    "preconditions": [
+      "가격을 지불할 수 있다.",
+      "오늘 아직 구매하지 않았다."
+    ],
+    "successResults": [
+      "향후 사건 방향을 공개한다.",
+      "진폭과 정확한 정점은 공개하지 않는다."
+    ],
+    "failureResults": [
+      "구매 실패 시 자금을 차감하지 않는다."
+    ],
+    "sourceBasis": "V5 §9.2, §17.4",
+    "implementationStatus": "implemented",
+    "runtimeBindings": [
+      "Game.buyInfo",
+      "buyInfo"
+    ],
+    "notes": "",
+    "readRefs": [
+      "daily.lots",
+      "player.cash",
+      "shop.stage"
+    ],
+    "writeRefs": [
+      "daily.expense",
+      "daily.info",
+      "information.marketForecast",
+      "player.cash"
+    ],
+    "failurePresentation": {
+      "mode": "global-popup",
+      "uiStateRef": "popup-global-failure",
+      "messageDataRef": "ui.lastMessage"
+    }
+  },
+  {
+    "id": "act-buy-lot-catalog",
+    "name": "BUY_LOT_CATALOG",
+    "label": "출품 목록 구매",
+    "triggerType": "button",
+    "input": "오늘 출품 목록 정보",
+    "preconditions": [
+      "도시 페이즈다.",
+      "아직 출품 목록을 구매하지 않았다.",
+      "구매 비용을 보유한다."
+    ],
+    "successResults": [
+      "오늘 출품 8점의 계열·등급·기준가 목록을 공개한다.",
+      "비용을 차감한다."
+    ],
+    "failureResults": [
+      "자금 부족 또는 이미 구매한 경우 상태를 바꾸지 않고 사유를 표시한다."
+    ],
+    "sourceBasis": "V6 §2.1, §10.1",
+    "implementationStatus": "implemented",
+    "runtimeBindings": [
+      "Game.buyInfo",
+      "buyInfo"
+    ],
+    "notes": "",
+    "readRefs": [
+      "daily.lots",
+      "player.cash",
+      "shop.stage"
+    ],
+    "writeRefs": [
+      "daily.info",
+      "daily.expense",
+      "information.lotCatalog",
+      "player.cash"
+    ],
+    "failurePresentation": {
+      "mode": "global-popup",
+      "uiStateRef": "popup-global-failure",
+      "messageDataRef": "ui.lastMessage"
+    }
+  },
+  {
+    "id": "act-buy-competitor-info",
+    "name": "BUY_COMPETITOR_INFO",
+    "label": "경쟁자 정보 구매",
+    "triggerType": "button",
+    "input": "경쟁자 예산·표적 상품",
+    "preconditions": [
+      "가격을 지불할 수 있다.",
+      "오늘 아직 구매하지 않았다."
+    ],
+    "successResults": [
+      "당일 경쟁자의 예산 범위와 표적을 공개한다."
+    ],
+    "failureResults": [
+      "구매 실패 시 상태를 변경하지 않는다."
+    ],
+    "sourceBasis": "V5 §9, §17.4",
+    "implementationStatus": "implemented",
+    "runtimeBindings": [
+      "Game.buyInfo",
+      "buyInfo"
+    ],
+    "notes": "",
+    "readRefs": [
+      "auction.bots",
+      "daily.lots",
+      "player.cash",
+      "shop.stage"
+    ],
+    "writeRefs": [
+      "daily.expense",
+      "daily.info",
+      "information.competitors",
+      "player.cash"
+    ],
+    "failurePresentation": {
+      "mode": "global-popup",
+      "uiStateRef": "popup-global-failure",
+      "messageDataRef": "ui.lastMessage"
+    }
+  },
+  {
+    "id": "act-switch-exchange-tab",
+    "name": "SWITCH_EXCHANGE_TAB",
+    "label": "거래소 탭 전환",
+    "triggerType": "button",
+    "input": "즉시 처분·족보 판매·시세판",
+    "preconditions": [
+      "거래소 화면이다."
+    ],
+    "successResults": [
+      "선택 탭을 표시한다."
+    ],
+    "failureResults": [
+      "탭 전환만으로 자금이나 보유품이 변하지 않는다."
+    ],
+    "sourceBasis": "V5 §11",
+    "implementationStatus": "implemented",
+    "runtimeBindings": [
+      "Game.renderExchange"
+    ],
+    "notes": "",
+    "readRefs": [],
+    "writeRefs": [
+      "ui.modal"
+    ],
+    "failurePresentation": {
+      "mode": "global-popup",
+      "uiStateRef": "popup-global-failure",
+      "messageDataRef": "ui.lastMessage"
+    }
+  },
+  {
+    "id": "act-sell-immediate",
+    "name": "SELL_IMMEDIATE",
+    "label": "즉시 처분",
+    "triggerType": "button",
+    "input": "보유품 ID",
+    "preconditions": [
+      "보유품이 판매 가능하다.",
+      "담보로 잠기지 않았다.",
+      "낙찰 다음 날 이후이거나 12일차 정산 중이다."
+    ],
+    "successResults": [
+      "당일 처분가를 자금에 더한다.",
+      "보유품을 판매 처리한다."
+    ],
+    "failureResults": [
+      "조건 미달 시 판매하지 않고 사유를 표시한다."
+    ],
+    "sourceBasis": "V5 §5.3, §5.4, §11.1, §11.3",
+    "implementationStatus": "implemented",
+    "runtimeBindings": [
+      "Game.sellItem",
+      "sellItem"
+    ],
+    "notes": "",
+    "readRefs": [
+      "market.indexByFamily",
+      "player.inventory"
+    ],
+    "writeRefs": [
+      "daily.income",
+      "player.cash",
+      "player.inventory"
+    ],
+    "failurePresentation": {
+      "mode": "global-popup",
+      "uiStateRef": "popup-global-failure",
+      "messageDataRef": "ui.lastMessage"
+    }
+  },
+  {
+    "id": "act-form-hanbo",
+    "name": "FORM_HANBO",
+    "label": "족보 판매",
+    "triggerType": "button",
+    "input": "성립 가능한 족보와 보유품",
+    "preconditions": [
+      "거래소의 족보 판매 탭이다.",
+      "선택 족보의 조건을 만족한다.",
+      "선택 물품이 판매 가능하다."
+    ],
+    "successResults": [
+      "선택 물품을 판매 처리한다.",
+      "족보 배수를 적용한 판매 대금을 지급한다.",
+      "족보 판매 결과를 표시한다."
+    ],
+    "failureResults": [
+      "조건 미달 또는 잠긴 물품이 있으면 상태를 바꾸지 않고 사유를 표시한다."
+    ],
+    "sourceBasis": "V6 §11.2~§11.4",
+    "implementationStatus": "implemented",
+    "runtimeBindings": [
+      "Game.sellHanbo",
+      "sellHanbo"
+    ],
+    "notes": "",
+    "readRefs": [
+      "hanbo.patterns",
+      "player.inventory",
+      "market.indexByFamily",
+      "shop.stage"
+    ],
+    "writeRefs": [
+      "player.cash",
+      "player.inventory",
+      "daily.income",
+      "ui.modal"
+    ],
+    "failurePresentation": {
+      "mode": "global-popup",
+      "uiStateRef": "popup-global-failure",
+      "messageDataRef": "ui.lastMessage"
+    }
+  },
+  {
+    "id": "act-finish-settlement",
+    "name": "FINISH_DAY12_SETTLEMENT",
+    "label": "12일차 정산 종료",
+    "triggerType": "button",
+    "input": "없음",
+    "preconditions": [
+      "12일차 경매가 끝났다.",
+      "정산 창이다."
+    ],
+    "successResults": [
+      "당일 낙찰품 즉시 처분 예외를 종료한다.",
+      "여정 판정 화면으로 이동한다."
+    ],
+    "failureResults": [
+      "정산 미완료 상태면 거래소에 남는다."
+    ],
+    "sourceBasis": "V5 §5.4",
+    "implementationStatus": "implemented",
+    "runtimeBindings": [
+      "Game.finishSettlement",
+      "finishSettlement"
+    ],
+    "notes": "",
+    "readRefs": [
+      "market.indexByFamily",
+      "player.inventory"
+    ],
+    "writeRefs": [
+      "daily.settlement",
+      "player.cash",
+      "player.inventory",
+      "run.scene"
+    ],
+    "failurePresentation": {
+      "mode": "global-popup",
+      "uiStateRef": "popup-global-failure",
+      "messageDataRef": "ui.lastMessage"
+    }
+  },
+  {
+    "id": "act-take-loan",
+    "name": "TAKE_LOAN",
+    "label": "담보 대출 실행",
+    "triggerType": "button",
+    "input": "담보 보유품",
+    "preconditions": [
+      "상회 2단계 이상이다.",
+      "동시 대출이 없다.",
+      "담보가 미판매·미잠금 보유품이다.",
+      "조합 거래 제한 상태가 아니다."
+    ],
+    "successResults": [
+      "담보 처분가의 70%를 자금에 더한다.",
+      "담보를 잠그고 2일 만기를 설정한다."
+    ],
+    "failureResults": [
+      "조건 미달 시 상태를 변경하지 않는다."
+    ],
+    "sourceBasis": "V5 §12",
+    "implementationStatus": "implemented",
+    "runtimeBindings": [
+      "Game.takeLoan",
+      "takeLoan"
+    ],
+    "notes": "",
+    "readRefs": [
+      "player.inventory",
+      "run.day"
+    ],
+    "writeRefs": [
+      "daily.income",
+      "loan.collateralDisposalValue",
+      "loan.collateralId",
+      "loan.dueDay",
+      "loan.principal",
+      "loan.repay",
+      "player.cash",
+      "player.inventory"
+    ],
+    "failurePresentation": {
+      "mode": "global-popup",
+      "uiStateRef": "popup-global-failure",
+      "messageDataRef": "ui.lastMessage"
+    }
+  },
+  {
+    "id": "act-repay-loan",
+    "name": "REPAY_LOAN",
+    "label": "대출 상환",
+    "triggerType": "button",
+    "input": "활성 대출",
+    "preconditions": [
+      "활성 대출이 있다.",
+      "원금의 110%를 지불할 수 있다."
+    ],
+    "successResults": [
+      "상환액을 차감한다.",
+      "담보 잠금을 해제한다."
+    ],
+    "failureResults": [
+      "자금 부족 시 상태를 변경하지 않는다."
+    ],
+    "sourceBasis": "V5 §12",
+    "implementationStatus": "implemented",
+    "runtimeBindings": [
+      "Game.repayLoan",
+      "repayLoan"
+    ],
+    "notes": "",
+    "readRefs": [
+      "loan.repay",
+      "player.cash"
+    ],
+    "writeRefs": [
+      "daily.expense",
+      "loan.collateralId",
+      "loan.dueDay",
+      "loan.principal",
+      "loan.repay",
+      "player.cash",
+      "player.inventory"
+    ],
+    "failurePresentation": {
+      "mode": "global-popup",
+      "uiStateRef": "popup-global-failure",
+      "messageDataRef": "ui.lastMessage"
+    }
+  },
+  {
+    "id": "act-process-loan-due",
+    "name": "PROCESS_LOAN_DUE",
+    "label": "대출 만기 처리",
+    "triggerType": "conditional",
+    "input": "활성 대출",
+    "preconditions": [
+      "현재 일차가 만기를 지났다."
+    ],
+    "successResults": [
+      "담보를 압류한다.",
+      "조합 거래 제한을 적용한다."
+    ],
+    "failureResults": [
+      "활성 대출이 없으면 아무 상태도 바꾸지 않는다."
+    ],
+    "sourceBasis": "V5 §12",
+    "implementationStatus": "implemented",
+    "runtimeBindings": [
+      "processLoanDue"
+    ],
+    "notes": "",
+    "readRefs": [
+      "loan.collateralId",
+      "loan.dueDay",
+      "player.cash",
+      "run.day"
+    ],
+    "writeRefs": [
+      "loan.guildLocked",
+      "loan.principal",
+      "player.inventory",
+      "run.ended",
+      "run.ending.reason",
+      "run.ending.type"
+    ],
+    "failurePresentation": {
+      "mode": "global-popup",
+      "uiStateRef": "popup-global-failure",
+      "messageDataRef": "ui.lastMessage"
+    }
+  },
+  {
+    "id": "act-upgrade-shop",
+    "name": "UPGRADE_SHOP",
+    "label": "상회 승급",
+    "triggerType": "button",
+    "input": "현재 상회 단계",
+    "preconditions": [
+      "다음 단계가 존재한다.",
+      "의뢰 완료 조건을 충족한다.",
+      "승급비를 지불할 수 있다."
+    ],
+    "successResults": [
+      "상회 단계를 1 올린다.",
+      "정보·거래·보관·연줄 효과가 함께 오른다.",
+      "보관칸과 해금 기능을 갱신한다."
+    ],
+    "failureResults": [
+      "조건 미달 시 승급하지 않고 부족 조건을 표시한다."
+    ],
+    "sourceBasis": "V5 §5.2, §14, §17.6",
+    "implementationStatus": "implemented",
+    "runtimeBindings": [
+      "Game.upgradeShop",
+      "upgradeShop"
+    ],
+    "notes": "",
+    "readRefs": [
+      "player.cash",
+      "shop.completedQuestsTotal",
+      "shop.deadlineRequiredStage",
+      "shop.stage",
+      "shop.upgradeCost"
+    ],
+    "writeRefs": [
+      "daily.expense",
+      "player.cash",
+      "player.storageCapacity",
+      "shop.displayName",
+      "shop.stage"
+    ],
+    "failurePresentation": {
+      "mode": "global-popup",
+      "uiStateRef": "popup-global-failure",
+      "messageDataRef": "ui.lastMessage"
+    }
+  },
+  {
+    "id": "act-place-bid",
+    "name": "PLACE_BID",
+    "label": "입찰",
+    "triggerType": "button",
+    "input": "입찰 금액",
+    "preconditions": [
+      "현재 호가 + 최소 인상폭 이상이다.",
+      "수수료 포함 금액을 지불할 수 있다.",
+      "보관칸이 가득 차지 않았다.",
+      "물러난 상태가 아니다."
+    ],
+    "successResults": [
+      "현재 호가와 최고 입찰자를 갱신한다.",
+      "경쟁자 턴을 실행한다."
+    ],
+    "failureResults": [
+      "조건 미달 시 호가를 바꾸지 않고 사유를 표시한다."
+    ],
+    "sourceBasis": "V5 §8.2",
+    "implementationStatus": "implemented",
+    "runtimeBindings": [
+      "Game.placeBid",
+      "placeBid"
+    ],
+    "notes": "",
+    "readRefs": [
+      "auction.currentBid",
+      "auction.minimumRaise",
+      "auction.playerPassed",
+      "player.cash",
+      "player.inventory",
+      "player.storageCapacity",
+      "shop.stage"
+    ],
+    "writeRefs": [
+      "auction.bidLog",
+      "auction.currentBid",
+      "auction.leader",
+      "auction.minimumRaise"
+    ],
+    "failurePresentation": {
+      "mode": "global-popup",
+      "uiStateRef": "popup-global-failure",
+      "messageDataRef": "ui.lastMessage"
+    }
+  },
+  {
+    "id": "act-pass-lot",
+    "name": "PASS_LOT",
+    "label": "물러나기",
+    "triggerType": "button",
+    "input": "없음",
+    "preconditions": [
+      "현재 출품 경매가 진행 중이다.",
+      "아직 물러나지 않았다."
+    ],
+    "successResults": [
+      "플레이어를 해당 출품 경매에서 제외한다.",
+      "남은 경쟁자 턴을 진행한다."
+    ],
+    "failureResults": [
+      "이미 물러났으면 상태를 변경하지 않는다."
+    ],
+    "sourceBasis": "V5 §0.5.2, §8.2",
+    "implementationStatus": "implemented",
+    "runtimeBindings": [
+      "Game.passLot",
+      "passLot"
+    ],
+    "notes": "",
+    "readRefs": [],
+    "writeRefs": [
+      "auction.bidLog",
+      "auction.playerPassed"
+    ],
+    "failurePresentation": {
+      "mode": "global-popup",
+      "uiStateRef": "popup-global-failure",
+      "messageDataRef": "ui.lastMessage"
+    }
+  },
+  {
+    "id": "act-run-bot-turn",
+    "name": "RUN_BOT_TURN",
+    "label": "경쟁자 입찰 판정",
+    "triggerType": "auto",
+    "input": "경쟁자 시장축·독립 사정축·예산",
+    "preconditions": [
+      "경쟁자가 물러나지 않았다.",
+      "고정된 당일 예산 안이다."
+    ],
+    "successResults": [
+      "시장축과 독립 사정축 중 큰 상한으로 입찰 또는 물러나기를 결정한다.",
+      "플레이어의 망설임을 참조하지 않는다."
+    ],
+    "failureResults": [
+      "입찰 불가면 경쟁자가 물러난다."
+    ],
+    "sourceBasis": "V5 §8.3",
+    "implementationStatus": "implemented",
+    "runtimeBindings": [
+      "botCycle",
+      "botCap"
+    ],
+    "notes": "",
+    "readRefs": [
+      "auction.bots",
+      "auction.currentBid",
+      "auction.currentLot",
+      "auction.minimumRaise",
+      "competitor.bennett"
+    ],
+    "writeRefs": [
+      "auction.bidLog",
+      "auction.bots",
+      "auction.currentBid",
+      "auction.leader"
+    ],
+    "failurePresentation": {
+      "mode": "global-popup",
+      "uiStateRef": "popup-global-failure",
+      "messageDataRef": "ui.lastMessage"
+    }
+  },
+  {
+    "id": "act-finalize-lot",
+    "name": "FINALIZE_LOT",
+    "label": "출품 결과 확정",
+    "triggerType": "auto",
+    "input": "최종 최고 입찰자·호가",
+    "preconditions": [
+      "더 입찰 가능한 참가자가 없다."
+    ],
+    "successResults": [
+      "낙찰자 또는 유찰을 확정한다.",
+      "플레이어 낙찰 시 수수료를 포함해 차감하고 보유품에 넣는다.",
+      "출품 결과 팝업을 연다."
+    ],
+    "failureResults": [
+      "보관칸 또는 자금 검증 실패 시 낙찰 처리하지 않는다."
+    ],
+    "sourceBasis": "V5 §8.2, §11.4",
+    "implementationStatus": "implemented",
+    "runtimeBindings": [
+      "finalizeLot"
+    ],
+    "notes": "",
+    "readRefs": [
+      "auction.currentBid",
+      "auction.currentLot",
+      "auction.leader",
+      "player.cash",
+      "shop.stage"
+    ],
+    "writeRefs": [
+      "auction.lastResult",
+      "daily.auctionResults",
+      "daily.expense",
+      "player.cash",
+      "player.inventory",
+      "quests.progress"
+    ],
+    "failurePresentation": {
+      "mode": "global-popup",
+      "uiStateRef": "popup-global-failure",
+      "messageDataRef": "ui.lastMessage"
+    }
+  },
+  {
+    "id": "act-next-lot",
+    "name": "ADVANCE_LOT",
+    "label": "다음 출품 진행",
+    "triggerType": "button",
+    "input": "출품 결과 확인",
+    "preconditions": [
+      "현재 출품 결과가 확정되었다."
+    ],
+    "successResults": [
+      "다음 출품을 불러온다.",
+      "8출품이 끝나면 하루 결산으로 이동한다."
+    ],
+    "failureResults": [
+      "결과 미확정이면 진행하지 않는다."
+    ],
+    "sourceBasis": "V5 §5.3, §8",
+    "implementationStatus": "implemented",
+    "runtimeBindings": [
+      "Game.nextLot",
+      "nextLot"
+    ],
+    "notes": "",
+    "readRefs": [
+      "daily.lotIndex",
+      "daily.lots"
+    ],
+    "writeRefs": [
+      "auction.bidLog",
+      "auction.currentBid",
+      "auction.currentLot",
+      "auction.leader",
+      "auction.playerPassed",
+      "daily.lotIndex"
+    ],
+    "failurePresentation": {
+      "mode": "global-popup",
+      "uiStateRef": "popup-global-failure",
+      "messageDataRef": "ui.lastMessage"
+    }
+  },
+  {
+    "id": "act-next-day",
+    "name": "ADVANCE_DAY",
+    "label": "다음 날 진행",
+    "triggerType": "button",
+    "input": "하루 결산 결과",
+    "preconditions": [
+      "12일차가 아니다.",
+      "하루 결산이 완료되었다."
+    ],
+    "successResults": [
+      "파산을 검사한다.",
+      "일차를 1 올린다.",
+      "다음 날 마감과 대출 만기를 검사한 뒤 도시를 생성한다."
+    ],
+    "failureResults": [
+      "파산 또는 마감 미달이면 여정을 종료한다."
+    ],
+    "sourceBasis": "V5 §5.2, §5.3, §5.6",
+    "implementationStatus": "implemented",
+    "runtimeBindings": [
+      "Game.nextDay",
+      "nextDay",
+      "startDay"
+    ],
+    "notes": "",
+    "readRefs": [
+      "daily.acceptedQuests",
+      "loan.dueDay",
+      "player.cash",
+      "run.day",
+      "shop.deadlineRequiredStage",
+      "shop.stage"
+    ],
+    "writeRefs": [
+      "auction.bots",
+      "competitor.bennettRumor",
+      "daily.event",
+      "daily.lots",
+      "daily.phase",
+      "market.history",
+      "market.indexByFamily",
+      "quests.results",
+      "run.day",
+      "run.ended",
+      "run.ending.reason",
+      "run.ending.type",
+      "shop.completedQuestsTotal",
+      "shop.deadlineRequiredStage"
+    ],
+    "failurePresentation": {
+      "mode": "result-state",
+      "uiStateRef": "state-result-bankruptcy"
+    }
+  },
+  {
+    "id": "act-open-day12-settlement",
+    "name": "OPEN_DAY12_SETTLEMENT",
+    "label": "12일차 정산 열기",
+    "triggerType": "button",
+    "input": "없음",
+    "preconditions": [
+      "12일차 경매와 결산이 끝났다."
+    ],
+    "successResults": [
+      "거래소 정산 상태를 연다.",
+      "당일 낙찰품 판매를 허용한다."
+    ],
+    "failureResults": [
+      "12일차가 아니면 열지 않는다."
+    ],
+    "sourceBasis": "V5 §5.4",
+    "implementationStatus": "implemented",
+    "runtimeBindings": [
+      "Game.openSettlement",
+      "openSettlement"
+    ],
+    "notes": "",
+    "readRefs": [
+      "player.inventory",
+      "run.day"
+    ],
+    "writeRefs": [
+      "daily.settlement",
+      "run.scene"
+    ],
+    "failurePresentation": {
+      "mode": "global-popup",
+      "uiStateRef": "popup-global-failure",
+      "messageDataRef": "ui.lastMessage"
+    }
+  },
+  {
+    "id": "act-check-final-qualification",
+    "name": "CHECK_FINAL_QUALIFICATION",
+    "label": "유물 경매 자격 판정",
+    "triggerType": "conditional",
+    "input": "상회 단계",
+    "preconditions": [
+      "12일차 정산을 종료했다."
+    ],
+    "successResults": [
+      "상회 4단계면 유물 경매 입장을 허용한다."
+    ],
+    "failureResults": [
+      "4단계 미달이면 여정 실패 결과로 이동한다."
+    ],
+    "sourceBasis": "V5 §5.2, §15.1",
+    "implementationStatus": "implemented",
+    "runtimeBindings": [
+      "renderEnding"
+    ],
+    "notes": "",
+    "readRefs": [
+      "loan.principal",
+      "player.cash",
+      "run.totalDays",
+      "shop.stage"
+    ],
+    "writeRefs": [
+      "run.ended",
+      "run.ending.reason",
+      "run.ending.type",
+      "run.scene"
+    ],
+    "failurePresentation": {
+      "mode": "result-state",
+      "uiStateRef": ""
+    }
+  },
+  {
+    "id": "act-start-relic-auction",
+    "name": "START_RELIC_AUCTION",
+    "label": "유물 경매 입장",
+    "triggerType": "button",
+    "input": "없음",
+    "preconditions": [
+      "상회 4단계다.",
+      "12일차 정산이 끝났다."
+    ],
+    "successResults": [
+      "하급→중급→상급 3라운드 공개 호가를 시작한다."
+    ],
+    "failureResults": [
+      "자격 미달이면 시작하지 않는다."
+    ],
+    "sourceBasis": "V5 §15.1",
+    "implementationStatus": "implemented",
+    "runtimeBindings": [
+      "Game.startFinalAuction",
+      "startFinalAuction"
+    ],
+    "notes": "",
+    "readRefs": [
+      "competitor.tycoons",
+      "meta.relics"
+    ],
+    "writeRefs": [
+      "relicAuction.currentBid",
+      "relicAuction.currentRelic",
+      "relicAuction.round",
+      "run.scene"
+    ],
+    "failurePresentation": {
+      "mode": "global-popup",
+      "uiStateRef": "popup-global-failure",
+      "messageDataRef": "ui.lastMessage"
+    }
+  },
+  {
+    "id": "act-place-relic-bid",
+    "name": "PLACE_RELIC_BID",
+    "label": "유물 입찰",
+    "triggerType": "button",
+    "input": "입찰 금액",
+    "preconditions": [
+      "현재 호가 + 최소 인상폭 이상이다.",
+      "보유 자금 안이다.",
+      "물러나지 않았다."
+    ],
+    "successResults": [
+      "현재 호가와 최고 입찰자를 갱신한다.",
+      "거물 턴을 진행한다."
+    ],
+    "failureResults": [
+      "조건 미달 시 상태를 변경하지 않는다."
+    ],
+    "sourceBasis": "V5 §15",
+    "implementationStatus": "implemented",
+    "runtimeBindings": [
+      "Game.placeFinalBid",
+      "placeFinalBid"
+    ],
+    "notes": "",
+    "readRefs": [
+      "player.cash",
+      "relicAuction.currentBid"
+    ],
+    "writeRefs": [
+      "relicAuction.bidLog",
+      "relicAuction.currentBid"
+    ],
+    "failurePresentation": {
+      "mode": "global-popup",
+      "uiStateRef": "popup-global-failure",
+      "messageDataRef": "ui.lastMessage"
+    }
+  },
+  {
+    "id": "act-pass-relic",
+    "name": "PASS_RELIC",
+    "label": "유물 경매 물러나기",
+    "triggerType": "button",
+    "input": "없음",
+    "preconditions": [
+      "현재 유물 라운드가 진행 중이다."
+    ],
+    "successResults": [
+      "플레이어를 해당 라운드에서 제외한다."
+    ],
+    "failureResults": [
+      "이미 물러났으면 상태를 변경하지 않는다."
+    ],
+    "sourceBasis": "V5 §15",
+    "implementationStatus": "implemented",
+    "runtimeBindings": [
+      "Game.passFinal",
+      "passFinal"
+    ],
+    "notes": "",
+    "readRefs": [],
+    "writeRefs": [
+      "relicAuction.bidLog"
+    ],
+    "failurePresentation": {
+      "mode": "global-popup",
+      "uiStateRef": "popup-global-failure",
+      "messageDataRef": "ui.lastMessage"
+    }
+  },
+  {
+    "id": "act-run-tycoon-turn",
+    "name": "RUN_TYCOON_TURN",
+    "label": "거물 입찰 판정",
+    "triggerType": "auto",
+    "input": "거물 절대 자금·의중·라운드 배분",
+    "preconditions": [
+      "거물 데이터가 여정 시작 시 독립 생성되었다."
+    ],
+    "successResults": [
+      "플레이어 자금과 독립된 상한으로 입찰을 결정한다."
+    ],
+    "failureResults": [
+      "예산 또는 상한 미달이면 물러난다."
+    ],
+    "sourceBasis": "V5 §9.3, §15.3 + 사용자 확정 2026-07-30",
+    "implementationStatus": "implemented",
+    "runtimeBindings": [
+      "makeTycoonProfiles",
+      "finalBotCycle"
+    ],
+    "notes": "",
+    "readRefs": [
+      "competitor.tycoons",
+      "relicAuction.currentBid",
+      "relicAuction.round"
+    ],
+    "writeRefs": [
+      "competitor.tycoons",
+      "relicAuction.bidLog",
+      "relicAuction.currentBid"
+    ],
+    "failurePresentation": {
+      "mode": "global-popup",
+      "uiStateRef": "popup-global-failure",
+      "messageDataRef": "ui.lastMessage"
+    }
+  },
+  {
+    "id": "act-next-relic-round",
+    "name": "ADVANCE_RELIC_ROUND",
+    "label": "다음 유물 라운드",
+    "triggerType": "button",
+    "input": "라운드 결과",
+    "preconditions": [
+      "현재 유물 라운드가 확정되었다."
+    ],
+    "successResults": [
+      "다음 티어 라운드를 불러온다.",
+      "3라운드가 끝나면 유물 경매를 정산한다."
+    ],
+    "failureResults": [
+      "결과 미확정이면 진행하지 않는다."
+    ],
+    "sourceBasis": "V5 §15.1",
+    "implementationStatus": "implemented",
+    "runtimeBindings": [
+      "Game.nextFinalRound",
+      "nextFinalRound"
+    ],
+    "notes": "",
+    "readRefs": [
+      "relicAuction.currentBid",
+      "relicAuction.currentRelic",
+      "relicAuction.round"
+    ],
+    "writeRefs": [
+      "relicAuction.bidLog",
+      "relicAuction.currentBid",
+      "relicAuction.currentRelic",
+      "relicAuction.round",
+      "relicAuction.wins"
+    ],
+    "failurePresentation": {
+      "mode": "global-popup",
+      "uiStateRef": "popup-global-failure",
+      "messageDataRef": "ui.lastMessage"
+    }
+  },
+  {
+    "id": "act-finish-relic-auction",
+    "name": "FINISH_RELIC_AUCTION",
+    "label": "유물 경매 정산",
+    "triggerType": "auto",
+    "input": "3라운드 낙찰 결과",
+    "preconditions": [
+      "3라운드가 모두 종료되었다."
+    ],
+    "successResults": [
+      "낙찰 유물을 영구 보존한다.",
+      "잔액의 40%를 다음 여정으로 이월한다."
+    ],
+    "failureResults": [
+      "빈손이면 캠페인을 종료하되 기존 유물은 보존한다."
+    ],
+    "sourceBasis": "V5 §15.4",
+    "implementationStatus": "implemented",
+    "runtimeBindings": [
+      "finishFinalAuction"
+    ],
+    "notes": "",
+    "readRefs": [
+      "player.cash",
+      "relicAuction.wins"
+    ],
+    "writeRefs": [
+      "campaign.highTierWins",
+      "meta.carry",
+      "meta.relics",
+      "meta.runs",
+      "run.ended",
+      "run.ending.reason",
+      "run.ending.type",
+      "run.scene"
+    ],
+    "failurePresentation": {
+      "mode": "result-state",
+      "uiStateRef": ""
+    }
+  },
+  {
+    "id": "act-start-next-journey",
+    "name": "START_NEXT_JOURNEY",
+    "label": "다음 여정 시작",
+    "triggerType": "button",
+    "input": "메타 유물·이월 자금",
+    "preconditions": [
+      "직전 여정을 유물 낙찰로 성공했다."
+    ],
+    "successResults": [
+      "영구 유물과 이월 자금을 적용해 다음 여정을 시작한다."
+    ],
+    "failureResults": [
+      "직전 여정 실패 시 다음 여정을 시작하지 않는다."
+    ],
+    "sourceBasis": "V5 §5.7, §15.4",
+    "implementationStatus": "partial",
+    "runtimeBindings": [
+      "Game.newJourney",
+      "newJourney"
+    ],
+    "notes": "3여정 캠페인의 상급 유물 성공 기록과 완전한 결말 판정은 아직 미구현이다.",
+    "readRefs": [
+      "campaign.journeyIndex",
+      "meta.carry",
+      "meta.relics"
+    ],
+    "writeRefs": [
+      "campaign.journeyIndex",
+      "campaign.status",
+      "player.cash",
+      "run.scene"
+    ],
+    "failurePresentation": {
+      "mode": "result-state",
+      "uiStateRef": ""
+    }
+  },
+  {
+    "id": "act-request-delete-save",
+    "name": "REQUEST_DELETE_SAVE",
+    "label": "저장 삭제 확인 열기",
+    "triggerType": "ui",
+    "scope": "ui",
+    "input": "현재 UI 상태",
+    "preconditions": [
+      "해당 UI 상태가 열려 있다."
+    ],
+    "successResults": [
+      "선택 슬롯 정보를 유지한 채 공통 확인 모달을 연다."
+    ],
+    "failureResults": [
+      "실패 시 현재 상태를 유지하고 사유를 표시한다."
+    ],
+    "sourceBasis": "UI 실행 계약 v6.2",
+    "implementationStatus": "spec-only",
+    "runtimeBindings": [],
+    "notes": "",
+    "readRefs": [
+      "run.slot"
+    ],
+    "writeRefs": [
+      "ui.modal"
+    ],
+    "failurePresentation": {
+      "mode": "global-popup",
+      "uiStateRef": "popup-global-failure",
+      "messageDataRef": "ui.lastMessage"
+    }
+  },
+  {
+    "id": "act-close-settings",
+    "name": "CLOSE_SETTINGS",
+    "label": "설정 닫기",
+    "triggerType": "ui",
+    "scope": "ui",
+    "input": "현재 UI 상태",
+    "preconditions": [
+      "해당 UI 상태가 열려 있다."
+    ],
+    "successResults": [
+      "변경을 저장하지 않고 설정 모달을 닫는다."
+    ],
+    "failureResults": [
+      "실패 시 현재 상태를 유지하고 사유를 표시한다."
+    ],
+    "sourceBasis": "UI 실행 계약 v6.2",
+    "implementationStatus": "spec-only",
+    "runtimeBindings": [],
+    "notes": "",
+    "readRefs": [
+      "settings.contrast",
+      "settings.qa",
+      "settings.textScale",
+      "settings.tutorial"
+    ],
+    "writeRefs": [
+      "ui.modal"
+    ],
+    "failurePresentation": {
+      "mode": "global-popup",
+      "uiStateRef": "popup-global-failure",
+      "messageDataRef": "ui.lastMessage"
+    }
+  },
+  {
+    "id": "act-close-confirm",
+    "name": "CLOSE_CONFIRM",
+    "label": "확인 모달 닫기",
+    "triggerType": "ui",
+    "scope": "ui",
+    "input": "현재 UI 상태",
+    "preconditions": [
+      "해당 UI 상태가 열려 있다."
+    ],
+    "successResults": [
+      "대상 행동을 실행하지 않고 확인 모달을 닫는다."
+    ],
+    "failureResults": [
+      "실패 시 현재 상태를 유지하고 사유를 표시한다."
+    ],
+    "sourceBasis": "UI 실행 계약 v6.2",
+    "implementationStatus": "spec-only",
+    "runtimeBindings": [],
+    "notes": "",
+    "readRefs": [
+      "ui.modal"
+    ],
+    "writeRefs": [
+      "ui.modal"
+    ],
+    "failurePresentation": {
+      "mode": "global-popup",
+      "uiStateRef": "popup-global-failure",
+      "messageDataRef": "ui.lastMessage"
+    }
+  },
+  {
+    "id": "act-open-first-day",
+    "name": "OPEN_FIRST_DAY_TUTORIAL",
+    "label": "첫날 튜토리얼 열기",
+    "triggerType": "ui",
+    "scope": "ui",
+    "input": "현재 UI 상태",
+    "preconditions": [
+      "1일차이고 튜토리얼 설정이 켜져 있으며 아직 완료하지 않았다."
+    ],
+    "successResults": [
+      "지정된 UI 상태를 닫거나 전환한다."
+    ],
+    "failureResults": [
+      "실패 시 현재 상태를 유지하고 사유를 표시한다."
+    ],
+    "sourceBasis": "UI 실행 계약 v6.2",
+    "implementationStatus": "spec-only",
+    "runtimeBindings": [],
+    "notes": "",
+    "readRefs": [
+      "run.day",
+      "settings.tutorial",
+      "tutorial.seen"
+    ],
+    "writeRefs": [
+      "ui.modal",
+      "tutorial.step"
+    ],
+    "failurePresentation": {
+      "mode": "global-popup",
+      "uiStateRef": "popup-global-failure",
+      "messageDataRef": "ui.lastMessage"
+    }
+  },
+  {
+    "id": "act-complete-first-day-tutorial",
+    "name": "COMPLETE_FIRST_DAY_TUTORIAL",
+    "label": "첫날 튜토리얼 완료",
+    "triggerType": "ui",
+    "scope": "ui",
+    "input": "현재 UI 상태",
+    "preconditions": [
+      "해당 UI 상태가 열려 있다."
+    ],
+    "successResults": [
+      "tutorial.seen을 true로 저장하고 안내를 닫는다."
+    ],
+    "failureResults": [
+      "실패 시 현재 상태를 유지하고 사유를 표시한다."
+    ],
+    "sourceBasis": "UI 실행 계약 v6.2",
+    "implementationStatus": "spec-only",
+    "runtimeBindings": [],
+    "notes": "",
+    "readRefs": [
+      "tutorial.step"
+    ],
+    "writeRefs": [
+      "tutorial.seen",
+      "ui.modal"
+    ],
+    "failurePresentation": {
+      "mode": "global-popup",
+      "uiStateRef": "popup-global-failure",
+      "messageDataRef": "ui.lastMessage"
+    }
+  },
+  {
+    "id": "act-skip-first-day-tutorial",
+    "name": "SKIP_FIRST_DAY_TUTORIAL",
+    "label": "첫날 튜토리얼 건너뛰기",
+    "triggerType": "ui",
+    "scope": "ui",
+    "input": "현재 UI 상태",
+    "preconditions": [
+      "해당 UI 상태가 열려 있다."
+    ],
+    "successResults": [
+      "tutorial.seen을 true로 저장하고 안내를 닫는다."
+    ],
+    "failureResults": [
+      "실패 시 현재 상태를 유지하고 사유를 표시한다."
+    ],
+    "sourceBasis": "UI 실행 계약 v6.2",
+    "implementationStatus": "spec-only",
+    "runtimeBindings": [],
+    "notes": "",
+    "readRefs": [
+      "tutorial.step"
+    ],
+    "writeRefs": [
+      "tutorial.seen",
+      "ui.modal"
+    ],
+    "failurePresentation": {
+      "mode": "global-popup",
+      "uiStateRef": "popup-global-failure",
+      "messageDataRef": "ui.lastMessage"
+    }
+  },
+  {
+    "id": "act-open-result-bankruptcy",
+    "name": "OPEN_RESULT_BANKRUPTCY",
+    "label": "파산 결과 열기",
+    "triggerType": "ui",
+    "scope": "ui",
+    "input": "현재 UI 상태",
+    "preconditions": [
+      "해당 UI 상태가 열려 있다."
+    ],
+    "successResults": [
+      "파산 결과 상태를 연다."
+    ],
+    "failureResults": [
+      "실패 시 현재 상태를 유지하고 사유를 표시한다."
+    ],
+    "sourceBasis": "UI 실행 계약 v6.2",
+    "implementationStatus": "spec-only",
+    "runtimeBindings": [],
+    "notes": "",
+    "readRefs": [
+      "run.ending.type",
+      "run.ending.reason"
+    ],
+    "writeRefs": [
+      "ui.modal"
+    ],
+    "failurePresentation": {
+      "mode": "global-popup",
+      "uiStateRef": "popup-global-failure",
+      "messageDataRef": "ui.lastMessage"
+    }
+  },
+  {
+    "id": "act-return-title-from-bankruptcy",
+    "name": "RETURN_TITLE_FROM_BANKRUPTCY",
+    "label": "파산 결과에서 타이틀로",
+    "triggerType": "ui",
+    "scope": "ui",
+    "input": "현재 UI 상태",
+    "preconditions": [
+      "해당 UI 상태가 열려 있다."
+    ],
+    "successResults": [
+      "파산 결과를 닫고 타이틀 화면으로 이동한다."
+    ],
+    "failureResults": [
+      "실패 시 현재 상태를 유지하고 사유를 표시한다."
+    ],
+    "sourceBasis": "UI 실행 계약 v6.2",
+    "implementationStatus": "spec-only",
+    "runtimeBindings": [],
+    "notes": "",
+    "readRefs": [
+      "run.ending.type"
+    ],
+    "writeRefs": [
+      "run.scene",
+      "ui.modal"
+    ],
+    "failurePresentation": {
+      "mode": "global-popup",
+      "uiStateRef": "popup-global-failure",
+      "messageDataRef": "ui.lastMessage"
+    }
+  },
+  {
+    "id": "act-close-appraisal-result",
+    "name": "CLOSE_APPRAISAL_RESULT",
+    "label": "감정 결과 닫기",
+    "triggerType": "ui",
+    "scope": "ui",
+    "input": "현재 UI 상태",
+    "preconditions": [
+      "해당 UI 상태가 열려 있다."
+    ],
+    "successResults": [
+      "지정된 UI 상태를 닫거나 전환한다."
+    ],
+    "failureResults": [
+      "실패 시 현재 상태를 유지하고 사유를 표시한다."
+    ],
+    "sourceBasis": "UI 실행 계약 v6.2",
+    "implementationStatus": "spec-only",
+    "runtimeBindings": [],
+    "notes": "",
+    "readRefs": [
+      "daily.appraisals"
+    ],
+    "writeRefs": [
+      "ui.modal"
+    ],
+    "failurePresentation": {
+      "mode": "global-popup",
+      "uiStateRef": "popup-global-failure",
+      "messageDataRef": "ui.lastMessage"
+    }
+  },
+  {
+    "id": "act-open-information-result",
+    "name": "OPEN_INFORMATION_RESULT",
+    "label": "정보 획득 결과 열기",
+    "triggerType": "ui",
+    "scope": "ui",
+    "input": "현재 UI 상태",
+    "preconditions": [
+      "해당 UI 상태가 열려 있다."
+    ],
+    "successResults": [
+      "구매 완료된 정보 결과를 표시한다."
+    ],
+    "failureResults": [
+      "실패 시 현재 상태를 유지하고 사유를 표시한다."
+    ],
+    "sourceBasis": "UI 실행 계약 v6.2",
+    "implementationStatus": "spec-only",
+    "runtimeBindings": [],
+    "notes": "",
+    "readRefs": [
+      "daily.info"
+    ],
+    "writeRefs": [
+      "ui.modal"
+    ],
+    "failurePresentation": {
+      "mode": "global-popup",
+      "uiStateRef": "popup-global-failure",
+      "messageDataRef": "ui.lastMessage"
+    }
+  },
+  {
+    "id": "act-close-information-result",
+    "name": "CLOSE_INFORMATION_RESULT",
+    "label": "정보 획득 결과 닫기",
+    "triggerType": "ui",
+    "scope": "ui",
+    "input": "현재 UI 상태",
+    "preconditions": [
+      "해당 UI 상태가 열려 있다."
+    ],
+    "successResults": [
+      "지정된 UI 상태를 닫거나 전환한다."
+    ],
+    "failureResults": [
+      "실패 시 현재 상태를 유지하고 사유를 표시한다."
+    ],
+    "sourceBasis": "UI 실행 계약 v6.2",
+    "implementationStatus": "spec-only",
+    "runtimeBindings": [],
+    "notes": "",
+    "readRefs": [
+      "daily.info"
+    ],
+    "writeRefs": [
+      "ui.modal"
+    ],
+    "failurePresentation": {
+      "mode": "global-popup",
+      "uiStateRef": "popup-global-failure",
+      "messageDataRef": "ui.lastMessage"
+    }
+  },
+  {
+    "id": "act-close-hanbo-result",
+    "name": "CLOSE_HANBO_RESULT",
+    "label": "족보 판매 결과 닫기",
+    "triggerType": "ui",
+    "scope": "ui",
+    "input": "없음",
+    "preconditions": [
+      "해당 UI 상태가 열려 있다."
+    ],
+    "successResults": [
+      "지정된 UI 상태를 닫거나 전환한다."
+    ],
+    "failureResults": [
+      "실패 시 현재 상태를 유지하고 사유를 표시한다."
+    ],
+    "sourceBasis": "V6 §11.2~§11.4",
+    "implementationStatus": "spec-only",
+    "runtimeBindings": [
+      "Game.closeModal",
+      "closeModal"
+    ],
+    "notes": "",
+    "readRefs": [
+      "ui.modal"
+    ],
+    "writeRefs": [
+      "ui.modal"
+    ],
+    "failurePresentation": {
+      "mode": "global-popup",
+      "uiStateRef": "popup-global-failure",
+      "messageDataRef": "ui.lastMessage"
+    }
+  },
+  {
+    "id": "act-close-loan-overdue",
+    "name": "CLOSE_LOAN_OVERDUE",
+    "label": "대출 만기 결과 확인",
+    "triggerType": "ui",
+    "scope": "ui",
+    "input": "현재 UI 상태",
+    "preconditions": [
+      "해당 UI 상태가 열려 있다."
+    ],
+    "successResults": [
+      "만기 처리 결과를 확인한 뒤 팝업을 닫는다."
+    ],
+    "failureResults": [
+      "실패 시 현재 상태를 유지하고 사유를 표시한다."
+    ],
+    "sourceBasis": "UI 실행 계약 v6.2",
+    "implementationStatus": "spec-only",
+    "runtimeBindings": [],
+    "notes": "",
+    "readRefs": [
+      "loan.principal",
+      "loan.guildLocked"
+    ],
+    "writeRefs": [
+      "ui.modal"
+    ],
+    "failurePresentation": {
+      "mode": "global-popup",
+      "uiStateRef": "popup-global-failure",
+      "messageDataRef": "ui.lastMessage"
+    }
+  },
+  {
+    "id": "act-close-upgrade-result",
+    "name": "CLOSE_UPGRADE_RESULT",
+    "label": "상회 승급 결과 닫기",
+    "triggerType": "ui",
+    "scope": "ui",
+    "input": "현재 UI 상태",
+    "preconditions": [
+      "해당 UI 상태가 열려 있다."
+    ],
+    "successResults": [
+      "지정된 UI 상태를 닫거나 전환한다."
+    ],
+    "failureResults": [
+      "실패 시 현재 상태를 유지하고 사유를 표시한다."
+    ],
+    "sourceBasis": "UI 실행 계약 v6.2",
+    "implementationStatus": "spec-only",
+    "runtimeBindings": [],
+    "notes": "",
+    "readRefs": [
+      "shop.stage",
+      "player.storageCapacity"
+    ],
+    "writeRefs": [
+      "ui.modal"
+    ],
+    "failurePresentation": {
+      "mode": "global-popup",
+      "uiStateRef": "popup-global-failure",
+      "messageDataRef": "ui.lastMessage"
+    }
+  },
+  {
+    "id": "act-open-relic-round-result",
+    "name": "OPEN_RELIC_ROUND_RESULT",
+    "label": "유물 라운드 결과 열기",
+    "triggerType": "ui",
+    "scope": "ui",
+    "input": "현재 UI 상태",
+    "preconditions": [
+      "해당 UI 상태가 열려 있다."
+    ],
+    "successResults": [
+      "현재 유물 라운드 결과를 표시한다."
+    ],
+    "failureResults": [
+      "실패 시 현재 상태를 유지하고 사유를 표시한다."
+    ],
+    "sourceBasis": "UI 실행 계약 v6.2",
+    "implementationStatus": "spec-only",
+    "runtimeBindings": [],
+    "notes": "",
+    "readRefs": [
+      "relicAuction.round",
+      "relicAuction.currentRelic",
+      "relicAuction.currentBid"
+    ],
+    "writeRefs": [
+      "ui.modal"
+    ],
+    "failurePresentation": {
+      "mode": "global-popup",
+      "uiStateRef": "popup-global-failure",
+      "messageDataRef": "ui.lastMessage"
+    }
+  },
+  {
+    "id": "act-open-relic-detail",
+    "name": "OPEN_RELIC_DETAIL",
+    "label": "유물 상세 열기",
+    "triggerType": "ui",
+    "scope": "ui",
+    "input": "현재 UI 상태",
+    "preconditions": [
+      "해당 UI 상태가 열려 있다."
+    ],
+    "successResults": [
+      "선택한 유물 상세를 연다."
+    ],
+    "failureResults": [
+      "실패 시 현재 상태를 유지하고 사유를 표시한다."
+    ],
+    "sourceBasis": "UI 실행 계약 v6.2",
+    "implementationStatus": "spec-only",
+    "runtimeBindings": [],
+    "notes": "",
+    "readRefs": [
+      "meta.relics"
+    ],
+    "writeRefs": [
+      "ui.modal"
+    ],
+    "failurePresentation": {
+      "mode": "global-popup",
+      "uiStateRef": "popup-global-failure",
+      "messageDataRef": "ui.lastMessage"
+    }
+  },
+  {
+    "id": "act-close-relic-detail",
+    "name": "CLOSE_RELIC_DETAIL",
+    "label": "유물 상세 닫기",
+    "triggerType": "ui",
+    "scope": "ui",
+    "input": "현재 UI 상태",
+    "preconditions": [
+      "해당 UI 상태가 열려 있다."
+    ],
+    "successResults": [
+      "지정된 UI 상태를 닫거나 전환한다."
+    ],
+    "failureResults": [
+      "실패 시 현재 상태를 유지하고 사유를 표시한다."
+    ],
+    "sourceBasis": "UI 실행 계약 v6.2",
+    "implementationStatus": "spec-only",
+    "runtimeBindings": [],
+    "notes": "",
+    "readRefs": [
+      "meta.relics"
+    ],
+    "writeRefs": [
+      "ui.modal"
+    ],
+    "failurePresentation": {
+      "mode": "global-popup",
+      "uiStateRef": "popup-global-failure",
+      "messageDataRef": "ui.lastMessage"
+    }
+  },
+  {
+    "id": "act-open-campaign-complete",
+    "name": "OPEN_CAMPAIGN_COMPLETE",
+    "label": "완전한 결말 열기",
+    "triggerType": "ui",
+    "scope": "ui",
+    "input": "현재 UI 상태",
+    "preconditions": [
+      "3여정 모두 상급 유물 획득 조건을 만족한다."
+    ],
+    "successResults": [
+      "지정된 UI 상태를 닫거나 전환한다."
+    ],
+    "failureResults": [
+      "실패 시 현재 상태를 유지하고 사유를 표시한다."
+    ],
+    "sourceBasis": "UI 실행 계약 v6.2",
+    "implementationStatus": "spec-only",
+    "runtimeBindings": [],
+    "notes": "",
+    "readRefs": [
+      "campaign.highTierWins",
+      "campaign.status",
+      "meta.relics"
+    ],
+    "writeRefs": [
+      "ui.modal"
+    ],
+    "failurePresentation": {
+      "mode": "global-popup",
+      "uiStateRef": "popup-global-failure",
+      "messageDataRef": "ui.lastMessage"
+    }
+  },
+  {
+    "id": "act-open-museum-from-campaign",
+    "name": "OPEN_MUSEUM_FROM_CAMPAIGN",
+    "label": "완전한 결말에서 전시관으로",
+    "triggerType": "ui",
+    "scope": "ui",
+    "input": "현재 UI 상태",
+    "preconditions": [
+      "해당 UI 상태가 열려 있다."
+    ],
+    "successResults": [
+      "완전한 결말을 닫고 유물 전시관으로 이동한다."
+    ],
+    "failureResults": [
+      "실패 시 현재 상태를 유지하고 사유를 표시한다."
+    ],
+    "sourceBasis": "UI 실행 계약 v6.2",
+    "implementationStatus": "spec-only",
+    "runtimeBindings": [],
+    "notes": "",
+    "readRefs": [
+      "meta.relics"
+    ],
+    "writeRefs": [
+      "run.scene",
+      "ui.modal"
+    ],
+    "failurePresentation": {
+      "mode": "global-popup",
+      "uiStateRef": "popup-global-failure",
+      "messageDataRef": "ui.lastMessage"
+    }
+  },
+  {
+    "id": "act-return-title-from-campaign",
+    "name": "RETURN_TITLE_FROM_CAMPAIGN",
+    "label": "완전한 결말에서 타이틀로",
+    "triggerType": "ui",
+    "scope": "ui",
+    "input": "현재 UI 상태",
+    "preconditions": [
+      "해당 UI 상태가 열려 있다."
+    ],
+    "successResults": [
+      "완전한 결말을 닫고 타이틀 화면으로 이동한다."
+    ],
+    "failureResults": [
+      "실패 시 현재 상태를 유지하고 사유를 표시한다."
+    ],
+    "sourceBasis": "UI 실행 계약 v6.2",
+    "implementationStatus": "spec-only",
+    "runtimeBindings": [],
+    "notes": "",
+    "readRefs": [
+      "campaign.status"
+    ],
+    "writeRefs": [
+      "run.scene",
+      "ui.modal"
+    ],
+    "failurePresentation": {
+      "mode": "global-popup",
+      "uiStateRef": "popup-global-failure",
+      "messageDataRef": "ui.lastMessage"
+    }
+  },
+  {
+    "id": "act-show-toast",
+    "name": "SHOW_TOAST",
+    "label": "전역 토스트 표시",
+    "triggerType": "ui",
+    "scope": "ui",
+    "input": "현재 UI 상태",
+    "preconditions": [
+      "해당 UI 상태가 열려 있다."
+    ],
+    "successResults": [
+      "흐름을 막지 않는 전역 토스트를 표시한다."
+    ],
+    "failureResults": [
+      "실패 시 현재 상태를 유지하고 사유를 표시한다."
+    ],
+    "sourceBasis": "UI 실행 계약 v6.2",
+    "implementationStatus": "spec-only",
+    "runtimeBindings": [],
+    "notes": "",
+    "readRefs": [
+      "ui.lastMessage"
+    ],
+    "writeRefs": [
+      "ui.modal"
+    ],
+    "failurePresentation": {
+      "mode": "global-popup",
+      "uiStateRef": "popup-global-failure",
+      "messageDataRef": "ui.lastMessage"
+    }
+  },
+  {
+    "id": "act-close-toast",
+    "name": "CLOSE_TOAST",
+    "label": "전역 토스트 닫기",
+    "triggerType": "ui",
+    "scope": "ui",
+    "input": "현재 UI 상태",
+    "preconditions": [
+      "해당 UI 상태가 열려 있다."
+    ],
+    "successResults": [
+      "지정된 UI 상태를 닫거나 전환한다."
+    ],
+    "failureResults": [
+      "실패 시 현재 상태를 유지하고 사유를 표시한다."
+    ],
+    "sourceBasis": "UI 실행 계약 v6.2",
+    "implementationStatus": "spec-only",
+    "runtimeBindings": [],
+    "notes": "",
+    "readRefs": [
+      "ui.lastMessage"
+    ],
+    "writeRefs": [
+      "ui.modal"
+    ],
+    "failurePresentation": {
+      "mode": "global-popup",
+      "uiStateRef": "popup-global-failure",
+      "messageDataRef": "ui.lastMessage"
+    }
+  },
+  {
+    "id": "act-show-failure-popup",
+    "name": "SHOW_FAILURE_POPUP",
+    "label": "행동 실패 안내 열기",
+    "triggerType": "ui",
+    "scope": "ui",
+    "input": "현재 실패 안내 상태",
+    "preconditions": [
+      "일반 행동 실패이며 여정 종료 판정이 아니다."
+    ],
+    "successResults": [
+      "ui.lastMessage를 표시하는 전역 실패 팝업을 연다."
+    ],
+    "failureResults": [
+      "표시 또는 닫기 실패 시 현재 게임 상태를 변경하지 않는다."
+    ],
+    "sourceBasis": "실패 피드백 분리 계약 v6.3",
+    "implementationStatus": "spec-only",
+    "runtimeBindings": [],
+    "notes": "파산·마감 미달·유물 경매 빈손처럼 여정을 종료하는 실패에는 사용하지 않는다.",
+    "readRefs": [
+      "ui.lastMessage",
+      "run.ending.type"
+    ],
+    "writeRefs": [
+      "ui.modal"
+    ]
+  },
+  {
+    "id": "act-close-failure-popup",
+    "name": "CLOSE_FAILURE_POPUP",
+    "label": "행동 실패 안내 닫기",
+    "triggerType": "ui",
+    "scope": "ui",
+    "input": "현재 실패 안내 상태",
+    "preconditions": [
+      "일반 행동 실패이며 여정 종료 판정이 아니다."
+    ],
+    "successResults": [
+      "실패 팝업을 닫고 발생한 씬으로 돌아간다."
+    ],
+    "failureResults": [
+      "표시 또는 닫기 실패 시 현재 게임 상태를 변경하지 않는다."
+    ],
+    "sourceBasis": "실패 피드백 분리 계약 v6.3",
+    "implementationStatus": "spec-only",
+    "runtimeBindings": [],
+    "notes": "파산·마감 미달·유물 경매 빈손처럼 여정을 종료하는 실패에는 사용하지 않는다.",
+    "readRefs": [
+      "ui.lastMessage"
+    ],
+    "writeRefs": [
+      "ui.modal"
+    ]
+  },
+  {
+    "id": "act-reveal-appraisal",
+    "name": "REVEAL_APPRAISAL",
+    "label": "감정 결과 공개",
+    "triggerType": "auto",
+    "input": "감정된 출품",
+    "preconditions": [
+      "감정 비용 결제가 완료되었다."
+    ],
+    "successResults": [
+      "일차별 오차를 적용한 품질 범위를 공개한다.",
+      "실가치·추천 입찰가는 표시하지 않는다."
+    ],
+    "failureResults": [
+      "결과 생성 실패 시 결제를 취소하고 현재 화면을 유지한다."
+    ],
+    "sourceBasis": "V6 §10.2, 불변 9",
+    "implementationStatus": "implemented",
+    "runtimeBindings": [
+      "Game.appraise",
+      "appraise"
+    ],
+    "notes": "결과의 좋고 나쁨에 따라 효과음을 바꾸지 않는다.",
+    "readRefs": [
+      "daily.lots",
+      "run.day"
+    ],
+    "writeRefs": [
+      "daily.appraisals",
+      "ui.modal"
+    ]
+  }
+]

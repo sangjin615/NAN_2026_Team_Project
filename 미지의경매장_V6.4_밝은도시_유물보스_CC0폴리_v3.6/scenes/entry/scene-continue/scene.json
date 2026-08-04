@@ -1,0 +1,296 @@
+{
+  "id": "scene-continue",
+  "type": "scene",
+  "title": "이어하기",
+  "groupId": "g-entry",
+  "x": 100,
+  "y": 500,
+  "description": "3개 저장 슬롯의 상태를 확인하고 불러오거나 삭제한다.",
+  "requirements": [
+    "저장 슬롯 3개",
+    "불러오기",
+    "삭제 확인",
+    "타이틀 복귀"
+  ],
+  "referencePath": "앱 셸 + V5 여정 상태",
+  "image": "assets/reference/scene-mockups/continue.png",
+  "annotations": [
+    {
+      "id": "continue-slots",
+      "type": "area",
+      "xPercent": 50,
+      "yPercent": 44,
+      "coordinateSpace": "image",
+      "title": "저장 슬롯 목록",
+      "requirement": "일차·상회 단계·자금·보유품 수를 슬롯별로 표시한다.",
+      "acceptanceCriteria": [
+        "빈 슬롯과 저장 슬롯을 구분한다.",
+        "저장 데이터의 핵심 상태와 표시값이 일치한다."
+      ],
+      "refType": "data",
+      "actionRef": "",
+      "dataRefs": [
+        "run.slot",
+        "run.day",
+        "shop.stage",
+        "player.cash",
+        "player.inventory"
+      ],
+      "navTargetSceneId": "",
+      "modalName": "",
+      "commonKey": "save-slot",
+      "failureSlot": false,
+      "sourceBasis": "앱 셸",
+      "implementationStatus": "implemented",
+      "widthPercent": 80,
+      "heightPercent": 55
+    },
+    {
+      "id": "continue-load",
+      "type": "pin",
+      "xPercent": 72,
+      "yPercent": 72,
+      "coordinateSpace": "image",
+      "title": "이어하기",
+      "requirement": "선택 슬롯을 복원한다.",
+      "acceptanceCriteria": [
+        "유효한 저장만 불러온다.",
+        "손상 시 상태를 바꾸지 않는다."
+      ],
+      "refType": "action",
+      "actionRef": "act-load-save",
+      "dataRefs": [
+        "run.slot"
+      ],
+      "navTargetSceneId": "",
+      "modalName": "",
+      "commonKey": "",
+      "failureSlot": false,
+      "sourceBasis": "앱 셸",
+      "implementationStatus": "implemented",
+      "soundCue": "sfx-load-complete"
+    },
+    {
+      "id": "continue-delete",
+      "type": "pin",
+      "xPercent": 84,
+      "yPercent": 72,
+      "coordinateSpace": "image",
+      "title": "삭제",
+      "requirement": "삭제 확인 모달을 연다.",
+      "acceptanceCriteria": [
+        "확인 전에는 삭제하지 않는다."
+      ],
+      "refType": "action",
+      "actionRef": "act-request-delete-save",
+      "dataRefs": [
+        "run.slot"
+      ],
+      "navTargetSceneId": "",
+      "modalName": "modal-confirm",
+      "commonKey": "",
+      "failureSlot": false,
+      "sourceBasis": "앱 셸",
+      "implementationStatus": "implemented",
+      "soundCue": "sfx-popup-open"
+    },
+    {
+      "id": "continue-back",
+      "type": "pin",
+      "xPercent": 15,
+      "yPercent": 91,
+      "coordinateSpace": "image",
+      "title": "타이틀로 돌아가기",
+      "requirement": "타이틀로 돌아간다.",
+      "acceptanceCriteria": [
+        "저장 슬롯을 변경하지 않는다."
+      ],
+      "refType": "nav",
+      "actionRef": "",
+      "dataRefs": [],
+      "navTargetSceneId": "scene-title",
+      "modalName": "",
+      "commonKey": "",
+      "failureSlot": false,
+      "sourceBasis": "앱 셸",
+      "implementationStatus": "implemented"
+    },
+    {
+      "id": "continue-settings",
+      "type": "pin",
+      "xPercent": 90,
+      "yPercent": 91,
+      "coordinateSpace": "image",
+      "title": "설정",
+      "requirement": "전역 설정 모달을 연다.",
+      "acceptanceCriteria": [
+        "이어하기 화면 상태를 유지한다."
+      ],
+      "refType": "modal",
+      "actionRef": "",
+      "dataRefs": [
+        "settings.contrast"
+      ],
+      "navTargetSceneId": "",
+      "modalName": "modal-settings",
+      "commonKey": "settings-button",
+      "failureSlot": false,
+      "sourceBasis": "앱 셸",
+      "implementationStatus": "implemented"
+    }
+  ],
+  "actionRefs": [
+    "act-load-save",
+    "act-delete-save",
+    "act-open-settings"
+  ],
+  "implementationStatus": "implemented",
+  "referenceImage": "assets/reference/scene-mockups/continue.png",
+  "runtimeBackground": "assets/runtime/backgrounds/continue.png",
+  "imageRole": "reference-mockup",
+  "assetStatus": "pure-background-and-mockup",
+  "uiRequirements": [
+    {
+      "id": "continue-title",
+      "name": "화면 제목",
+      "kind": "display",
+      "priority": "A",
+      "implementationStatus": "asset-available",
+      "dataRefs": [],
+      "actionRefs": [],
+      "notes": ""
+    },
+    {
+      "id": "continue-slots",
+      "name": "저장 슬롯 3개",
+      "kind": "list",
+      "priority": "A",
+      "implementationStatus": "implemented",
+      "dataRefs": [
+        "run.slot",
+        "run.day",
+        "player.cash",
+        "shop.stage"
+      ],
+      "actionRefs": [],
+      "notes": ""
+    },
+    {
+      "id": "continue-selected",
+      "name": "선택 슬롯 강조",
+      "kind": "state",
+      "priority": "A",
+      "implementationStatus": "partial",
+      "dataRefs": [],
+      "actionRefs": [],
+      "notes": ""
+    },
+    {
+      "id": "continue-load",
+      "name": "이어하기 버튼",
+      "kind": "button",
+      "priority": "A",
+      "implementationStatus": "implemented",
+      "dataRefs": [],
+      "actionRefs": [
+        "act-load-save"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "continue-delete",
+      "name": "저장 삭제 버튼",
+      "kind": "button",
+      "priority": "A",
+      "implementationStatus": "implemented",
+      "dataRefs": [],
+      "actionRefs": [
+        "act-delete-save"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "continue-back",
+      "name": "타이틀 복귀 버튼",
+      "kind": "button",
+      "priority": "A",
+      "implementationStatus": "implemented",
+      "dataRefs": [],
+      "actionRefs": [],
+      "notes": ""
+    },
+    {
+      "id": "continue-settings",
+      "name": "설정 버튼",
+      "kind": "button",
+      "priority": "B",
+      "implementationStatus": "implemented",
+      "dataRefs": [],
+      "actionRefs": [
+        "act-open-settings"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "continue-help",
+      "name": "선택 안내 문구",
+      "kind": "notice",
+      "priority": "B",
+      "implementationStatus": "implemented",
+      "dataRefs": [],
+      "actionRefs": [],
+      "notes": ""
+    }
+  ],
+  "popupRefs": [
+    "modal-confirm",
+    "modal-settings",
+    "popup-global-failure"
+  ],
+  "mockupCorrections": [
+    "저장 슬롯에는 명성 대신 일차·자금·상회 단계·마지막 저장을 표시한다.",
+    "빈 슬롯은 새 여정 생성 진입점으로 사용할 수 있으나 이어하기 버튼과는 구분한다."
+  ],
+  "backgroundPolicy": {
+    "source": "runtime",
+    "path": "assets/runtime/backgrounds/continue.png",
+    "fit": "contain",
+    "contentRect": {
+      "x": 0.0,
+      "y": 0.0,
+      "width": 1536.0,
+      "height": 1024.0,
+      "xPercent": 0.0,
+      "yPercent": 0.0,
+      "widthPercent": 100.0,
+      "heightPercent": 100.0
+    },
+    "sourceImageSize": {
+      "width": 1536,
+      "height": 1024
+    },
+    "sceneTransform": {
+      "scale": 1.0,
+      "offsetXPercent": 0.0,
+      "offsetYPercent": 0.0,
+      "anchor": "center",
+      "appliesTo": "background-and-scene-ui",
+      "editable": true
+    },
+    "onMissingAsset": "show-error-placeholder"
+  },
+  "runtimeBackgroundSource": "runtime",
+  "temporaryRuntimeUse": false,
+  "layoutCanvas": {
+    "width": 1536,
+    "height": 1024
+  },
+  "failureFeedbackRef": "popup-global-failure",
+  "failureFeedbackPolicy": "global-popup",
+  "sound": {
+    "bgm": "bgm-01-title",
+    "layers": null,
+    "layersOnSuccess": null,
+    "restart": true
+  }
+}

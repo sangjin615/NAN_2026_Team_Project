@@ -1,0 +1,1044 @@
+{
+  "schemaVersion": "implementation-contract-1.1",
+  "projectId": "unknown-auction-v5-v1-3-pins",
+  "canvas": {
+    "width": 1536,
+    "height": 1024,
+    "scaleMode": "fit",
+    "anchor": "center",
+    "letterbox": true,
+    "letterboxColor": "#000000",
+    "coordinateUnit": "percent",
+    "scaleWholeCanvas": true,
+    "responsiveLayout": false,
+    "sceneContentMapping": "contain-content-rect"
+  },
+  "assetPolicy": {
+    "referenceMockupRuntimeUse": "temporary-only",
+    "onMissingAsset": "show-error-placeholder",
+    "allowCssFallback": false,
+    "failClosed": true,
+    "fallbackColor": "#2a2118",
+    "defaultBackgroundFit": "contain"
+  },
+  "renderer": {
+    "layers": [
+      "background-layer",
+      "content-layer",
+      "ui-layer",
+      "popup-layer",
+      "toast-layer"
+    ],
+    "popupMount": "project-canvas",
+    "readFlow": true,
+    "readLayout": true,
+    "readContracts": true,
+    "sceneTransformPolicy": {
+      "enabled": true,
+      "defaultScale": 1.0,
+      "defaultOffsetXPercent": 0.0,
+      "defaultOffsetYPercent": 0.0,
+      "anchor": "center",
+      "appliesTo": "background-and-scene-ui",
+      "allowPerSceneOverride": true,
+      "note": "현재는 scale=1.0. 이후 씬별 보정은 배경과 해당 씬 UI를 함께 변환한다."
+    },
+    "failureFeedbackPolicy": {
+      "sceneFailureSlots": false,
+      "regularActionFailureUiStateRef": "popup-global-failure",
+      "regularActionFailureMessageDataRef": "ui.lastMessage",
+      "successAndInfoUiStateRef": "toast-global",
+      "runEndingPresentation": "result-state",
+      "runEndingUiStateRefs": [
+        "state-result-bankruptcy"
+      ],
+      "popupMountLayer": "popup-layer",
+      "toastMountLayer": "toast-layer",
+      "rule": "일반 행동 실패는 전역 팝업, 성공·정보는 토스트, 여정 종료 실패는 결과 상태로 표시한다."
+    }
+  },
+  "scenes": {
+    "scene-title": {
+      "canvas": {
+        "width": 1536,
+        "height": 1024
+      },
+      "referenceImage": "assets/reference/scene-mockups/title.png",
+      "runtimeBackground": "assets/runtime/backgrounds/title.png",
+      "backgroundSource": "runtime",
+      "backgroundFit": "contain",
+      "temporaryRuntimeUse": false,
+      "elementCount": 7,
+      "sourceImageSize": {
+        "width": 1536,
+        "height": 1024
+      },
+      "contentRect": {
+        "x": 0.0,
+        "y": 0.0,
+        "width": 1536.0,
+        "height": 1024.0,
+        "xPercent": 0.0,
+        "yPercent": 0.0,
+        "widthPercent": 100.0,
+        "heightPercent": 100.0
+      },
+      "layoutCoordinateSpace": "canvas",
+      "annotationCoordinateSpace": "background-content",
+      "sceneTransform": {
+        "scale": 1.0,
+        "offsetXPercent": 0.0,
+        "offsetYPercent": 0.0,
+        "anchor": "center",
+        "appliesTo": "background-and-scene-ui",
+        "editable": true
+      }
+    },
+    "scene-continue": {
+      "canvas": {
+        "width": 1536,
+        "height": 1024
+      },
+      "referenceImage": "assets/reference/scene-mockups/continue.png",
+      "runtimeBackground": "assets/runtime/backgrounds/continue.png",
+      "backgroundSource": "runtime",
+      "backgroundFit": "contain",
+      "temporaryRuntimeUse": false,
+      "elementCount": 7,
+      "sourceImageSize": {
+        "width": 1536,
+        "height": 1024
+      },
+      "contentRect": {
+        "x": 0.0,
+        "y": 0.0,
+        "width": 1536.0,
+        "height": 1024.0,
+        "xPercent": 0.0,
+        "yPercent": 0.0,
+        "widthPercent": 100.0,
+        "heightPercent": 100.0
+      },
+      "layoutCoordinateSpace": "canvas",
+      "annotationCoordinateSpace": "background-content",
+      "sceneTransform": {
+        "scale": 1.0,
+        "offsetXPercent": 0.0,
+        "offsetYPercent": 0.0,
+        "anchor": "center",
+        "appliesTo": "background-and-scene-ui",
+        "editable": true
+      }
+    },
+    "scene-loading": {
+      "canvas": {
+        "width": 1536,
+        "height": 1024
+      },
+      "referenceImage": "assets/reference/scene-mockups/loading.png",
+      "runtimeBackground": "assets/runtime/backgrounds/loading.png",
+      "backgroundSource": "runtime",
+      "backgroundFit": "contain",
+      "temporaryRuntimeUse": false,
+      "elementCount": 4,
+      "sourceImageSize": {
+        "width": 1672,
+        "height": 941
+      },
+      "contentRect": {
+        "x": 0.0,
+        "y": 79.77,
+        "width": 1536.0,
+        "height": 864.459,
+        "xPercent": 0.0,
+        "yPercent": 7.790072,
+        "widthPercent": 100.0,
+        "heightPercent": 84.419856
+      },
+      "layoutCoordinateSpace": "canvas",
+      "annotationCoordinateSpace": "background-content",
+      "sceneTransform": {
+        "scale": 1.0,
+        "offsetXPercent": 0.0,
+        "offsetYPercent": 0.0,
+        "anchor": "center",
+        "appliesTo": "background-and-scene-ui",
+        "editable": true
+      }
+    },
+    "scene-city": {
+      "canvas": {
+        "width": 1536,
+        "height": 1024
+      },
+      "referenceImage": "assets/reference/scene-mockups/city.png",
+      "runtimeBackground": "assets/reference/scene-mockups/city.png",
+      "backgroundSource": "reference-temporary",
+      "backgroundFit": "contain",
+      "temporaryRuntimeUse": true,
+      "elementCount": 12,
+      "sourceImageSize": {
+        "width": 1672,
+        "height": 941
+      },
+      "contentRect": {
+        "x": 0.0,
+        "y": 79.77,
+        "width": 1536.0,
+        "height": 864.459,
+        "xPercent": 0.0,
+        "yPercent": 7.790072,
+        "widthPercent": 100.0,
+        "heightPercent": 84.419856
+      },
+      "layoutCoordinateSpace": "canvas",
+      "annotationCoordinateSpace": "background-content",
+      "sceneTransform": {
+        "scale": 1.0,
+        "offsetXPercent": 0.0,
+        "offsetYPercent": 0.0,
+        "anchor": "center",
+        "appliesTo": "background-and-scene-ui",
+        "editable": true
+      },
+      "temporaryReference": true
+    },
+    "scene-office": {
+      "canvas": {
+        "width": 1536,
+        "height": 1024
+      },
+      "referenceImage": "assets/reference/scene-mockups/office.png",
+      "runtimeBackground": "assets/reference/scene-mockups/office.png",
+      "backgroundSource": "reference-temporary",
+      "backgroundFit": "contain",
+      "temporaryRuntimeUse": true,
+      "elementCount": 9,
+      "sourceImageSize": {
+        "width": 1672,
+        "height": 941
+      },
+      "contentRect": {
+        "x": 0.0,
+        "y": 79.77,
+        "width": 1536.0,
+        "height": 864.459,
+        "xPercent": 0.0,
+        "yPercent": 7.790072,
+        "widthPercent": 100.0,
+        "heightPercent": 84.419856
+      },
+      "layoutCoordinateSpace": "canvas",
+      "annotationCoordinateSpace": "background-content",
+      "sceneTransform": {
+        "scale": 1.0,
+        "offsetXPercent": 0.0,
+        "offsetYPercent": 0.0,
+        "anchor": "center",
+        "appliesTo": "background-and-scene-ui",
+        "editable": true
+      },
+      "temporaryReference": true
+    },
+    "scene-tavern": {
+      "canvas": {
+        "width": 1536,
+        "height": 1024
+      },
+      "referenceImage": "assets/reference/scene-mockups/tavern.png",
+      "runtimeBackground": "assets/runtime/backgrounds/tavern.png",
+      "backgroundSource": "runtime",
+      "backgroundFit": "contain",
+      "temporaryRuntimeUse": false,
+      "elementCount": 10,
+      "sourceImageSize": {
+        "width": 1672,
+        "height": 941
+      },
+      "contentRect": {
+        "x": 0.0,
+        "y": 79.77,
+        "width": 1536.0,
+        "height": 864.459,
+        "xPercent": 0.0,
+        "yPercent": 7.790072,
+        "widthPercent": 100.0,
+        "heightPercent": 84.419856
+      },
+      "layoutCoordinateSpace": "canvas",
+      "annotationCoordinateSpace": "background-content",
+      "sceneTransform": {
+        "scale": 1.0,
+        "offsetXPercent": 0.0,
+        "offsetYPercent": 0.0,
+        "anchor": "center",
+        "appliesTo": "background-and-scene-ui",
+        "editable": true
+      }
+    },
+    "scene-exchange": {
+      "canvas": {
+        "width": 1536,
+        "height": 1024
+      },
+      "referenceImage": "assets/reference/scene-mockups/exchange.png",
+      "runtimeBackground": "assets/runtime/backgrounds/exchange.png",
+      "backgroundSource": "runtime",
+      "backgroundFit": "contain",
+      "temporaryRuntimeUse": false,
+      "elementCount": 12,
+      "sourceImageSize": {
+        "width": 1536,
+        "height": 1024
+      },
+      "contentRect": {
+        "x": 0.0,
+        "y": 0.0,
+        "width": 1536.0,
+        "height": 1024.0,
+        "xPercent": 0.0,
+        "yPercent": 0.0,
+        "widthPercent": 100.0,
+        "heightPercent": 100.0
+      },
+      "layoutCoordinateSpace": "canvas",
+      "annotationCoordinateSpace": "background-content",
+      "sceneTransform": {
+        "scale": 1.0,
+        "offsetXPercent": 0.0,
+        "offsetYPercent": 0.0,
+        "anchor": "center",
+        "appliesTo": "background-and-scene-ui",
+        "editable": true
+      }
+    },
+    "scene-guild": {
+      "canvas": {
+        "width": 1536,
+        "height": 1024
+      },
+      "referenceImage": "assets/reference/scene-mockups/guild.png",
+      "runtimeBackground": "assets/runtime/backgrounds/guild.png",
+      "backgroundSource": "runtime",
+      "backgroundFit": "contain",
+      "temporaryRuntimeUse": false,
+      "elementCount": 9,
+      "sourceImageSize": {
+        "width": 1536,
+        "height": 1024
+      },
+      "contentRect": {
+        "x": 0.0,
+        "y": 0.0,
+        "width": 1536.0,
+        "height": 1024.0,
+        "xPercent": 0.0,
+        "yPercent": 0.0,
+        "widthPercent": 100.0,
+        "heightPercent": 100.0
+      },
+      "layoutCoordinateSpace": "canvas",
+      "annotationCoordinateSpace": "background-content",
+      "sceneTransform": {
+        "scale": 1.0,
+        "offsetXPercent": 0.0,
+        "offsetYPercent": 0.0,
+        "anchor": "center",
+        "appliesTo": "background-and-scene-ui",
+        "editable": true
+      }
+    },
+    "scene-merchant": {
+      "canvas": {
+        "width": 1536,
+        "height": 1024
+      },
+      "referenceImage": "assets/reference/scene-mockups/merchant.png",
+      "runtimeBackground": "assets/runtime/backgrounds/merchant.png",
+      "backgroundSource": "runtime",
+      "backgroundFit": "contain",
+      "temporaryRuntimeUse": false,
+      "elementCount": 8,
+      "sourceImageSize": {
+        "width": 1536,
+        "height": 1024
+      },
+      "contentRect": {
+        "x": 0.0,
+        "y": 0.0,
+        "width": 1536.0,
+        "height": 1024.0,
+        "xPercent": 0.0,
+        "yPercent": 0.0,
+        "widthPercent": 100.0,
+        "heightPercent": 100.0
+      },
+      "layoutCoordinateSpace": "canvas",
+      "annotationCoordinateSpace": "background-content",
+      "sceneTransform": {
+        "scale": 1.0,
+        "offsetXPercent": 0.0,
+        "offsetYPercent": 0.0,
+        "anchor": "center",
+        "appliesTo": "background-and-scene-ui",
+        "editable": true
+      }
+    },
+    "scene-auction": {
+      "canvas": {
+        "width": 1536,
+        "height": 1024
+      },
+      "referenceImage": "assets/reference/scene-mockups/auction.png",
+      "runtimeBackground": "assets/runtime/backgrounds/auction.png",
+      "backgroundSource": "runtime",
+      "backgroundFit": "contain",
+      "temporaryRuntimeUse": false,
+      "elementCount": 12,
+      "sourceImageSize": {
+        "width": 1536,
+        "height": 1024
+      },
+      "contentRect": {
+        "x": 0.0,
+        "y": 0.0,
+        "width": 1536.0,
+        "height": 1024.0,
+        "xPercent": 0.0,
+        "yPercent": 0.0,
+        "widthPercent": 100.0,
+        "heightPercent": 100.0
+      },
+      "layoutCoordinateSpace": "canvas",
+      "annotationCoordinateSpace": "background-content",
+      "sceneTransform": {
+        "scale": 1.0,
+        "offsetXPercent": 0.0,
+        "offsetYPercent": 0.0,
+        "anchor": "center",
+        "appliesTo": "background-and-scene-ui",
+        "editable": true
+      }
+    },
+    "scene-summary": {
+      "canvas": {
+        "width": 1536,
+        "height": 1024
+      },
+      "referenceImage": "assets/reference/scene-mockups/summary.png",
+      "runtimeBackground": "assets/runtime/backgrounds/summary.png",
+      "backgroundSource": "runtime",
+      "backgroundFit": "contain",
+      "temporaryRuntimeUse": false,
+      "elementCount": 10,
+      "sourceImageSize": {
+        "width": 1536,
+        "height": 1024
+      },
+      "contentRect": {
+        "x": 0.0,
+        "y": 0.0,
+        "width": 1536.0,
+        "height": 1024.0,
+        "xPercent": 0.0,
+        "yPercent": 0.0,
+        "widthPercent": 100.0,
+        "heightPercent": 100.0
+      },
+      "layoutCoordinateSpace": "canvas",
+      "annotationCoordinateSpace": "background-content",
+      "sceneTransform": {
+        "scale": 1.0,
+        "offsetXPercent": 0.0,
+        "offsetYPercent": 0.0,
+        "anchor": "center",
+        "appliesTo": "background-and-scene-ui",
+        "editable": true
+      }
+    },
+    "scene-ending": {
+      "canvas": {
+        "width": 1536,
+        "height": 1024
+      },
+      "referenceImage": "assets/reference/scene-mockups/qualification.png",
+      "runtimeBackground": "assets/runtime/backgrounds/ending.png",
+      "backgroundSource": "runtime",
+      "backgroundFit": "contain",
+      "temporaryRuntimeUse": false,
+      "elementCount": 6,
+      "sourceImageSize": {
+        "width": 1536,
+        "height": 1024
+      },
+      "contentRect": {
+        "x": 0.0,
+        "y": 0.0,
+        "width": 1536.0,
+        "height": 1024.0,
+        "xPercent": 0.0,
+        "yPercent": 0.0,
+        "widthPercent": 100.0,
+        "heightPercent": 100.0
+      },
+      "layoutCoordinateSpace": "canvas",
+      "annotationCoordinateSpace": "background-content",
+      "sceneTransform": {
+        "scale": 1.0,
+        "offsetXPercent": 0.0,
+        "offsetYPercent": 0.0,
+        "anchor": "center",
+        "appliesTo": "background-and-scene-ui",
+        "editable": true
+      }
+    },
+    "scene-final": {
+      "canvas": {
+        "width": 1536,
+        "height": 1024
+      },
+      "referenceImage": "assets/reference/scene-mockups/final-auction.png",
+      "runtimeBackground": "assets/reference/scene-mockups/final-auction.png",
+      "backgroundSource": "reference-temporary",
+      "backgroundFit": "contain",
+      "temporaryRuntimeUse": true,
+      "elementCount": 10,
+      "sourceImageSize": {
+        "width": 1536,
+        "height": 1024
+      },
+      "contentRect": {
+        "x": 0.0,
+        "y": 0.0,
+        "width": 1536.0,
+        "height": 1024.0,
+        "xPercent": 0.0,
+        "yPercent": 0.0,
+        "widthPercent": 100.0,
+        "heightPercent": 100.0
+      },
+      "layoutCoordinateSpace": "canvas",
+      "annotationCoordinateSpace": "background-content",
+      "sceneTransform": {
+        "scale": 1.0,
+        "offsetXPercent": 0.0,
+        "offsetYPercent": 0.0,
+        "anchor": "center",
+        "appliesTo": "background-and-scene-ui",
+        "editable": true
+      },
+      "temporaryReference": true
+    },
+    "scene-result": {
+      "canvas": {
+        "width": 1536,
+        "height": 1024
+      },
+      "referenceImage": "assets/reference/scene-mockups/result.png",
+      "runtimeBackground": "assets/reference/scene-mockups/result.png",
+      "backgroundSource": "reference-temporary",
+      "backgroundFit": "contain",
+      "temporaryRuntimeUse": true,
+      "elementCount": 8,
+      "sourceImageSize": {
+        "width": 1536,
+        "height": 1024
+      },
+      "contentRect": {
+        "x": 0.0,
+        "y": 0.0,
+        "width": 1536.0,
+        "height": 1024.0,
+        "xPercent": 0.0,
+        "yPercent": 0.0,
+        "widthPercent": 100.0,
+        "heightPercent": 100.0
+      },
+      "layoutCoordinateSpace": "canvas",
+      "annotationCoordinateSpace": "background-content",
+      "sceneTransform": {
+        "scale": 1.0,
+        "offsetXPercent": 0.0,
+        "offsetYPercent": 0.0,
+        "anchor": "center",
+        "appliesTo": "background-and-scene-ui",
+        "editable": true
+      },
+      "temporaryReference": true
+    },
+    "scene-museum": {
+      "canvas": {
+        "width": 1536,
+        "height": 1024
+      },
+      "referenceImage": "assets/reference/scene-mockups/museum.png",
+      "runtimeBackground": "assets/reference/scene-mockups/museum.png",
+      "backgroundSource": "reference-temporary",
+      "backgroundFit": "contain",
+      "temporaryRuntimeUse": true,
+      "elementCount": 5,
+      "sourceImageSize": {
+        "width": 1536,
+        "height": 1024
+      },
+      "contentRect": {
+        "x": 0.0,
+        "y": 0.0,
+        "width": 1536.0,
+        "height": 1024.0,
+        "xPercent": 0.0,
+        "yPercent": 0.0,
+        "widthPercent": 100.0,
+        "heightPercent": 100.0
+      },
+      "layoutCoordinateSpace": "canvas",
+      "annotationCoordinateSpace": "background-content",
+      "sceneTransform": {
+        "scale": 1.0,
+        "offsetXPercent": 0.0,
+        "offsetYPercent": 0.0,
+        "anchor": "center",
+        "appliesTo": "background-and-scene-ui",
+        "editable": true
+      },
+      "temporaryReference": true
+    }
+  },
+  "uiStates": {
+    "modal-settings": {
+      "type": "modal",
+      "hostSceneIds": [],
+      "popupFrame": {
+        "xPercent": 22,
+        "yPercent": 18,
+        "widthPercent": 56,
+        "heightPercent": 64,
+        "zIndex": 220
+      },
+      "blocksInput": true,
+      "closeOnBackdrop": false,
+      "closeOnEscape": true,
+      "openActionRef": "act-open-settings",
+      "confirmActionRef": "act-apply-settings",
+      "cancelActionRef": "act-close-settings",
+      "closeActionRef": "act-close-settings",
+      "elementCount": 2,
+      "actionContractMode": "explicit",
+      "dismissPolicy": "cancel-or-apply"
+    },
+    "modal-confirm": {
+      "type": "modal",
+      "hostSceneIds": [
+        "scene-continue"
+      ],
+      "popupFrame": {
+        "xPercent": 22,
+        "yPercent": 18,
+        "widthPercent": 56,
+        "heightPercent": 64,
+        "zIndex": 220
+      },
+      "blocksInput": true,
+      "closeOnBackdrop": false,
+      "closeOnEscape": true,
+      "openActionRef": "act-request-delete-save",
+      "confirmActionRef": "act-delete-save",
+      "cancelActionRef": "act-close-confirm",
+      "closeActionRef": "act-close-confirm",
+      "elementCount": 1,
+      "actionContractMode": "explicit",
+      "dismissPolicy": "confirm-or-cancel"
+    },
+    "popup-lot-result": {
+      "type": "modal",
+      "hostSceneIds": [
+        "scene-auction"
+      ],
+      "popupFrame": {
+        "xPercent": 22,
+        "yPercent": 18,
+        "widthPercent": 56,
+        "heightPercent": 64,
+        "zIndex": 220
+      },
+      "blocksInput": true,
+      "closeOnBackdrop": false,
+      "closeOnEscape": false,
+      "openActionRef": "act-finalize-lot",
+      "confirmActionRef": "act-next-lot",
+      "cancelActionRef": "",
+      "closeActionRef": "",
+      "elementCount": 2,
+      "actionContractMode": "explicit",
+      "dismissPolicy": "confirm-only"
+    },
+    "tutorial-first-day": {
+      "type": "overlay",
+      "hostSceneIds": [
+        "scene-city"
+      ],
+      "popupFrame": {
+        "xPercent": 0,
+        "yPercent": 0,
+        "widthPercent": 100,
+        "heightPercent": 100,
+        "zIndex": 180
+      },
+      "blocksInput": true,
+      "closeOnBackdrop": false,
+      "closeOnEscape": false,
+      "openActionRef": "act-open-first-day",
+      "confirmActionRef": "act-complete-first-day-tutorial",
+      "cancelActionRef": "act-skip-first-day-tutorial",
+      "closeActionRef": "",
+      "elementCount": 1,
+      "actionContractMode": "explicit",
+      "dismissPolicy": "complete-or-skip"
+    },
+    "state-exchange-settlement": {
+      "type": "state",
+      "hostSceneIds": [
+        "scene-exchange"
+      ],
+      "popupFrame": {
+        "xPercent": 0,
+        "yPercent": 0,
+        "widthPercent": 100,
+        "heightPercent": 100,
+        "zIndex": 120
+      },
+      "blocksInput": false,
+      "closeOnBackdrop": false,
+      "closeOnEscape": false,
+      "openActionRef": "act-open-day12-settlement",
+      "confirmActionRef": "act-finish-settlement",
+      "cancelActionRef": "",
+      "closeActionRef": "",
+      "elementCount": 1,
+      "actionContractMode": "explicit",
+      "dismissPolicy": "confirm-only"
+    },
+    "state-result-bankruptcy": {
+      "type": "state",
+      "hostSceneIds": [
+        "scene-result"
+      ],
+      "popupFrame": {
+        "xPercent": 0,
+        "yPercent": 0,
+        "widthPercent": 100,
+        "heightPercent": 100,
+        "zIndex": 120
+      },
+      "blocksInput": false,
+      "closeOnBackdrop": false,
+      "closeOnEscape": false,
+      "openActionRef": "act-open-result-bankruptcy",
+      "confirmActionRef": "act-return-title-from-bankruptcy",
+      "cancelActionRef": "",
+      "closeActionRef": "",
+      "elementCount": 1,
+      "actionContractMode": "explicit",
+      "dismissPolicy": "confirm-only"
+    },
+    "panel-office-appraisal": {
+      "type": "panel",
+      "hostSceneIds": [
+        "scene-office"
+      ],
+      "popupFrame": {
+        "xPercent": 5,
+        "yPercent": 8,
+        "widthPercent": 90,
+        "heightPercent": 84,
+        "zIndex": 140
+      },
+      "blocksInput": false,
+      "closeOnBackdrop": false,
+      "closeOnEscape": true,
+      "openActionRef": "act-switch-office-tab",
+      "confirmActionRef": "",
+      "cancelActionRef": "",
+      "closeActionRef": "",
+      "elementCount": 0,
+      "actionContractMode": "host-panel",
+      "dismissPolicy": "host-tab"
+    },
+    "panel-exchange-market": {
+      "type": "panel",
+      "hostSceneIds": [
+        "scene-exchange"
+      ],
+      "popupFrame": {
+        "xPercent": 5,
+        "yPercent": 8,
+        "widthPercent": 90,
+        "heightPercent": 84,
+        "zIndex": 140
+      },
+      "blocksInput": false,
+      "closeOnBackdrop": false,
+      "closeOnEscape": true,
+      "openActionRef": "act-switch-exchange-tab",
+      "confirmActionRef": "",
+      "cancelActionRef": "",
+      "closeActionRef": "",
+      "elementCount": 0,
+      "actionContractMode": "host-panel",
+      "dismissPolicy": "host-tab"
+    },
+    "popup-appraisal-result": {
+      "type": "state",
+      "hostSceneIds": [
+        "scene-office"
+      ],
+      "popupFrame": {
+        "xPercent": 0,
+        "yPercent": 0,
+        "widthPercent": 100,
+        "heightPercent": 100,
+        "zIndex": 120
+      },
+      "blocksInput": false,
+      "closeOnBackdrop": false,
+      "closeOnEscape": true,
+      "openActionRef": "act-appraise-lot",
+      "confirmActionRef": "act-close-appraisal-result",
+      "cancelActionRef": "",
+      "closeActionRef": "act-close-appraisal-result",
+      "elementCount": 5,
+      "actionContractMode": "explicit",
+      "dismissPolicy": "confirm-or-escape"
+    },
+    "popup-information-result": {
+      "type": "state",
+      "hostSceneIds": [
+        "scene-tavern"
+      ],
+      "popupFrame": {
+        "xPercent": 0,
+        "yPercent": 0,
+        "widthPercent": 100,
+        "heightPercent": 100,
+        "zIndex": 120
+      },
+      "blocksInput": false,
+      "closeOnBackdrop": false,
+      "closeOnEscape": true,
+      "openActionRef": "act-open-information-result",
+      "confirmActionRef": "act-close-information-result",
+      "cancelActionRef": "",
+      "closeActionRef": "act-close-information-result",
+      "elementCount": 5,
+      "actionContractMode": "explicit",
+      "dismissPolicy": "confirm-or-escape"
+    },
+    "popup-hanbo-result": {
+      "type": "state",
+      "hostSceneIds": [
+        "scene-exchange"
+      ],
+      "popupFrame": {
+        "xPercent": 0,
+        "yPercent": 0,
+        "widthPercent": 100,
+        "heightPercent": 100,
+        "zIndex": 120
+      },
+      "blocksInput": false,
+      "closeOnBackdrop": false,
+      "closeOnEscape": true,
+      "openActionRef": "act-form-hanbo",
+      "confirmActionRef": "act-close-hanbo-result",
+      "cancelActionRef": "",
+      "closeActionRef": "act-close-hanbo-result",
+      "elementCount": 6,
+      "actionContractMode": "explicit",
+      "dismissPolicy": "confirm-or-escape"
+    },
+    "popup-loan-overdue": {
+      "type": "state",
+      "hostSceneIds": [
+        "scene-city",
+        "scene-guild",
+        "scene-summary"
+      ],
+      "popupFrame": {
+        "xPercent": 0,
+        "yPercent": 0,
+        "widthPercent": 100,
+        "heightPercent": 100,
+        "zIndex": 120
+      },
+      "blocksInput": true,
+      "closeOnBackdrop": false,
+      "closeOnEscape": false,
+      "openActionRef": "act-process-loan-due",
+      "confirmActionRef": "act-close-loan-overdue",
+      "cancelActionRef": "",
+      "closeActionRef": "",
+      "elementCount": 4,
+      "actionContractMode": "explicit",
+      "dismissPolicy": "confirm-only"
+    },
+    "popup-upgrade-result": {
+      "type": "state",
+      "hostSceneIds": [
+        "scene-merchant"
+      ],
+      "popupFrame": {
+        "xPercent": 0,
+        "yPercent": 0,
+        "widthPercent": 100,
+        "heightPercent": 100,
+        "zIndex": 120
+      },
+      "blocksInput": false,
+      "closeOnBackdrop": false,
+      "closeOnEscape": true,
+      "openActionRef": "act-upgrade-shop",
+      "confirmActionRef": "act-close-upgrade-result",
+      "cancelActionRef": "",
+      "closeActionRef": "act-close-upgrade-result",
+      "elementCount": 5,
+      "actionContractMode": "explicit",
+      "dismissPolicy": "confirm-or-escape"
+    },
+    "popup-relic-round-result": {
+      "type": "state",
+      "hostSceneIds": [
+        "scene-final"
+      ],
+      "popupFrame": {
+        "xPercent": 0,
+        "yPercent": 0,
+        "widthPercent": 100,
+        "heightPercent": 100,
+        "zIndex": 120
+      },
+      "blocksInput": true,
+      "closeOnBackdrop": false,
+      "closeOnEscape": false,
+      "openActionRef": "act-open-relic-round-result",
+      "confirmActionRef": "act-next-relic-round",
+      "cancelActionRef": "",
+      "closeActionRef": "",
+      "elementCount": 6,
+      "actionContractMode": "explicit",
+      "dismissPolicy": "confirm-only"
+    },
+    "popup-relic-detail": {
+      "type": "state",
+      "hostSceneIds": [
+        "scene-museum"
+      ],
+      "popupFrame": {
+        "xPercent": 0,
+        "yPercent": 0,
+        "widthPercent": 100,
+        "heightPercent": 100,
+        "zIndex": 120
+      },
+      "blocksInput": false,
+      "closeOnBackdrop": false,
+      "closeOnEscape": true,
+      "openActionRef": "act-open-relic-detail",
+      "confirmActionRef": "",
+      "cancelActionRef": "",
+      "closeActionRef": "act-close-relic-detail",
+      "elementCount": 7,
+      "actionContractMode": "explicit",
+      "dismissPolicy": "close-or-escape"
+    },
+    "popup-campaign-complete": {
+      "type": "state",
+      "hostSceneIds": [
+        "scene-result"
+      ],
+      "popupFrame": {
+        "xPercent": 0,
+        "yPercent": 0,
+        "widthPercent": 100,
+        "heightPercent": 100,
+        "zIndex": 120
+      },
+      "blocksInput": true,
+      "closeOnBackdrop": false,
+      "closeOnEscape": false,
+      "openActionRef": "act-open-campaign-complete",
+      "confirmActionRef": "",
+      "cancelActionRef": "",
+      "closeActionRef": "",
+      "elementCount": 5,
+      "actionContractMode": "explicit",
+      "dismissPolicy": "explicit-navigation"
+    },
+    "toast-global": {
+      "type": "toast",
+      "hostSceneIds": [],
+      "popupFrame": {
+        "xPercent": 35,
+        "yPercent": 5,
+        "widthPercent": 30,
+        "heightPercent": 10,
+        "zIndex": 320
+      },
+      "blocksInput": false,
+      "closeOnBackdrop": false,
+      "closeOnEscape": true,
+      "openActionRef": "act-show-toast",
+      "confirmActionRef": "",
+      "cancelActionRef": "",
+      "closeActionRef": "act-close-toast",
+      "elementCount": 3,
+      "actionContractMode": "explicit",
+      "dismissPolicy": "auto-or-close",
+      "autoCloseMs": 3000,
+      "presentationRole": "success-or-information",
+      "allowFailurePresentation": false
+    },
+    "popup-global-failure": {
+      "type": "modal",
+      "hostSceneIds": [],
+      "popupFrame": {
+        "xPercent": 30,
+        "yPercent": 33,
+        "widthPercent": 40,
+        "heightPercent": 34,
+        "zIndex": 310
+      },
+      "blocksInput": true,
+      "closeOnBackdrop": false,
+      "closeOnEscape": true,
+      "openActionRef": "act-show-failure-popup",
+      "confirmActionRef": "act-close-failure-popup",
+      "cancelActionRef": "",
+      "closeActionRef": "act-close-failure-popup",
+      "elementCount": 3,
+      "actionContractMode": "explicit",
+      "dismissPolicy": "confirm-or-escape",
+      "messageDataRef": "ui.lastMessage",
+      "presentationRole": "non-ending-action-failure"
+    }
+  },
+  "failureFeedback": {
+    "sceneFailureSlots": false,
+    "regularActionFailureUiStateRef": "popup-global-failure",
+    "regularActionFailureMessageDataRef": "ui.lastMessage",
+    "successAndInfoUiStateRef": "toast-global",
+    "runEndingPresentation": "result-state",
+    "runEndingUiStateRefs": [
+      "state-result-bankruptcy"
+    ],
+    "popupMountLayer": "popup-layer",
+    "toastMountLayer": "toast-layer",
+    "rule": "일반 행동 실패는 전역 팝업, 성공·정보는 토스트, 여정 종료 실패는 결과 상태로 표시한다."
+  },
+  "soundContract": {
+    "schemaVersion": "sound-contract-1.0",
+    "version": "6.4-sound-1.0",
+    "path": "sound/sound.json",
+    "runtimeConfig": "assets/runtime/audio/sound-runtime.js",
+    "prototypeAudio": true
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "id": "popup-relic-round-result",
+  "type": "blocking-popup",
+  "scope": "scenes",
+  "global": false,
+  "title": "유물 라운드 결과",
+  "description": "하급·중급·상급 라운드 사이의 결과와 자금 소모를 명확히 보여준다.",
+  "hostSceneIds": [
+    "scene-final"
+  ],
+  "bindings": [],
+  "returnMode": "opener",
+  "blocksInput": true,
+  "closeOnBackdrop": false,
+  "closeOnEscape": false,
+  "reusable": false,
+  "referencePath": "V5 씬별 UI 정리 v1.5",
+  "image": "",
+  "referenceImage": "",
+  "imageRole": "none",
+  "runtimeBackground": "",
+  "requirements": [
+    "유물 티어",
+    "유물",
+    "낙찰자",
+    "낙찰가",
+    "남은 자금",
+    "다음 라운드"
+  ],
+  "implementationStatus": "spec-only",
+  "priority": "A",
+  "annotations": [],
+  "openActionRef": "act-open-relic-round-result",
+  "confirmActionRef": "act-next-relic-round",
+  "cancelActionRef": "",
+  "closeActionRef": "",
+  "actionContractMode": "explicit",
+  "dismissPolicy": "confirm-only"
+}
