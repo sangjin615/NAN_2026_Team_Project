@@ -1115,6 +1115,40 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
 [data-scene="tavern"] #tavern-message { left: 38%; top: auto; bottom: 2%; z-index: 8; }
 [data-scene="tavern"] .return-city { left: 2.2%; top: auto; bottom: 1.5%; width: 16%; height: 6%; }
 
+/* Tavern: use the three light paper fields already painted into the mockup. */
+[data-scene="tavern"] .tavern-brokers,
+[data-scene="tavern"] .tavern-market,
+[data-scene="tavern"] #tavern-owned {
+  top: 27.4%; bottom: 5.4%; box-sizing: border-box;
+  padding: 16px 18px; border: 0; border-image: none;
+  background: transparent; color: #2b2015; box-shadow: none;
+}
+[data-scene="tavern"] .tavern-brokers { left: 1.2%; width: 28.5%; }
+[data-scene="tavern"] .tavern-market { left: 31.5%; width: 37.8%; }
+[data-scene="tavern"] #tavern-owned { left: 71.3%; right: auto; width: 27.3%; top: 27.4%; }
+[data-scene="tavern"] .tavern-brokers h3,
+[data-scene="tavern"] #tavern-detail > h3,
+[data-scene="tavern"] #tavern-owned > h3 {
+  color: #5f421f; text-align: center;
+}
+[data-scene="tavern"] .tavern-brokers article {
+  min-height: 25%; margin: 8px 0;
+}
+[data-scene="tavern"] #tavern-detail h2,
+[data-scene="tavern"] #tavern-owned .owned-heading h2 { color: #2b2015; }
+[data-scene="tavern"] #tavern-detail small,
+[data-scene="tavern"] #tavern-owned .owned-heading small,
+[data-scene="tavern"] .tavern-rule,
+[data-scene="tavern"] #tavern-owned .owned-note,
+[data-scene="tavern"] #tavern-owned .empty-info { color: #6d5942; }
+[data-scene="tavern"] #tavern-detail > p { color: #493824; }
+[data-scene="tavern"] .info-result {
+  border-image-source: url("./assets/ui/skin-v1/item-card.png");
+  background: #f0dfc6c9; color: #3d2d1d;
+}
+[data-scene="tavern"] .detail-price { color: #493824; border-top-color: #8c704c; }
+[data-scene="tavern"] .tavern-market .tavern-rule { bottom: 24px; }
+
 /* Keep the quest cards clear of the persistent return control. */
 [data-scene="quests"] .office-layout { bottom: 11%; }
 [data-scene="quests"] > [data-place="city"] { z-index: 7; }
