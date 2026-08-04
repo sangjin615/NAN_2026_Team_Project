@@ -811,11 +811,15 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
 [data-scene="hub"] .hub-stats > span { flex-direction: column; line-height: 1.15; }
 [data-scene="hub"] .hub-stats b { color: #f3bd3f; font-size: 1.12em; }
 [data-scene="hub"] #market-indices {
-  left: auto; right: 1%; bottom: 1.2%; width: 29%; height: 30%;
-  display: block; padding: 8px 14px; font-size: clamp(10px, .88vw, 15px);
+  left: auto; right: 1.2%; top: 55%; bottom: auto; width: 30%; height: 38%;
+  display: block; box-sizing: border-box; padding: 8px 14px;
+  border: 34px solid transparent;
+  border-image: url("./assets/ui/market/newspaper-board.png") 72 52 62 52 fill / 34px / 0 stretch;
+  background: transparent; box-shadow: 0 10px 18px #0006;
+  color: #352416; font-size: clamp(10px, .88vw, 15px);
 }
 [data-scene="hub"] #market-indices > strong {
-  display: block; margin-bottom: 5px; color: #ddbd76; text-align: left;
+  display: block; margin-bottom: 5px; color: #493019; text-align: left;
   font-size: 1.12em; letter-spacing: .08em;
 }
 [data-scene="hub"] .market-sparklines {
@@ -824,16 +828,16 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
 [data-scene="hub"] .market-spark {
   position: relative; display: grid; grid-template-rows: auto 1fr;
   min-width: 0; height: 40px; padding: 1px 4px 2px;
-  border-bottom: 1px solid #9e886033;
+  border-bottom: 1px solid #785d3b66;
 }
 [data-scene="hub"] .market-quote { display: grid; grid-template-columns: 1fr auto auto; gap: 6px; align-items: center; }
 [data-scene="hub"] .market-quote b,
 [data-scene="hub"] .market-quote em,
 [data-scene="hub"] .market-quote i { font-style: normal; font-weight: 900; }
 [data-scene="hub"] .market-spark svg { width: 100%; height: 20px; overflow: visible; }
-[data-scene="hub"] .market-spark line { stroke: #9e886055; stroke-width: 1; stroke-dasharray: 4 4; }
-[data-scene="hub"] .market-spark polyline { fill: none; stroke: #d8c28f; stroke-width: 2.8; stroke-linecap: round; stroke-linejoin: round; }
-[data-scene="hub"] .market-spark circle { fill: #d8c28f; stroke: #1b1209; stroke-width: 1.5; }
+[data-scene="hub"] .market-spark line { stroke: #80674677; stroke-width: 1; stroke-dasharray: 4 4; }
+[data-scene="hub"] .market-spark polyline { fill: none; stroke: #6a4a27; stroke-width: 2.8; stroke-linecap: round; stroke-linejoin: round; }
+[data-scene="hub"] .market-spark circle { fill: #6a4a27; stroke: #f0d5a4; stroke-width: 1.5; }
 [data-scene="hub"] .market-spark.rise i { color: #9cdf8e; }
 [data-scene="hub"] .market-spark.rise polyline { stroke: #76c878; }
 [data-scene="hub"] .market-spark.rise circle { fill: #9cdf8e; }
@@ -1456,8 +1460,9 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
 [data-scene="hub"] .place-grid button[data-place="museum"] { left: 61%; top: 55%; width: 20%; height: 32%; }
 [data-scene="hub"] .place-grid button[data-place="guild"] > span,
 [data-scene="hub"] .place-grid button[data-place="shop"] > span,
-[data-scene="hub"] .place-grid button[data-place="museum"] > span { bottom: 15%; }
-[data-scene="hub"] .place-grid button[data-place="museum"] > span { left: -18%; right: 49%; }
+[data-scene="hub"] .place-grid button[data-place="museum"] > span { bottom: -1%; }
+[data-scene="hub"] .place-grid button[data-place="shop"] > span { left: -12%; right: 32%; bottom: 11%; }
+[data-scene="hub"] .place-grid button[data-place="museum"] > span { left: -25%; right: 56%; bottom: 11%; }
 
 /* Normalized quest artwork replaces the temporary glyphs. */
 [data-scene="quests"] .quest-grid article::before { display: none; }
