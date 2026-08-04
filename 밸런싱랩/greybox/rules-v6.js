@@ -103,7 +103,7 @@ const CFG = {
   "upgradeCost": [
     0,
     7500,
-    12000,
+    11500,
     17500
   ],
   "upgradeQuests": [
