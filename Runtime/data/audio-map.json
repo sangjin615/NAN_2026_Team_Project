@@ -1,16 +1,21 @@
 {
   "schemaVersion": "1.1",
-  "sourceContract": "V6.4 sound-3.4-city-weight-appraisal-soften",
+  "sourceContract": "V6.4 Audio v3.6.1 bright-city-relic-boss-CC0-foley-auction-core-separated",
+  "contractFile": "../contracts/sound-v3.6.1.json",
   "masterVolume": 0.8,
   "bgm": {
     "title": { "file": "./assets/audio/bgm/bgm-01-title__loop.wav", "volume": 0.72, "loop": true },
     "city": { "file": "./assets/audio/bgm/bgm-02-city__loop.wav", "volume": 0.72, "loop": true },
     "workplace": { "file": "./assets/audio/bgm/bgm-07-loading-workshop__loop.wav", "volume": 0.68, "loop": true },
+    "office": { "file": "./assets/audio/bgm/bgm-10-office-appraisal__loop.wav", "volume": 0.68, "loop": true },
+    "exchange": { "file": "./assets/audio/bgm/bgm-14-merchant-workshop__loop.wav", "volume": 0.68, "loop": true },
+    "merchant": { "file": "./assets/audio/bgm/bgm-06-archive__loop.wav", "volume": 0.68, "loop": true },
+    "guild": { "file": "./assets/audio/bgm/bgm-13-guild-vault__loop.wav", "volume": 0.68, "loop": true },
     "tavern": { "file": "./assets/audio/bgm/bgm-11-tavern-whispers__loop.wav", "volume": 0.68, "loop": true },
     "auction": { "file": "./assets/audio/bgm/bgm-03-auction__L1.wav", "volume": 0.74, "loop": true },
     "relic": { "file": "./assets/audio/bgm/bgm-04-relic__L1.wav", "volume": 0.76, "loop": true },
     "settlement": { "file": "./assets/audio/bgm/bgm-05-settlement__L1.wav", "volume": 0.7, "loop": true },
-    "museum": { "file": "./assets/audio/bgm/bgm-06-archive__loop.wav", "volume": 0.66, "loop": true }
+    "museum": { "file": "./assets/audio/bgm/bgm-21-museum-memory__loop.wav", "volume": 0.66, "loop": true }
   },
   "sfx": {
     "navigate": { "file": "./assets/audio/sfx/sfx-venue-enter.wav", "volume": 0.72 },
@@ -19,6 +24,7 @@
     "bot-bid": { "file": "./assets/audio/sfx/sfx-bid-bot.wav", "volume": 0.68 },
     "pass": { "file": "./assets/audio/sfx/sfx-pass.wav", "volume": 0.7 },
     "gavel": { "file": "./assets/audio/sfx/sfx-gavel.wav", "volume": 0.82 },
+    "lot-win": { "file": "./assets/audio/sfx/sfx-lot-win.wav", "volume": 0.78 },
     "appraise": { "file": "./assets/audio/sfx/sfx-appraise-start.wav", "volume": 0.72 },
     "sell": { "file": "./assets/audio/sfx/sfx-sale-confirm.wav", "volume": 0.76 },
     "quest": { "file": "./assets/audio/sfx/sfx-quest-accept.wav", "volume": 0.72 },

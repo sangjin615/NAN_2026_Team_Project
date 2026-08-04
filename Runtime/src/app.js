@@ -196,7 +196,7 @@ function questRequirement(quest) {
 }
 
 function renderQuestOffice(message = '') {
-  clearActionTimer(); audio.playBgm('workplace'); state.phase = 'quests'; adapter.showScene('quests'); syncHeader();
+  clearActionTimer(); audio.playBgm('office'); state.phase = 'quests'; adapter.showScene('quests'); syncHeader();
   document.querySelector('#quest-offers').innerHTML = state.questOffers.map((quest) => `
     <article><b>${questTitle(quest)}</b><small>${questRequirement(quest)}</small><span>수주비 ${money(quest.fee)} · 보상 ${money(quest.reward)}</span>
     <button data-quest="${quest.id}" ${quest.accepted ? 'disabled' : ''}>${quest.accepted ? '수주 완료' : '수주'}</button></article>`).join('');
@@ -249,7 +249,7 @@ function renderQuestOffice(message = '') {
 }
 
 function renderExchange(message = '') {
-  clearActionTimer(); audio.playBgm('workplace'); state.phase = 'exchange'; adapter.showScene('exchange'); syncHeader();
+  clearActionTimer(); audio.playBgm('exchange'); state.phase = 'exchange'; adapter.showScene('exchange'); syncHeader();
   document.querySelector('#inventory-list').innerHTML = ownedItems().length ? ownedItems().map((item) => `
     <article><label><input type="checkbox" data-item-select="${item.lotId}"> <b>${item.name}</b></label>
     <span>${gradeLabel(item.grade)} · ${item.category}</span><span>매입 ${money(item.paid)} · ${item.appraised ? `감정 ${money(item.trueValue)} ±${money(item.appraisalRange)}` : '미감정'}</span>
@@ -295,7 +295,7 @@ function renderTavern(message = '') {
 }
 
 function renderShop(message = '') {
-  clearActionTimer(); audio.playBgm('workplace'); state.phase = 'shop'; adapter.showScene('shop'); syncHeader();
+  clearActionTimer(); audio.playBgm('merchant'); state.phase = 'shop'; adapter.showScene('shop'); syncHeader();
   const next = Math.min(4, state.shopStage + 1); const maxed = state.shopStage >= 4;
   const cost = maxed ? 0 : balance.shop.upgradeCost[next - 1];
   const required = maxed ? 0 : balance.shop.questRequirement[next - 1];
@@ -308,7 +308,7 @@ function renderShop(message = '') {
 }
 
 function renderGuild(message = '') {
-  clearActionTimer(); audio.playBgm('workplace'); state.phase = 'guild'; adapter.showScene('guild'); syncHeader();
+  clearActionTimer(); audio.playBgm('guild'); state.phase = 'guild'; adapter.showScene('guild'); syncHeader();
   const locked = state.shopStage < balance.loan.minShopStage;
   const collateralItems = ownedItems().filter((item) => !item.collateral);
   const collateralCount = collateralItems.length;
