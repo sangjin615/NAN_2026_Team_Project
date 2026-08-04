@@ -901,12 +901,12 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
   border: 34px solid transparent;
   border-image: url("./assets/ui/market/newspaper-board.png") 72 52 62 52 fill / 34px / 0 stretch;
   background: transparent; box-shadow: none;
-  color: #352416; font-size: clamp(10px, .88vw, 15px);
+  color: #352416; font-size: clamp(12px, 1.02vw, 17px);
 }
 [data-scene="hub"] #market-indices > strong {
   position: absolute; left: 17%; right: 17%; top: 7.5%;
   display: grid; place-items: center; height: 14%; margin: 0;
-  color: #493019; text-align: center; font-size: 1.2em; letter-spacing: .08em;
+  color: #493019; text-align: center; font-size: 1.65em; font-weight: 900; letter-spacing: .08em;
 }
 [data-scene="hub"] .market-sparklines {
   position: absolute; left: 8%; right: 8%; top: 29%; bottom: 7%;
@@ -915,12 +915,13 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
 }
 [data-scene="hub"] .market-spark {
   position: relative; display: grid; grid-template-rows: auto 1fr;
-  min-width: 0; height: 40px; padding: 1px 4px 2px;
+  min-width: 0; height: 48px; padding: 1px 4px 2px;
   border-bottom: 1px solid #785d3b66;
 }
-[data-scene="hub"] .market-quote { display: grid; grid-template-columns: 22px minmax(0,1fr) auto auto; gap: 4px; align-items: center; }
-[data-scene="hub"] .market-quote img { width: 21px; height: 21px; object-fit: contain; filter: drop-shadow(0 1px 1px #0005); }
-[data-scene="hub"] .market-quote b { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: .9em; }
+[data-scene="hub"] .market-quote { display: grid; grid-template-columns: 27px minmax(0,1fr) auto auto; gap: 2px; align-items: center; }
+[data-scene="hub"] .market-quote img { width: 26px; height: 26px; object-fit: contain; filter: drop-shadow(0 1px 1px #0005); }
+[data-scene="hub"] .market-quote b { overflow: visible; white-space: nowrap; font-size: .88em; }
+[data-scene="hub"] .market-quote em { font-size: 1em; }
 [data-scene="hub"] .market-quote b,
 [data-scene="hub"] .market-quote em,
 [data-scene="hub"] .market-quote i { font-style: normal; font-weight: 900; }
