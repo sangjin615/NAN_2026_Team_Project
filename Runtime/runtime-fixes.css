@@ -525,11 +525,12 @@ button.secondary:disabled { background-image: url("./assets/ui/skin-v1/button-se
 [data-scene="exchange"] .market-rates > div { padding: 5px 3px; }
 [data-scene="exchange"] .bundle-sale-panel {
   margin-top: 12px;
-  padding: 12px 14px;
+  padding: 4px 7px;
   color: #f3ead9;
-  background: linear-gradient(180deg, #30261ded, #17120eef);
-  border: 1px solid #8d682d;
-  box-shadow: inset 0 0 0 2px #17110a, 0 4px 10px #38230b33;
+  background: none;
+  border: 12px solid transparent;
+  border-image: url("./assets/ui/exchange/bundle-sale-panel.png") 40 48 fill / 12px / 0 stretch;
+  box-shadow: 0 4px 10px #38230b33;
 }
 [data-scene="exchange"] .bundle-sale-panel h4 { margin: 0 0 5px; color: #f2c75c; font-size: 1.12em; }
 [data-scene="exchange"] .bundle-sale-panel p { margin: 0 0 9px; color: #d9c9ae; font-size: .86em; line-height: 1.35; }
