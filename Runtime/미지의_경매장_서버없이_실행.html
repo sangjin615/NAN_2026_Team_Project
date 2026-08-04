@@ -1043,9 +1043,14 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
 [data-scene="tavern"] .tavern-brokers article {
   display: grid; grid-template-columns: 82px minmax(0,1fr); align-items: center; gap: 8px;
   min-height: 27%; margin: 7px 0; padding: 5px 9px;
-  border: 1px solid #6e512c; background: linear-gradient(90deg,#302218ed,#17110deb);
+  border: 9px solid transparent;
+  border-image: url("./assets/ui/skin-v1/status-card.png") 34 fill / 9px / 0 stretch;
+  background: transparent;
 }
-[data-scene="tavern"] .tavern-brokers article.is-active { border-color: #d5a31f; box-shadow: inset 0 0 0 2px #6d4d0d; }
+[data-scene="tavern"] .tavern-brokers article.is-active {
+  border-image-source: url("./assets/ui/skin-v1/tab-active.png");
+  filter: drop-shadow(0 0 5px #b77a20aa);
+}
 [data-scene="tavern"] .tavern-brokers article img {
   width: 82px; height: 88px; object-fit: contain; object-position: center bottom;
   filter: drop-shadow(0 3px 4px #000b); image-rendering: auto;
@@ -1063,11 +1068,15 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
 [data-scene="tavern"] .info-actions button:disabled {
   position: static; width: 100%; height: auto; min-height: 104px; padding: 10px 12px;
   display: grid; grid-template-columns: 52px minmax(0,1fr) 82px 90px 78px; align-items: center; gap: 8px;
-  border: 1px solid #49351f !important; border-image: none !important;
-  background: linear-gradient(90deg,#302218f2,#1a130df2) !important;
+  border: 10px solid transparent !important;
+  border-image: url("./assets/ui/skin-v1/status-card.png") 34 fill / 10px / 0 stretch !important;
+  background: transparent !important;
   color: #f0dfbf; box-shadow: none !important; text-align: left; white-space: normal;
 }
-[data-scene="tavern"] .info-actions button.is-selected { border-color: #d5a31f !important; box-shadow: inset 0 0 0 2px #76530b !important; }
+[data-scene="tavern"] .info-actions button.is-selected {
+  border-image-source: url("./assets/ui/skin-v1/tab-active.png") !important;
+  filter: drop-shadow(0 0 5px #b77a20aa);
+}
 [data-scene="tavern"] .info-symbol { color: #e6b841; font-size: 24px; text-align: center; }
 [data-scene="tavern"] .info-copy { display: grid; gap: 4px; }
 [data-scene="tavern"] .info-copy strong { font-size: clamp(14px,1.2vw,19px); }
@@ -1082,7 +1091,12 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
 [data-scene="tavern"] #tavern-detail h2 { margin: 0 0 5px; font-size: clamp(19px,1.7vw,27px); }
 [data-scene="tavern"] #tavern-detail small { color: #c8b89d; }
 [data-scene="tavern"] #tavern-detail > p { margin: 8px 0; line-height: 1.45; }
-[data-scene="tavern"] .info-result { min-height: 92px; margin-top: 11px; padding-top: 10px; border-top: 1px dashed #755b36; color: #d5c4a5; }
+[data-scene="tavern"] .info-result {
+  min-height: 92px; margin-top: 11px; padding: 10px 12px;
+  border: 8px solid transparent;
+  border-image: url("./assets/ui/skin-v1/status-card.png") 34 fill / 8px / 0 stretch;
+  color: #d5c4a5;
+}
 [data-scene="tavern"] .info-result p { margin: 7px 0; }
 [data-scene="tavern"] .info-result ul { padding-left: 18px; line-height: 1.6; }
 [data-scene="tavern"] .detail-price { display: flex; justify-content: space-between; margin: 9px 0 5px; padding-top: 8px; border-top: 1px solid #513c23; }
