@@ -159,6 +159,7 @@ test('individual inventory actions, information and telemetry are ready for plac
   const id = state.inventory[0].lotId;
   assert.equal(appraiseItem(state, balance, id), true);
   assert.equal(buyInformation(state, balance, 'forecast'), true);
+  assert.equal(buyInformation(state, balance, 'competitors'), false);
   assert.ok(sellItems(state, balance, [id]) > 0);
   recordEvent(state, 'test-action', { lotId: id });
   assert.equal(runMetrics(state).events.length, 1);

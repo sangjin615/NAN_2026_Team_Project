@@ -131,7 +131,7 @@ export function sellItems(state, balance, lotIds) {
 
 export function buyInformation(state, balance, kind) {
   const rate = balance.informationRate?.[kind];
-  if (!rate || state.information?.[state.day]?.[kind]) return false;
+  if (!rate || Object.keys(state.information?.[state.day] || {}).length) return false;
   const lots = state.schedule.days[state.day - 1].lots;
   const discount = 1 - (balance.shop.infoDiscount?.[state.shopStage] ?? 0);
   const cost = Math.ceil(lots.reduce((sum, lot) => sum + lot.pricing.basePrice, 0) * rate * discount / 100) * 100;

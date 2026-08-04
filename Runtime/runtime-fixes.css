@@ -1020,7 +1020,7 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
 [data-scene="tavern"] > header { display: none; }
 [data-scene="tavern"] .tavern-brokers,
 [data-scene="tavern"] .tavern-market,
-[data-scene="tavern"] #tavern-detail {
+[data-scene="tavern"] #tavern-owned {
   position: absolute; top: 25%; bottom: 10%; padding: 12px;
   border: 12px solid transparent;
   border-image: url("./assets/ui/skin-v1/panel-dark.png") 46 fill / 12px / 0 stretch;
@@ -1028,10 +1028,10 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
 }
 [data-scene="tavern"] .tavern-brokers { left: 1%; width: 23%; }
 [data-scene="tavern"] .tavern-market { left: 24.5%; width: 48%; }
-[data-scene="tavern"] #tavern-detail { right: 1%; width: 26%; }
+[data-scene="tavern"] #tavern-owned { right: 1%; width: 26%; }
 [data-scene="tavern"] .tavern-brokers h3,
-[data-scene="tavern"] .tavern-market h3,
-[data-scene="tavern"] #tavern-detail > h3 { margin: 0 0 10px; font-size: clamp(15px,1.35vw,21px); }
+[data-scene="tavern"] #tavern-detail > h3,
+[data-scene="tavern"] #tavern-owned > h3 { margin: 0 0 10px; font-size: clamp(15px,1.35vw,21px); }
 [data-scene="tavern"] .tavern-brokers article {
   display: grid; grid-template-columns: 82px minmax(0,1fr); align-items: center; gap: 8px;
   min-height: 27%; margin: 7px 0; padding: 5px 9px;
@@ -1083,11 +1083,14 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
 [data-scene="tavern"] .info-actions button > em small { display: block; color: #c9b99c; }
 [data-scene="tavern"] .info-state { color: #9fca67; font-weight: 900; text-align: center; }
 [data-scene="tavern"] .tavern-rule { color: #bcae96; font-size: 11px; }
-[data-scene="tavern"] #tavern-detail .detail-heading { display: flex; align-items: center; gap: 15px; margin: 7px 0 11px; }
+[data-scene="tavern"] #tavern-detail .detail-heading,
+[data-scene="tavern"] #tavern-owned .owned-heading { display: flex; align-items: center; gap: 15px; margin: 12px 0 18px; }
 [data-scene="tavern"] #tavern-detail .detail-symbol {
   flex: 0 0 auto; width: 76px; height: 76px; object-fit: contain;
   filter: drop-shadow(0 3px 6px #000b); image-rendering: auto;
 }
+[data-scene="tavern"] #tavern-owned .owned-heading img { width: 68px; height: 68px; object-fit: contain; filter: drop-shadow(0 3px 6px #000b); }
+[data-scene="tavern"] #tavern-owned .owned-heading h2 { margin: 0 0 5px; font-size: clamp(17px,1.45vw,23px); }
 [data-scene="tavern"] #tavern-detail h2 { margin: 0 0 5px; font-size: clamp(19px,1.7vw,27px); }
 [data-scene="tavern"] #tavern-detail small { color: #c8b89d; }
 [data-scene="tavern"] #tavern-detail > p { margin: 8px 0; line-height: 1.45; }
@@ -1102,13 +1105,12 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
 [data-scene="tavern"] .detail-price { display: flex; justify-content: space-between; margin: 9px 0 5px; padding-top: 8px; border-top: 1px solid #513c23; }
 [data-scene="tavern"] #buy-tavern-info { width: 100%; }
 [data-scene="tavern"] #tavern-owned {
-  left: 28%; top: 12%; width: 68%; height: 9%;
-  display: flex; align-items: center; gap: 18px; margin: 0; padding: 8px 18px;
-  border-width: 10px; border-image-width: 10px; color: #f1dfbd;
-  overflow: hidden;
+  left: auto; top: 25%; height: auto; margin: 0; color: #f1dfbd;
 }
-[data-scene="tavern"] #tavern-owned h3,
-[data-scene="tavern"] #tavern-owned p { margin: 1px; }
+[data-scene="tavern"] #tavern-owned .info-result { min-height: 190px; }
+[data-scene="tavern"] #tavern-owned .owned-note { color: #bcae96; font-size: 11px; }
+[data-scene="tavern"] #tavern-owned .empty-info { margin-top: 35%; color: #bcae96; line-height: 1.6; text-align: center; }
+[data-scene="tavern"] .tavern-market .tavern-rule { position: absolute; left: 20px; right: 20px; bottom: 10px; }
 [data-scene="tavern"] #tavern-message { left: 38%; top: auto; bottom: 2%; z-index: 8; }
 [data-scene="tavern"] .return-city { left: 2.2%; top: auto; bottom: 1.5%; width: 16%; height: 6%; }
 

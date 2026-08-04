@@ -323,7 +323,7 @@ function renderTavern(message = '') {
     const selectBroker = () => { selectedInfoKind = kind; renderTavern(); };
     broker.classList.toggle('is-active', kind === selectedInfoKind);
     broker.setAttribute('aria-pressed', String(kind === selectedInfoKind));
-    broker.querySelector('span').textContent = bought.includes(kind) ? '오늘 구매 완료' : '오늘 구매 가능';
+    broker.querySelector('span').textContent = bought.includes(kind) ? '오늘 구매 완료' : bought.length ? '오늘 구매 종료' : '오늘 구매 가능';
     broker.onclick = selectBroker;
     broker.onkeydown = (event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); selectBroker(); } };
   });
@@ -339,12 +339,12 @@ function renderTavern(message = '') {
   const discount = 1 - (balance.shop.infoDiscount?.[state.shopStage] ?? 0);
   const selectedCost = Math.ceil(totalBase * balance.informationRate[selected] * discount / 100) * 100;
   const categoryNames = { CER: '도자기', CLK: '시계', PNT: '회화', BOK: '고서', MET: '금은세공', JEW: '장신구' };
-  const results = (() => {
-    if (selected === 'forecast') {
+  const informationResult = (kind) => {
+    if (kind === 'forecast') {
       const ranked = Object.entries(state.marketPath).map(([key, path]) => [key, path[state.day - 1]]).sort((a, b) => b[1] - a[1]).slice(0, 2);
       return `<ul>${ranked.map(([key, value]) => `<li>${categoryNames[key]} 수요 <b>${Math.round(value * 100)}%</b> · ${value >= 1 ? '상승 우세' : '하락 주의'}</li>`).join('')}</ul>`;
     }
-    if (selected === 'catalog') {
+    if (kind === 'catalog') {
       const grades = Object.entries(Object.groupBy(lots, (lot) => lot.grade)).map(([grade, entries]) => `${gradeLabel(grade)} ${entries.length}점`).join(' · ');
       const families = Object.entries(Object.groupBy(lots, (lot) => lot.category)).map(([key, entries]) => `${categoryNames[key]} ${entries.length}`).join(' · ');
       return `<p><b>예상 등급</b><br>${grades}</p><p><b>계열 분포</b><br>${families}</p>`;
@@ -352,11 +352,13 @@ function renderTavern(message = '') {
     const estimates = lots.flatMap((lot) => botBidForLot({ lot, day: state.day, balance, marketIndex: state.marketPath[lot.category][state.day - 1], seed: state.seed }));
     const grouped = Object.groupBy(estimates, (bot) => bot.name);
     return `<ul>${Object.entries(grouped).map(([name, entries]) => { const values = entries.map((entry) => entry.maxBid); return `<li><b>${name}</b> ${money(Math.min(...values))} ~ ${money(Math.max(...values))}</li>`; }).join('')}</ul>`;
-  })();
+  };
+  const results = informationResult(selected);
   const owned = bought.includes(selected);
-  document.querySelector('#tavern-detail').innerHTML = `<h3>정보 상세</h3><div class="detail-heading"><img class="detail-symbol" src="${icons[selected]}" alt=""><div><h2>${names[selected]}</h2><strong>${precision[selected][0]} <small>(${precision[selected][1]})</small></strong></div></div><p>${descriptions[selected]}</p><section class="info-result"><b>${owned ? '확보한 정보' : '공개 범위'}</b>${owned ? results : '<p>구매하면 추정 범위와 분석 결과가 이곳에 공개됩니다.</p>'}</section><div class="detail-price"><span>가격</span><b>${money(selectedCost)}</b></div><button id="buy-tavern-info" ${owned || state.cash < selectedCost ? 'disabled' : ''}>${owned ? '구매 완료' : '구매하기'}</button>`;
+  document.querySelector('#tavern-detail').innerHTML = `<h3>정보 상세</h3><div class="detail-heading"><img class="detail-symbol" src="${icons[selected]}" alt=""><div><h2>${names[selected]}</h2><strong>${precision[selected][0]} <small>(${precision[selected][1]})</small></strong></div></div><p>${descriptions[selected]}</p><section class="info-result"><b>공개 범위</b><p>${owned ? '구매한 정보는 오른쪽 확보 정보에서 확인할 수 있습니다.' : '구매하면 추정 범위와 분석 결과가 오른쪽에 공개됩니다.'}</p></section><div class="detail-price"><span>가격</span><b>${money(selectedCost)}</b></div><button id="buy-tavern-info" ${bought.length || state.cash < selectedCost ? 'disabled' : ''}>${owned ? '구매 완료' : bought.length ? '오늘 구매 종료' : '구매하기'}</button>`;
   document.querySelector('#buy-tavern-info').onclick = () => { const ok = buyInformation(state, balance, selected); if (ok) { audio.playSfx('information'); save(); } renderTavern(ok ? '정보를 구매했습니다.' : '이미 구매했거나 현금이 부족합니다.'); };
-  document.querySelector('#tavern-owned').innerHTML = `<h3>오늘 확보한 정보</h3><p>${bought.length ? bought.map((key) => names[key]).join(' · ') : '아직 구매한 정보가 없습니다.'}</p>`;
+  const ownedKind = bought[0];
+  document.querySelector('#tavern-owned').innerHTML = ownedKind ? `<h3>오늘 확보한 정보</h3><div class="owned-heading"><img src="${icons[ownedKind]}" alt=""><div><h2>${names[ownedKind]}</h2><small>${precision[ownedKind][0]} (${precision[ownedKind][1]})</small></div></div><section class="info-result">${informationResult(ownedKind)}</section><p class="owned-note">당일 경매 종료까지 유지됩니다.</p>` : '<h3>오늘 확보한 정보</h3><p class="empty-info">정보상을 선택하고 오늘 사용할 정보 하나를 구매하세요.</p>';
   document.querySelector('#tavern-message').textContent = message;
 }
 
