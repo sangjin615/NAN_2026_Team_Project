@@ -9,6 +9,7 @@ import { resolveAuction, appraiseAll, appraiseItem, sellAll, sellItems, acceptQu
 import { recordEvent, runMetrics } from '../src/telemetry.js';
 import { GenerationApiProvider } from '../src/generation-api-provider.js';
 import { SaveStore } from '../src/save-store.js';
+import { qualityErrors } from '../generation-server.js';
 
 const catalog = JSON.parse(await readFile(new URL('../assets/items/catalog.json', import.meta.url), 'utf8'));
 const balance = JSON.parse(await readFile(new URL('../data/balance.json', import.meta.url), 'utf8'));
@@ -189,4 +190,29 @@ test('generation API sends only narrative identifiers and accepts fixed-order co
     assert.equal(JSON.stringify(requests).includes('trueValue'), false);
     assert.equal(JSON.stringify(requests).includes('quality'), false);
   } finally { globalThis.fetch = originalFetch; }
+});
+
+test('generation copy quality rejects supernatural, awkward and repeated catalog prose', () => {
+  const request = { mode: 'daily-content', lots: Array.from({ length: 8 }, (_, index) => ({ baseName: `물품 ${index + 1}` })) };
+  const lot = (description, index) => ({ displayName: request.lots[index].baseName, description, rumor: '오래된 창고에서 발견됐다는 소문이 돈다.', setHint: '같은 각인', npcReaction: '중개인이 표면의 흠집을 살핀다.' });
+  const bad = { lots: Array.from({ length: 8 }, (_, index) => lot('새로운 세계를 탐험할 수 있는 힘이 느껴진다.', index)) };
+  const errors = qualityErrors(request, bad);
+  assert.ok(errors.some((error) => error.includes('banned phrase')));
+  assert.ok(errors.some((error) => error.includes('repeated clause')));
+  const categoryMismatch = qualityErrors(
+    { mode: 'daily-content', lots: [{ baseName: '창가의 재봉사', category: 'PNT' }] },
+    { lots: [lot('재봉사의 바늘 끝에 금속 손상이 남아 있다.', 0)] },
+  );
+  assert.ok(categoryMismatch.some((error) => error.includes('does not match category PNT')));
+  const goodDescriptions = [
+    '은제 뚜껑 가장자리에 항로를 닮은 가는 선각이 남아 있다.',
+    '검게 바랜 가죽 표지 안쪽에 여러 필체의 메모가 겹쳐 보인다.',
+    '사파이어 둘레의 작은 흠집 사이로 별자리 각인이 이어진다.',
+    '북문 거리의 행렬을 그린 안료 일부의 변색이 보인다.',
+    '범선 모형의 돛대 밑에서 오래된 조선소 표식이 확인된다.',
+    '티아라의 세 갈래 받침마다 서로 다른 세공 흔적이 보인다.',
+    '사자 모양 손잡이 안쪽에 붉은 안료가 얇게 남아 있다.',
+    '육각 몸체와 황동 뚜껑의 마모 정도가 서로 다르게 보인다.',
+  ];
+  assert.deepEqual(qualityErrors(request, { lots: goodDescriptions.map(lot) }), []);
 });
