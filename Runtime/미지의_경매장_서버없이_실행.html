@@ -980,7 +980,8 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
 
 /* Shared live HUD for every city facility, including the auction catalog. */
 .scene > .scene-hud {
-  position: absolute; left: 2.8%; right: 2.8%; top: .35%; height: 100px; z-index: 12;
+  position: absolute; left: 2.8%; right: 2.8%; top: 5.8%; height: 100px; z-index: 12;
+  transform: translateY(-50%);
   display: grid; grid-template-columns: 1.05fr 1.25fr .78fr .78fr 1.05fr 100px; gap: .45%;
   pointer-events: none;
 }
