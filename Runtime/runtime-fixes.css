@@ -1507,24 +1507,24 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
 [data-scene="quests"] .office-layout {
   left: 1.9%; right: 2.15%; top: 40.8%; bottom: 1.45%;
   grid-template-columns: 41.4% minmax(0, 1fr); gap: 1.45%;
-  overflow: hidden;
+  overflow: visible;
 }
 [data-scene="quests"] .office-layout > section {
   padding: 8.2% 1.4% 1.4%;
-  overflow: hidden;
+  overflow: visible;
 }
 [data-scene="quests"] .office-layout > section > h3 {
-  top: .7%; left: 3%; width: 54%; height: 7.8%;
+  top: -7.4%; left: 3%; width: 54%; height: 7.8%;
 }
 [data-scene="quests"] .office-layout > section:nth-child(2) > h3 {
   left: 3%; width: 43%;
 }
 [data-scene="quests"] .office-layout .quest-grid,
 [data-scene="quests"] .office-layout .inventory-list {
-  left: 1.5%; right: 1.5%; top: 9%; bottom: 3.2%;
+  left: 1.5%; right: 1.5%; top: 2.4%; bottom: 2.4%;
 }
 [data-scene="quests"] > [data-place="city"] {
-  left: auto; right: 3.25%; top: 41.45%; bottom: auto;
+  left: auto; right: 3.25%; top: 36.65%; bottom: auto;
   width: 12.5%; height: 4.8%; z-index: 8;
 }
 [data-scene="quests"] #quest-message {
