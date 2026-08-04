@@ -75,18 +75,17 @@
   "loan": {
     "limitFromDisposalValue": 0.35,
     "repayMultiplier": 1.9,
-    "earlyRepayMultiplier": 1.0,
     "termDays": 2,
     "concurrent": 1,
-    "minShopStage": 2,
+    "minShopStage": 3,
     "collateral": "재고. 담보로 잡히면 잠겨서 못 판다. 현금은 담보가 아니다",
     "overdue": "담보 압류 + 조합 거래 제한(guildLocked)",
     "measured": {
-      "loansPerRun": 0.78,
-      "seizureRate": 0.287,
-      "interestPerRun": 1469,
-      "deadlineFailWithout": 32.4,
-      "deadlineFailWith": 29.2,
+      "loansPerRun": 0.77,
+      "seizureRate": 0.292,
+      "interestPerRun": 1428,
+      "deadlineFailWithout": 32.1,
+      "deadlineFailWith": 28.7,
       "policy": "measurementPolicy.withLoan"
     },
     "note": "값어치는 이익이 아니라 생존이다. 마감 실패를 35.2% -> 22.7% 로 낮춘다. 여정당 0.87회 - 자주 쓰는 것이 아니라 한 번쯤 오는 위기에 쓰는 장치다",
@@ -116,7 +115,7 @@
     "upgradeCost": [
       0,
       7500,
-      12000,
+      11500,
       17500
     ],
     "questRequirement": [
@@ -134,9 +133,9 @@
     ],
     "auctionFee": [
       0,
-      0,
-      0,
-      0,
+      0.05,
+      0.03,
+      0.01,
       0
     ],
     "upgradeCostNote": "합 37,000. 2026-07-31 재산정 - 시뮬을 balance.json 에 맞추고 의뢰 보상을 다시 매긴 뒤 다시 잡았다. 도달 55.9% · 마감실패 31.0% · 생존중앙값 193,280 (씨앗 900). 옛 값 32,500 은 6.36 에서 낡은 시뮬로 잡은 것이다",
@@ -283,9 +282,9 @@
     "offering": {
       "mode": "random3of5",
       "perDay": 3,
-      "acceptMax": 3,
-      "note": "하루 5종 중 3종을 무작위 제시하고 제시된 3건을 모두 수주할 수 있다. 물품 하나는 한 의뢰에만 제출할 수 있다.",
-      "acceptancePolicy": "플레이어가 제시된 의뢰를 자유롭게 조합하도록 의뢰 간 수주 충돌을 적용하지 않는다."
+      "acceptMax": 2,
+      "note": "하루 5종 중 3종을 무작위 제시하고 최대 2건 수주한다. 5종 전부 제시로 하면 왕실 인가장의 값어치가 0 이 된다",
+      "acceptancePolicy": "수주는 의무가 아니다. 이미 받은 것과 충돌하면 안 받는 것만으로 도달률이 11%p 오른다 - 화면이 충돌을 보여줘야 한다"
     },
     "remeasuredAt": {
       "at": "2026-07-31",
@@ -388,12 +387,12 @@
   "measuredAt": {
     "seeds": 900,
     "policy": "measurementPolicy.baseline",
-    "reach": 55.6,
-    "deadlineFail": 32.4,
+    "reach": 54.7,
+    "deadlineFail": 32.1,
     "ruin": 0,
-    "survivorMedian": 218060,
-    "setsPerRun": 7.96,
-    "questsPerRun": 8.06,
+    "survivorMedian": 208790,
+    "setsPerRun": 7.99,
+    "questsPerRun": 8.03,
     "loansPerRun": 0,
     "seizureRate": 0,
     "interestPerRun": 0
@@ -481,10 +480,10 @@
     ],
     "note": "족보형(상시·기한없음). 배수 폭이 1.3~5.2 에서 1.2~2.6 으로 좁아졌다 - 여섯이 다 서면 한 족보에 몰아줄 이유가 없다",
     "measured": {
-      "reach": 55.6,
-      "deadlineFail": 32.4,
-      "survivorMedian": 218060,
-      "setsPerRun": 7.96,
+      "reach": 54.7,
+      "deadlineFail": 32.1,
+      "survivorMedian": 208790,
+      "setsPerRun": 7.99,
       "seeds": 900,
       "policy": "measurementPolicy.baseline"
     }
@@ -726,12 +725,12 @@
       "opts": {},
       "means": "기준 정책 - 감정하고, 추정 범위 아래를 노리고, 족보가 서면 판다. 대출도 의뢰 추격도 안 한다",
       "result": {
-        "reach": 55.6,
-        "deadlineFail": 32.4,
+        "reach": 54.7,
+        "deadlineFail": 32.1,
         "ruin": 0,
-        "survivorMedian": 218060,
-        "setsPerRun": 7.96,
-        "questsPerRun": 8.06,
+        "survivorMedian": 208790,
+        "setsPerRun": 7.99,
+        "questsPerRun": 8.03,
         "loansPerRun": 0,
         "seizureRate": 0,
         "interestPerRun": 0
@@ -744,15 +743,15 @@
       },
       "means": "위에 대출만 켠다. 6.29 의 대출 수치는 이 정책에서 나온 것이다",
       "result": {
-        "reach": 57.1,
-        "deadlineFail": 29.2,
+        "reach": 58.3,
+        "deadlineFail": 28.7,
         "ruin": 0,
-        "survivorMedian": 216260,
-        "setsPerRun": 8.37,
-        "questsPerRun": 8.24,
-        "loansPerRun": 0.78,
-        "seizureRate": 0.287,
-        "interestPerRun": 1469
+        "survivorMedian": 213170,
+        "setsPerRun": 8.41,
+        "questsPerRun": 8.33,
+        "loansPerRun": 0.77,
+        "seizureRate": 0.292,
+        "interestPerRun": 1428
       }
     },
     "why": "수치만 적고 정책을 안 적으면 재현이 안 된다. 2026-07-30 의 55.6% 를 재현 못 한 것이 그 이유였다"
