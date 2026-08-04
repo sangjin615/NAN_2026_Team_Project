@@ -520,6 +520,23 @@ button.secondary:disabled { background-image: url("./assets/ui/skin-v1/button-se
   position: absolute; left: 0; right: 0; top: -9%; margin: 0;
   color: #f1dfbd; text-align: center; text-shadow: 0 2px 2px #0009;
 }
+
+[data-scene="exchange"] .market-rates { gap: 2px; }
+[data-scene="exchange"] .market-rates > div { padding: 5px 3px; }
+[data-scene="exchange"] .bundle-sale-panel {
+  margin-top: 12px;
+  padding: 12px 14px;
+  color: #f3ead9;
+  background: linear-gradient(180deg, #30261ded, #17120eef);
+  border: 1px solid #8d682d;
+  box-shadow: inset 0 0 0 2px #17110a, 0 4px 10px #38230b33;
+}
+[data-scene="exchange"] .bundle-sale-panel h4 { margin: 0 0 5px; color: #f2c75c; font-size: 1.12em; }
+[data-scene="exchange"] .bundle-sale-panel p { margin: 0 0 9px; color: #d9c9ae; font-size: .86em; line-height: 1.35; }
+[data-scene="exchange"] .bundle-sale-summary { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px 8px; font-size: .82em; }
+[data-scene="exchange"] .bundle-sale-summary span { display: flex; justify-content: space-between; gap: 5px; }
+[data-scene="exchange"] .bundle-sale-summary b { color: #fff2c8; }
+[data-scene="exchange"] #bundle-estimate { grid-column: 1 / -1; padding-top: 6px; border-top: 1px solid #76582e; color: #f2c75c; text-align: right; font-size: 1.18em; }
 [data-scene="exchange"] .actions {
   left: 42%; bottom: 1.25%; width: 20%; height: 5.5%;
   margin: 0; padding: 0; border: 0 !important; border-image: none !important;

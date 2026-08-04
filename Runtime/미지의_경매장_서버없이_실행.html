@@ -528,6 +528,23 @@ button.secondary:disabled { background-image: url("./assets/ui/skin-v1/button-se
   position: absolute; left: 0; right: 0; top: -9%; margin: 0;
   color: #f1dfbd; text-align: center; text-shadow: 0 2px 2px #0009;
 }
+
+[data-scene="exchange"] .market-rates { gap: 2px; }
+[data-scene="exchange"] .market-rates > div { padding: 5px 3px; }
+[data-scene="exchange"] .bundle-sale-panel {
+  margin-top: 12px;
+  padding: 12px 14px;
+  color: #f3ead9;
+  background: linear-gradient(180deg, #30261ded, #17120eef);
+  border: 1px solid #8d682d;
+  box-shadow: inset 0 0 0 2px #17110a, 0 4px 10px #38230b33;
+}
+[data-scene="exchange"] .bundle-sale-panel h4 { margin: 0 0 5px; color: #f2c75c; font-size: 1.12em; }
+[data-scene="exchange"] .bundle-sale-panel p { margin: 0 0 9px; color: #d9c9ae; font-size: .86em; line-height: 1.35; }
+[data-scene="exchange"] .bundle-sale-summary { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px 8px; font-size: .82em; }
+[data-scene="exchange"] .bundle-sale-summary span { display: flex; justify-content: space-between; gap: 5px; }
+[data-scene="exchange"] .bundle-sale-summary b { color: #fff2c8; }
+[data-scene="exchange"] #bundle-estimate { grid-column: 1 / -1; padding-top: 6px; border-top: 1px solid #76582e; color: #f2c75c; text-align: right; font-size: 1.18em; }
 [data-scene="exchange"] .actions {
   left: 42%; bottom: 1.25%; width: 20%; height: 5.5%;
   margin: 0; padding: 0; border: 0 !important; border-image: none !important;
@@ -2282,19 +2299,27 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
     return multiplier + (relics.includes("house-crest") && multiplier > 1 ? 0.2 : 0);
   }
   function sellItems(state2, balance2, lotIds) {
+    const quote = quoteItemsSale(state2, balance2, lotIds);
+    const selected = new Set(lotIds);
+    const items = state2.inventory.filter((entry) => selected.has(entry.lotId) && !entry.sold && !entry.collateral);
+    for (const item of items) {
+      const sale = quote.sales[item.lotId];
+      item.sold = true;
+      item.salePrice = sale;
+    }
+    state2.cash += quote.revenue;
+    return quote.revenue;
+  }
+  function quoteItemsSale(state2, balance2, lotIds) {
     const selected = new Set(lotIds);
     const fee = balance2.shop.auctionFee[state2.shopStage] ?? 0.05;
     const items = state2.inventory.filter((entry) => selected.has(entry.lotId) && !entry.sold && !entry.collateral);
     const multiplier = bestSetMultiplier(items, balance2, state2.metaRelics, state2.shopStage);
-    let revenue = 0;
-    for (const item of items) {
-      const sale = Math.round(item.trueValue * state2.marketPath[item.category][state2.day - 1] * multiplier * (1 - fee));
-      item.sold = true;
-      item.salePrice = sale;
-      revenue += sale;
-    }
-    state2.cash += revenue;
-    return revenue;
+    const sales = Object.fromEntries(items.map((item) => [
+      item.lotId,
+      Math.round(item.trueValue * state2.marketPath[item.category][state2.day - 1] * multiplier * (1 - fee))
+    ]));
+    return { count: items.length, multiplier, revenue: Object.values(sales).reduce((sum, sale) => sum + sale, 0), sales };
   }
   function buyInformation(state2, balance2, kind) {
     const rate = balance2.informationRate?.[kind];
@@ -2886,24 +2911,35 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
       if (revenue) audio.playSfx("sell");
       renderExchange(`${money(revenue)}\uC5D0 \uCC98\uBD84\uD588\uC2B5\uB2C8\uB2E4.`);
     });
-    const syncBulkActions = () => {
-      const checked = [...document.querySelectorAll("[data-item-select]:checked")];
-      document.querySelector("#sell-selected").disabled = !checked.some((input) => {
-        const item = ownedItems().find((entry) => entry.lotId === input.dataset.itemSelect);
-        return item && !item.collateral;
-      });
-    };
-    document.querySelectorAll("[data-item-select]").forEach((input) => {
-      input.onchange = syncBulkActions;
-    });
-    syncBulkActions();
     const names = { CER: "\uB3C4\uC790\uAE30", CLK: "\uC2DC\uACC4", PNT: "\uD68C\uD654", BOK: "\uACE0\uC11C", MET: "\uAE08\uC740\uC138\uACF5", JEW: "\uC7A5\uC2E0\uAD6C" };
     document.querySelector("#exchange-market").innerHTML = `<h3>\uCD5C\uADFC \uC2DC\uC138</h3><div class="market-rates">${Object.entries(state.marketPath).map(([key, path]) => {
       const now = path[state.day - 1];
       const previous = state.day > 1 ? path[state.day - 2] : 1;
       const delta = now - previous;
       return `<div><b>${names[key]}</b><strong>${Math.round(now * 100)}%</strong><span class="${delta >= 0 ? "rise" : "fall"}">${delta >= 0 ? "\u25B2" : "\u25BC"} ${Math.abs(delta * 100).toFixed(0)}%</span></div>`;
-    }).join("")}</div>`;
+    }).join("")}</div><section class="bundle-sale-panel"><h4>\uBB36\uC74C \uD310\uB9E4</h4><p>\uAC19\uC740 \uACC4\uC5F4\uACFC \uD76C\uADC0\uB3C4 \uC870\uD569\uC744 \uD568\uAED8 \uD314\uBA74 \uBB36\uC74C \uBCF4\uB108\uC2A4\uAC00 \uC801\uC6A9\uB429\uB2C8\uB2E4.</p><div class="bundle-sale-summary"><span>\uC120\uD0DD <b id="bundle-count">0\uAC1C</b></span><span>\uC870\uD569 <b id="bundle-label">\uC120\uD0DD \uC5C6\uC74C</b></span><span>\uBC30\uC728 <b id="bundle-multiplier">\xD71.00</b></span><strong id="bundle-estimate">\uC608\uC0C1 0 G</strong></div></section>`;
+    const syncBulkActions = () => {
+      const ids = [...document.querySelectorAll("[data-item-select]:checked")].map((input) => input.dataset.itemSelect);
+      const items = ownedItems().filter((item) => ids.includes(item.lotId) && !item.collateral);
+      const quote = quoteItemsSale(state, balance, ids);
+      const categories = Object.values(Object.groupBy(items, (item) => item.category)).map((group) => group.length);
+      const distinctGrades = new Set(items.map((item) => item.grade)).size;
+      let label = items.length ? "\uC77C\uBC18 \uBB36\uC74C" : "\uC120\uD0DD \uC5C6\uC74C";
+      if (categories.some((count) => count >= 3) && distinctGrades >= 3) label = "\uD63C\uD569 \uD76C\uADC0\uB3C4 \uC138\uD2B8";
+      else if (categories.some((count) => count >= 3)) label = "\uB3D9\uC77C \uACC4\uC5F4 3\uC810";
+      else if (categories.some((count) => count >= 2)) label = "\uB3D9\uC77C \uACC4\uC5F4 2\uC810";
+      else if (new Set(items.map((item) => item.category)).size >= 6) label = "\uC804 \uACC4\uC5F4 \uCEEC\uB809\uC158";
+      document.querySelector("#sell-selected").disabled = !quote.count;
+      document.querySelector("#bundle-count").textContent = `${quote.count}\uAC1C`;
+      document.querySelector("#bundle-label").textContent = label;
+      document.querySelector("#bundle-multiplier").textContent = `\xD7${quote.multiplier.toFixed(2)}`;
+      document.querySelector("#bundle-estimate").textContent = `\uC608\uC0C1 ${money(quote.revenue)}`;
+    };
+    document.querySelectorAll("[data-item-select]").forEach((input) => {
+      input.onchange = syncBulkActions;
+    });
+    document.querySelector("#sell-selected").textContent = "\uC120\uD0DD \uBB36\uC74C \uD310\uB9E4";
+    syncBulkActions();
     document.querySelector("#exchange-message").textContent = message;
   }
   function renderTavern(message = "") {

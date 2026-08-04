@@ -9,7 +9,7 @@ import { VslRuntimeAdapter } from './vsl-adapter.js';
 import {
   acceptQuest, appraiseItem, botBidForLot, buyInformation, createDailyQuestOffers,
   deliverQuestItem, expireQuestsBeforeAuction, missedDeadline, questMatchesItem,
-  repayLoanEarly, sellItems, settleLoan, settleQuests, takeLoan, upgradeShop,
+  quoteItemsSale, repayLoanEarly, sellItems, settleLoan, settleQuests, takeLoan, upgradeShop,
 } from './systems.js';
 import { downloadRunLog, recordEvent } from './telemetry.js';
 import { AudioBus } from './audio-bus.js';
@@ -292,20 +292,31 @@ function renderExchange(message = '') {
     if (revenue) audio.playSfx('sell');
     renderExchange(`${money(revenue)}에 처분했습니다.`);
   });
-  const syncBulkActions = () => {
-    const checked = [...document.querySelectorAll('[data-item-select]:checked')];
-    document.querySelector('#sell-selected').disabled = !checked.some((input) => {
-      const item = ownedItems().find((entry) => entry.lotId === input.dataset.itemSelect);
-      return item && !item.collateral;
-    });
-  };
-  document.querySelectorAll('[data-item-select]').forEach((input) => { input.onchange = syncBulkActions; });
-  syncBulkActions();
   const names = { CER: '도자기', CLK: '시계', PNT: '회화', BOK: '고서', MET: '금은세공', JEW: '장신구' };
   document.querySelector('#exchange-market').innerHTML = `<h3>최근 시세</h3><div class="market-rates">${Object.entries(state.marketPath).map(([key, path]) => {
     const now = path[state.day - 1]; const previous = state.day > 1 ? path[state.day - 2] : 1; const delta = now - previous;
     return `<div><b>${names[key]}</b><strong>${Math.round(now * 100)}%</strong><span class="${delta >= 0 ? 'rise' : 'fall'}">${delta >= 0 ? '▲' : '▼'} ${Math.abs(delta * 100).toFixed(0)}%</span></div>`;
-  }).join('')}</div>`;
+  }).join('')}</div><section class="bundle-sale-panel"><h4>묶음 판매</h4><p>같은 계열과 희귀도 조합을 함께 팔면 묶음 보너스가 적용됩니다.</p><div class="bundle-sale-summary"><span>선택 <b id="bundle-count">0개</b></span><span>조합 <b id="bundle-label">선택 없음</b></span><span>배율 <b id="bundle-multiplier">×1.00</b></span><strong id="bundle-estimate">예상 0 G</strong></div></section>`;
+  const syncBulkActions = () => {
+    const ids = [...document.querySelectorAll('[data-item-select]:checked')].map((input) => input.dataset.itemSelect);
+    const items = ownedItems().filter((item) => ids.includes(item.lotId) && !item.collateral);
+    const quote = quoteItemsSale(state, balance, ids);
+    const categories = Object.values(Object.groupBy(items, (item) => item.category)).map((group) => group.length);
+    const distinctGrades = new Set(items.map((item) => item.grade)).size;
+    let label = items.length ? '일반 묶음' : '선택 없음';
+    if (categories.some((count) => count >= 3) && distinctGrades >= 3) label = '혼합 희귀도 세트';
+    else if (categories.some((count) => count >= 3)) label = '동일 계열 3점';
+    else if (categories.some((count) => count >= 2)) label = '동일 계열 2점';
+    else if (new Set(items.map((item) => item.category)).size >= 6) label = '전 계열 컬렉션';
+    document.querySelector('#sell-selected').disabled = !quote.count;
+    document.querySelector('#bundle-count').textContent = `${quote.count}개`;
+    document.querySelector('#bundle-label').textContent = label;
+    document.querySelector('#bundle-multiplier').textContent = `×${quote.multiplier.toFixed(2)}`;
+    document.querySelector('#bundle-estimate').textContent = `예상 ${money(quote.revenue)}`;
+  };
+  document.querySelectorAll('[data-item-select]').forEach((input) => { input.onchange = syncBulkActions; });
+  document.querySelector('#sell-selected').textContent = '선택 묶음 판매';
+  syncBulkActions();
   document.querySelector('#exchange-message').textContent = message;
 }
 

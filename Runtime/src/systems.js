@@ -117,16 +117,26 @@ export function sellAll(state, balance) {
 }
 
 export function sellItems(state, balance, lotIds) {
+  const quote = quoteItemsSale(state, balance, lotIds);
+  const selected = new Set(lotIds);
+  const items = state.inventory.filter((entry) => selected.has(entry.lotId) && !entry.sold && !entry.collateral);
+  for (const item of items) {
+    const sale = quote.sales[item.lotId];
+    item.sold = true; item.salePrice = sale;
+  }
+  state.cash += quote.revenue; return quote.revenue;
+}
+
+export function quoteItemsSale(state, balance, lotIds) {
   const selected = new Set(lotIds);
   const fee = balance.shop.auctionFee[state.shopStage] ?? 0.05;
   const items = state.inventory.filter((entry) => selected.has(entry.lotId) && !entry.sold && !entry.collateral);
   const multiplier = bestSetMultiplier(items, balance, state.metaRelics, state.shopStage);
-  let revenue = 0;
-  for (const item of items) {
-    const sale = Math.round(item.trueValue * state.marketPath[item.category][state.day - 1] * multiplier * (1 - fee));
-    item.sold = true; item.salePrice = sale; revenue += sale;
-  }
-  state.cash += revenue; return revenue;
+  const sales = Object.fromEntries(items.map((item) => [
+    item.lotId,
+    Math.round(item.trueValue * state.marketPath[item.category][state.day - 1] * multiplier * (1 - fee)),
+  ]));
+  return { count: items.length, multiplier, revenue: Object.values(sales).reduce((sum, sale) => sum + sale, 0), sales };
 }
 
 export function buyInformation(state, balance, kind) {

@@ -5,7 +5,7 @@ import { createRunSchedule, validateSchedule } from '../src/schedule.js';
 import { createSetGraph } from '../src/set-graph.js';
 import { FallbackContentProvider, GenerationBuffer } from '../src/generation-buffer.js';
 import { createInitialState, resolveLot, advanceDay } from '../src/game-state.js';
-import { resolveAuction, appraiseAll, appraiseItem, sellAll, sellItems, acceptQuest, takeLoan, botBidForLot, buyInformation, missedDeadline, isBankrupt, deliverQuestItem, repayLoanEarly } from '../src/systems.js';
+import { resolveAuction, appraiseAll, appraiseItem, sellAll, sellItems, quoteItemsSale, acceptQuest, takeLoan, botBidForLot, buyInformation, missedDeadline, isBankrupt, deliverQuestItem, repayLoanEarly } from '../src/systems.js';
 import { recordEvent, runMetrics } from '../src/telemetry.js';
 import { GenerationApiProvider } from '../src/generation-api-provider.js';
 import { SaveStore } from '../src/save-store.js';
@@ -168,6 +168,20 @@ test('individual inventory actions, information and telemetry are ready for plac
 test('disabled generation API fails fast so the two-day buffer can use fallback', async () => {
   const provider = new GenerationApiProvider({ enabled: false });
   await assert.rejects(() => provider.generateDay({ day: 1, lots: [], sets: [] }), /disabled/);
+});
+
+test('exchange quote matches the actual bundle sale without mutating inventory', () => {
+  const schedule = createRunSchedule({ catalog, balance, seed: 'bundle-quote' });
+  const state = createInitialState({ schedule, sets: createSetGraph(schedule, 'bundle-quote'), balance, startCash: 20000 });
+  state.inventory.push(
+    { lotId: 'cer-1', trueValue: 1000, category: 'CER', grade: 'COMMON', sold: false, collateral: false },
+    { lotId: 'cer-2', trueValue: 1200, category: 'CER', grade: 'RARE', sold: false, collateral: false },
+  );
+  const quote = quoteItemsSale(state, balance, ['cer-1', 'cer-2']);
+  assert.equal(quote.count, 2);
+  assert.ok(quote.multiplier >= 1.2);
+  assert.equal(state.inventory.some((item) => item.sold), false);
+  assert.equal(sellItems(state, balance, ['cer-1', 'cer-2']), quote.revenue);
 });
 
 test('generation API sends only narrative identifiers and accepts fixed-order content', async () => {
