@@ -841,7 +841,7 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
   display: block; box-sizing: border-box; padding: 8px 14px;
   border: 34px solid transparent;
   border-image: url("./assets/ui/market/newspaper-board.png") 72 52 62 52 fill / 34px / 0 stretch;
-  background: transparent; box-shadow: 0 10px 18px #0006;
+  background: transparent; box-shadow: none;
   color: #352416; font-size: clamp(10px, .88vw, 15px);
 }
 [data-scene="hub"] #market-indices > strong {
@@ -1492,6 +1492,7 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
 [data-scene="hub"] .place-grid button[data-place="guild"] > span,
 [data-scene="hub"] .place-grid button[data-place="shop"] > span,
 [data-scene="hub"] .place-grid button[data-place="museum"] > span { bottom: -1%; }
+[data-scene="hub"] .place-grid button[data-place="guild"] > span { bottom: 11%; }
 [data-scene="hub"] .place-grid button[data-place="shop"] > span { left: -12%; right: 32%; bottom: 11%; }
 [data-scene="hub"] .place-grid button[data-place="museum"] > span { left: -25%; right: 56%; bottom: 11%; }
 
