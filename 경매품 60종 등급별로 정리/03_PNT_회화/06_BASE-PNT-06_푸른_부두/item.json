@@ -1,0 +1,16 @@
+{
+  "base_id": "BASE-PNT-06",
+  "item_name_ko": "푸른 부두",
+  "category": "PNT",
+  "category_name_ko": "회화",
+  "canvas": [
+    128,
+    128
+  ],
+  "grades": {
+    "COMMON": "03_PNT_회화/06_BASE-PNT-06_푸른_부두/01_COMMON_일반/BASE-PNT-06_COMMON.png",
+    "RARE": "03_PNT_회화/06_BASE-PNT-06_푸른_부두/02_RARE_레어/BASE-PNT-06_RARE.png",
+    "EPIC": "03_PNT_회화/06_BASE-PNT-06_푸른_부두/03_EPIC_에픽/BASE-PNT-06_EPIC.png",
+    "LEGENDARY": "03_PNT_회화/06_BASE-PNT-06_푸른_부두/04_LEGENDARY_전설/BASE-PNT-06_LEGENDARY.png"
+  }
+}

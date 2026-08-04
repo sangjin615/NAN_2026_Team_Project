@@ -1,0 +1,16 @@
+{
+  "base_id": "BASE-PNT-04",
+  "item_name_ko": "폐쇄된 온실",
+  "category": "PNT",
+  "category_name_ko": "회화",
+  "canvas": [
+    128,
+    128
+  ],
+  "grades": {
+    "COMMON": "03_PNT_회화/04_BASE-PNT-04_폐쇄된_온실/01_COMMON_일반/BASE-PNT-04_COMMON.png",
+    "RARE": "03_PNT_회화/04_BASE-PNT-04_폐쇄된_온실/02_RARE_레어/BASE-PNT-04_RARE.png",
+    "EPIC": "03_PNT_회화/04_BASE-PNT-04_폐쇄된_온실/03_EPIC_에픽/BASE-PNT-04_EPIC.png",
+    "LEGENDARY": "03_PNT_회화/04_BASE-PNT-04_폐쇄된_온실/04_LEGENDARY_전설/BASE-PNT-04_LEGENDARY.png"
+  }
+}
