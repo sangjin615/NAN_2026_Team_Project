@@ -1455,11 +1455,12 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
   font-size: clamp(9px,.82vw,13px);
 }
 [data-scene="quests"] #active-quests.inventory-list {
-  display: grid; grid-template-rows: auto 1fr; gap: 1.5%; overflow: hidden;
+  display: grid; grid-template-columns: 45% minmax(0,1fr); grid-template-rows: 1fr;
+  gap: 1.8%; overflow: hidden;
 }
 [data-scene="quests"] #active-quests > section {
-  min-height: 0; padding: 5.5% 1% 1%; overflow: hidden;
-  border: 1px solid #8f6c3d; background: #ead7b9aa; color: #2b2015;
+  min-width: 0; min-height: 0; padding: 7% 2% 2%; overflow: hidden;
+  border: 0; background: transparent; color: #2b2015;
 }
 [data-scene="quests"] #active-quests h4 {
   left: 2%; top: 2%; color: #69481f; font-size: clamp(10px,.9vw,14px);
@@ -1474,7 +1475,9 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
 [data-scene="quests"] .appraisal-card {
   grid-template-columns: 1fr; grid-template-rows: 45% minmax(42px,1fr) 30px;
   place-items: center; gap: 3px; min-height: 150px; padding: 5px;
-  border: 1px solid #a98c68; background: #ead7b9cc; color: #2b2015;
+  border: 7px solid transparent;
+  border-image: url("./assets/ui/skin-v1/item-card.png") 42 fill / 7px / 0 stretch;
+  background: transparent; color: #2b2015;
   text-align: center; overflow: hidden;
 }
 [data-scene="quests"] .appraisal-card img { width: 68%; height: 100%; background: transparent; }
