@@ -224,9 +224,17 @@ body {
 [data-scene="save"][data-mode="continue"] #back-title {
   top: 82%; bottom: auto; height: 7.2%; min-height: 0;
 }
-[data-scene="save"][data-mode="continue"] #back-title { left: 15%; width: 20%; }
-[data-scene="save"][data-mode="continue"] .save-actions #continue-run { position: absolute; left: 40%; width: 20%; }
-[data-scene="save"][data-mode="continue"] #delete-save { position: absolute; display: block; left: 65%; width: 20%; }
+/* The three 600x160 button files have different transparent side gutters.
+   Anchor their centers, then compensate widths so their visible frames match. */
+[data-scene="save"][data-mode="continue"] #back-title {
+  left: 25%; width: 22.1%; transform: translateX(-50%);
+}
+[data-scene="save"][data-mode="continue"] .save-actions #continue-run {
+  position: absolute; left: 50%; width: 20%; transform: translateX(-50%);
+}
+[data-scene="save"][data-mode="continue"] #delete-save {
+  position: absolute; display: block; left: 75%; width: 21.7%; transform: translateX(-50%);
+}
 [data-scene="save"][data-mode="continue"] #save-guide {
   left: 29%; bottom: 1.3%; width: 42%;
   border: 10px solid transparent;
