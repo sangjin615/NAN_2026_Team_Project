@@ -972,15 +972,16 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
 
 /* Shared live HUD for every city facility, including the auction catalog. */
 .scene > .scene-hud {
-  position: absolute; left: 2.8%; right: 2.8%; top: .5%; height: 10%; z-index: 12;
-  display: grid; grid-template-columns: 1.05fr 1.25fr .78fr .78fr 1.05fr 64px; gap: .45%;
+  position: absolute; left: 2.8%; right: 2.8%; top: .35%; height: 6.25%; z-index: 12;
+  display: grid; grid-template-columns: 1.05fr 1.25fr .78fr .78fr 1.05fr 76px; gap: .45%;
   pointer-events: none;
 }
 .scene > .scene-hud > span {
   position: relative; display: flex; align-items: center; justify-content: center; flex-direction: column;
-  min-width: 0; padding: 0 7px 0 clamp(32px, 2.8vw, 44px);
-  border: 9px solid transparent;
-  border-image: url("./assets/ui/skin-v1/status-card.png") 34 fill / 9px / 0 stretch;
+  min-width: 0; min-height: 0; height: min(6.25vh, 48px); box-sizing: border-box;
+  padding: 0 7px 0 clamp(32px, 2.8vw, 44px); line-height: 1.05; overflow: hidden;
+  border: 6px solid transparent;
+  border-image: url("./assets/ui/skin-v1/status-card.png") 34 fill / 6px / 0 stretch;
   background: #0a0907ec; color: #f2e6d0; white-space: nowrap;
 }
 .scene > .scene-hud > span::before {
@@ -1000,7 +1001,7 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
 .scene > .scene-hud .hud-cash b { font-size: clamp(19px, 1.7vw, 27px); }
 .scene > .scene-hud > .scene-hud-settings {
   pointer-events: auto; min-width: 0 !important; min-height: 0 !important;
-  width: 64px; height: 64px; align-self: center;
+  width: 76px; height: 76px; align-self: start;
   overflow: hidden; text-indent: -999px; font-size: 0; padding: 0 !important;
   border: 0 !important; border-image: none !important;
   background: transparent url("./assets/ui/vsl-v6.4/buttons/settings.png") center / contain no-repeat !important;
