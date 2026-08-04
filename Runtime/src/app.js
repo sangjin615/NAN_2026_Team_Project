@@ -294,7 +294,7 @@ function renderExchange(message = '') {
   const emptyCards = Array.from({ length: Math.max(0, state.storage - exchangeItems.length) }, (_, index) => `
     <article class="empty-inventory-slot" aria-label="빈 보관칸 ${exchangeItems.length + index + 1}">
       <span class="empty-slot-number">${String(exchangeItems.length + index + 1).padStart(2, '0')}</span>
-      <span class="empty-slot-icon">＋</span>
+      <span class="empty-slot-icon"><img src="./assets/ui/exchange/storage-empty.png" alt=""></span>
       <span><b>빈 보관칸</b><small>낙찰한 물품이 이곳에 표시됩니다.</small></span>
     </article>`).join('');
   const lockedCards = Array.from({ length: Math.max(0, maxStorage - state.storage) }, (_, index) => {
@@ -302,7 +302,7 @@ function renderExchange(message = '') {
     const unlockStage = balance.shop.storage.findIndex((capacity) => capacity >= slotNumber);
     return `<article class="empty-inventory-slot locked-inventory-slot" aria-label="잠긴 보관칸 ${slotNumber}">
       <span class="empty-slot-number">${String(slotNumber).padStart(2, '0')}</span>
-      <span class="empty-slot-icon" aria-hidden="true">🔒</span>
+      <span class="empty-slot-icon" aria-hidden="true"><img src="./assets/ui/exchange/storage-locked.png" alt=""></span>
       <span><b>잠긴 보관칸</b><small>상회 ${unlockStage}단계에서 해금됩니다.</small></span>
     </article>`;
   }).join('');

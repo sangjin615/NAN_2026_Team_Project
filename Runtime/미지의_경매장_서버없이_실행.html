@@ -532,8 +532,11 @@ button.secondary:disabled { background-image: url("./assets/ui/skin-v1/button-se
 }
 [data-scene="exchange"] .empty-slot-icon {
   display: grid; place-items: center; width: 48px; height: 34px;
-  border: 2px dashed #8f7b61; color: #8a755c; background: #594b3a22;
-  font-size: clamp(18px,1.55vw,27px); line-height: 1;
+  color: #8a755c; font-size: clamp(18px,1.55vw,27px); line-height: 1;
+}
+[data-scene="exchange"] .empty-slot-icon img {
+  display: block; width: 48px; height: 40px; object-fit: contain;
+  filter: drop-shadow(0 2px 2px #0008);
 }
 [data-scene="exchange"] .empty-inventory-slot > span:last-child { display: grid; gap: 1px; line-height: 1.05; }
 [data-scene="exchange"] .empty-inventory-slot b { color: #eadfc9; font-size: clamp(12px,1vw,17px); }
@@ -542,7 +545,7 @@ button.secondary:disabled { background-image: url("./assets/ui/skin-v1/button-se
   color: #b8ae9e; filter: grayscale(.72); opacity: .62;
 }
 [data-scene="exchange"] .locked-inventory-slot .empty-slot-icon {
-  border-style: solid; border-color: #655a4b; background: #312b25aa;
+  background: transparent;
 }
 [data-scene="exchange"] .locked-inventory-slot b { color: #d2c8b8; }
 [data-scene="exchange"] .market-board {
@@ -605,9 +608,15 @@ button.secondary:disabled { background-image: url("./assets/ui/skin-v1/button-se
 }
 [data-scene="exchange"] .actions #sell-selected { width: 100%; height: 100%; }
 [data-scene="exchange"] .actions #sell-selected {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
   color: #f4ecd8; text-shadow: 0 2px 2px #0009;
   border: 0 !important; border-image: none !important;
   background: transparent url("./assets/ui/clean-v1/buttons/button-green.png") center / 100% 100% no-repeat !important;
+}
+[data-scene="exchange"] .actions #sell-selected::before {
+  content: ""; display: block; width: clamp(22px,2.3vw,38px); height: clamp(22px,2.3vw,38px);
+  flex: 0 0 auto; background: url("./assets/ui/exchange/sell-icon.png") center / contain no-repeat;
+  filter: drop-shadow(0 2px 2px #0008);
 }
 [data-scene="exchange"] .actions #sell-selected:disabled { filter: grayscale(.45) brightness(.7); opacity: .72; }
 [data-scene="exchange"] .return-city {
@@ -2989,7 +2998,7 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
     const emptyCards = Array.from({ length: Math.max(0, state.storage - exchangeItems.length) }, (_, index) => `
     <article class="empty-inventory-slot" aria-label="\uBE48 \uBCF4\uAD00\uCE78 ${exchangeItems.length + index + 1}">
       <span class="empty-slot-number">${String(exchangeItems.length + index + 1).padStart(2, "0")}</span>
-      <span class="empty-slot-icon">\uFF0B</span>
+      <span class="empty-slot-icon"><img src="./assets/ui/exchange/storage-empty.png" alt=""></span>
       <span><b>\uBE48 \uBCF4\uAD00\uCE78</b><small>\uB099\uCC30\uD55C \uBB3C\uD488\uC774 \uC774\uACF3\uC5D0 \uD45C\uC2DC\uB429\uB2C8\uB2E4.</small></span>
     </article>`).join("");
     const lockedCards = Array.from({ length: Math.max(0, maxStorage - state.storage) }, (_, index) => {
@@ -2997,7 +3006,7 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
       const unlockStage = balance.shop.storage.findIndex((capacity) => capacity >= slotNumber);
       return `<article class="empty-inventory-slot locked-inventory-slot" aria-label="\uC7A0\uAE34 \uBCF4\uAD00\uCE78 ${slotNumber}">
       <span class="empty-slot-number">${String(slotNumber).padStart(2, "0")}</span>
-      <span class="empty-slot-icon" aria-hidden="true">\u{1F512}</span>
+      <span class="empty-slot-icon" aria-hidden="true"><img src="./assets/ui/exchange/storage-locked.png" alt=""></span>
       <span><b>\uC7A0\uAE34 \uBCF4\uAD00\uCE78</b><small>\uC0C1\uD68C ${unlockStage}\uB2E8\uACC4\uC5D0\uC11C \uD574\uAE08\uB429\uB2C8\uB2E4.</small></span>
     </article>`;
     }).join("");
