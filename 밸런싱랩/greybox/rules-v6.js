@@ -255,34 +255,15 @@ const CFG = {
     }
   },
   "questOffer": 3,
-  "questAccept": 2,
-  "questClash": {
-    "restraint": [
-      "multi",
-      "designated",
-      "block"
-    ],
-    "multi": [
-      "restraint"
-    ],
-    "designated": [
-      "bargain",
-      "restraint"
-    ],
-    "bargain": [
-      "designated"
-    ],
-    "block": [
-      "restraint"
-    ]
-  },
+  "questAccept": 3,
+  "questClash": {},
   "restraintKeepRate": 0.6,
   "blockPushThreshold": 1500,
   "loan": {
     "ltv": 0.35,
     "repay": 1.9,
     "term": 2,
-    "minStage": 3
+    "minStage": 2
   },
   "deadline": {
     "3": 2,
