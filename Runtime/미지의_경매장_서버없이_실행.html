@@ -113,7 +113,7 @@ body {
   text-shadow: 0 2px 3px #000;
 }
 [data-scene="title"] #title-settings {
-  position: absolute; right: 2%; top: 2%; width: min(70px, 5vw); aspect-ratio: 1;
+  position: absolute; right: 2.8%; top: 2%; width: 100px; height: 100px;
   min-width: 0; padding: 0; border: 0;
   color: transparent; background: url("./assets/ui/vsl-v6.4/buttons/settings.png") center / contain no-repeat;
 }
@@ -167,7 +167,7 @@ body {
 [data-scene="save"] .save-actions button { width: 100%; }
 [data-scene="save"] #back-title { position: absolute; left: 7%; top: 87.5%; width: 16%; }
 [data-scene="save"] #save-settings {
-  position: absolute; right: 2.5%; top: 2%; width: min(70px,5vw); aspect-ratio: 1;
+  position: absolute; right: 2.8%; top: 2%; width: 100px; height: 100px;
   min-width: 0; padding: 0; border: 0; color: transparent;
   background: url("./assets/ui/vsl-v6.4/buttons/settings.png") center / contain no-repeat;
 }
@@ -980,13 +980,13 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
 
 /* Shared live HUD for every city facility, including the auction catalog. */
 .scene > .scene-hud {
-  position: absolute; left: 2.8%; right: 2.8%; top: .35%; height: 6.25%; z-index: 12;
+  position: absolute; left: 2.8%; right: 2.8%; top: .35%; height: 100px; z-index: 12;
   display: grid; grid-template-columns: 1.05fr 1.25fr .78fr .78fr 1.05fr 100px; gap: .45%;
   pointer-events: none;
 }
 .scene > .scene-hud > span {
   position: relative; display: flex; align-items: center; justify-content: center; flex-direction: column;
-  min-width: 0; min-height: 0; height: min(6.25vh, 48px); box-sizing: border-box;
+  min-width: 0; min-height: 0; height: 100px; box-sizing: border-box;
   padding: 0 7px 0 clamp(32px, 2.8vw, 44px); line-height: 1.05; overflow: hidden;
   border: 6px solid transparent;
   border-image: url("./assets/ui/skin-v1/status-card.png") 34 fill / 6px / 0 stretch;
