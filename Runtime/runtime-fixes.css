@@ -939,6 +939,28 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
   border-image-source: url("./assets/ui/skin-v1/button-primary-disabled.png");
 }
 [data-scene="tavern"] #tavern-owned { left: 9%; top: 72%; width: 82%; height: 11%; }
+
+/* Tavern cards are painted into the scene. Never stack generic panel/button skins over them. */
+[data-scene="tavern"] .info-actions {
+  border: 0 !important; border-image: none !important;
+  background: transparent !important; box-shadow: none !important;
+  overflow: hidden;
+}
+[data-scene="tavern"] .info-actions button,
+[data-scene="tavern"] .info-actions button:hover:not(:disabled),
+[data-scene="tavern"] .info-actions button:disabled {
+  border: 0 !important; border-image: none !important;
+  background: transparent !important; background-image: none !important;
+  box-shadow: none !important;
+}
+[data-scene="tavern"] #tavern-owned {
+  left: 36%; top: 11%; width: 60%; height: 9%;
+  display: grid; place-content: center; margin: 0; padding: 8px 18px;
+  border-width: 10px; border-image-width: 10px;
+  overflow: hidden;
+}
+[data-scene="tavern"] #tavern-owned h3,
+[data-scene="tavern"] #tavern-owned p { margin: 1px; }
 [data-scene="tavern"] .return-city { left: 2.2%; top: auto; bottom: 1.5%; width: 16%; height: 6%; }
 
 /* Keep the quest cards clear of the persistent return control. */

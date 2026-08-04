@@ -40,6 +40,7 @@ test('generation buffer prepares current day plus two and falls back without blo
   assert.equal(result.failures.length, 3);
   assert.ok(schedule.days.slice(0, 3).every((day) => day.lots.every((lot) => lot.content?.provenance === 'local-fallback')));
   assert.ok(schedule.days.slice(0, 3).every((day) => day.lots.every((lot) => lot.content?.description.includes('테마와 연결된'))));
+  assert.ok(schedule.days.slice(0, 3).every((day) => day.lots.every((lot) => lot.content?.rumor && lot.content?.setHint && lot.content?.npcReaction)));
 });
 
 test('core state can finish all 12 days without a VSL implementation', () => {

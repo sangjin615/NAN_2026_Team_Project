@@ -15,6 +15,9 @@ export class FallbackContentProvider {
         lotId: lot.lotId,
         displayName: lot.baseName,
         description: `${lot.baseName}. ${theme} 테마와 연결된 ${{ COMMON: '일반', RARE: '희귀', EPIC: '영웅', LEGENDARY: '전설' }[lot.grade] || lot.grade} 등급 출품품이다.`,
+        rumor: `${theme} 관련 출처 기록이 있다는 소문이 돈다.`,
+        setHint: `${theme} 계열에서 반복되는 표식이 보인다.`,
+        npcReaction: `참가자들이 ${lot.baseName}의 보존 상태를 살핀다.`,
         setId: lot.setId,
         provenance: 'local-fallback',
         generatedForDay: day
