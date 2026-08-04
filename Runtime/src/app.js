@@ -433,6 +433,7 @@ function finishLot(action, multiplier = 1) {
     if (proposed > state.cash) { session.feed.push('보유 자금이 부족합니다.'); return renderAuction(); }
     if (ownedItems().length >= state.storage) { session.feed.push('보관칸이 가득 찼습니다.'); return renderAuction(); }
     session.currentPrice = proposed; session.leader = 'player'; session.feed.push(`플레이어 ${money(proposed)}`); audio.playSfx('bid');
+    session.deadline = Date.now() + 15000;
     const challenger = [...session.bots].filter((bot) => bot.maxBid > proposed).sort((a, b) => b.maxBid - a.maxBid)[0];
     if (challenger) { session.currentPrice = Math.min(challenger.maxBid, proposed + raise); session.leader = challenger.id; session.feed.push(`${challenger.name} ${money(session.currentPrice)}`); audio.playSfx('bot-bid'); return renderAuction(); }
     result = { winner: 'player', price: proposed, bots: session.bots };
@@ -517,6 +518,7 @@ function finishRelic(bid) {
     const price = Math.ceil(session.currentPrice * 1.1);
     if (state.cash < price) return renderRelic();
     session.currentPrice = price; session.leader = 'player'; session.feed.push(`당신 ${money(price)}`); audio.playSfx('relic-bid');
+    session.deadline = Date.now() + 15000;
     const challenger = [...session.bots].filter((bot) => bot.maxBid > price).sort((a, b) => b.maxBid - a.maxBid)[0];
     if (challenger) {
       session.currentPrice = Math.min(challenger.maxBid, Math.ceil(price * 1.1)); session.leader = challenger.id; session.feed.push(`${challenger.name} ${money(session.currentPrice)}`); audio.playSfx('bot-bid'); return renderRelic();

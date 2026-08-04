@@ -2888,6 +2888,7 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
       session.leader = "player";
       session.feed.push(`\uD50C\uB808\uC774\uC5B4 ${money(proposed)}`);
       audio.playSfx("bid");
+      session.deadline = Date.now() + 15e3;
       const challenger = [...session.bots].filter((bot) => bot.maxBid > proposed).sort((a, b) => b.maxBid - a.maxBid)[0];
       if (challenger) {
         session.currentPrice = Math.min(challenger.maxBid, proposed + raise);
@@ -2992,6 +2993,7 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
       session.leader = "player";
       session.feed.push(`\uB2F9\uC2E0 ${money(price)}`);
       audio.playSfx("relic-bid");
+      session.deadline = Date.now() + 15e3;
       const challenger = [...session.bots].filter((bot) => bot.maxBid > price).sort((a, b) => b.maxBid - a.maxBid)[0];
       if (challenger) {
         session.currentPrice = Math.min(challenger.maxBid, Math.ceil(price * 1.1));
