@@ -1,0 +1,16 @@
+{
+  "base_id": "BASE-PNT-02",
+  "item_name_ko": "여름 선창의 범선",
+  "category": "PNT",
+  "category_name_ko": "회화",
+  "canvas": [
+    128,
+    128
+  ],
+  "grades": {
+    "COMMON": "03_PNT_회화/02_BASE-PNT-02_여름_선창의_범선/01_COMMON_일반/BASE-PNT-02_COMMON.png",
+    "RARE": "03_PNT_회화/02_BASE-PNT-02_여름_선창의_범선/02_RARE_레어/BASE-PNT-02_RARE.png",
+    "EPIC": "03_PNT_회화/02_BASE-PNT-02_여름_선창의_범선/03_EPIC_에픽/BASE-PNT-02_EPIC.png",
+    "LEGENDARY": "03_PNT_회화/02_BASE-PNT-02_여름_선창의_범선/04_LEGENDARY_전설/BASE-PNT-02_LEGENDARY.png"
+  }
+}
