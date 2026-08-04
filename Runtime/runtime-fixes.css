@@ -1505,7 +1505,7 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
    into the background. The return control intentionally lives in the upper
    right of the right-hand field for this scene. */
 [data-scene="quests"] .office-layout {
-  left: 1.9%; right: 2.15%; top: 39.1%; bottom: 3.15%;
+  left: 1.9%; right: 2.15%; top: 38.77%; bottom: 3.48%;
   grid-template-columns: 41.4% minmax(0, 1fr); gap: 1.45%;
   overflow: visible;
 }
@@ -1524,11 +1524,11 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
   left: 1.5%; right: 1.5%; top: 2.4%; bottom: 2.4%;
 }
 [data-scene="quests"] > [data-place="city"] {
-  left: auto; right: 3.25%; top: 34.95%; bottom: auto;
+  left: auto; right: 3.25%; top: 34.62%; bottom: auto;
   width: 12.5%; height: 4.8%; z-index: 8;
 }
 [data-scene="quests"] #quest-message {
-  left: auto; right: 17%; top: 39.95%; bottom: auto;
+  left: auto; right: 17%; top: 39.62%; bottom: auto;
   max-width: 30%; max-height: 4.4%; overflow: hidden;
 }
 
