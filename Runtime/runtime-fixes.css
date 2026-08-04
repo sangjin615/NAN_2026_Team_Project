@@ -1511,6 +1511,26 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
   background-position: center; background-repeat: no-repeat; background-size: contain;
   filter: drop-shadow(0 2px 2px #0008);
 }
+
+/* HUD hierarchy: day and cash are primary; storage, stage and loan are compact support data. */
+[data-scene="hub"] > header {
+  left: 2.8%; width: 34%; grid-template-columns: 1.05fr 1.25fr; gap: .5%;
+}
+[data-scene="hub"] > header > div .eyebrow { font-size: clamp(13px, 1.18vw, 19px); }
+[data-scene="hub"] > header > strong { font-size: clamp(17px, 1.62vw, 25px); }
+[data-scene="hub"] .hub-stats {
+  left: 37.5%; right: 24%; grid-template-columns: 1fr 1fr 1.35fr; gap: .5%;
+}
+[data-scene="hub"] .hub-stats > span { font-size: clamp(9px, .82vw, 13px); }
+[data-scene="hub"] .hub-stats b { font-size: 1.08em; }
+[data-scene="hub"] .hub-stats > .storage-stat,
+[data-scene="hub"] .hub-stats > .stage-stat { padding-left: clamp(36px, 3vw, 47px); }
+[data-scene="hub"] .storage-stat::before,
+[data-scene="hub"] .stage-stat::before { width: clamp(27px, 2.5vw, 38px); height: 78%; }
+[data-scene="hub"] #loan-status { padding-left: clamp(76px, 6.5vw, 100px); padding-right: 7px; }
+[data-scene="hub"] #loan-status::before {
+  left: 6px; height: 72%; padding-left: clamp(25px, 2.2vw, 34px); font-size: .8em;
+}
 [data-scene="hub"] > header > div::before { background-image: url("./assets/ui/quest-icons/restraint.png"); }
 [data-scene="hub"] > header > strong::before { background-image: url("./assets/ui/quest-icons/bargain.png"); }
 [data-scene="hub"] .storage-stat::before { background-image: url("./assets/ui/quest-icons/multi.png"); }
