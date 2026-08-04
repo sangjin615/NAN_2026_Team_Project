@@ -549,6 +549,28 @@ button.secondary:disabled { background-image: url("./assets/ui/skin-v1/button-se
 [data-scene="exchange"] .bundle-sale-summary span { display: flex; justify-content: space-between; gap: 5px; }
 [data-scene="exchange"] .bundle-sale-summary b { color: #fff2c8; }
 [data-scene="exchange"] #bundle-estimate { grid-column: 1 / -1; padding-top: 6px; border-top: 1px solid #76582e; color: #f2c75c; text-align: right; font-size: 1.18em; }
+[data-scene="exchange"] .set-bonus-guide { margin-top: 10px; padding: 9px 10px; border-top: 2px solid #8b6b3f; border-bottom: 1px solid #b69a72; color: #493722; }
+[data-scene="exchange"] .set-bonus-guide h4 { margin: 0 0 6px; color: #68491f; font-size: clamp(15px,1.15vw,19px); }
+[data-scene="exchange"] .set-bonus-guide > div { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 4px 9px; }
+[data-scene="exchange"] .set-bonus-guide span { display: flex; justify-content: space-between; gap: 5px; padding: 3px 5px; border: 1px solid #9b805c66; background: #e9d7bd88; font-size: clamp(11px,.86vw,14px); }
+[data-scene="exchange"] .set-bonus-guide span b { color: #6d4c20; white-space: nowrap; }
+[data-scene="exchange"] .set-bonus-guide span.is-active { border-color: #be8624; background: #f0cc7a99; box-shadow: inset 0 0 0 1px #fff2b888; }
+[data-scene="exchange"] .set-bonus-guide span.is-active b { color: #9b4f08; }
+[data-scene="exchange"] .set-bonus-guide small { display: block; margin-top: 5px; color: #78644b; font-size: clamp(9px,.72vw,12px); }
+@media (max-width: 1300px) {
+  [data-scene="exchange"] .bundle-sale-panel {
+    margin-top: 4px; padding: 1px 4px; border-width: 7px;
+    border-image-width: 7px;
+  }
+  [data-scene="exchange"] .bundle-sale-panel h4 { margin-bottom: 2px; }
+  [data-scene="exchange"] .bundle-sale-panel p { margin-bottom: 4px; line-height: 1.15; }
+  [data-scene="exchange"] #bundle-estimate { padding-top: 3px; }
+  [data-scene="exchange"] .set-bonus-guide { margin-top: 4px; padding: 4px 6px; }
+  [data-scene="exchange"] .set-bonus-guide h4 { margin-bottom: 3px; font-size: 13px; }
+  [data-scene="exchange"] .set-bonus-guide > div { grid-template-columns: repeat(3,minmax(0,1fr)); gap: 2px 4px; }
+  [data-scene="exchange"] .set-bonus-guide span { padding: 1px 3px; font-size: 10px; }
+  [data-scene="exchange"] .set-bonus-guide small { display: none; }
+}
 [data-scene="exchange"] .actions {
   left: 42%; bottom: 1.25%; width: 20%; height: 5.5%;
   margin: 0; padding: 0; border: 0 !important; border-image: none !important;
@@ -2939,12 +2961,13 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
       const previous = state.day > 1 ? path[state.day - 2] : 1;
       const delta = now - previous;
       return `<div><img src="${categoryIconUrl(key)}" alt=""><b>${CATEGORY_LABELS[key]}</b><strong>${Math.round(now * 100)}%</strong><span class="${delta >= 0 ? "rise" : "fall"}">${delta >= 0 ? "\u25B2" : "\u25BC"} ${Math.abs(delta * 100).toFixed(0)}%</span></div>`;
-    }).join("")}</div><section class="bundle-sale-panel"><h4>\uBB36\uC74C \uD310\uB9E4</h4><p>\uAC19\uC740 \uACC4\uC5F4\uACFC \uD76C\uADC0\uB3C4 \uC870\uD569\uC744 \uD568\uAED8 \uD314\uBA74 \uBB36\uC74C \uBCF4\uB108\uC2A4\uAC00 \uC801\uC6A9\uB429\uB2C8\uB2E4.</p><div class="bundle-sale-summary"><span>\uC120\uD0DD <b id="bundle-count">0\uAC1C</b></span><span>\uC870\uD569 <b id="bundle-label">\uC120\uD0DD \uC5C6\uC74C</b></span><span>\uBC30\uC728 <b id="bundle-multiplier">\xD71.00</b></span><strong id="bundle-estimate">\uC608\uC0C1 0 G</strong></div></section>`;
+    }).join("")}</div><section class="bundle-sale-panel"><h4>\uBB36\uC74C \uD310\uB9E4</h4><p>\uAC19\uC740 \uACC4\uC5F4\uACFC \uD76C\uADC0\uB3C4 \uC870\uD569\uC744 \uD568\uAED8 \uD314\uBA74 \uBB36\uC74C \uBCF4\uB108\uC2A4\uAC00 \uC801\uC6A9\uB429\uB2C8\uB2E4.</p><div class="bundle-sale-summary"><span>\uC120\uD0DD <b id="bundle-count">0\uAC1C</b></span><span>\uC870\uD569 <b id="bundle-label">\uC120\uD0DD \uC5C6\uC74C</b></span><span>\uBC30\uC728 <b id="bundle-multiplier">\xD71.00</b></span><strong id="bundle-estimate">\uC608\uC0C1 0 G</strong></div></section><section class="set-bonus-guide"><h4>\uC138\uD2B8 \uBCF4\uB108\uC2A4</h4><div><span data-set-rule="same-2">\uB3D9\uC77C \uACC4\uC5F4 2\uC810 <b>\xD71.20</b></span><span data-set-rule="same-3">\uB3D9\uC77C \uACC4\uC5F4 3\uC810 <b>\xD71.80</b></span><span data-set-rule="high-3">\uC601\uC6C5 \uC774\uC0C1 3\uC810 <b>\xD72.40</b></span><span data-set-rule="grade-3">\uD76C\uADC0\uB3C4 3\uC885 <b>\xD72.60</b></span><span data-set-rule="all-6">\uC804 \uACC4\uC5F4 6\uC885 <b>\xD71.40</b></span></div><small>\uC131\uB9BD\uD55C \uC870\uD569 \uC911 \uAC00\uC7A5 \uB192\uC740 \uBC30\uC728\uC774 \uC801\uC6A9\uB429\uB2C8\uB2E4.</small></section>`;
     const syncBulkActions = () => {
       const ids = [...document.querySelectorAll("[data-item-select]:checked")].map((input) => input.dataset.itemSelect);
       const items = ownedItems().filter((item) => ids.includes(item.lotId) && !item.collateral);
       const quote = quoteItemsSale(state, balance, ids);
-      const categories = Object.values(Object.groupBy(items, (item) => item.category)).map((group) => group.length);
+      const groups = Object.values(Object.groupBy(items, (item) => item.category));
+      const categories = groups.map((group) => group.length);
       const distinctGrades = new Set(items.map((item) => item.grade)).size;
       let label = items.length ? "\uC77C\uBC18 \uBB36\uC74C" : "\uC120\uD0DD \uC5C6\uC74C";
       if (categories.some((count) => count >= 3) && distinctGrades >= 3) label = "\uD63C\uD569 \uD76C\uADC0\uB3C4 \uC138\uD2B8";
@@ -2956,6 +2979,14 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
       document.querySelector("#bundle-label").textContent = label;
       document.querySelector("#bundle-multiplier").textContent = `\xD7${quote.multiplier.toFixed(2)}`;
       document.querySelector("#bundle-estimate").textContent = `\uC608\uC0C1 ${money(quote.revenue)}`;
+      const activeRules = {
+        "same-2": groups.some((group) => group.length >= 2),
+        "same-3": groups.some((group) => group.length >= 3),
+        "high-3": groups.some((group) => group.filter((item) => ["EPIC", "LEGENDARY"].includes(item.grade)).length >= 3),
+        "grade-3": groups.some((group) => new Set(group.map((item) => item.grade)).size >= 3),
+        "all-6": new Set(items.map((item) => item.category)).size >= 6
+      };
+      document.querySelectorAll("[data-set-rule]").forEach((rule) => rule.classList.toggle("is-active", activeRules[rule.dataset.setRule]));
     };
     document.querySelectorAll("[data-item-select]").forEach((input) => {
       input.onchange = syncBulkActions;
