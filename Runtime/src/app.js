@@ -176,8 +176,15 @@ function renderHub(message = '') {
     quests: state.completedQuestCount,
   };
   for (const [key, value] of Object.entries(values)) adapter.setText(key, value);
-  document.querySelector('#market-indices').innerHTML = Object.entries(state.marketPath)
-    .map(([family, valuesByDay]) => `<span>${family} ${(valuesByDay[state.day - 1] * 100).toFixed(0)}</span>`).join('');
+  document.querySelector('#market-indices').innerHTML = `<strong>오늘의 시세</strong><div class="market-sparklines">${Object.entries(state.marketPath)
+    .map(([family, valuesByDay]) => {
+      const visible = valuesByDay.slice(0, state.day);
+      const current = visible.at(-1);
+      const previous = visible.at(-2) ?? current;
+      const trend = current > previous ? 'rise' : current < previous ? 'fall' : 'flat';
+      const arrow = trend === 'rise' ? '▲' : trend === 'fall' ? '▼' : '—';
+      return `<span class="market-spark ${trend}"><b>${family}</b><em>${(current * 100).toFixed(0)}</em><i aria-label="${trend === 'rise' ? '상승' : trend === 'fall' ? '하락' : '변동 없음'}">${arrow}</i></span>`;
+    }).join('')}</div>`;
   document.querySelector('#loan-status').textContent = state.loan
     ? `만기 ${state.loan.dueDay}일 · ${money(state.loan.due)}`
     : state.guildLocked ? '조합 이용 제한' : '대출 없음';
