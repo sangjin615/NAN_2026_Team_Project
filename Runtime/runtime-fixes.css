@@ -1848,6 +1848,37 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
   left: 15.5%; right: 15.5%;
 }
 
+/* Keep the four upper facility nameplates crisp at every viewport size.
+   The old rule stretched the complete bitmap; border-image only stretches its center. */
+[data-scene="hub"] .place-grid button:is(
+  [data-place="quests"],
+  [data-place="tavern"],
+  [data-place="catalog"],
+  [data-place="exchange"]
+) > span {
+  box-sizing: border-box;
+  min-height: 0;
+  border: clamp(8px, .65vw, 12px) solid transparent;
+  border-image: url("./assets/ui/skin-v1/tab-inactive.png") 34 fill / 1 / 0 stretch;
+  background: transparent !important;
+  image-rendering: auto;
+}
+[data-scene="hub"] .place-grid button:is(
+  [data-place="quests"],
+  [data-place="tavern"],
+  [data-place="catalog"],
+  [data-place="exchange"]
+):hover > span,
+[data-scene="hub"] .place-grid button:is(
+  [data-place="quests"],
+  [data-place="tavern"],
+  [data-place="catalog"],
+  [data-place="exchange"]
+):focus-visible > span {
+  border-image-source: url("./assets/ui/skin-v1/tab-active.png");
+  background: transparent !important;
+}
+
 /* Merchant shop: use the mockup's left upgrade sheet and lower-right storage desk. */
 [data-scene="shop"] > header {
   z-index: 5; left: 35.2% !important; top: 12.6% !important; width: 29% !important; height: 10.5% !important;
