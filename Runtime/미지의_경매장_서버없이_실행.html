@@ -1016,6 +1016,9 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
 [data-scene="catalog"] > header,
 [data-scene="exchange"] > header,
 [data-scene="shop"] > header { display: none; }
+[data-scene="hub"] > header,
+[data-scene="hub"] > .hub-stats,
+[data-scene="hub"] > #hub-settings { display: none; }
 [data-scene="catalog"] > .catalog-return {
   position: absolute; left: 3%; bottom: 3%; z-index: 10;
   width: 15%; min-width: 128px;
@@ -2565,7 +2568,7 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
     adapter.setText("day", state.day);
     adapter.setText("cash", money(state.cash));
     const scene = document.querySelector(".scene:not([hidden])");
-    const facilityScenes = /* @__PURE__ */ new Set(["quests", "tavern", "catalog", "exchange", "shop", "guild", "museum"]);
+    const facilityScenes = /* @__PURE__ */ new Set(["hub", "quests", "tavern", "catalog", "exchange", "shop", "guild", "museum"]);
     if (scene && facilityScenes.has(scene.dataset.scene)) {
       let hud = scene.querySelector(".scene-hud");
       if (!hud) {
@@ -2584,6 +2587,7 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
     audio.playBgm("city");
     state.phase = "hub";
     adapter.showScene("hub");
+    syncHeader();
     const values = {
       day: state.day,
       cash: money(state.cash),

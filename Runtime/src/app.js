@@ -151,7 +151,7 @@ function syncHeader() {
   adapter.setText('day', state.day);
   adapter.setText('cash', money(state.cash));
   const scene = document.querySelector('.scene:not([hidden])');
-  const facilityScenes = new Set(['quests', 'tavern', 'catalog', 'exchange', 'shop', 'guild', 'museum']);
+  const facilityScenes = new Set(['hub', 'quests', 'tavern', 'catalog', 'exchange', 'shop', 'guild', 'museum']);
   if (scene && facilityScenes.has(scene.dataset.scene)) {
     let hud = scene.querySelector('.scene-hud');
     if (!hud) {
@@ -170,6 +170,7 @@ function renderHub(message = '') {
   clearActionTimer(); audio.playBgm('city');
   state.phase = 'hub';
   adapter.showScene('hub');
+  syncHeader();
   const values = {
     day: state.day,
     cash: money(state.cash),

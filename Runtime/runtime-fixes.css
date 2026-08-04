@@ -1008,6 +1008,9 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
 [data-scene="catalog"] > header,
 [data-scene="exchange"] > header,
 [data-scene="shop"] > header { display: none; }
+[data-scene="hub"] > header,
+[data-scene="hub"] > .hub-stats,
+[data-scene="hub"] > #hub-settings { display: none; }
 [data-scene="catalog"] > .catalog-return {
   position: absolute; left: 3%; bottom: 3%; z-index: 10;
   width: 15%; min-width: 128px;
