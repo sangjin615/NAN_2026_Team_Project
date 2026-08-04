@@ -1976,6 +1976,61 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
 }
 [data-scene="shop"] .shop-inventory-panel > header small { color: #d5ad61; }
 
+/* Shop mockup alignment: three upgrade rows and one horizontal storage shelf. */
+[data-scene="shop"] > header {
+  left: 43.4% !important; top: 17.2% !important; width: 18% !important; height: 3% !important;
+}
+[data-scene="shop"] .shop-upgrade-panel {
+  left: 3.8%; top: 12.2%; width: 28.2%; height: 75%; padding: 7% 3.5% 10% !important;
+}
+[data-scene="shop"] .shop-upgrade-panel > header h3 {
+  margin-bottom: 17px !important; font-size: clamp(20px,1.72vw,28px) !important;
+}
+[data-scene="shop"] .shop-upgrade-panel > h4 {
+  margin: 26px 0 13px; padding: 0; border: 0; font-size: clamp(17px,1.45vw,24px);
+}
+[data-scene="shop"] .shop-requirements { gap: 0; border: 1px solid #bda88b; }
+[data-scene="shop"] .shop-requirements li {
+  min-height: 68px; box-sizing: border-box; align-items: center; padding: 13px 17px;
+  border-bottom: 1px solid #c8b69d; background: #e8d5b82b;
+  color: #a3352a; font-size: clamp(13px,1.05vw,17px);
+}
+[data-scene="shop"] .shop-requirements li:last-child { border-bottom: 0; }
+[data-scene="shop"] .shop-requirements li.is-ready { color: #8d3328; }
+[data-scene="shop"] .shop-benefits { gap: 13px; }
+[data-scene="shop"] .shop-benefits li { font-size: clamp(13px,1.02vw,17px); }
+[data-scene="shop"] .shop-inventory-panel {
+  left: 35.4%; top: 51.2%; width: 61.6%; height: 35.4%; padding: .7% 2.3% 1.7% !important;
+}
+[data-scene="shop"] .shop-inventory-panel > header {
+  width: 100% !important; min-width: 100% !important; max-width: none !important;
+  height: 44px; box-sizing: border-box; align-items: center; padding: 0 7px 7px;
+  border: 0 !important; background: transparent !important; box-shadow: none !important;
+}
+[data-scene="shop"] .shop-inventory-panel > header > div { display: flex; align-items: baseline; gap: 13px; }
+[data-scene="shop"] .shop-inventory-panel > header h3 { font-size: clamp(17px,1.45vw,24px) !important; }
+[data-scene="shop"] .shop-storage-grid {
+  grid-template-columns: repeat(6,minmax(0,1fr)); grid-template-rows: minmax(0,1fr);
+  gap: 7px; height: 54%; margin-top: 12px;
+}
+[data-scene="shop"] .shop-storage-slot {
+  grid-template-columns: 1fr; grid-template-rows: minmax(54px,1fr) auto; place-items: center;
+  gap: 2px; padding: 7px 5px 5px; text-align: center;
+}
+[data-scene="shop"] .shop-storage-slot img,
+[data-scene="shop"] .storage-placeholder {
+  width: 72px; height: 72px; max-width: 72%; max-height: 90%; object-fit: contain;
+}
+[data-scene="shop"] .shop-storage-slot b { font-size: clamp(9px,.75vw,12px); }
+[data-scene="shop"] .shop-storage-slot small { font-size: clamp(7px,.56vw,9px); }
+[data-scene="shop"] .shop-storage-note { margin-top: 12px; font-size: clamp(9px,.72vw,12px); }
+[data-scene="shop"] #shop-upgrade {
+  left: 11.5% !important; bottom: 12.3% !important; width: 17.5% !important; height: 6.5% !important;
+}
+[data-scene="shop"] .return-city {
+  left: 7% !important; bottom: 1.6% !important; width: 17.5% !important; height: 5.8% !important;
+}
+
 [data-scene="guild"] .guild-heading {
   left: 16.2%; top: 15.1%; width: 19.5%; height: 5.5%;
   display: block; padding: 0; border: 0; background: transparent; color: #ded0b8;

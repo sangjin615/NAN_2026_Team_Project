@@ -1984,6 +1984,61 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
 }
 [data-scene="shop"] .shop-inventory-panel > header small { color: #d5ad61; }
 
+/* Shop mockup alignment: three upgrade rows and one horizontal storage shelf. */
+[data-scene="shop"] > header {
+  left: 43.4% !important; top: 17.2% !important; width: 18% !important; height: 3% !important;
+}
+[data-scene="shop"] .shop-upgrade-panel {
+  left: 3.8%; top: 12.2%; width: 28.2%; height: 75%; padding: 7% 3.5% 10% !important;
+}
+[data-scene="shop"] .shop-upgrade-panel > header h3 {
+  margin-bottom: 17px !important; font-size: clamp(20px,1.72vw,28px) !important;
+}
+[data-scene="shop"] .shop-upgrade-panel > h4 {
+  margin: 26px 0 13px; padding: 0; border: 0; font-size: clamp(17px,1.45vw,24px);
+}
+[data-scene="shop"] .shop-requirements { gap: 0; border: 1px solid #bda88b; }
+[data-scene="shop"] .shop-requirements li {
+  min-height: 68px; box-sizing: border-box; align-items: center; padding: 13px 17px;
+  border-bottom: 1px solid #c8b69d; background: #e8d5b82b;
+  color: #a3352a; font-size: clamp(13px,1.05vw,17px);
+}
+[data-scene="shop"] .shop-requirements li:last-child { border-bottom: 0; }
+[data-scene="shop"] .shop-requirements li.is-ready { color: #8d3328; }
+[data-scene="shop"] .shop-benefits { gap: 13px; }
+[data-scene="shop"] .shop-benefits li { font-size: clamp(13px,1.02vw,17px); }
+[data-scene="shop"] .shop-inventory-panel {
+  left: 35.4%; top: 51.2%; width: 61.6%; height: 35.4%; padding: .7% 2.3% 1.7% !important;
+}
+[data-scene="shop"] .shop-inventory-panel > header {
+  width: 100% !important; min-width: 100% !important; max-width: none !important;
+  height: 44px; box-sizing: border-box; align-items: center; padding: 0 7px 7px;
+  border: 0 !important; background: transparent !important; box-shadow: none !important;
+}
+[data-scene="shop"] .shop-inventory-panel > header > div { display: flex; align-items: baseline; gap: 13px; }
+[data-scene="shop"] .shop-inventory-panel > header h3 { font-size: clamp(17px,1.45vw,24px) !important; }
+[data-scene="shop"] .shop-storage-grid {
+  grid-template-columns: repeat(6,minmax(0,1fr)); grid-template-rows: minmax(0,1fr);
+  gap: 7px; height: 54%; margin-top: 12px;
+}
+[data-scene="shop"] .shop-storage-slot {
+  grid-template-columns: 1fr; grid-template-rows: minmax(54px,1fr) auto; place-items: center;
+  gap: 2px; padding: 7px 5px 5px; text-align: center;
+}
+[data-scene="shop"] .shop-storage-slot img,
+[data-scene="shop"] .storage-placeholder {
+  width: 72px; height: 72px; max-width: 72%; max-height: 90%; object-fit: contain;
+}
+[data-scene="shop"] .shop-storage-slot b { font-size: clamp(9px,.75vw,12px); }
+[data-scene="shop"] .shop-storage-slot small { font-size: clamp(7px,.56vw,9px); }
+[data-scene="shop"] .shop-storage-note { margin-top: 12px; font-size: clamp(9px,.72vw,12px); }
+[data-scene="shop"] #shop-upgrade {
+  left: 11.5% !important; bottom: 12.3% !important; width: 17.5% !important; height: 6.5% !important;
+}
+[data-scene="shop"] .return-city {
+  left: 7% !important; bottom: 1.6% !important; width: 17.5% !important; height: 5.8% !important;
+}
+
 [data-scene="guild"] .guild-heading {
   left: 16.2%; top: 15.1%; width: 19.5%; height: 5.5%;
   display: block; padding: 0; border: 0; background: transparent; color: #ded0b8;
@@ -3348,12 +3403,12 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
         const lot = scheduledLot(item.lotId);
         return `<article class="shop-storage-slot is-filled"><span class="slot-number">${index + 1}</span><img src="${lot ? spriteUrl(lot, item.grade) : ""}" alt=""><div><b>${escapeHtml(item.name)}</b><small>${gradeLabel(item.grade)} \xB7 \uAC10\uC815\uAC00 ${money(item.appraisedValue || item.trueValue)}</small></div></article>`;
       }
-      return `<article class="shop-storage-slot ${unlocked ? "is-empty" : "is-locked"}"><span class="slot-number">${index + 1}</span><div class="storage-placeholder" aria-hidden="true">${unlocked ? "\uFF0B" : "\u{1F512}"}</div><div><b>${unlocked ? "\uBE48 \uBCF4\uAD00\uCE78" : "\uC7A0\uAE34 \uBCF4\uAD00\uCE78"}</b><small>${unlocked ? "\uB099\uCC30\uD55C \uBB3C\uD488\uC744 \uBCF4\uAD00\uD569\uB2C8\uB2E4." : "\uC0C1\uD68C \uC2B9\uAE09 \uC2DC \uD574\uAE08\uB429\uB2C8\uB2E4."}</small></div></article>`;
+      return `<article class="shop-storage-slot ${unlocked ? "is-empty" : "is-locked"}"><span class="slot-number">${index + 1}</span><img class="storage-placeholder" src="./assets/ui/exchange/${unlocked ? "storage-empty.png" : "storage-locked.png"}" alt=""><div><b>${unlocked ? "\uBE48 \uBCF4\uAD00\uCE78" : "\uC7A0\uAE34 \uBCF4\uAD00\uCE78"}</b><small>${unlocked ? "\uB099\uCC30 \uBB3C\uD488 \uBCF4\uAD00" : "\uC0C1\uD68C \uC2B9\uAE09 \uC2DC \uD574\uAE08"}</small></div></article>`;
     }).join("");
     const questReady = state.completedQuestCount >= required;
     const cashReady = state.cash >= cost;
-    document.querySelector("#shop-detail").innerHTML = `<section class="shop-upgrade-panel"><header><span class="shop-building-icon">\u{1F3EA}</span><div><small>\uC0C1\uD68C \uC131\uC7A5</small><h3>${state.shopStage}\uB2E8\uACC4 \uC0C1\uD68C</h3></div></header><div class="shop-current-stats"><div><span>\uBCF4\uAD00\uD568</span><b>${state.storage} / ${maxStorage}</b></div><div><span>\uC815\uBCF4 \uD560\uC778</span><b>${Math.round((balance.shop.infoDiscount[state.shopStage] || 0) * 100)}%</b></div></div><h4>${maxed ? "\uCD5C\uACE0 \uB2E8\uACC4 \uB2EC\uC131" : `${next}\uB2E8\uACC4 \uC2B9\uAE09 \uC870\uAC74`}</h4><ul class="shop-requirements"><li class="${questReady ? "is-ready" : ""}"><span>\uC644\uB8CC \uC758\uB8B0</span><b>${state.completedQuestCount} / ${required}\uAC74</b></li><li class="${cashReady ? "is-ready" : ""}"><span>\uC2B9\uAE09 \uBE44\uC6A9</span><b>${money(cost)}</b></li></ul><h4>\uC2B9\uAE09 \uD6A8\uACFC</h4><ul class="shop-benefits"><li>\uBCF4\uAD00\uD568 ${state.storage} \u2192 ${nextStorage}\uCE78</li><li>\uC815\uBCF4 \uAD6C\uB9E4 \uBE44\uC6A9 ${Math.round((nextDiscount || 0) * 100)}% \uD560\uC778</li>${next >= 3 ? "<li>\uC0C1\uAE09 \uC720\uBB3C \uC804\uC2DC \uC815\uBCF4 \uD574\uAE08</li>" : "<li>\uC758\uB8B0\uC640 \uAC70\uB798 \uAE30\uB2A5 \uAC15\uD654</li>"}</ul></section><section class="shop-inventory-panel"><header><div><small>STORAGE</small><h3>\uBCF4\uC720\uD488 \uAD00\uB9AC</h3></div><b>${inventory.length} / ${state.storage}</b></header><div class="shop-storage-grid">${slots}</div><p class="shop-storage-note">\uC0C1\uD68C \uB2E8\uACC4\uAC00 \uC624\uB974\uBA74 \uBCF4\uAD00\uCE78\uACFC \uC815\uBCF4 \uD560\uC778 \uD61C\uD0DD\uC774 \uB298\uC5B4\uB0A9\uB2C8\uB2E4.</p></section>`;
-    document.querySelector("#shop-upgrade").textContent = maxed ? "\uCD5C\uACE0 \uB2E8\uACC4 \uB2EC\uC131" : `${next}\uB2E8\uACC4\uB85C \uC2B9\uAE09`;
+    document.querySelector("#shop-detail").innerHTML = `<section class="shop-upgrade-panel"><header><h3>${maxed ? "\uC0C1\uD68C \uCD5C\uACE0 \uB2E8\uACC4" : `\uC0C1\uD68C ${next}\uB2E8\uACC4 \uC2B9\uAE09 \uC870\uAC74`}</h3></header><ul class="shop-requirements"><li class="${questReady ? "is-ready" : ""}"><span>\u25A3 \uC758\uB8B0 \uB2EC\uC131 \uC870\uAC74</span><b>${state.completedQuestCount} / ${required}\uAC74</b></li><li class="${cashReady ? "is-ready" : ""}"><span>\u25CF \uC2B9\uAE09\uBE44</span><b>${money(cost)}</b></li><li class="${cashReady ? "is-ready" : ""}"><span>\u25CF \uD604\uC7AC \uC790\uC0B0</span><b>${money(state.cash)}</b></li></ul><h4>\uB2E4\uC74C \uB2E8\uACC4 \uD6A8\uACFC</h4><ul class="shop-benefits"><li>\uBCF4\uAD00\uD568 +${Math.max(0, nextStorage - state.storage)}</li><li>\uC815\uBCF4 \uAD6C\uB9E4 \uBE44\uC6A9 ${Math.round((nextDiscount || 0) * 100)}% \uD560\uC778</li>${next >= 3 ? "<li>\uC720\uBB3C \uC804\uC2DC\uAD00 \uD574\uAE08 \uD655\uB300</li>" : "<li>\uC758\uB8B0 \uB3D9\uC2DC \uC218\uC8FC \uAC15\uD654</li>"}</ul></section><section class="shop-inventory-panel"><header><div><small>STORAGE</small><h3>\uBCF4\uC720\uD488 \uAD00\uB9AC</h3></div><b>${inventory.length} / ${state.storage}</b></header><div class="shop-storage-grid">${slots}</div><p class="shop-storage-note">\u203B \uBCF4\uC720\uD488 \uC2AC\uB86F\uC740 \uC0C1\uD68C \uB2E8\uACC4\uC5D0 \uB530\uB77C \uC99D\uAC00\uD569\uB2C8\uB2E4.</p></section>`;
+    document.querySelector("#shop-upgrade").textContent = maxed ? "\uCD5C\uACE0 \uB2E8\uACC4 \uB2EC\uC131" : `${next}\uB2E8\uACC4\uB85C \uC2B9\uAE09\uD558\uAE30`;
     document.querySelector("#shop-upgrade").disabled = maxed || state.cash < cost || state.completedQuestCount < required;
     document.querySelector("#shop-message").textContent = message;
   }
