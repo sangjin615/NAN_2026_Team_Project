@@ -285,10 +285,28 @@ function renderQuestOffice(message = '') {
 
 function renderExchange(message = '') {
   clearActionTimer(); audio.playBgm('workplace'); state.phase = 'exchange'; adapter.showScene('exchange'); syncHeader();
-  document.querySelector('#inventory-list').innerHTML = ownedItems().length ? ownedItems().map((item) => `
+  const exchangeItems = ownedItems();
+  const maxStorage = Math.max(...balance.shop.storage);
+  const occupiedCards = exchangeItems.map((item) => `
     <article><label><input type="checkbox" data-item-select="${item.lotId}"> <b>${item.name}</b></label>
     <span>${gradeLabel(item.grade)} · ${item.category}</span><span>매입 ${money(item.paid)} · ${item.appraised ? `감정 ${money(item.trueValue)} ±${money(item.appraisalRange)}` : '미감정'}</span>
-    <button data-sell-item="${item.lotId}" ${item.collateral ? 'disabled' : ''}>즉시 처분</button></article>`).join('') : '<p>보유 물품이 없습니다.</p>';
+    <button data-sell-item="${item.lotId}" ${item.collateral ? 'disabled' : ''}>즉시 처분</button></article>`).join('');
+  const emptyCards = Array.from({ length: Math.max(0, state.storage - exchangeItems.length) }, (_, index) => `
+    <article class="empty-inventory-slot" aria-label="빈 보관칸 ${exchangeItems.length + index + 1}">
+      <span class="empty-slot-number">${String(exchangeItems.length + index + 1).padStart(2, '0')}</span>
+      <span class="empty-slot-icon">＋</span>
+      <span><b>빈 보관칸</b><small>낙찰한 물품이 이곳에 표시됩니다.</small></span>
+    </article>`).join('');
+  const lockedCards = Array.from({ length: Math.max(0, maxStorage - state.storage) }, (_, index) => {
+    const slotNumber = state.storage + index + 1;
+    const unlockStage = balance.shop.storage.findIndex((capacity) => capacity >= slotNumber);
+    return `<article class="empty-inventory-slot locked-inventory-slot" aria-label="잠긴 보관칸 ${slotNumber}">
+      <span class="empty-slot-number">${String(slotNumber).padStart(2, '0')}</span>
+      <span class="empty-slot-icon" aria-hidden="true">🔒</span>
+      <span><b>잠긴 보관칸</b><small>상회 ${unlockStage}단계에서 해금됩니다.</small></span>
+    </article>`;
+  }).join('');
+  document.querySelector('#inventory-list').innerHTML = occupiedCards + emptyCards + lockedCards;
   document.querySelectorAll('[data-sell-item]').forEach((button) => button.onclick = () => {
     const revenue = sellItems(state, balance, [button.dataset.sellItem]);
     if (revenue) audio.playSfx('sell');

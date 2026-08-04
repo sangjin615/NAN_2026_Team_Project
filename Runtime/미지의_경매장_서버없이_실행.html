@@ -505,7 +505,7 @@ button.secondary:disabled { background-image: url("./assets/ui/skin-v1/button-se
 [data-scene="exchange"] .inventory-list {
   left: 1.2%; top: 45.9%; width: 64.3%; height: auto; bottom: 7.1%;
   box-sizing: border-box; padding: 16px 18px;
-  grid-template-columns: 1fr; grid-template-rows: repeat(3,minmax(0,1fr)); gap: 10px;
+  grid-template-columns: 1fr; grid-template-rows: repeat(6,minmax(0,1fr)); gap: 5px;
   border: 0; border-image: none; background: transparent; box-shadow: none;
   overflow: visible;
 }
@@ -521,6 +521,30 @@ button.secondary:disabled { background-image: url("./assets/ui/skin-v1/button-se
   border-image: url("./assets/ui/skin-v1/status-card.png") 34 fill / 8px / 0 stretch;
   background: transparent;
 }
+[data-scene="exchange"] #inventory-list .empty-inventory-slot {
+  grid-template-columns: 46px 54px minmax(0,1fr);
+  gap: 11px; align-items: center; padding: 3px 14px;
+  color: #eadfc9; opacity: .9;
+}
+[data-scene="exchange"] .empty-slot-number {
+  align-self: stretch; display: grid; place-items: center;
+  color: #e7d9c1; background: #332a22; font-size: clamp(16px,1.35vw,22px); font-weight: 900;
+}
+[data-scene="exchange"] .empty-slot-icon {
+  display: grid; place-items: center; width: 48px; height: 34px;
+  border: 2px dashed #8f7b61; color: #8a755c; background: #594b3a22;
+  font-size: clamp(18px,1.55vw,27px); line-height: 1;
+}
+[data-scene="exchange"] .empty-inventory-slot > span:last-child { display: grid; gap: 1px; line-height: 1.05; }
+[data-scene="exchange"] .empty-inventory-slot b { color: #eadfc9; font-size: clamp(12px,1vw,17px); }
+[data-scene="exchange"] .empty-inventory-slot small { color: #baa98f; font-size: clamp(9px,.72vw,12px); }
+[data-scene="exchange"] #inventory-list .locked-inventory-slot {
+  color: #b8ae9e; filter: grayscale(.72); opacity: .62;
+}
+[data-scene="exchange"] .locked-inventory-slot .empty-slot-icon {
+  border-style: solid; border-color: #655a4b; background: #312b25aa;
+}
+[data-scene="exchange"] .locked-inventory-slot b { color: #d2c8b8; }
 [data-scene="exchange"] .market-board {
   right: 1.6%; top: 28.9%; width: 30.5%; height: auto; bottom: 5%;
   box-sizing: border-box; display: flex; flex-direction: column; padding: 18px 22px;
@@ -575,7 +599,7 @@ button.secondary:disabled { background-image: url("./assets/ui/skin-v1/button-se
   [data-scene="exchange"] .set-bonus-guide small { display: none; }
 }
 [data-scene="exchange"] .actions {
-  left: 42%; bottom: 1.25%; width: 20%; height: 5.5%;
+  left: 42%; bottom: .35%; width: 20%; height: 5.5%;
   margin: 0; padding: 0; border: 0 !important; border-image: none !important;
   background: transparent !important; box-shadow: none !important;
 }
@@ -587,7 +611,7 @@ button.secondary:disabled { background-image: url("./assets/ui/skin-v1/button-se
 }
 [data-scene="exchange"] .actions #sell-selected:disabled { filter: grayscale(.45) brightness(.7); opacity: .72; }
 [data-scene="exchange"] .return-city {
-  left: 2%; bottom: 1.25%; width: 15%; height: 5.5%;
+  left: 2%; bottom: .35%; width: 15%; height: 5.5%;
   color: #2b2015; text-shadow: none;
   border: 0 !important; border-image: none !important;
   background: transparent url("./assets/ui/clean-v1/buttons/button-parchment.png") center / 100% 100% no-repeat !important;
@@ -2956,10 +2980,28 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
     state.phase = "exchange";
     adapter.showScene("exchange");
     syncHeader();
-    document.querySelector("#inventory-list").innerHTML = ownedItems().length ? ownedItems().map((item) => `
+    const exchangeItems = ownedItems();
+    const maxStorage = Math.max(...balance.shop.storage);
+    const occupiedCards = exchangeItems.map((item) => `
     <article><label><input type="checkbox" data-item-select="${item.lotId}"> <b>${item.name}</b></label>
     <span>${gradeLabel(item.grade)} \xB7 ${item.category}</span><span>\uB9E4\uC785 ${money(item.paid)} \xB7 ${item.appraised ? `\uAC10\uC815 ${money(item.trueValue)} \xB1${money(item.appraisalRange)}` : "\uBBF8\uAC10\uC815"}</span>
-    <button data-sell-item="${item.lotId}" ${item.collateral ? "disabled" : ""}>\uC989\uC2DC \uCC98\uBD84</button></article>`).join("") : "<p>\uBCF4\uC720 \uBB3C\uD488\uC774 \uC5C6\uC2B5\uB2C8\uB2E4.</p>";
+    <button data-sell-item="${item.lotId}" ${item.collateral ? "disabled" : ""}>\uC989\uC2DC \uCC98\uBD84</button></article>`).join("");
+    const emptyCards = Array.from({ length: Math.max(0, state.storage - exchangeItems.length) }, (_, index) => `
+    <article class="empty-inventory-slot" aria-label="\uBE48 \uBCF4\uAD00\uCE78 ${exchangeItems.length + index + 1}">
+      <span class="empty-slot-number">${String(exchangeItems.length + index + 1).padStart(2, "0")}</span>
+      <span class="empty-slot-icon">\uFF0B</span>
+      <span><b>\uBE48 \uBCF4\uAD00\uCE78</b><small>\uB099\uCC30\uD55C \uBB3C\uD488\uC774 \uC774\uACF3\uC5D0 \uD45C\uC2DC\uB429\uB2C8\uB2E4.</small></span>
+    </article>`).join("");
+    const lockedCards = Array.from({ length: Math.max(0, maxStorage - state.storage) }, (_, index) => {
+      const slotNumber = state.storage + index + 1;
+      const unlockStage = balance.shop.storage.findIndex((capacity) => capacity >= slotNumber);
+      return `<article class="empty-inventory-slot locked-inventory-slot" aria-label="\uC7A0\uAE34 \uBCF4\uAD00\uCE78 ${slotNumber}">
+      <span class="empty-slot-number">${String(slotNumber).padStart(2, "0")}</span>
+      <span class="empty-slot-icon" aria-hidden="true">\u{1F512}</span>
+      <span><b>\uC7A0\uAE34 \uBCF4\uAD00\uCE78</b><small>\uC0C1\uD68C ${unlockStage}\uB2E8\uACC4\uC5D0\uC11C \uD574\uAE08\uB429\uB2C8\uB2E4.</small></span>
+    </article>`;
+    }).join("");
+    document.querySelector("#inventory-list").innerHTML = occupiedCards + emptyCards + lockedCards;
     document.querySelectorAll("[data-sell-item]").forEach((button) => button.onclick = () => {
       const revenue = sellItems(state, balance, [button.dataset.sellItem]);
       if (revenue) audio.playSfx("sell");
