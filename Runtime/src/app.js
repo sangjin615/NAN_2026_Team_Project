@@ -465,9 +465,19 @@ async function nextDay() {
   audio.playSfx('day');
   if (state.failure) return renderResult();
   if (state.day === 12) return startRelicAuction();
+  const nextDayButton = document.querySelector('#next-day');
+  nextDayButton.disabled = true;
   advanceDay(state); state.questOffers = createDailyQuestOffers(balance, state.day, state.seed, state.metaRelics); state.settledDay = null;
-  await generation.ensure({ currentDay: state.day, schedule: state.schedule, sets: state.sets });
-  renderHub();
+  save();
+  try {
+    await generation.ensure({ currentDay: state.day, schedule: state.schedule, sets: state.sets });
+    renderHub();
+  } catch (error) {
+    console.warn('Daily content buffer failed; continuing with prepared fallback.', error);
+    renderHub('콘텐츠 준비에 실패해 기본 데이터를 사용합니다.');
+  } finally {
+    nextDayButton.disabled = false;
+  }
 }
 
 function startRelicAuction() {

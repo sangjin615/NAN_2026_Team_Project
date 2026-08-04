@@ -1011,6 +1011,10 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
 [data-scene="catalog"] > header,
 [data-scene="exchange"] > header,
 [data-scene="shop"] > header { display: none; }
+[data-scene="catalog"] > .catalog-return {
+  position: absolute; left: 3%; bottom: 3%; z-index: 10;
+  width: 15%; min-width: 128px;
+}
 
 /* Tavern: the three implemented information channels occupy the painted cards. */
 [data-scene="tavern"] > header { display: none; }
@@ -1600,7 +1604,7 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
   <section class="scene place" data-scene="shop" hidden><header><div><p class="eyebrow">MERCHANT SHOP · <span data-bind="day"></span>일차</p><h2>상회</h2></div><strong data-bind="cash"></strong></header><div id="shop-detail" class="place-panel"></div><button id="shop-upgrade">상점 확장</button><p id="shop-message" class="status"></p><button data-place="city" class="secondary return-city">도시로</button></section>
   <section class="scene place" data-scene="guild" hidden><div class="guild-heading"><p class="eyebrow">BROKER GUILD · <span data-bind="day"></span>일차</p><h2>중개인 조합</h2><strong data-bind="cash"></strong></div><div id="guild-detail" class="place-panel"></div><div class="actions"><button id="guild-loan">담보 대출</button><button id="guild-repay" class="secondary">중도 상환</button></div><p id="guild-message" class="status"></p><button data-place="city" class="secondary return-city">도시로</button></section>
   <section class="scene place" data-scene="museum" hidden><p class="eyebrow">RELIC MUSEUM</p><h2>유물 전시관</h2><div id="relic-list" class="relic-list"></div><aside id="relic-detail" class="relic-detail" aria-live="polite"></aside><div id="museum-progress" class="museum-progress"></div><button id="museum-back" class="secondary">돌아가기</button></section>
-  <section class="scene" data-scene="catalog" hidden><header><div><p class="eyebrow">오늘의 카탈로그</p><h2><span data-bind="day"></span>일차 · 8 LOT</h2></div><strong data-bind="cash"></strong></header><div id="catalog-grid" class="catalog-grid"></div><button id="start-auction">경매 시작</button></section>
+  <section class="scene" data-scene="catalog" hidden><header><div><p class="eyebrow">오늘의 카탈로그</p><h2><span data-bind="day"></span>일차 · 8 LOT</h2></div><strong data-bind="cash"></strong></header><div id="catalog-grid" class="catalog-grid"></div><button data-place="city" class="secondary return-city catalog-return">도시로</button><button id="start-auction">경매 시작</button></section>
   <section class="scene" data-scene="auction" hidden>
     <aside id="auction-lot-status"></aside>
     <header><div><p class="eyebrow" data-bind="lot-progress"></p><h2 data-bind="lot-name"></h2></div><strong data-bind="cash"></strong></header>
@@ -2916,11 +2920,21 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
     audio.playSfx("day");
     if (state.failure) return renderResult();
     if (state.day === 12) return startRelicAuction();
+    const nextDayButton = document.querySelector("#next-day");
+    nextDayButton.disabled = true;
     advanceDay(state);
     state.questOffers = createDailyQuestOffers(balance, state.day, state.seed, state.metaRelics);
     state.settledDay = null;
-    await generation.ensure({ currentDay: state.day, schedule: state.schedule, sets: state.sets });
-    renderHub();
+    save();
+    try {
+      await generation.ensure({ currentDay: state.day, schedule: state.schedule, sets: state.sets });
+      renderHub();
+    } catch (error) {
+      console.warn("Daily content buffer failed; continuing with prepared fallback.", error);
+      renderHub("\uCF58\uD150\uCE20 \uC900\uBE44\uC5D0 \uC2E4\uD328\uD574 \uAE30\uBCF8 \uB370\uC774\uD130\uB97C \uC0AC\uC6A9\uD569\uB2C8\uB2E4.");
+    } finally {
+      nextDayButton.disabled = false;
+    }
   }
   function startRelicAuction() {
     clearActionTimer();
