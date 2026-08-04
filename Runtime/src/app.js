@@ -115,6 +115,21 @@ function openSlotScene(mode) {
   renderSaveSlots();
 }
 
+const waitForPaint = () => new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+
+function updateRunLoading(progress, message, completedSteps = [], activeStep = '') {
+  const scene = document.querySelector('[data-scene="loading"]');
+  const value = Math.max(0, Math.min(100, Math.round(progress)));
+  document.querySelector('#loading-message').textContent = message;
+  document.querySelector('#loading-progress-fill').style.width = `${value}%`;
+  document.querySelector('#loading-percent').textContent = `${value}%`;
+  scene.querySelector('.loading-progress').setAttribute('aria-valuenow', String(value));
+  scene.querySelectorAll('[data-loading-step]').forEach((step) => {
+    step.classList.toggle('is-complete', completedSteps.includes(step.dataset.loadingStep));
+    step.classList.toggle('is-active', step.dataset.loadingStep === activeStep);
+  });
+}
+
 async function boot() {
   try {
     await adapter.loadContract();
@@ -133,19 +148,32 @@ async function boot() {
 }
 
 async function newRun(seed) {
+  const loadingStartedAt = performance.now();
+  adapter.showScene('loading');
+  updateRunLoading(6, '저장 슬롯과 새 여정을 준비하고 있습니다.', [], 'schedule');
+  await waitForPaint();
+
+  updateRunLoading(18, '12일 경매 일정을 구성했습니다.', ['schedule'], 'sets');
   const schedule = createRunSchedule({ catalog, balance, seed });
   if (!validateSchedule(schedule).valid) throw new Error('96 LOT 생성 실패');
+  updateRunLoading(38, '품목 세트와 시장 흐름을 연결하고 있습니다.', ['schedule'], 'sets');
   const sets = createSetGraph(schedule, seed);
   state = createInitialState({ schedule, sets, balance, startCash: balance.run.startCash, metaRelics: loadMeta() });
   state.saveSlot = selectedSlot;
   state.version = 2;
   recordEvent(state, 'run-start', { saveSlot: selectedSlot });
-  audio.playBgm('city');
+  updateRunLoading(58, '첫날 경매와 도시 정보를 생성하고 있습니다.', ['schedule', 'sets'], 'content');
   state.generationBlueprint = await generation.prepareRun({
     runSeed: seed, sets, market: state.marketPath,
   });
   await generation.ensure({ currentDay: 1, schedule, sets, aheadDays: 0 });
+  updateRunLoading(88, `SLOT ${selectedSlot}에 새 여정을 저장하고 있습니다.`, ['schedule', 'sets', 'content'], 'save');
   save();
+  const remainingMs = 900 - (performance.now() - loadingStartedAt);
+  if (remainingMs > 0) await new Promise((resolve) => window.setTimeout(resolve, remainingMs));
+  updateRunLoading(100, '준비가 완료되었습니다. 도시로 이동합니다.', ['schedule', 'sets', 'content', 'save']);
+  await waitForPaint();
+  audio.playBgm('city');
   renderHub();
   generation.ensure({ currentDay: 1, schedule, sets }).then(save);
 }
@@ -665,7 +693,20 @@ function renderResult() {
 
 const placeRenderers = { city: renderHub, quests: renderQuestOffice, tavern: renderTavern, exchange: renderExchange, shop: renderShop, guild: renderGuild, museum: () => renderMuseum('city'), catalog: renderCatalog };
 
-document.querySelector('#new-run').onclick = () => newRun(document.querySelector('#seed').value.trim() || Date.now());
+document.querySelector('#new-run').onclick = async () => {
+  const button = document.querySelector('#new-run');
+  if (button.disabled) return;
+  button.disabled = true;
+  try {
+    await newRun(document.querySelector('#seed').value.trim() || Date.now());
+  } catch (error) {
+    console.error('새 런 생성 실패', error);
+    openSlotScene('new');
+    document.querySelector('#save-guide').textContent = `새 런 생성에 실패했습니다: ${error.message}`;
+  } finally {
+    button.disabled = false;
+  }
+};
 document.querySelector('#open-new-slots').onclick = () => { audio.playBgm('title'); openSlotScene('new'); };
 document.querySelector('#open-continue-slots').onclick = () => { audio.playBgm('title'); openSlotScene('continue'); };
 document.querySelector('#back-title').onclick = () => adapter.showScene('title');

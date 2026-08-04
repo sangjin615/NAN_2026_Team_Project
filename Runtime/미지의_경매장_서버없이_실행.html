@@ -399,6 +399,41 @@ button.secondary:disabled { background-image: url("./assets/ui/skin-v1/button-se
   background: transparent url("./assets/ui/vsl-v6.4/popups/settings.png") center / 100% 100% no-repeat;
   color: #382719; filter: drop-shadow(0 18px 24px #000b);
 }
+
+/* New run flow: title -> save slot -> loading -> city. */
+[data-scene="loading"] {
+  position: relative;
+  width: min(100vw, calc(100vh * 16 / 9));
+  height: min(100vh, calc(100vw * 9 / 16));
+  margin: auto;
+  overflow: hidden;
+  color: #f4ead3;
+  background: #100d09 url("./assets/ui-mockups/loading.png") center / cover no-repeat;
+}
+[data-scene="loading"]::before { content: ""; position: absolute; inset: 0; background: rgba(8,6,4,.24); pointer-events: none; }
+[data-scene="loading"]::after { content: ""; position: absolute; z-index: 0; right: 0; bottom: 0; left: 0; height: 17%; background: linear-gradient(180deg,transparent,rgba(8,6,4,.94) 36%); pointer-events: none; }
+.loading-foot-mask { position: absolute; z-index: 1; right: 0; bottom: 0; left: 0; height: 16%; background: linear-gradient(180deg,transparent,rgba(8,6,4,.97) 34%); pointer-events: none; }
+.loading-panel {
+  position: absolute; z-index: 2; left: 50%; top: 19.5%; width: 47.5%; min-height: 49%;
+  transform: translateX(-50%); box-sizing: border-box; padding: 5.5% 5.2% 3.2%; text-align: center;
+  background: linear-gradient(180deg,rgba(11,11,9,.985),rgba(18,17,14,.985)); border: 2px solid #9f6d21;
+  box-shadow: inset 0 0 0 2px #2a2419,0 12px 35px #000b;
+}
+.loading-icon { margin: 0 0 .3em; color: #d5a44e; font-size: clamp(16px,2vw,32px); }
+.loading-panel h2 { margin: 0; font-size: clamp(25px,3vw,48px); letter-spacing: .04em; }
+#loading-message { margin: .65em 0 1.2em; color: #e7dbc2; font-size: clamp(13px,1.35vw,22px); }
+.loading-progress { display: inline-block; width: 78%; height: clamp(12px,1.6vw,25px); overflow: hidden; vertical-align: middle; border: 1px solid #625540; background: #302e29; }
+.loading-progress span { display: block; width: 0; height: 100%; background: linear-gradient(90deg,#c38b3d,#ebc47d); transition: width .24s ease; }
+#loading-percent { display: inline-block; width: 15%; margin-left: 2%; font-size: clamp(15px,1.7vw,27px); }
+.loading-steps { width: 86%; margin: 1em auto 0; padding: .75em 1.1em; box-sizing: border-box; list-style: none; text-align: left; border: 1px solid #4b4335; background: #0c0c0bd9; }
+.loading-steps li { position: relative; padding: .14em 2em .14em .3em; color: #8c877c; font-size: clamp(11px,1.12vw,18px); }
+.loading-steps li::after { content: "●"; position: absolute; right: .25em; color: #555; }
+.loading-steps li.is-active { color: #f0dfbf; }
+.loading-steps li.is-active::after { color: #eaaa22; }
+.loading-steps li.is-complete { color: #e8e0d0; }
+.loading-steps li.is-complete::after { content: "✓"; color: #7fbd3e; font-weight: 900; }
+.loading-tip { position: absolute; top: 105%; left: 2%; width: 96%; margin: 0; padding: .75em 1.2em; box-sizing: border-box; color: #2d241a; font-size: clamp(11px,1.1vw,18px); background: #ead6adf2; border: 2px solid #8f6429; }
+.loading-tip b { margin-right: .7em; padding: .15em .45em; color: #f5e4bd; background: #2c241a; }
 #settings-dialog::backdrop { background: #090705c7; backdrop-filter: blur(2px); }
 #settings-dialog > h2 {
   position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
@@ -2360,6 +2395,16 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
     <button id="title-settings" aria-label="설정">설정</button>
     <p id="boot-status" class="status"></p>
   </section>
+  <section class="scene run-loading" data-scene="loading" hidden aria-labelledby="loading-title" aria-busy="true">
+    <div class="loading-foot-mask" aria-hidden="true"></div>
+    <div class="loading-panel">
+      <p class="loading-icon" aria-hidden="true">◆</p><h2 id="loading-title">세계를 생성하는 중</h2>
+      <p id="loading-message" aria-live="polite">새 여정을 준비하고 있습니다.</p>
+      <div class="loading-progress" role="progressbar" aria-label="새 런 생성 진행률" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span id="loading-progress-fill"></span></div><strong id="loading-percent">0%</strong>
+      <ul class="loading-steps" aria-label="준비 단계"><li data-loading-step="schedule">12일 경매 일정 구성</li><li data-loading-step="sets">세트와 시장 정보 연결</li><li data-loading-step="content">첫날 콘텐츠 생성</li><li data-loading-step="save">저장 슬롯 기록</li></ul>
+      <p class="loading-tip"><b>TIP</b> 정보는 승리를 보장하지 않지만, 정보가 없는 경매는 언제나 불리합니다.</p>
+    </div>
+  </section>
   <section class="scene save-select" data-scene="save" hidden>
     <header><p class="eyebrow">SAVE SLOT</p><h2 id="save-mode-title">여정을 선택하세요</h2></header>
     <label class="seed-field">런 시드 <input id="seed" value="nan-2026-demo"></label>
@@ -3294,6 +3339,19 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
     adapter.showScene("save");
     renderSaveSlots();
   }
+  var waitForPaint = () => new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+  function updateRunLoading(progress, message, completedSteps = [], activeStep = "") {
+    const scene = document.querySelector('[data-scene="loading"]');
+    const value = Math.max(0, Math.min(100, Math.round(progress)));
+    document.querySelector("#loading-message").textContent = message;
+    document.querySelector("#loading-progress-fill").style.width = `${value}%`;
+    document.querySelector("#loading-percent").textContent = `${value}%`;
+    scene.querySelector(".loading-progress").setAttribute("aria-valuenow", String(value));
+    scene.querySelectorAll("[data-loading-step]").forEach((step) => {
+      step.classList.toggle("is-complete", completedSteps.includes(step.dataset.loadingStep));
+      step.classList.toggle("is-active", step.dataset.loadingStep === activeStep);
+    });
+  }
   async function boot() {
     try {
       await adapter.loadContract();
@@ -3311,21 +3369,33 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
     }
   }
   async function newRun(seed) {
+    const loadingStartedAt = performance.now();
+    adapter.showScene("loading");
+    updateRunLoading(6, "\uC800\uC7A5 \uC2AC\uB86F\uACFC \uC0C8 \uC5EC\uC815\uC744 \uC900\uBE44\uD558\uACE0 \uC788\uC2B5\uB2C8\uB2E4.", [], "schedule");
+    await waitForPaint();
+    updateRunLoading(18, "12\uC77C \uACBD\uB9E4 \uC77C\uC815\uC744 \uAD6C\uC131\uD588\uC2B5\uB2C8\uB2E4.", ["schedule"], "sets");
     const schedule = createRunSchedule({ catalog, balance, seed });
     if (!validateSchedule(schedule).valid) throw new Error("96 LOT \uC0DD\uC131 \uC2E4\uD328");
+    updateRunLoading(38, "\uD488\uBAA9 \uC138\uD2B8\uC640 \uC2DC\uC7A5 \uD750\uB984\uC744 \uC5F0\uACB0\uD558\uACE0 \uC788\uC2B5\uB2C8\uB2E4.", ["schedule"], "sets");
     const sets = createSetGraph(schedule, seed);
     state = createInitialState({ schedule, sets, balance, startCash: balance.run.startCash, metaRelics: loadMeta() });
     state.saveSlot = selectedSlot;
     state.version = 2;
     recordEvent(state, "run-start", { saveSlot: selectedSlot });
-    audio.playBgm("city");
+    updateRunLoading(58, "\uCCAB\uB0A0 \uACBD\uB9E4\uC640 \uB3C4\uC2DC \uC815\uBCF4\uB97C \uC0DD\uC131\uD558\uACE0 \uC788\uC2B5\uB2C8\uB2E4.", ["schedule", "sets"], "content");
     state.generationBlueprint = await generation.prepareRun({
       runSeed: seed,
       sets,
       market: state.marketPath
     });
     await generation.ensure({ currentDay: 1, schedule, sets, aheadDays: 0 });
+    updateRunLoading(88, `SLOT ${selectedSlot}\uC5D0 \uC0C8 \uC5EC\uC815\uC744 \uC800\uC7A5\uD558\uACE0 \uC788\uC2B5\uB2C8\uB2E4.`, ["schedule", "sets", "content"], "save");
     save();
+    const remainingMs = 900 - (performance.now() - loadingStartedAt);
+    if (remainingMs > 0) await new Promise((resolve) => window.setTimeout(resolve, remainingMs));
+    updateRunLoading(100, "\uC900\uBE44\uAC00 \uC644\uB8CC\uB418\uC5C8\uC2B5\uB2C8\uB2E4. \uB3C4\uC2DC\uB85C \uC774\uB3D9\uD569\uB2C8\uB2E4.", ["schedule", "sets", "content", "save"]);
+    await waitForPaint();
+    audio.playBgm("city");
     renderHub();
     generation.ensure({ currentDay: 1, schedule, sets }).then(save);
   }
@@ -3948,7 +4018,20 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
     save();
   }
   var placeRenderers = { city: renderHub, quests: renderQuestOffice, tavern: renderTavern, exchange: renderExchange, shop: renderShop, guild: renderGuild, museum: () => renderMuseum("city"), catalog: renderCatalog };
-  document.querySelector("#new-run").onclick = () => newRun(document.querySelector("#seed").value.trim() || Date.now());
+  document.querySelector("#new-run").onclick = async () => {
+    const button = document.querySelector("#new-run");
+    if (button.disabled) return;
+    button.disabled = true;
+    try {
+      await newRun(document.querySelector("#seed").value.trim() || Date.now());
+    } catch (error) {
+      console.error("\uC0C8 \uB7F0 \uC0DD\uC131 \uC2E4\uD328", error);
+      openSlotScene("new");
+      document.querySelector("#save-guide").textContent = `\uC0C8 \uB7F0 \uC0DD\uC131\uC5D0 \uC2E4\uD328\uD588\uC2B5\uB2C8\uB2E4: ${error.message}`;
+    } finally {
+      button.disabled = false;
+    }
+  };
   document.querySelector("#open-new-slots").onclick = () => {
     audio.playBgm("title");
     openSlotScene("new");
