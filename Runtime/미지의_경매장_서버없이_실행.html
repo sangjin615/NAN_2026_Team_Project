@@ -837,7 +837,7 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
 [data-scene="hub"] .stage-stat::before { background-image: url("./assets/ui/quest-icons/block.png"); }
 [data-scene="hub"] #loan-status::before { background-image: url("./assets/ui/quest-icons/designated.png"); }
 [data-scene="hub"] #market-indices {
-  left: auto; right: 1.2%; top: 55%; bottom: auto; width: 30%; height: 38%;
+  left: auto; right: 10px; top: auto; bottom: 10px; width: 30%; height: 38%;
   display: block; box-sizing: border-box; padding: 8px 14px;
   border: 34px solid transparent;
   border-image: url("./assets/ui/market/newspaper-board.png") 72 52 62 52 fill / 34px / 0 stretch;
@@ -845,11 +845,14 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
   color: #352416; font-size: clamp(10px, .88vw, 15px);
 }
 [data-scene="hub"] #market-indices > strong {
-  display: block; margin-bottom: 5px; color: #493019; text-align: left;
-  font-size: 1.12em; letter-spacing: .08em;
+  position: absolute; left: 17%; right: 17%; top: 7.5%;
+  display: grid; place-items: center; height: 14%; margin: 0;
+  color: #493019; text-align: center; font-size: 1.2em; letter-spacing: .08em;
 }
 [data-scene="hub"] .market-sparklines {
-  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px 10px;
+  position: absolute; left: 8%; right: 8%; top: 29%; bottom: 7%;
+  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-rows: repeat(3, minmax(0, 1fr)); gap: 4px 10px;
 }
 [data-scene="hub"] .market-spark {
   position: relative; display: grid; grid-template-rows: auto 1fr;
@@ -1484,6 +1487,8 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
 [data-scene="hub"] .place-grid button[data-place="guild"] { left: 11%; top: 55%; width: 20%; height: 32%; }
 [data-scene="hub"] .place-grid button[data-place="shop"] { left: 36%; top: 55%; width: 20%; height: 32%; }
 [data-scene="hub"] .place-grid button[data-place="museum"] { left: 61%; top: 55%; width: 20%; height: 32%; }
+[data-scene="hub"] .place-grid button[data-place="quests"] > span { left: 19%; right: 1%; }
+[data-scene="hub"] .place-grid button[data-place="guild"] > span { left: 3%; right: 17%; }
 [data-scene="hub"] .place-grid button[data-place="guild"] > span,
 [data-scene="hub"] .place-grid button[data-place="shop"] > span,
 [data-scene="hub"] .place-grid button[data-place="museum"] > span { bottom: -1%; }
