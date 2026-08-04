@@ -258,7 +258,7 @@ function renderQuestOffice(message = '') {
     button.onclick = () => {
       const ok = acceptQuest(state, button.dataset.quest, balance);
       if (ok) { recordEvent(state, 'quest-accept', { questId: button.dataset.quest }); audio.playSfx('quest'); }
-      renderQuestOffice(ok ? '의뢰를 수주했습니다.' : '현금·수주 한도·충돌 조건을 확인하세요.');
+      renderQuestOffice(ok ? '의뢰를 수주했습니다.' : '수주비와 오늘 제시된 의뢰인지 확인하세요.');
     };
   });
   document.querySelectorAll('[data-deliver-quest]').forEach((button) => {

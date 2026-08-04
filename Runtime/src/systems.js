@@ -2,7 +2,6 @@ import { createRng, shuffle } from './rng.js';
 
 const QUEST_IDS = ['designated', 'multi', 'bargain', 'restraint', 'block'];
 const GRADE_BETA = { COMMON: 0.27, RARE: 1, EPIC: 2.09, LEGENDARY: 3.64 };
-const QUEST_CLASH = { restraint: ['multi', 'designated', 'block'], multi: ['restraint'], designated: ['bargain', 'restraint'], bargain: ['designated'], block: ['restraint'] };
 
 export function createMarketPath(balance, seed) {
   const rng = createRng(`${seed}:market`);
@@ -142,10 +141,9 @@ export function buyInformation(state, balance, kind) {
 }
 
 export function acceptQuest(state, questId, balance) {
-  if (state.activeQuests.length >= (balance.quests.offering.acceptMax || 2)) return false;
+  if (state.activeQuests.length >= (balance.quests.offering.acceptMax || 3)) return false;
   const quest = state.questOffers.find((entry) => entry.id === questId && !entry.accepted);
   if (!quest || state.cash < quest.fee) return false;
-  if (state.activeQuests.some((active) => QUEST_CLASH[active.id]?.includes(questId) || QUEST_CLASH[questId]?.includes(active.id))) return false;
   state.cash -= quest.fee; quest.accepted = true;
   state.activeQuests.push({ ...quest, acceptedDay: state.day, deadlineDay: Math.min(12, state.day + 2) });
   return true;

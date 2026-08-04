@@ -75,7 +75,7 @@ test('auction inventory connects to appraisal, sale, quest and loan systems', ()
   assert.equal(takeLoan(state, balance), true);
 });
 
-test('V6.2 rules apply grade demand, quest clashes, upgrade deadlines and no bankruptcy', () => {
+test('V6.2 rules apply grade demand, allow all offered quests, upgrade deadlines and no bankruptcy', () => {
   const schedule = createRunSchedule({ catalog, balance, seed: 'lab-rules' });
   const sets = createSetGraph(schedule, 'lab-rules');
   const state = createInitialState({ schedule, sets, balance, startCash: 20000 });
@@ -83,9 +83,10 @@ test('V6.2 rules apply grade demand, quest clashes, upgrade deadlines and no ban
   const low = botBidForLot({ lot, day: 1, balance, marketIndex: 0.8, seed: 'same' });
   const high = botBidForLot({ lot, day: 1, balance, marketIndex: 1.2, seed: 'same' });
   assert.ok(Math.max(...high.map((x) => x.maxBid)) > Math.max(...low.map((x) => x.maxBid)));
-  state.questOffers = ['restraint', 'multi'].map((id) => ({ id, ...balance.quests[id], accepted: false }));
+  state.questOffers = ['restraint', 'multi', 'designated'].map((id) => ({ id, ...balance.quests[id], accepted: false }));
   assert.equal(acceptQuest(state, 'restraint', balance), true);
-  assert.equal(acceptQuest(state, 'multi', balance), false);
+  assert.equal(acceptQuest(state, 'multi', balance), true);
+  assert.equal(acceptQuest(state, 'designated', balance), true);
   state.day = 3; state.shopStage = 1;
   assert.equal(missedDeadline(state), true);
   state.cash = 0; state.inventory = []; state.loan = null;
