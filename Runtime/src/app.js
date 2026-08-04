@@ -32,6 +32,8 @@ let selectedInfoKind = 'competitors';
 
 const GRADE_LABELS = { COMMON: '일반', RARE: '희귀', EPIC: '영웅', LEGENDARY: '전설' };
 const RELIC_TIER_LABELS = { low: '하급', mid: '중급', high: '상급' };
+const CATEGORY_LABELS = { CER: '도자기', CLK: '시계', PNT: '회화', BOK: '고서', MET: '금은세공', JEW: '장신구' };
+const categoryIconUrl = (category) => `./assets/ui/market-categories/${category.toLowerCase()}.png`;
 const gradeLabel = (grade) => GRADE_LABELS[grade] || grade;
 const escapeHtml = (value = '') => String(value).replace(/[&<>"']/g, (character) => ({
   '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
@@ -198,7 +200,7 @@ function renderHub(message = '') {
       }
       const points = pointList.join(' ');
       const [lastX, lastY] = points.split(' ').at(-1).split(',');
-      return `<span class="market-spark ${trend}"><span class="market-quote"><b>${family}</b><em>${(current * 100).toFixed(0)}</em><i aria-label="${trend === 'rise' ? '상승' : trend === 'fall' ? '하락' : '변동 없음'}">${arrow}</i></span><svg viewBox="0 0 100 46" preserveAspectRatio="none" aria-hidden="true"><line x1="0" y1="25" x2="100" y2="25"></line><polyline points="${points}"></polyline><circle cx="${lastX}" cy="${lastY}" r="3.4"></circle></svg></span>`;
+      return `<span class="market-spark ${trend}"><span class="market-quote"><img src="${categoryIconUrl(family)}" alt=""><b>${CATEGORY_LABELS[family]}</b><em>${(current * 100).toFixed(0)}</em><i aria-label="${trend === 'rise' ? '상승' : trend === 'fall' ? '하락' : '변동 없음'}">${arrow}</i></span><svg viewBox="0 0 100 46" preserveAspectRatio="none" aria-hidden="true"><line x1="0" y1="25" x2="100" y2="25"></line><polyline points="${points}"></polyline><circle cx="${lastX}" cy="${lastY}" r="3.4"></circle></svg></span>`;
     }).join('')}</div>`;
   document.querySelector('#loan-status').textContent = state.loan
     ? `만기 ${state.loan.dueDay}일 · ${money(state.loan.due)}`
@@ -292,10 +294,9 @@ function renderExchange(message = '') {
     if (revenue) audio.playSfx('sell');
     renderExchange(`${money(revenue)}에 처분했습니다.`);
   });
-  const names = { CER: '도자기', CLK: '시계', PNT: '회화', BOK: '고서', MET: '금은세공', JEW: '장신구' };
   document.querySelector('#exchange-market').innerHTML = `<h3>최근 시세</h3><div class="market-rates">${Object.entries(state.marketPath).map(([key, path]) => {
     const now = path[state.day - 1]; const previous = state.day > 1 ? path[state.day - 2] : 1; const delta = now - previous;
-    return `<div><b>${names[key]}</b><strong>${Math.round(now * 100)}%</strong><span class="${delta >= 0 ? 'rise' : 'fall'}">${delta >= 0 ? '▲' : '▼'} ${Math.abs(delta * 100).toFixed(0)}%</span></div>`;
+    return `<div><img src="${categoryIconUrl(key)}" alt=""><b>${CATEGORY_LABELS[key]}</b><strong>${Math.round(now * 100)}%</strong><span class="${delta >= 0 ? 'rise' : 'fall'}">${delta >= 0 ? '▲' : '▼'} ${Math.abs(delta * 100).toFixed(0)}%</span></div>`;
   }).join('')}</div><section class="bundle-sale-panel"><h4>묶음 판매</h4><p>같은 계열과 희귀도 조합을 함께 팔면 묶음 보너스가 적용됩니다.</p><div class="bundle-sale-summary"><span>선택 <b id="bundle-count">0개</b></span><span>조합 <b id="bundle-label">선택 없음</b></span><span>배율 <b id="bundle-multiplier">×1.00</b></span><strong id="bundle-estimate">예상 0 G</strong></div></section>`;
   const syncBulkActions = () => {
     const ids = [...document.querySelectorAll('[data-item-select]:checked')].map((input) => input.dataset.itemSelect);

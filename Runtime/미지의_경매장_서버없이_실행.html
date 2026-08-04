@@ -490,7 +490,8 @@ button.secondary:disabled { background-image: url("./assets/ui/skin-v1/button-se
 }
 .market-board h3 { margin: 0 0 14px; font-size: clamp(17px, 1.45vw, 25px); }
 .market-rates { display: grid; gap: 8px; }
-.market-rates > div { display: grid; grid-template-columns: 1fr auto auto; gap: 10px; align-items: center; padding: 10px 4px; border-bottom: 1px solid #8b7962; }
+.market-rates > div { display: grid; grid-template-columns: 28px 1fr auto auto; gap: 8px; align-items: center; padding: 10px 4px; border-bottom: 1px solid #8b7962; }
+.market-rates > div > img { width: 26px; height: 26px; object-fit: contain; filter: drop-shadow(0 1px 1px #0005); }
 .market-rates strong { font-size: 1.1em; }
 .market-rates .rise { color: #33702e; }.market-rates .fall { color: #a63c2f; }
 .market-board p { margin-top: 18px; color: #5c4b38; line-height: 1.55; }
@@ -925,7 +926,9 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
   min-width: 0; height: 40px; padding: 1px 4px 2px;
   border-bottom: 1px solid #785d3b66;
 }
-[data-scene="hub"] .market-quote { display: grid; grid-template-columns: 1fr auto auto; gap: 6px; align-items: center; }
+[data-scene="hub"] .market-quote { display: grid; grid-template-columns: 22px minmax(0,1fr) auto auto; gap: 4px; align-items: center; }
+[data-scene="hub"] .market-quote img { width: 21px; height: 21px; object-fit: contain; filter: drop-shadow(0 1px 1px #0005); }
+[data-scene="hub"] .market-quote b { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: .9em; }
 [data-scene="hub"] .market-quote b,
 [data-scene="hub"] .market-quote em,
 [data-scene="hub"] .market-quote i { font-style: normal; font-weight: 900; }
@@ -2636,6 +2639,8 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
   var selectedInfoKind = "competitors";
   var GRADE_LABELS = { COMMON: "\uC77C\uBC18", RARE: "\uD76C\uADC0", EPIC: "\uC601\uC6C5", LEGENDARY: "\uC804\uC124" };
   var RELIC_TIER_LABELS = { low: "\uD558\uAE09", mid: "\uC911\uAE09", high: "\uC0C1\uAE09" };
+  var CATEGORY_LABELS = { CER: "\uB3C4\uC790\uAE30", CLK: "\uC2DC\uACC4", PNT: "\uD68C\uD654", BOK: "\uACE0\uC11C", MET: "\uAE08\uC740\uC138\uACF5", JEW: "\uC7A5\uC2E0\uAD6C" };
+  var categoryIconUrl = (category) => `./assets/ui/market-categories/${category.toLowerCase()}.png`;
   var gradeLabel = (grade) => GRADE_LABELS[grade] || grade;
   var escapeHtml = (value = "") => String(value).replace(/[&<>"']/g, (character) => ({
     "&": "&amp;",
@@ -2810,7 +2815,7 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
       }
       const points = pointList.join(" ");
       const [lastX, lastY] = points.split(" ").at(-1).split(",");
-      return `<span class="market-spark ${trend}"><span class="market-quote"><b>${family}</b><em>${(current * 100).toFixed(0)}</em><i aria-label="${trend === "rise" ? "\uC0C1\uC2B9" : trend === "fall" ? "\uD558\uB77D" : "\uBCC0\uB3D9 \uC5C6\uC74C"}">${arrow}</i></span><svg viewBox="0 0 100 46" preserveAspectRatio="none" aria-hidden="true"><line x1="0" y1="25" x2="100" y2="25"></line><polyline points="${points}"></polyline><circle cx="${lastX}" cy="${lastY}" r="3.4"></circle></svg></span>`;
+      return `<span class="market-spark ${trend}"><span class="market-quote"><img src="${categoryIconUrl(family)}" alt=""><b>${CATEGORY_LABELS[family]}</b><em>${(current * 100).toFixed(0)}</em><i aria-label="${trend === "rise" ? "\uC0C1\uC2B9" : trend === "fall" ? "\uD558\uB77D" : "\uBCC0\uB3D9 \uC5C6\uC74C"}">${arrow}</i></span><svg viewBox="0 0 100 46" preserveAspectRatio="none" aria-hidden="true"><line x1="0" y1="25" x2="100" y2="25"></line><polyline points="${points}"></polyline><circle cx="${lastX}" cy="${lastY}" r="3.4"></circle></svg></span>`;
     }).join("")}</div>`;
     document.querySelector("#loan-status").textContent = state.loan ? `\uB9CC\uAE30 ${state.loan.dueDay}\uC77C \xB7 ${money(state.loan.due)}` : state.guildLocked ? "\uC870\uD569 \uC774\uC6A9 \uC81C\uD55C" : "\uB300\uCD9C \uC5C6\uC74C";
     document.querySelector("#hub-message").textContent = message;
@@ -2912,12 +2917,11 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
       if (revenue) audio.playSfx("sell");
       renderExchange(`${money(revenue)}\uC5D0 \uCC98\uBD84\uD588\uC2B5\uB2C8\uB2E4.`);
     });
-    const names = { CER: "\uB3C4\uC790\uAE30", CLK: "\uC2DC\uACC4", PNT: "\uD68C\uD654", BOK: "\uACE0\uC11C", MET: "\uAE08\uC740\uC138\uACF5", JEW: "\uC7A5\uC2E0\uAD6C" };
     document.querySelector("#exchange-market").innerHTML = `<h3>\uCD5C\uADFC \uC2DC\uC138</h3><div class="market-rates">${Object.entries(state.marketPath).map(([key, path]) => {
       const now = path[state.day - 1];
       const previous = state.day > 1 ? path[state.day - 2] : 1;
       const delta = now - previous;
-      return `<div><b>${names[key]}</b><strong>${Math.round(now * 100)}%</strong><span class="${delta >= 0 ? "rise" : "fall"}">${delta >= 0 ? "\u25B2" : "\u25BC"} ${Math.abs(delta * 100).toFixed(0)}%</span></div>`;
+      return `<div><img src="${categoryIconUrl(key)}" alt=""><b>${CATEGORY_LABELS[key]}</b><strong>${Math.round(now * 100)}%</strong><span class="${delta >= 0 ? "rise" : "fall"}">${delta >= 0 ? "\u25B2" : "\u25BC"} ${Math.abs(delta * 100).toFixed(0)}%</span></div>`;
     }).join("")}</div><section class="bundle-sale-panel"><h4>\uBB36\uC74C \uD310\uB9E4</h4><p>\uAC19\uC740 \uACC4\uC5F4\uACFC \uD76C\uADC0\uB3C4 \uC870\uD569\uC744 \uD568\uAED8 \uD314\uBA74 \uBB36\uC74C \uBCF4\uB108\uC2A4\uAC00 \uC801\uC6A9\uB429\uB2C8\uB2E4.</p><div class="bundle-sale-summary"><span>\uC120\uD0DD <b id="bundle-count">0\uAC1C</b></span><span>\uC870\uD569 <b id="bundle-label">\uC120\uD0DD \uC5C6\uC74C</b></span><span>\uBC30\uC728 <b id="bundle-multiplier">\xD71.00</b></span><strong id="bundle-estimate">\uC608\uC0C1 0 G</strong></div></section>`;
     const syncBulkActions = () => {
       const ids = [...document.querySelectorAll("[data-item-select]:checked")].map((input) => input.dataset.itemSelect);
