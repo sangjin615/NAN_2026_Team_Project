@@ -674,7 +674,7 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
 [data-scene="museum"] > .eyebrow,
 [data-scene="museum"] > h2 { display: none; }
 [data-scene="museum"] .relic-list {
-  position: absolute; left: 31.2%; top: 31.6%; width: 35.5%; height: 58%;
+  position: absolute; left: 31.2%; top: 26.5%; width: 35.5%; height: 58%;
   display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(3, 1fr);
   gap: 3% 7%; margin: 0; padding: 0;
   border: 0; background: transparent; box-shadow: none;
@@ -903,6 +903,11 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
 [data-scene="museum"] .relic-list article.is-owned b {
   position: absolute; left: 0; right: 0; bottom: 3%;
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+[data-scene="museum"] #relic-list > article {
+  position: relative !important;
+  overflow: hidden !important;
+  isolation: isolate;
 }
 
 /* Auction layout is placed directly into the five panels painted into the background. */
