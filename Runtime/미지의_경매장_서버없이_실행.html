@@ -657,28 +657,73 @@ button.secondary:disabled { background-image: url("./assets/ui/skin-v1/button-se
 /* Guild: place live data inside the three empty areas painted into the mockup. */
 [data-scene="guild"] { padding: 0; }
 [data-scene="guild"] .guild-heading {
-  position: absolute; left: 8%; top: 9%; width: 27%; height: 12%;
-  color: #f0e5d1;
+  position: absolute; z-index: 3; left: 7.7%; top: 12.9%; width: 52.8%; height: 12.8%;
+  box-sizing: border-box; display: flex; flex-direction: column-reverse; justify-content: center;
+  padding: 10px 28px 10px 118px; color: #f0e5d1;
+  border: 14px solid transparent; border-image: url("./assets/ui/skin-v1/panel-dark.png") 48 fill / 14px / 0 stretch;
 }
-[data-scene="guild"] .guild-heading h2,
-[data-scene="guild"] .guild-heading .eyebrow { display: none; }
+[data-scene="guild"] .guild-heading::before { content: "⚖"; position: absolute; left: 36px; top: 50%; transform: translateY(-50%); color: #ddb14e; font-size: clamp(34px,4vw,62px); }
+[data-scene="guild"] .guild-heading h2 { display: block; margin: 0; font-size: clamp(25px,2.5vw,42px); }
+[data-scene="guild"] .guild-heading .eyebrow { display: block; margin: 2px 0 0; color: #d7c8ad; font-size: clamp(9px,.85vw,14px); }
 [data-scene="guild"] .guild-heading strong { position: absolute; right: 0; top: 0; }
 [data-scene="guild"] #guild-detail {
-  position: absolute; left: 8%; top: 29%; width: 52.5%; height: 22%;
-  margin: 0; padding: 18px 24px; overflow: auto;
+  position: absolute; left: 7.7%; top: 27.2%; width: 52.8%; height: 29.7%;
+  box-sizing: border-box; margin: 0; padding: 12px 20px; overflow: hidden;
   border: 0; background: transparent; box-shadow: none; color: #21180f;
 }
+[data-scene="guild"] #guild-detail > h3 { margin: 0 0 8px; font-size: clamp(15px,1.3vw,22px); }
+[data-scene="guild"] .guild-status-grid { display: grid; grid-template-columns: 32% 1fr; gap: 14px; }
+[data-scene="guild"] .guild-status-grid section { display: grid; align-content: center; gap: 4px; padding: 9px 12px; border: 1px solid #aa9272; background: #ead8bd99; }
+[data-scene="guild"] .guild-status-grid section strong { color: #9f2d20; font-size: clamp(15px,1.35vw,23px); }
+[data-scene="guild"] .guild-status-grid section span { font-size: clamp(9px,.72vw,12px); line-height: 1.25; }
+[data-scene="guild"] .guild-status-grid dl { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; margin: 0; }
+[data-scene="guild"] .guild-status-grid dl div { display: grid; place-content: center; text-align: center; border: 1px solid #b9a587; background: #eadbc5aa; }
+[data-scene="guild"] .guild-status-grid dt { font-size: clamp(9px,.78vw,13px); }
+[data-scene="guild"] .guild-status-grid dd { margin: 4px 0 0; font-weight: 900; font-size: clamp(13px,1.2vw,20px); }
+[data-scene="guild"] .collateral-picker { display: flex; align-items: center; gap: 10px; margin-top: 10px; }
+[data-scene="guild"] .collateral-picker select { flex: 1; min-width: 0; height: 32px; }
+[data-scene="guild"] #loan-preview { margin: 6px 0 0; font-size: clamp(9px,.76vw,13px); }
+[data-scene="guild"] #guild-collateral-list {
+  position: absolute; right: 6.3%; top: 10.6%; width: 31.7%; height: 78.5%;
+  box-sizing: border-box; display: grid; grid-template-rows: auto 1fr auto; padding: 10px 15px 14px;
+  color: #2c2116; background: transparent;
+}
+[data-scene="guild"] #guild-collateral-list > header {
+  position: static; inset: auto; display: flex; justify-content: space-between; align-items: center;
+  width: auto; min-width: 100%; max-width: none !important; height: 44px; min-height: 44px; max-height: 44px; margin: 0; padding: 0 6px; color: #eadcc3;
+}
+[data-scene="guild"] #guild-collateral-list > header h3 { white-space: nowrap; }
+[data-scene="guild"] #guild-collateral-list h3 { margin: 0; font-size: clamp(15px,1.4vw,23px); }
+[data-scene="guild"] #guild-collateral-list h3 small { font-size: .62em; font-weight: 500; }
+[data-scene="guild"] .guild-collateral-scroll { overflow: auto; padding: 6px 5px; }
+[data-scene="guild"] .guild-collateral-card { display: grid; grid-template-columns: 48px minmax(0,1fr) auto 28px; gap: 8px; align-items: center; min-height: 62px; padding: 4px 8px; border-bottom: 1px solid #b6a081; cursor: pointer; }
+[data-scene="guild"] .guild-collateral-card:has(input:checked) { background: #d5bd84aa; box-shadow: inset 0 0 0 2px #9b6a20; }
+[data-scene="guild"] .guild-collateral-card img { width: 44px; height: 50px; object-fit: contain; }
+[data-scene="guild"] .guild-collateral-card span { display: grid; gap: 3px; }
+[data-scene="guild"] .guild-collateral-card small { font-size: clamp(9px,.7vw,12px); }
+[data-scene="guild"] .guild-collateral-card input { width: 20px; height: 20px; accent-color: #4f7a36; }
+[data-scene="guild"] .guild-collateral-empty { display: grid; place-content: center; gap: 8px; height: 100%; text-align: center; color: #66523a; }
+[data-scene="guild"] #guild-collateral-list > footer { display: flex; justify-content: space-between; align-items: center; padding: 12px 8px 4px; border-top: 1px solid #b49a75; }
+[data-scene="guild"] #guild-limit-total { color: #47732b; font-size: clamp(16px,1.4vw,24px); }
 [data-scene="guild"] .actions {
-  position: absolute; left: 63%; top: 29%; width: 29%; height: 45%;
-  display: grid; grid-template-columns: 230px; justify-content: center; align-content: start; gap: 14px;
-  margin: 0; padding: 28px; border: 0; background: transparent;
+  position: absolute; left: 7.7%; top: 61%; width: 52.8%; height: 23.8%;
+  box-sizing: border-box; display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); align-items: center; gap: 18px;
+  margin: 0; padding: 42px 22px 16px; border: 0; background: transparent;
 }
-[data-scene="guild"] .actions button { justify-self: stretch; width: auto; height: 54px; }
+[data-scene="guild"] .actions::before { content: "대출 실행"; position: absolute; left: 20px; top: 10px; color: #eadcc3; font-size: clamp(15px,1.35vw,22px); font-weight: 900; }
+[data-scene="guild"] .actions button { justify-self: stretch; width: auto; height: 58px; font-size: clamp(13px,1.15vw,19px); }
+[data-scene="guild"] #guild-loan { background-image: url("./assets/ui/clean-v1/buttons/button-green.png") !important; }
+[data-scene="guild"] #guild-repay { background-image: url("./assets/ui/clean-v1/buttons/button-red.png") !important; }
 [data-scene="guild"] #guild-message {
-  position: absolute; left: 8%; top: 61%; width: 52.5%; min-height: 9%;
-  margin: 0; padding: 18px 24px; background: transparent; color: #21180f;
+  position: absolute; left: 27%; right: 6.3%; bottom: 1.8%; min-height: 4.8%;
+  box-sizing: border-box; margin: 0; padding: 8px 18px; overflow: hidden; background: transparent; color: #e8dbc4;
 }
-[data-scene="guild"] .return-city { position: absolute; left: 20%; bottom: 3%; width: 22%; }
+[data-scene="guild"] #guild-message p { display: inline; margin-left: 12px; }
+[data-scene="guild"] .return-city {
+  position: absolute; left: 7.7%; bottom: 1.4%; width: 17%; height: 6.2%;
+  color: #2b2015 !important; text-shadow: none; opacity: 1; filter: none;
+  background: transparent url("./assets/ui/clean-v1/buttons/button-parchment.png") center / 100% 100% no-repeat !important;
+}
 
 .catalog-grid { margin-top: 8%; padding: 12px; background: #080705e6; }
 .catalog-grid .lot-card { background: #15110ced; }
@@ -1377,7 +1422,8 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
 [data-scene="exchange"] #inventory-list article { grid-template-columns: minmax(0,1.4fr) .75fr 1.2fr 100px; }
 
 /* Guild collateral selection uses the existing left parchment. */
-[data-scene="guild"] .collateral-picker { display: grid; grid-template-columns: 62px 1fr; align-items: center; gap: 8px; margin: 10px 0 6px; }
+[data-scene="guild"] .collateral-picker { display: grid; grid-template-columns: 90px 1fr; align-items: center; gap: 8px; margin: 10px 0 6px; }
+[data-scene="guild"] .collateral-picker span { white-space: nowrap; }
 [data-scene="guild"] .collateral-picker span { font-weight: 900; }
 [data-scene="guild"] .collateral-picker select { min-width: 0; padding: 7px 9px; border: 1px solid #72501f; background: #f2dfbd; color: #21180f; }
 [data-scene="guild"] #loan-preview { margin: 5px 0 0; font-weight: 800; color: #5b3514; }
@@ -1893,7 +1939,7 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
   <section class="scene place" data-scene="tavern" hidden><header><div><p class="eyebrow">TAVERN · <span data-bind="day"></span>일차</p><h2>술집</h2></div><strong data-bind="cash"></strong></header><section class="tavern-brokers"><h3>정보상 목록</h3><article data-broker="competitors" role="button" tabindex="0"><img src="./assets/ui/tavern/bartender.png" alt=""><div><b>바텐더</b><small>항구의 소식통</small><span></span></div></article><article data-broker="catalog" role="button" tabindex="0"><img src="./assets/ui/tavern/informant.png" alt=""><div><b>정보상</b><small>도시의 뒷골목 정보망</small><span></span></div></article><article data-broker="forecast" role="button" tabindex="0"><img src="./assets/ui/tavern/traveling-merchant.png" alt=""><div><b>여행 상인</b><small>먼 지역을 오가는 상인</small><span></span></div></article></section><section class="tavern-market"><div id="tavern-detail" aria-live="polite"></div><p class="tavern-rule">오늘은 세 정보 중 하나만 구매할 수 있으며 당일 경매 종료까지 유지됩니다.</p></section><aside id="tavern-owned" aria-live="polite"></aside><p id="tavern-message" class="status"></p><button data-place="city" class="secondary return-city">도시로 돌아가기</button></section>
   <section class="scene place" data-scene="exchange" hidden><header><div><p class="eyebrow">EXCHANGE · <span data-bind="day"></span>일차</p><h2>거래소</h2></div><strong data-bind="cash"></strong></header><div id="inventory-list" class="inventory-list"></div><aside id="exchange-market" class="market-board" aria-label="오늘의 시세"></aside><div class="actions"><button id="sell-selected">선택 판매</button></div><p id="exchange-message" class="status"></p><button data-place="city" class="secondary return-city">도시로</button></section>
   <section class="scene place" data-scene="shop" hidden><header><div><p class="eyebrow">MERCHANT SHOP · <span data-bind="day"></span>일차</p><h2>상회</h2></div><strong data-bind="cash"></strong></header><div id="shop-detail" class="place-panel"></div><button id="shop-upgrade">상점 확장</button><p id="shop-message" class="status"></p><button data-place="city" class="secondary return-city">도시로</button></section>
-  <section class="scene place" data-scene="guild" hidden><div class="guild-heading"><p class="eyebrow">BROKER GUILD · <span data-bind="day"></span>일차</p><h2>중개인 조합</h2><strong data-bind="cash"></strong></div><div id="guild-detail" class="place-panel"></div><div class="actions"><button id="guild-loan">담보 대출</button><button id="guild-repay" class="secondary">중도 상환</button></div><p id="guild-message" class="status"></p><button data-place="city" class="secondary return-city">도시로</button></section>
+  <section class="scene place" data-scene="guild" hidden><div class="guild-heading"><p class="eyebrow">미판매 물품을 담보로 단기 자금을 조달합니다.</p><h2>조합</h2><strong data-bind="cash"></strong></div><div id="guild-detail" class="place-panel"></div><aside id="guild-collateral-list" aria-label="담보 보유품"></aside><div class="actions"><button id="guild-loan">대출 실행</button><button id="guild-repay" class="secondary">대출 상환</button></div><p id="guild-message" class="status"></p><button data-place="city" class="secondary return-city">도시로 돌아가기</button></section>
   <section class="scene place" data-scene="museum" hidden><p class="eyebrow">RELIC MUSEUM</p><h2>유물 전시관</h2><div id="relic-list" class="relic-list"></div><aside id="relic-detail" class="relic-detail" aria-live="polite"></aside><div id="museum-progress" class="museum-progress"></div><button id="museum-back" class="secondary">돌아가기</button></section>
   <section class="scene" data-scene="catalog" hidden><header><div><p class="eyebrow">오늘의 카탈로그</p><h2><span data-bind="day"></span>일차 · 8 LOT</h2></div><strong data-bind="cash"></strong></header><div id="catalog-grid" class="catalog-grid"></div><button data-place="city" class="secondary return-city catalog-return">도시로</button><button id="start-auction">경매 시작</button></section>
   <section class="scene" data-scene="auction" hidden>
@@ -3158,9 +3204,17 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
     const locked = state.shopStage < balance.loan.minShopStage;
     const collateralItems = ownedItems().filter((item) => !item.collateral);
     const collateralCount = collateralItems.length;
-    const collateralOptions = collateralItems.map((item) => `<option value="${item.lotId}">${item.name} \xB7 ${money(Math.round(item.trueValue * balance.loan.limitFromDisposalValue))}</option>`).join("");
-    const detail = locked ? `<h3>\uB2F4\uBCF4 \uB300\uCD9C \uC7A0\uAE40</h3><p>\uC0C1\uD68C ${balance.loan.minShopStage}\uB2E8\uACC4\uC5D0\uC11C \uD574\uAE08\uB429\uB2C8\uB2E4.</p>` : state.loan ? `<h3>\uD65C\uC131 \uB300\uCD9C</h3><p>\uB2F4\uBCF4 ${state.inventory.find((item) => item.lotId === state.loan.lotId)?.name || state.loan.lotId}</p><p>\uC6D0\uAE08 ${money(state.loan.principal)} \xB7 \uB9CC\uAE30 ${state.loan.dueDay}\uC77C \xB7 \uC0C1\uD658 ${money(state.loan.due)}</p>` : state.guildLocked ? "<h3>\uC870\uD569 \uC774\uC6A9 \uC81C\uD55C</h3><p>\uC5F0\uCCB4\uB85C \uC778\uD574 \uC774\uBC88 \uC5EC\uC815\uC5D0\uC11C\uB294 \uC870\uD569\uC744 \uC774\uC6A9\uD560 \uC218 \uC5C6\uC2B5\uB2C8\uB2E4.</p>" : `<h3>\uB2F4\uBCF4 \uBB3C\uD488 \uC120\uD0DD</h3><p>\uB300\uCD9C \uAC00\uB2A5 \uBB3C\uD488 ${collateralCount}\uAC1C \xB7 \uC815\uC0B0\uAC00\uCE58\uC758 ${Math.round(balance.loan.limitFromDisposalValue * 100)}%</p><label class="collateral-picker"><span>\uB2F4\uBCF4</span><select id="guild-collateral"><option value="">\uBB3C\uD488\uC744 \uC120\uD0DD\uD558\uC138\uC694</option>${collateralOptions}</select></label><p id="loan-preview">\uBB3C\uD488\uC744 \uC120\uD0DD\uD558\uBA74 \uB300\uCD9C\uC561\uACFC \uB9CC\uAE30 \uC0C1\uD658\uC561\uC744 \uACC4\uC0B0\uD569\uB2C8\uB2E4.</p>`;
+    const collateralOptions = collateralItems.map((item) => `<option value="${item.lotId}">${item.name}</option>`).join("");
+    const activeCollateral = state.loan ? state.inventory.find((item) => item.lotId === state.loan.lotId) : null;
+    const statusTitle = locked ? "\uB2F4\uBCF4 \uB300\uCD9C \uC7A0\uAE40" : state.loan ? "\uD65C\uC131 \uB300\uCD9C" : state.guildLocked ? "\uC870\uD569 \uC774\uC6A9 \uC81C\uD55C" : "\uD65C\uC131 \uB300\uCD9C \uC5C6\uC74C";
+    const detail = `<h3>\uB2F4\uBCF4 \uB300\uCD9C \uC0C1\uD0DC</h3><div class="guild-status-grid"><section><small>\uD604\uC7AC \uC0C1\uD0DC</small><strong>${statusTitle}</strong><span>${locked ? `\uC0C1\uD68C ${balance.loan.minShopStage}\uB2E8\uACC4\uC5D0\uC11C \uD574\uAE08\uB429\uB2C8\uB2E4.` : state.loan ? `\uB2F4\uBCF4 \xB7 ${activeCollateral?.name || state.loan.lotId}` : "\uD604\uC7AC \uD65C\uC131 \uB300\uCD9C\uC774 \uC5C6\uC2B5\uB2C8\uB2E4."}</span></section><dl><div><dt>\uC6D0\uAE08</dt><dd>${state.loan ? money(state.loan.principal) : "\u2014"}</dd></div><div><dt>\uB9CC\uAE30</dt><dd>${state.loan ? `${state.loan.dueDay}\uC77C\uCC28` : "\u2014"}</dd></div><div><dt>\uC0C1\uD658 \uCD1D\uC561</dt><dd>${state.loan ? money(state.loan.due) : "\u2014"}</dd></div></dl></div><label class="collateral-picker"><span>\uC120\uD0DD \uB2F4\uBCF4</span><select id="guild-collateral"><option value="">\uBB3C\uD488\uC744 \uC120\uD0DD\uD558\uC138\uC694</option>${collateralOptions}</select></label><p id="loan-preview">\uBCF4\uC720 \uBB3C\uD488\uC744 \uC120\uD0DD\uD558\uBA74 \uB300\uCD9C \uAC00\uB2A5 \uAE08\uC561\uC744 \uACC4\uC0B0\uD569\uB2C8\uB2E4.</p>`;
     document.querySelector("#guild-detail").innerHTML = detail;
+    const collateralMarkup = collateralItems.length ? collateralItems.map((item) => {
+      const lot = scheduledLot(item.lotId);
+      const value = Math.round(item.trueValue * balance.loan.limitFromDisposalValue);
+      return `<label class="guild-collateral-card"><img src="${lot ? spriteUrl(lot, item.grade) : ""}" alt=""><span><b>${item.name}</b><small>${gradeLabel(item.grade)} \xB7 \uC815\uC0B0\uAC00\uCE58 ${money(item.trueValue)}</small></span><strong>${money(value)}</strong><input type="radio" name="guild-collateral-card" value="${item.lotId}"></label>`;
+    }).join("") : `<div class="guild-collateral-empty"><b>${locked ? "\uB2F4\uBCF4 \uAE30\uB2A5\uC774 \uC7A0\uACA8 \uC788\uC2B5\uB2C8\uB2E4." : "\uB2F4\uBCF4\uB85C \uC124\uC815\uD560 \uBCF4\uC720 \uBB3C\uD488\uC774 \uC5C6\uC2B5\uB2C8\uB2E4."}</b><span>${locked ? `\uC0C1\uD68C\uB97C ${balance.loan.minShopStage}\uB2E8\uACC4\uB85C \uC2B9\uAE09\uD558\uBA74 \uC774\uC6A9\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4.` : "\uACBD\uB9E4\uC5D0\uC11C \uBB3C\uD488\uC744 \uB099\uCC30\uD55C \uB4A4 \uB2E4\uC2DC \uBC29\uBB38\uD558\uC138\uC694."}</span></div>`;
+    document.querySelector("#guild-collateral-list").innerHTML = `<header><h3>\uB2F4\uBCF4 \uBCF4\uC720\uD488 <small>(\uBBF8\uD310\uB9E4 \uBB3C\uD488)</small></h3><b>${collateralCount} / ${state.storage}</b></header><div class="guild-collateral-scroll">${collateralMarkup}</div><footer><span>\uC120\uD0DD \uB2F4\uBCF4 \uB300\uCD9C \uD55C\uB3C4</span><strong id="guild-limit-total">0 G</strong></footer>`;
     document.querySelector("#guild-loan").disabled = locked || Boolean(state.loan) || state.guildLocked || !collateralCount;
     document.querySelector("#guild-repay").disabled = !state.loan || state.day >= state.loan?.dueDay;
     document.querySelector("#guild-message").innerHTML = message ? `<b>${message}</b>` : `<b>\uB300\uCD9C \uC548\uB0B4</b><p>\uC120\uD0DD\uD55C \uBB3C\uD488\uC740 \uC0C1\uD658 \uC804\uAE4C\uC9C0 \uD310\uB9E4\xB7\uAC10\uC815\xB7\uC758\uB8B0 \uC81C\uCD9C\uC774 \uC81C\uD55C\uB429\uB2C8\uB2E4.</p><p>\uB9CC\uAE30 ${balance.loan.termDays}\uC77C \xB7 \uB9CC\uAE30 \uC0C1\uD658\uC561\uC740 \uC6D0\uAE08\uC758 ${Math.round(balance.loan.repayMultiplier * 100)}%</p>`;
@@ -3173,6 +3227,14 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
         document.querySelector("#guild-loan").disabled = !item;
         document.querySelector("#loan-preview").textContent = item ? `\uB300\uCD9C ${money(principal)} \xB7 ${state.day + balance.loan.termDays}\uC77C\uCC28 \uB9CC\uAE30 ${money(Math.round(principal * balance.loan.repayMultiplier))}` : "\uBB3C\uD488\uC744 \uC120\uD0DD\uD558\uBA74 \uB300\uCD9C\uC561\uACFC \uB9CC\uAE30 \uC0C1\uD658\uC561\uC744 \uACC4\uC0B0\uD569\uB2C8\uB2E4.";
       };
+      document.querySelectorAll('[name="guild-collateral-card"]').forEach((radio) => {
+        radio.onchange = () => {
+          picker.value = radio.value;
+          picker.dispatchEvent(new Event("change"));
+          const item = collateralItems.find((entry) => entry.lotId === radio.value);
+          document.querySelector("#guild-limit-total").textContent = money(Math.round(item.trueValue * balance.loan.limitFromDisposalValue));
+        };
+      });
     }
   }
   function renderMuseum(returnTo = "city") {
