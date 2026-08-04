@@ -323,6 +323,13 @@ button.secondary:disabled { background-image: url("./assets/ui/skin-v1/button-se
 }
 [data-scene="hub"] .market { left: 12.5%; right: 12.5%; top: 71.95%; bottom: auto; justify-content: center; max-width: none; }
 [data-scene="hub"] #download-log { display: none; }
+[data-scene="hub"] #hub-settings {
+  position: absolute; right: 2%; top: 2%; z-index: 10;
+  width: min(70px, 5vw); aspect-ratio: 1; min-width: 0; min-height: 0;
+  padding: 0; border: 0 !important; border-image: none !important;
+  color: transparent;
+  background: transparent url("./assets/ui/vsl-v6.4/buttons/settings.png") center / contain no-repeat !important;
+}
 [data-scene="hub"] #hub-message { position: absolute; left: 40%; bottom: 1.4%; margin: 0; }
 .place-grid { position: absolute; inset: 0; margin: 0; padding: 0; }
 .place-grid button {
@@ -601,7 +608,7 @@ button.secondary:disabled { background-image: url("./assets/ui/skin-v1/button-se
 }
 
 /* Final visual audit: preserve button corners at every width with true 9-slice borders. */
-button:not(.title-actions button):not(#title-settings):not(#save-settings):not(.save-slot):not(.place-grid button):not(.info-actions button):not(#return-title) {
+button:not(.title-actions button):not(#title-settings):not(#save-settings):not(#hub-settings):not(.save-slot):not(.place-grid button):not(.info-actions button):not(#return-title) {
   min-height: 44px;
   border: 12px solid transparent;
   border-image: url("./assets/ui/skin-v1/button-primary.png") 24 34 fill / 12px 17px / 0 stretch;
@@ -609,7 +616,7 @@ button:not(.title-actions button):not(#title-settings):not(#save-settings):not(.
   background-clip: padding-box;
   padding: 2px 16px;
 }
-button:not(.title-actions button):not(#title-settings):not(#save-settings):not(.save-slot):not(.place-grid button):not(.info-actions button):not(#return-title):hover:not(:disabled) {
+button:not(.title-actions button):not(#title-settings):not(#save-settings):not(#hub-settings):not(.save-slot):not(.place-grid button):not(.info-actions button):not(#return-title):hover:not(:disabled) {
   border-image-source: url("./assets/ui/skin-v1/button-primary-hover.png");
   background: #211b12;
 }
@@ -1270,7 +1277,7 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
     <p id="save-guide">저장 슬롯을 선택한 후 이어하기 버튼을 눌러 진행하세요.</p>
     <button id="back-title" class="secondary">타이틀로 돌아가기</button>
   </section>
-  <section class="scene hub" data-scene="hub" hidden><header><div><p class="eyebrow">CITY HUB · <span data-bind="day"></span>일차</p><h2>미지의 도시</h2></div><strong data-bind="cash"></strong></header><div class="hub-stats"><span>상점 <b data-bind="stage"></b>단계</span><span>창고 <b data-bind="storage"></b></span><span>완료 의뢰 <b data-bind="quests"></b></span><span id="loan-status"></span></div><div id="market-indices" class="market"></div><div class="place-grid"><button data-place="quests">의뢰소</button><button data-place="tavern">술집</button><button data-place="catalog">경매장</button><button data-place="exchange">거래소</button><button data-place="shop">상회</button><button data-place="guild">조합</button><button data-place="museum">유물 전시관</button></div><button id="download-log" class="secondary">플레이 기록 다운로드</button><p id="hub-message" class="status"></p></section>
+  <section class="scene hub" data-scene="hub" hidden><header><div><p class="eyebrow">CITY HUB · <span data-bind="day"></span>일차</p><h2>미지의 도시</h2></div><strong data-bind="cash"></strong></header><div class="hub-stats"><span>상점 <b data-bind="stage"></b>단계</span><span>창고 <b data-bind="storage"></b></span><span>완료 의뢰 <b data-bind="quests"></b></span><span id="loan-status"></span></div><button id="hub-settings" aria-label="설정">설정</button><div id="market-indices" class="market"></div><div class="place-grid"><button data-place="quests">의뢰소</button><button data-place="tavern">술집</button><button data-place="catalog">경매장</button><button data-place="exchange">거래소</button><button data-place="shop">상회</button><button data-place="guild">조합</button><button data-place="museum">유물 전시관</button></div><button id="download-log" class="secondary">플레이 기록 다운로드</button><p id="hub-message" class="status"></p></section>
   <section class="scene place" data-scene="quests" hidden><header><div><p class="eyebrow">QUEST & APPRAISAL OFFICE · <span data-bind="day"></span>일차</p><h2>의뢰소 · 감정소</h2></div><strong data-bind="cash"></strong></header><div class="office-layout"><section><h3>오늘의 의뢰</h3><div id="quest-offers" class="quest-grid"></div></section><section><h3>의뢰 진행 · 정밀 감정</h3><div id="active-quests" class="inventory-list"></div></section></div><p id="quest-message" class="status"></p><button data-place="city" class="secondary">도시로</button></section>
   <section class="scene place" data-scene="tavern" hidden><header><div><p class="eyebrow">TAVERN · <span data-bind="day"></span>일차</p><h2>술집</h2></div><strong data-bind="cash"></strong></header><div class="info-actions"><button data-info="forecast">수요 동향</button><button data-info="catalog">출품 목록</button><button data-info="competitors">경쟁자 정보</button></div><div id="tavern-owned" class="place-panel"></div><p id="tavern-message" class="status"></p><button data-place="city" class="secondary return-city">도시로</button></section>
   <section class="scene place" data-scene="exchange" hidden><header><div><p class="eyebrow">EXCHANGE · <span data-bind="day"></span>일차</p><h2>거래소</h2></div><strong data-bind="cash"></strong></header><div id="inventory-list" class="inventory-list"></div><aside id="exchange-market" class="market-board" aria-label="오늘의 시세"></aside><div class="actions"><button id="sell-selected">선택 판매</button></div><p id="exchange-message" class="status"></p><button data-place="city" class="secondary return-city">도시로</button></section>
@@ -2688,6 +2695,7 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
   document.querySelector("#museum-back").onclick = () => museumReturn === "title" ? adapter.showScene("title") : renderHub();
   document.querySelector("#title-exit").onclick = () => status("\uBE0C\uB77C\uC6B0\uC800 \uAC8C\uC784\uC740 \uC774 \uD0ED\uC744 \uB2EB\uC73C\uBA74 \uC885\uB8CC\uB429\uB2C8\uB2E4.");
   document.querySelector("#title-settings").onclick = () => document.querySelector("#settings-dialog").showModal();
+  document.querySelector("#hub-settings").onclick = () => document.querySelector("#settings-dialog").showModal();
   document.querySelector("#close-settings").onclick = () => document.querySelector("#settings-dialog").close();
   var syncSoundToggle = () => {
     const button = document.querySelector("#sound-toggle");
