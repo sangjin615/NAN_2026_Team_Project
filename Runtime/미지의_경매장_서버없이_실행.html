@@ -420,9 +420,9 @@ button.secondary:disabled { background-image: url("./assets/ui/skin-v1/button-se
   margin: auto;
   overflow: hidden;
   color: #f4ead3;
-  background: #100d09 url("./assets/ui-mockups/loading.png") center / cover no-repeat;
+  background: #100d09 url("./assets/scene-backgrounds/loading.png") center / cover no-repeat;
 }
-[data-scene="loading"]::before { content: ""; position: absolute; inset: 0; background: rgba(8,6,4,.24); pointer-events: none; }
+[data-scene="loading"]::before { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg,rgba(8,6,4,.18),rgba(8,6,4,.34) 30%,rgba(8,6,4,.34) 70%,rgba(8,6,4,.18)); pointer-events: none; }
 [data-scene="loading"]::after { content: ""; position: absolute; z-index: 0; right: 0; bottom: 0; left: 0; height: 17%; background: linear-gradient(180deg,transparent,rgba(8,6,4,.94) 36%); pointer-events: none; }
 .loading-foot-mask { position: absolute; z-index: 1; right: 0; bottom: 0; left: 0; height: 16%; background: linear-gradient(180deg,transparent,rgba(8,6,4,.97) 34%); pointer-events: none; }
 .loading-panel {
