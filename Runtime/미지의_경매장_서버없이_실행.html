@@ -2479,7 +2479,7 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
   <section class="scene place" data-scene="shop" hidden><header><div><p class="eyebrow">상회의 성장과 보유품을 관리합니다.</p><h2>상회</h2></div><strong data-bind="cash"></strong></header><div id="shop-detail" class="place-panel"></div><button id="shop-upgrade">상점 확장</button><p id="shop-message" class="status"></p><button data-place="city" class="secondary return-city">도시로</button></section>
   <section class="scene place" data-scene="guild" hidden><div class="guild-heading"><p class="eyebrow">미판매 물품을 담보로 단기 자금을 조달합니다.</p><h2>조합</h2><strong data-bind="cash"></strong></div><div id="guild-detail" class="place-panel"></div><aside id="guild-collateral-list" aria-label="담보 보유품"></aside><div class="actions"><button id="guild-loan">대출 실행</button><button id="guild-repay" class="secondary">대출 상환</button></div><p id="guild-message" class="status"></p><button id="guild-return" data-place="city" class="secondary return-city">도시로 돌아가기</button></section>
   <section class="scene place" data-scene="museum" hidden><p class="eyebrow">RELIC MUSEUM</p><h2>유물 전시관</h2><div id="relic-list" class="relic-list"></div><aside id="relic-detail" class="relic-detail" aria-live="polite"></aside><div id="museum-progress" class="museum-progress"></div><aside class="museum-effects"><h3>수집 효과</h3><p><b>하급 세트</b><span>경매 정보 보조</span></p><p><b>중급 세트</b><span>거래 보너스 강화</span></p><p><b>상급 세트</b><span>최종 여정 보너스</span></p></aside><button id="museum-back" class="secondary">돌아가기</button></section>
-  <section class="scene" data-scene="catalog" hidden><header><div><p class="eyebrow">오늘의 카탈로그</p><h2><span data-bind="day"></span>일차 · 8 LOT</h2></div><strong data-bind="cash"></strong></header><div id="catalog-grid" class="catalog-grid"></div><button data-place="city" class="secondary return-city catalog-return">도시로</button><button id="start-auction">경매 시작</button></section>
+  <section class="scene" data-scene="catalog" hidden><header><div><p class="eyebrow">오늘의 카탈로그</p><h2><span data-bind="day"></span>일차 · 경매품 8개</h2></div><strong data-bind="cash"></strong></header><div id="catalog-grid" class="catalog-grid"></div><button data-place="city" class="secondary return-city catalog-return">도시로</button><button id="start-auction">경매 시작</button></section>
   <section class="scene" data-scene="auction" hidden>
     <aside id="auction-lot-status"></aside>
     <header><div><p class="eyebrow" data-bind="lot-progress"></p><h2 data-bind="lot-name"></h2></div><strong data-bind="cash"></strong></header>
@@ -2488,7 +2488,7 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
     <div id="auction-feed" class="auction-feed"></div>
     <div class="actions"><button data-raise="1">최소 호가</button><button data-raise="1.15">+15%</button><button id="pass" class="secondary">포기/낙찰 확정</button></div>
   </section>
-  <section class="scene" data-scene="settlement" hidden><p class="eyebrow">DAILY SETTLEMENT</p><h2><span data-bind="day"></span>일차 결산</h2><p>오늘의 8 LOT이 종료되었습니다. 생성 버퍼는 다음 2일을 준비합니다.</p><div id="settlement-summary"></div><button id="next-day">다음 날</button></section>
+  <section class="scene" data-scene="settlement" hidden><p class="eyebrow">DAILY SETTLEMENT</p><h2><span data-bind="day"></span>일차 결산</h2><p>오늘의 경매품 8개가 모두 종료되었습니다. 생성 버퍼는 다음 2일을 준비합니다.</p><div id="settlement-summary"></div><button id="next-day">다음 날</button></section>
   <section class="scene relic" data-scene="relic" hidden><p class="eyebrow">RELIC AUCTION</p><aside id="relic-participants"></aside><div id="relic-card"></div><div id="relic-feed" class="auction-feed"></div><div class="actions"><button id="buy-relic">유물 입찰</button><button id="skip-relic" class="secondary">포기</button></div></section>
   <section class="scene" data-scene="result" hidden><p class="eyebrow">RUN RESULT</p><h2 id="result-title">12일 여정 종료</h2><div id="run-summary"></div><button id="return-title">타이틀로 돌아가기</button></section>
 </main><dialog id="settings-dialog"><h2>설정</h2><p class="settings-lead">게임의 전체 소리를 설정합니다.</p><button id="sound-toggle" type="button" aria-pressed="true"><span>전체 소리</span><strong>켜짐</strong></button><button id="close-settings" class="secondary">닫기</button></dialog>
@@ -3704,7 +3704,7 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
     syncHeader();
     const bought = Object.keys(state.information?.[state.day] || {});
     const names = { forecast: "\uC218\uC694 \uB3D9\uD5A5", catalog: "\uCD9C\uD488 \uBA85\uC138", competitors: "\uACBD\uC7C1\uC790 \uC608\uC0B0" };
-    const descriptions = { forecast: "\uD604\uC7AC \uC2DC\uC7A5\uC5D0\uC11C \uC218\uC694\uAC00 \uB192\uC740 \uACC4\uC5F4\uACFC \uBC29\uD5A5\uC744 \uBD84\uC11D\uD569\uB2C8\uB2E4.", catalog: "\uC8FC\uC694 LOT\uC758 \uC608\uC0C1 \uB4F1\uAE09\uACFC \uACC4\uC5F4 \uBD84\uD3EC\uB97C \uC54C\uB824\uB4DC\uB9BD\uB2C8\uB2E4.", competitors: "\uACBD\uB9E4 \uCC38\uAC00\uC790\uB4E4\uC758 \uBCF4\uC720 \uC608\uC0B0 \uBC94\uC704\uB97C \uCD94\uC815\uD569\uB2C8\uB2E4." };
+    const descriptions = { forecast: "\uD604\uC7AC \uC2DC\uC7A5\uC5D0\uC11C \uC218\uC694\uAC00 \uB192\uC740 \uACC4\uC5F4\uACFC \uBC29\uD5A5\uC744 \uBD84\uC11D\uD569\uB2C8\uB2E4.", catalog: "\uC8FC\uC694 \uACBD\uB9E4\uD488\uC758 \uC608\uC0C1 \uB4F1\uAE09\uACFC \uACC4\uC5F4 \uBD84\uD3EC\uB97C \uC54C\uB824\uB4DC\uB9BD\uB2C8\uB2E4.", competitors: "\uACBD\uB9E4 \uCC38\uAC00\uC790\uB4E4\uC758 \uBCF4\uC720 \uC608\uC0B0 \uBC94\uC704\uB97C \uCD94\uC815\uD569\uB2C8\uB2E4." };
     const icons = { forecast: "./assets/ui/tavern/demand-trend.png", catalog: "./assets/ui/tavern/lot-specification.png", competitors: "./assets/ui/tavern/competitor-budget.png" };
     const precision = { forecast: ["\u2605\u2605\u2605\u2605\u2606", "\uB192\uC74C"], catalog: ["\u2605\u2605\u2605\u2606\u2606", "\uBCF4\uD1B5"], competitors: ["\u2605\u2605\u2605\u2606\u2606", "\uBCF4\uD1B5"] };
     const lots = state.schedule.days[state.day - 1].lots;
@@ -3891,7 +3891,7 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
     state.phase = "catalog";
     adapter.showScene("catalog");
     syncHeader();
-    document.querySelector("#catalog-grid").innerHTML = state.schedule.days[state.day - 1].lots.map((lot, index) => `<article class="lot-card catalog-lot-${index + 1}" tabindex="0" aria-label="LOT ${index + 1} ${escapeHtml(lot.content.displayName)} \uC0C1\uC138 \uC815\uBCF4">
+    document.querySelector("#catalog-grid").innerHTML = state.schedule.days[state.day - 1].lots.map((lot, index) => `<article class="lot-card catalog-lot-${index + 1}" tabindex="0" aria-label="\uACBD\uB9E4\uD488 ${index + 1} ${escapeHtml(lot.content.displayName)} \uC0C1\uC138 \uC815\uBCF4">
     <b class="catalog-number">${String(index + 1).padStart(2, "0")}</b>
     <div class="mini-sprite ${lot.visualEffects.map((effect) => `vfx-${effect}`).join(" ")}"><img src="${spriteUrl(lot, lot.grade)}" alt=""></div>
     <span class="catalog-grade">${gradeLabel(lot.grade)}</span><h3>${escapeHtml(lot.content.displayName)}</h3>
@@ -3912,7 +3912,7 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
     }
     state.auctionSession.deadline ||= Date.now() + 15e3;
     adapter.showScene("auction");
-    adapter.setText("lot-progress", `${state.day}\uC77C\uCC28 \xB7 LOT ${state.lotIndex + 1} / 8`);
+    adapter.setText("lot-progress", `${state.day}\uC77C\uCC28 \xB7 \uACBD\uB9E4\uD488 ${state.lotIndex + 1} / 8`);
     adapter.setText("lot-name", lot.content.displayName);
     adapter.setText("lot-grade", lot.grade);
     adapter.setText("lot-description", lot.content.description);
@@ -3990,7 +3990,7 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
     const dayLots = state.schedule.days[state.day - 1].lots;
     const categories = [...new Set(dayLots.map((lot) => lot.category))].slice(0, 4);
     document.querySelector("#settlement-summary").innerHTML = `
-    <section class="settlement-lots"><h3>\uB099\uCC30 / \uC720\uCC30 \uACB0\uACFC (8 LOT)</h3>${dayHistory.map((entry, index) => `<p><b>LOT ${index + 1}</b><span class="${entry.won ? "won" : "lost"}">${entry.won ? "\uB099\uCC30" : "\uC720\uCC30"}</span><em>${entry.won ? "\uB2F9\uC2E0" : "\uACBD\uC7C1\uC790"}</em><strong>${money(entry.price)}</strong></p>`).join("")}</section>
+    <section class="settlement-lots"><h3>\uB099\uCC30 / \uC720\uCC30 \uACB0\uACFC (\uACBD\uB9E4\uD488 8\uAC1C)</h3>${dayHistory.map((entry, index) => `<p><b>\uACBD\uB9E4\uD488 ${index + 1}</b><span class="${entry.won ? "won" : "lost"}">${entry.won ? "\uB099\uCC30" : "\uC720\uCC30"}</span><em>${entry.won ? "\uB2F9\uC2E0" : "\uACBD\uC7C1\uC790"}</em><strong>${money(entry.price)}</strong></p>`).join("")}</section>
     <section class="settlement-center"><h3>\uC624\uB298\uC758 \uC815\uC0B0</h3><div class="settlement-owned"><b>\uD68D\uB4DD \uBB3C\uD488</b><strong>${wins.length}\uAC1C</strong><span>\uD604\uC7AC \uBCF4\uAD00 ${ownedItems().length} / ${state.storage}</span></div><div class="settlement-money settlement-finance"><h4>\uC790\uAE08 \uD604\uD669</h4><p><span>\uCD1D \uC9C0\uCD9C \uAE08\uC561</span><strong>${money(spent)}</strong></p><p><span>\uD604\uC7AC \uC790\uC0B0</span><strong>${money(state.cash)}</strong></p></div><div class="settlement-money settlement-progress"><h4>\uC6B4\uC601 \uD604\uD669</h4><p><span>\uC644\uB8CC \uC758\uB8B0</span><strong>${state.lastSettlement.quests}\uAC74</strong></p><p><span>\uB300\uCD9C \uC0C1\uD0DC</span><strong>${loanResult}</strong></p></div></section>
     <section class="settlement-market"><h3>\uACC4\uC5F4\uBCC4 \uC2DC\uC138 \uC694\uC57D</h3>${categories.map((category) => {
       const value = state.marketPath[category]?.[state.day - 1] ?? 100;

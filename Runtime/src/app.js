@@ -413,7 +413,7 @@ function renderTavern(message = '') {
   clearActionTimer(); audio.playBgm('tavern'); state.phase = 'tavern'; adapter.showScene('tavern'); syncHeader();
   const bought = Object.keys(state.information?.[state.day] || {});
   const names = { forecast: '수요 동향', catalog: '출품 명세', competitors: '경쟁자 예산' };
-  const descriptions = { forecast: '현재 시장에서 수요가 높은 계열과 방향을 분석합니다.', catalog: '주요 LOT의 예상 등급과 계열 분포를 알려드립니다.', competitors: '경매 참가자들의 보유 예산 범위를 추정합니다.' };
+  const descriptions = { forecast: '현재 시장에서 수요가 높은 계열과 방향을 분석합니다.', catalog: '주요 경매품의 예상 등급과 계열 분포를 알려드립니다.', competitors: '경매 참가자들의 보유 예산 범위를 추정합니다.' };
   const icons = { forecast: './assets/ui/tavern/demand-trend.png', catalog: './assets/ui/tavern/lot-specification.png', competitors: './assets/ui/tavern/competitor-budget.png' };
   const precision = { forecast: ['★★★★☆', '높음'], catalog: ['★★★☆☆', '보통'], competitors: ['★★★☆☆', '보통'] };
   const lots = state.schedule.days[state.day - 1].lots;
@@ -560,7 +560,7 @@ function renderMuseum(returnTo = 'city') {
 
 function renderCatalog() {
   clearActionTimer(); audio.playBgm('workplace'); state.phase = 'catalog'; adapter.showScene('catalog'); syncHeader();
-  document.querySelector('#catalog-grid').innerHTML = state.schedule.days[state.day - 1].lots.map((lot, index) => `<article class="lot-card catalog-lot-${index + 1}" tabindex="0" aria-label="LOT ${index + 1} ${escapeHtml(lot.content.displayName)} 상세 정보">
+  document.querySelector('#catalog-grid').innerHTML = state.schedule.days[state.day - 1].lots.map((lot, index) => `<article class="lot-card catalog-lot-${index + 1}" tabindex="0" aria-label="경매품 ${index + 1} ${escapeHtml(lot.content.displayName)} 상세 정보">
     <b class="catalog-number">${String(index + 1).padStart(2, '0')}</b>
     <div class="mini-sprite ${lot.visualEffects.map((effect) => `vfx-${effect}`).join(' ')}"><img src="${spriteUrl(lot, lot.grade)}" alt=""></div>
     <span class="catalog-grade">${gradeLabel(lot.grade)}</span><h3>${escapeHtml(lot.content.displayName)}</h3>
@@ -581,7 +581,7 @@ function renderAuction() {
   }
   state.auctionSession.deadline ||= Date.now() + 15000;
   adapter.showScene('auction');
-  adapter.setText('lot-progress', `${state.day}일차 · LOT ${state.lotIndex + 1} / 8`); adapter.setText('lot-name', lot.content.displayName);
+  adapter.setText('lot-progress', `${state.day}일차 · 경매품 ${state.lotIndex + 1} / 8`); adapter.setText('lot-name', lot.content.displayName);
   adapter.setText('lot-grade', lot.grade); adapter.setText('lot-description', lot.content.description); adapter.setText('base-price', money(lot.pricing.basePrice));
   adapter.setText('current-bid', money(state.auctionSession.currentPrice)); adapter.setText('cash', money(state.cash)); adapter.setSprite('current-lot', spriteUrl(lot, lot.grade)); adapter.setEffects('current-lot', lot.visualEffects);
   document.querySelector('#auction-feed').innerHTML = state.auctionSession.feed.slice(-4).map((line) => `<p>${escapeHtml(line)}</p>`).join('');
@@ -633,7 +633,7 @@ function renderSettlement() {
   const dayLots = state.schedule.days[state.day - 1].lots;
   const categories = [...new Set(dayLots.map((lot) => lot.category))].slice(0, 4);
   document.querySelector('#settlement-summary').innerHTML = `
-    <section class="settlement-lots"><h3>낙찰 / 유찰 결과 (8 LOT)</h3>${dayHistory.map((entry, index) => `<p><b>LOT ${index + 1}</b><span class="${entry.won ? 'won' : 'lost'}">${entry.won ? '낙찰' : '유찰'}</span><em>${entry.won ? '당신' : '경쟁자'}</em><strong>${money(entry.price)}</strong></p>`).join('')}</section>
+    <section class="settlement-lots"><h3>낙찰 / 유찰 결과 (경매품 8개)</h3>${dayHistory.map((entry, index) => `<p><b>경매품 ${index + 1}</b><span class="${entry.won ? 'won' : 'lost'}">${entry.won ? '낙찰' : '유찰'}</span><em>${entry.won ? '당신' : '경쟁자'}</em><strong>${money(entry.price)}</strong></p>`).join('')}</section>
     <section class="settlement-center"><h3>오늘의 정산</h3><div class="settlement-owned"><b>획득 물품</b><strong>${wins.length}개</strong><span>현재 보관 ${ownedItems().length} / ${state.storage}</span></div><div class="settlement-money settlement-finance"><h4>자금 현황</h4><p><span>총 지출 금액</span><strong>${money(spent)}</strong></p><p><span>현재 자산</span><strong>${money(state.cash)}</strong></p></div><div class="settlement-money settlement-progress"><h4>운영 현황</h4><p><span>완료 의뢰</span><strong>${state.lastSettlement.quests}건</strong></p><p><span>대출 상태</span><strong>${loanResult}</strong></p></div></section>
     <section class="settlement-market"><h3>계열별 시세 요약</h3>${categories.map((category) => { const value = state.marketPath[category]?.[state.day - 1] ?? 100; return `<p><b>${categoryLabel(category)}</b><span class="market-line" style="--market:${Math.max(15, Math.min(95, value - 40))}%"></span><strong>${value.toFixed(2)}</strong></p>`; }).join('')}</section>`;
   document.querySelector('#next-day').textContent = state.failure ? '실패 결과 확인' : state.day === 12 ? '최종 유물 경매로' : `${state.day + 1}일차로`;
