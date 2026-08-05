@@ -1440,7 +1440,18 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
   min-height: 230px; max-height: 48vh; overflow: auto;
   font-size: clamp(12px,1vw,16px);
 }
-[data-scene="tavern"] .tavern-live-result li { margin: 5px 0; }
+[data-scene="tavern"] .tavern-live-result li {
+  display: grid; grid-template-columns: 34px minmax(0,1fr) auto;
+  align-items: center; gap: 9px; margin: 5px 0; padding: 7px 9px;
+  border-bottom: 1px solid #b99b73;
+}
+[data-scene="tavern"] .tavern-live-result li > img { width: 28px; height: 28px; object-fit: contain; }
+[data-scene="tavern"] .tavern-live-result li > span { display: grid; min-width: 0; }
+[data-scene="tavern"] .tavern-live-result li > span > b { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+[data-scene="tavern"] .tavern-live-result li small { color: #665039; }
+[data-scene="tavern"] .tavern-live-result .market-rise { color: #28752f; }
+[data-scene="tavern"] .tavern-live-result .market-fall { color: #a42d27; }
+[data-scene="tavern"] .tavern-live-result .market-flat { color: #725b3e; }
 [data-scene="tavern"] .tavern-market .tavern-rule {
   position: static; margin: 12px 2px 0; padding-top: 10px;
   border-top: 1px solid #9b7c56; font-weight: 700;

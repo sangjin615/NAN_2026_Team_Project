@@ -425,8 +425,8 @@ function renderExchange(message = '') {
 
 function renderTavern(message = '') {
   clearActionTimer(); audio.playBgm('tavern'); state.phase = 'tavern'; adapter.showScene('tavern'); syncHeader();
-  const names = { forecast: '다음 날 경매품 시세', catalog: '다음 날 경매품 정보', competitors: '경쟁자의 관심 경매품' };
-  const descriptions = { forecast: '상회 단계에 따라 다음 날 경매품 2개, 4개, 6개의 예상 시세를 공개합니다.', catalog: '상회 단계에 따라 다음 날 경매품의 이름, 계열, 등급을 순차적으로 공개합니다.', competitors: '상회 단계에 따라 경쟁자 1명부터 최대 3명까지 관심 경매품을 공개합니다.' };
+  const names = { forecast: '내일의 시세', catalog: '다음 날 경매품 정보', competitors: '경쟁자의 관심 경매품' };
+  const descriptions = { forecast: '여행 상인이 내일 열릴 경매품의 시세 방향과 예상 가격을 알려줍니다. 상회 단계에 따라 2개, 4개, 6개가 공개됩니다.', catalog: '상회 단계에 따라 다음 날 경매품의 이름, 계열, 등급을 순차적으로 공개합니다.', competitors: '상회 단계에 따라 경쟁자 1명부터 최대 3명까지 관심 경매품을 공개합니다.' };
   const icons = { forecast: './assets/ui/tavern/demand-trend.png', catalog: './assets/ui/tavern/lot-specification.png', competitors: './assets/ui/tavern/competitor-budget.png' };
   document.querySelectorAll('[data-broker]').forEach((broker) => {
     const kind = broker.dataset.broker;
@@ -446,7 +446,12 @@ function renderTavern(message = '') {
     if (!nextLots.length) return '<p>마지막 날에는 다음 날 경매 정보가 없습니다.</p>';
     if (kind === 'forecast') {
       const visible = nextLots.slice(0, stage * 2);
-      return `<p><b>${nextDayIndex + 1}일차 예상 시세 · ${visible.length}개 공개</b></p><ul>${visible.map((lot) => { const market = state.marketPath[lot.category]?.[nextDayIndex] ?? 1; return `<li>${escapeHtml(lot.content?.displayName || lot.baseName)} <b>${money(lot.pricing.basePrice * market)}</b></li>`; }).join('')}</ul>`;
+      return `<p><b>${nextDayIndex + 1}일차 시세 · ${visible.length}개 공개</b></p><ul>${visible.map((lot) => {
+        const market = state.marketPath[lot.category]?.[nextDayIndex] ?? 1;
+        const direction = market > 1.005 ? '▲ 상승' : market < 0.995 ? '▼ 하락' : '─ 보합';
+        const tone = market > 1.005 ? 'rise' : market < 0.995 ? 'fall' : 'flat';
+        return `<li><img src="${categoryIconUrl(lot.category)}" alt=""><span><b>${escapeHtml(lot.content?.displayName || lot.baseName)}</b><small>${categoryNames[lot.category]} · <em class="market-${tone}">${direction} ${Math.round(market * 100)}%</em></small></span><strong>${money(lot.pricing.basePrice * market)}</strong></li>`;
+      }).join('')}</ul>`;
     }
     if (kind === 'catalog') {
       return `<p><b>${nextDayIndex + 1}일차 경매품</b></p><ul>${nextLots.map((lot) => `<li><b>${escapeHtml(lot.content?.displayName || lot.baseName)}</b>${stage >= 2 ? ` · ${categoryNames[lot.category]}` : ''}${stage >= 3 ? ` · ${gradeLabel(lot.grade)}` : ''}</li>`).join('')}</ul>`;
