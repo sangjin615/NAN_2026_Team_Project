@@ -546,6 +546,9 @@ function renderMuseum(returnTo = 'city') {
   const owned = new Set(state?.metaRelics || loadMeta());
   const relics = balance.relics.list;
   const tierNames = { low: '하급', mid: '중급', high: '상급' };
+  const detail = document.querySelector('#relic-detail');
+  detail.innerHTML = '';
+  detail.hidden = true;
   document.querySelector('#relic-list').innerHTML = relics.map((relic, index) => {
     const isOwned = owned.has(relic.id);
     const art = relicArt[relic.id];
@@ -553,9 +556,13 @@ function renderMuseum(returnTo = 'city') {
   }).join('');
   const showRelicDetail = (relic) => {
     const isOwned = owned.has(relic.id); const art = relicArt[relic.id];
-    document.querySelector('#relic-detail').innerHTML = isOwned
-      ? `${art ? `<img src="./assets/relics/${encodeURIComponent(art)}" alt="">` : ''}<small>${tierNames[relic.tier]} 유물</small><h3>${relic.name}</h3><p>${relic.effect}</p>`
-      : `<small>${tierNames[relic.tier]} 전시 슬롯</small><h3>미획득 유물</h3><p>여정을 완주하고 유물 경매에서 획득하면 정보가 공개됩니다.</p>`;
+    if (!isOwned) return;
+    detail.innerHTML = `<button type="button" class="relic-detail-close" aria-label="유물 정보 닫기">×</button>${art ? `<img src="./assets/relics/${encodeURIComponent(art)}" alt="">` : ''}<small>${tierNames[relic.tier]} 유물</small><h3>${relic.name}</h3><p>${relic.effect}</p>`;
+    detail.hidden = false;
+    detail.querySelector('.relic-detail-close').onclick = () => {
+      detail.hidden = true;
+      document.querySelectorAll('[data-relic]').forEach((entry) => entry.classList.remove('is-selected'));
+    };
   };
   document.querySelectorAll('[data-relic]').forEach((card) => {
     const select = () => { document.querySelectorAll('[data-relic]').forEach((entry) => entry.classList.toggle('is-selected', entry === card)); showRelicDetail(relics.find((relic) => relic.id === card.dataset.relic)); audio.playSfx('museum'); };
@@ -563,8 +570,6 @@ function renderMuseum(returnTo = 'city') {
   });
   const ownedCount = relics.filter((relic) => owned.has(relic.id)).length;
   document.querySelector('#museum-progress').innerHTML = `<b>수집 현황</b><strong>${ownedCount} / ${relics.length}</strong><span>하급 ${relics.filter((relic) => relic.tier === 'low' && owned.has(relic.id)).length}/3 · 중급 ${relics.filter((relic) => relic.tier === 'mid' && owned.has(relic.id)).length}/3 · 상급 ${relics.filter((relic) => relic.tier === 'high' && owned.has(relic.id)).length}/3</span>`;
-  const initial = relics.find((relic) => owned.has(relic.id)) || relics[0];
-  document.querySelector(`[data-relic="${initial.id}"]`)?.click();
 }
 
 function renderCatalog() {

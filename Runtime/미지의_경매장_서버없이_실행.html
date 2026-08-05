@@ -2565,6 +2565,119 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
 [data-scene="hub"] .place-grid button[data-place="shop"] > span { left: -6.5%; right: 37.5%; }
 [data-scene="hub"] .place-grid button[data-place="museum"] > span { left: -25%; right: 56%; }
 
+/* Museum gallery v2: align the runtime to the architectural 3x3 wall display. */
+[data-scene="museum"] { --mockup: url("./assets/scene-backgrounds/museum.png"); }
+[data-scene="museum"] > h2 {
+  display: grid !important;
+  position: absolute;
+  z-index: 2;
+  left: 31.2%;
+  top: 12.2%;
+  width: 36.2%;
+  height: 16.4%;
+  margin: 0;
+  place-items: center;
+  color: #382414;
+  font: 900 clamp(28px, 3.3vw, 54px) Georgia, "Noto Serif KR", serif;
+  letter-spacing: .08em;
+  text-shadow: 0 2px #f7dfad88;
+}
+[data-scene="museum"] .relic-list {
+  left: 25.1% !important;
+  top: 35.2% !important;
+  width: 48.7% !important;
+  height: 61.2% !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+  grid-template-rows: repeat(3, 1fr) !important;
+  gap: 2.8% 3.9% !important;
+}
+[data-scene="museum"] .relic-list article {
+  padding: 3% 5% 8% !important;
+  place-content: center !important;
+  background: transparent !important;
+}
+[data-scene="museum"] .relic-list article.is-empty { pointer-events: none; }
+[data-scene="museum"] .relic-list article.is-owned img {
+  width: 72%;
+  height: 64%;
+  max-width: 100px;
+  max-height: 100px;
+  object-fit: contain;
+}
+[data-scene="museum"] .relic-list article.is-owned b {
+  max-width: 94%;
+  color: #3a2516;
+  font-size: clamp(9px, .78vw, 13px);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+[data-scene="museum"] #museum-progress {
+  left: 12.9% !important;
+  top: 34.2% !important;
+  width: 9.1% !important;
+  height: 42.5% !important;
+  padding: 1.2% .7% !important;
+  gap: 6px !important;
+  color: #f3d994 !important;
+  text-shadow: 0 2px 2px #281006;
+}
+[data-scene="museum"] #museum-progress b { color: #f3d994; }
+[data-scene="museum"] #museum-progress strong { font-size: clamp(24px, 2.5vw, 40px); }
+[data-scene="museum"] #museum-progress span { max-width: 9em; color: #f7e9bf; }
+[data-scene="museum"] .museum-effects {
+  display: none !important;
+}
+[data-scene="museum"] .museum-effects h3 { color: #f3d994; font-size: clamp(10px, .9vw, 15px); }
+[data-scene="museum"] .museum-effects p {
+  padding: 5px 2px;
+  border: 0;
+  border-top: 1px solid #d6aa4f88;
+  background: transparent;
+}
+[data-scene="museum"] .museum-effects b { color: #f3d994; }
+[data-scene="museum"] .museum-effects span { color: #f7e9bf; }
+[data-scene="museum"] #relic-detail {
+  z-index: 8;
+  left: 50% !important;
+  top: 50% !important;
+  width: min(380px, 30%) !important;
+  height: auto !important;
+  min-height: 30%;
+  padding: 2.2% 2% !important;
+  transform: translate(-50%, -50%);
+  border: 12px solid transparent;
+  border-image-source: url("./assets/ui/skin-v1/status-card.png");
+  border-image-slice: 18 fill;
+  border-image-width: 12px;
+  background: #ead8b9;
+  box-shadow: 0 18px 50px #120906dd;
+}
+[data-scene="museum"] #relic-detail[hidden] { display: none !important; }
+[data-scene="museum"] #relic-detail img { width: 38%; max-height: 76px; }
+[data-scene="museum"] #relic-detail h3 { font-size: clamp(13px, 1.2vw, 20px); }
+[data-scene="museum"] #relic-detail p { font-size: clamp(9px, .76vw, 12px); }
+[data-scene="museum"] .relic-detail-close {
+  position: absolute;
+  right: 4%;
+  top: 5%;
+  width: 32px;
+  height: 32px;
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #4b2e18;
+  font-size: 27px;
+  line-height: 1;
+}
+[data-scene="museum"] > #museum-back {
+  left: 2.2% !important;
+  bottom: 2% !important;
+  width: 13.5% !important;
+  height: 5.7% !important;
+}
+
 /* Normalized quest artwork replaces the temporary glyphs. */
 [data-scene="quests"] .quest-grid article::before { display: none; }
 [data-scene="quests"] .quest-icon {
@@ -4058,6 +4171,9 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
     const owned = new Set(state?.metaRelics || loadMeta());
     const relics = balance.relics.list;
     const tierNames = { low: "\uD558\uAE09", mid: "\uC911\uAE09", high: "\uC0C1\uAE09" };
+    const detail = document.querySelector("#relic-detail");
+    detail.innerHTML = "";
+    detail.hidden = true;
     document.querySelector("#relic-list").innerHTML = relics.map((relic, index) => {
       const isOwned = owned.has(relic.id);
       const art = relicArt[relic.id];
@@ -4066,7 +4182,13 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
     const showRelicDetail = (relic) => {
       const isOwned = owned.has(relic.id);
       const art = relicArt[relic.id];
-      document.querySelector("#relic-detail").innerHTML = isOwned ? `${art ? `<img src="./assets/relics/${encodeURIComponent(art)}" alt="">` : ""}<small>${tierNames[relic.tier]} \uC720\uBB3C</small><h3>${relic.name}</h3><p>${relic.effect}</p>` : `<small>${tierNames[relic.tier]} \uC804\uC2DC \uC2AC\uB86F</small><h3>\uBBF8\uD68D\uB4DD \uC720\uBB3C</h3><p>\uC5EC\uC815\uC744 \uC644\uC8FC\uD558\uACE0 \uC720\uBB3C \uACBD\uB9E4\uC5D0\uC11C \uD68D\uB4DD\uD558\uBA74 \uC815\uBCF4\uAC00 \uACF5\uAC1C\uB429\uB2C8\uB2E4.</p>`;
+      if (!isOwned) return;
+      detail.innerHTML = `<button type="button" class="relic-detail-close" aria-label="\uC720\uBB3C \uC815\uBCF4 \uB2EB\uAE30">\xD7</button>${art ? `<img src="./assets/relics/${encodeURIComponent(art)}" alt="">` : ""}<small>${tierNames[relic.tier]} \uC720\uBB3C</small><h3>${relic.name}</h3><p>${relic.effect}</p>`;
+      detail.hidden = false;
+      detail.querySelector(".relic-detail-close").onclick = () => {
+        detail.hidden = true;
+        document.querySelectorAll("[data-relic]").forEach((entry) => entry.classList.remove("is-selected"));
+      };
     };
     document.querySelectorAll("[data-relic]").forEach((card) => {
       const select = () => {
@@ -4084,8 +4206,6 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
     });
     const ownedCount = relics.filter((relic) => owned.has(relic.id)).length;
     document.querySelector("#museum-progress").innerHTML = `<b>\uC218\uC9D1 \uD604\uD669</b><strong>${ownedCount} / ${relics.length}</strong><span>\uD558\uAE09 ${relics.filter((relic) => relic.tier === "low" && owned.has(relic.id)).length}/3 \xB7 \uC911\uAE09 ${relics.filter((relic) => relic.tier === "mid" && owned.has(relic.id)).length}/3 \xB7 \uC0C1\uAE09 ${relics.filter((relic) => relic.tier === "high" && owned.has(relic.id)).length}/3</span>`;
-    const initial = relics.find((relic) => owned.has(relic.id)) || relics[0];
-    document.querySelector(`[data-relic="${initial.id}"]`)?.click();
   }
   function renderCatalog() {
     clearActionTimer();
