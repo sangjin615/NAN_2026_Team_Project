@@ -1450,6 +1450,23 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
 [data-scene="tavern"] .tavern-live-result li > span { display: grid; min-width: 0; }
 [data-scene="tavern"] .tavern-live-result li > span > b { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 [data-scene="tavern"] .tavern-live-result li small { color: #665039; }
+[data-scene="tavern"] .tavern-live-result.info-catalog li,
+[data-scene="tavern"] .tavern-live-result.info-competitors li {
+  display: block;
+  min-width: 0;
+  word-break: keep-all;
+  overflow-wrap: normal;
+  white-space: normal;
+}
+[data-scene="tavern"] .tavern-live-result.info-catalog li > b,
+[data-scene="tavern"] .tavern-live-result.info-competitors li > b {
+  word-break: keep-all;
+}
+[data-scene="tavern"] .tavern-live-result.info-forecast li > strong {
+  min-width: 92px;
+  text-align: right;
+  white-space: nowrap;
+}
 [data-scene="tavern"] .tavern-live-result .market-rise { color: #28752f; }
 [data-scene="tavern"] .tavern-live-result .market-fall { color: #a42d27; }
 [data-scene="tavern"] .tavern-live-result .market-flat { color: #725b3e; }
@@ -4112,7 +4129,7 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
     adapter.showScene("tavern");
     syncHeader();
     const names = { forecast: "\uB0B4\uC77C\uC758 \uC2DC\uC138", catalog: "\uB2E4\uC74C \uB0A0 \uACBD\uB9E4\uD488 \uC815\uBCF4", competitors: "\uACBD\uC7C1\uC790\uC758 \uAD00\uC2EC \uACBD\uB9E4\uD488" };
-    const descriptions = { forecast: "\uC5EC\uD589 \uC0C1\uC778\uC774 \uB0B4\uC77C \uC5F4\uB9B4 \uACBD\uB9E4\uD488\uC758 \uC2DC\uC138 \uBC29\uD5A5\uACFC \uC608\uC0C1 \uAC00\uACA9\uC744 \uC54C\uB824\uC90D\uB2C8\uB2E4. \uC0C1\uD68C \uB2E8\uACC4\uC5D0 \uB530\uB77C 2\uAC1C, 4\uAC1C, 6\uAC1C\uAC00 \uACF5\uAC1C\uB429\uB2C8\uB2E4.", catalog: "\uC0C1\uD68C \uB2E8\uACC4\uC5D0 \uB530\uB77C \uB2E4\uC74C \uB0A0 \uACBD\uB9E4\uD488\uC758 \uC774\uB984, \uACC4\uC5F4, \uB4F1\uAE09\uC744 \uC21C\uCC28\uC801\uC73C\uB85C \uACF5\uAC1C\uD569\uB2C8\uB2E4.", competitors: "\uC0C1\uD68C \uB2E8\uACC4\uC5D0 \uB530\uB77C \uACBD\uC7C1\uC790 1\uBA85\uBD80\uD130 \uCD5C\uB300 3\uBA85\uAE4C\uC9C0 \uAD00\uC2EC \uACBD\uB9E4\uD488\uC744 \uACF5\uAC1C\uD569\uB2C8\uB2E4." };
+    const descriptions = { forecast: "\uC5EC\uD589 \uC0C1\uC778\uC774 \uC624\uB298\uACFC \uBE44\uAD50\uD55C \uB0B4\uC77C\uC758 \uACC4\uC5F4\uBCC4 \uC2DC\uC138 \uBCC0\uB3D9\uC744 \uC54C\uB824\uC90D\uB2C8\uB2E4. \uC0C1\uD68C \uB2E8\uACC4\uC5D0 \uB530\uB77C 2\uAC1C, 4\uAC1C, 6\uAC1C \uACC4\uC5F4\uC774 \uACF5\uAC1C\uB429\uB2C8\uB2E4.", catalog: "\uC0C1\uD68C \uB2E8\uACC4\uC5D0 \uB530\uB77C \uB2E4\uC74C \uB0A0 \uACBD\uB9E4\uD488\uC758 \uC774\uB984, \uACC4\uC5F4, \uB4F1\uAE09\uC744 \uC21C\uCC28\uC801\uC73C\uB85C \uACF5\uAC1C\uD569\uB2C8\uB2E4.", competitors: "\uC0C1\uD68C \uB2E8\uACC4\uC5D0 \uB530\uB77C \uACBD\uC7C1\uC790 1\uBA85\uBD80\uD130 \uCD5C\uB300 3\uBA85\uAE4C\uC9C0 \uAD00\uC2EC \uACBD\uB9E4\uD488\uC744 \uACF5\uAC1C\uD569\uB2C8\uB2E4." };
     const icons = { forecast: "./assets/ui/tavern/demand-trend.png", catalog: "./assets/ui/tavern/lot-specification.png", competitors: "./assets/ui/tavern/competitor-budget.png" };
     document.querySelectorAll("[data-broker]").forEach((broker) => {
       const kind = broker.dataset.broker;
@@ -4139,12 +4156,16 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
       const nextLots = state.schedule.days[nextDayIndex]?.lots || [];
       if (!nextLots.length) return "<p>\uB9C8\uC9C0\uB9C9 \uB0A0\uC5D0\uB294 \uB2E4\uC74C \uB0A0 \uACBD\uB9E4 \uC815\uBCF4\uAC00 \uC5C6\uC2B5\uB2C8\uB2E4.</p>";
       if (kind === "forecast") {
-        const visible = nextLots.slice(0, stage * 2);
-        return `<p><b>${nextDayIndex + 1}\uC77C\uCC28 \uC2DC\uC138 \xB7 ${visible.length}\uAC1C \uACF5\uAC1C</b></p><ul>${visible.map((lot) => {
-          const market = state.marketPath[lot.category]?.[nextDayIndex] ?? 1;
-          const direction = market > 1.005 ? "\u25B2 \uC0C1\uC2B9" : market < 0.995 ? "\u25BC \uD558\uB77D" : "\u2500 \uBCF4\uD569";
-          const tone = market > 1.005 ? "rise" : market < 0.995 ? "fall" : "flat";
-          return `<li><img src="${categoryIconUrl(lot.category)}" alt=""><span><b>${escapeHtml(lot.content?.displayName || lot.baseName)}</b><small>${categoryNames[lot.category]} \xB7 <em class="market-${tone}">${direction} ${Math.round(market * 100)}%</em></small></span><strong>${money(lot.pricing.basePrice * market)}</strong></li>`;
+        const categoryOrder = ["CER", "CLK", "PNT", "BOK", "MET", "JEW"];
+        const visible = categoryOrder.slice(0, stage * 2);
+        return `<p><b>${nextDayIndex + 1}\uC77C\uCC28 \uACC4\uC5F4 \uC2DC\uC138 \xB7 ${visible.length}\uAC1C \uACF5\uAC1C</b></p><ul>${visible.map((category) => {
+          const today = state.marketPath[category]?.[Math.max(0, nextDayIndex - 1)] ?? 1;
+          const tomorrow = state.marketPath[category]?.[nextDayIndex] ?? today;
+          const change = today ? (tomorrow / today - 1) * 100 : 0;
+          const tone = change > 0.5 ? "rise" : change < -0.5 ? "fall" : "flat";
+          const direction = tone === "rise" ? "\u25B2 \uC0C1\uC2B9" : tone === "fall" ? "\u25BC \uD558\uB77D" : "\u2500 \uBCF4\uD569";
+          const changeText = tone === "flat" ? "\uBCC0\uB3D9 \uC5C6\uC74C" : `${direction} ${Math.abs(change).toFixed(0)}%`;
+          return `<li><img src="${categoryIconUrl(category)}" alt=""><span><b>${categoryNames[category]}</b><small>\uB0B4\uC77C \uC2DC\uC138 \uC9C0\uC218 ${Math.round(tomorrow * 100)}</small></span><strong class="market-${tone}">${changeText}</strong></li>`;
         }).join("")}</ul>`;
       }
       if (kind === "catalog") {
@@ -4157,7 +4178,7 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
         return `<li><b>${name}</b> \xB7 ${escapeHtml(interest.lot.content?.displayName || interest.lot.baseName)}</li>`;
       }).join("")}</ul>`;
     };
-    document.querySelector("#tavern-detail").innerHTML = `<h3>\uC815\uBCF4 \uC0C1\uC138</h3><div class="detail-heading"><img class="detail-symbol" src="${icons[selected]}" alt=""><div><h2>${names[selected]}</h2><small>\uC0C1\uD68C ${state.shopStage}\uB2E8\uACC4 \uACF5\uAC1C \uC815\uBCF4</small></div></div><p>${descriptions[selected]}</p><section class="info-result tavern-live-result">${informationResult(selected)}</section><p class="tavern-rule">\uC815\uBCF4 \uAD6C\uB9E4 \uC5C6\uC774 \uC138 \uC815\uBCF4\uC0C1\uC744 \uC790\uC720\uB86D\uAC8C \uD655\uC778\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4.</p>`;
+    document.querySelector("#tavern-detail").innerHTML = `<h3>\uC815\uBCF4 \uC0C1\uC138</h3><div class="detail-heading"><img class="detail-symbol" src="${icons[selected]}" alt=""><div><h2>${names[selected]}</h2><small>\uC0C1\uD68C ${state.shopStage}\uB2E8\uACC4 \uACF5\uAC1C \uC815\uBCF4</small></div></div><p>${descriptions[selected]}</p><section class="info-result tavern-live-result info-${selected}">${informationResult(selected)}</section><p class="tavern-rule">\uC815\uBCF4 \uAD6C\uB9E4 \uC5C6\uC774 \uC138 \uC815\uBCF4\uC0C1\uC744 \uC790\uC720\uB86D\uAC8C \uD655\uC778\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4.</p>`;
     const effectiveStage = Math.max(1, Math.min(3, state.shopStage));
     const stageRows = [
       { stage: 1, competitors: "\uACBD\uC7C1\uC790 1\uBA85", catalog: "\uC774\uB984", forecast: "\uC2DC\uC138 2\uAC1C" },

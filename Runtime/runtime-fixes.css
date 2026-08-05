@@ -1442,6 +1442,23 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
 [data-scene="tavern"] .tavern-live-result li > span { display: grid; min-width: 0; }
 [data-scene="tavern"] .tavern-live-result li > span > b { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 [data-scene="tavern"] .tavern-live-result li small { color: #665039; }
+[data-scene="tavern"] .tavern-live-result.info-catalog li,
+[data-scene="tavern"] .tavern-live-result.info-competitors li {
+  display: block;
+  min-width: 0;
+  word-break: keep-all;
+  overflow-wrap: normal;
+  white-space: normal;
+}
+[data-scene="tavern"] .tavern-live-result.info-catalog li > b,
+[data-scene="tavern"] .tavern-live-result.info-competitors li > b {
+  word-break: keep-all;
+}
+[data-scene="tavern"] .tavern-live-result.info-forecast li > strong {
+  min-width: 92px;
+  text-align: right;
+  white-space: nowrap;
+}
 [data-scene="tavern"] .tavern-live-result .market-rise { color: #28752f; }
 [data-scene="tavern"] .tavern-live-result .market-fall { color: #a42d27; }
 [data-scene="tavern"] .tavern-live-result .market-flat { color: #725b3e; }

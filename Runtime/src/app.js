@@ -426,7 +426,7 @@ function renderExchange(message = '') {
 function renderTavern(message = '') {
   clearActionTimer(); audio.playBgm('tavern'); state.phase = 'tavern'; adapter.showScene('tavern'); syncHeader();
   const names = { forecast: '내일의 시세', catalog: '다음 날 경매품 정보', competitors: '경쟁자의 관심 경매품' };
-  const descriptions = { forecast: '여행 상인이 내일 열릴 경매품의 시세 방향과 예상 가격을 알려줍니다. 상회 단계에 따라 2개, 4개, 6개가 공개됩니다.', catalog: '상회 단계에 따라 다음 날 경매품의 이름, 계열, 등급을 순차적으로 공개합니다.', competitors: '상회 단계에 따라 경쟁자 1명부터 최대 3명까지 관심 경매품을 공개합니다.' };
+  const descriptions = { forecast: '여행 상인이 오늘과 비교한 내일의 계열별 시세 변동을 알려줍니다. 상회 단계에 따라 2개, 4개, 6개 계열이 공개됩니다.', catalog: '상회 단계에 따라 다음 날 경매품의 이름, 계열, 등급을 순차적으로 공개합니다.', competitors: '상회 단계에 따라 경쟁자 1명부터 최대 3명까지 관심 경매품을 공개합니다.' };
   const icons = { forecast: './assets/ui/tavern/demand-trend.png', catalog: './assets/ui/tavern/lot-specification.png', competitors: './assets/ui/tavern/competitor-budget.png' };
   document.querySelectorAll('[data-broker]').forEach((broker) => {
     const kind = broker.dataset.broker;
@@ -445,12 +445,16 @@ function renderTavern(message = '') {
     const nextLots = state.schedule.days[nextDayIndex]?.lots || [];
     if (!nextLots.length) return '<p>마지막 날에는 다음 날 경매 정보가 없습니다.</p>';
     if (kind === 'forecast') {
-      const visible = nextLots.slice(0, stage * 2);
-      return `<p><b>${nextDayIndex + 1}일차 시세 · ${visible.length}개 공개</b></p><ul>${visible.map((lot) => {
-        const market = state.marketPath[lot.category]?.[nextDayIndex] ?? 1;
-        const direction = market > 1.005 ? '▲ 상승' : market < 0.995 ? '▼ 하락' : '─ 보합';
-        const tone = market > 1.005 ? 'rise' : market < 0.995 ? 'fall' : 'flat';
-        return `<li><img src="${categoryIconUrl(lot.category)}" alt=""><span><b>${escapeHtml(lot.content?.displayName || lot.baseName)}</b><small>${categoryNames[lot.category]} · <em class="market-${tone}">${direction} ${Math.round(market * 100)}%</em></small></span><strong>${money(lot.pricing.basePrice * market)}</strong></li>`;
+      const categoryOrder = ['CER', 'CLK', 'PNT', 'BOK', 'MET', 'JEW'];
+      const visible = categoryOrder.slice(0, stage * 2);
+      return `<p><b>${nextDayIndex + 1}일차 계열 시세 · ${visible.length}개 공개</b></p><ul>${visible.map((category) => {
+        const today = state.marketPath[category]?.[Math.max(0, nextDayIndex - 1)] ?? 1;
+        const tomorrow = state.marketPath[category]?.[nextDayIndex] ?? today;
+        const change = today ? ((tomorrow / today) - 1) * 100 : 0;
+        const tone = change > 0.5 ? 'rise' : change < -0.5 ? 'fall' : 'flat';
+        const direction = tone === 'rise' ? '▲ 상승' : tone === 'fall' ? '▼ 하락' : '─ 보합';
+        const changeText = tone === 'flat' ? '변동 없음' : `${direction} ${Math.abs(change).toFixed(0)}%`;
+        return `<li><img src="${categoryIconUrl(category)}" alt=""><span><b>${categoryNames[category]}</b><small>내일 시세 지수 ${Math.round(tomorrow * 100)}</small></span><strong class="market-${tone}">${changeText}</strong></li>`;
       }).join('')}</ul>`;
     }
     if (kind === 'catalog') {
@@ -460,7 +464,7 @@ function renderTavern(message = '') {
     const grouped = Object.groupBy(estimates, (bot) => bot.name);
     return `<p><b>${stage}명 공개</b></p><ul>${Object.entries(grouped).slice(0, stage).map(([name, entries]) => { const interest = [...entries].sort((a, b) => b.maxBid - a.maxBid)[0]; return `<li><b>${name}</b> · ${escapeHtml(interest.lot.content?.displayName || interest.lot.baseName)}</li>`; }).join('')}</ul>`;
   };
-  document.querySelector('#tavern-detail').innerHTML = `<h3>정보 상세</h3><div class="detail-heading"><img class="detail-symbol" src="${icons[selected]}" alt=""><div><h2>${names[selected]}</h2><small>상회 ${state.shopStage}단계 공개 정보</small></div></div><p>${descriptions[selected]}</p><section class="info-result tavern-live-result">${informationResult(selected)}</section><p class="tavern-rule">정보 구매 없이 세 정보상을 자유롭게 확인할 수 있습니다.</p>`;
+  document.querySelector('#tavern-detail').innerHTML = `<h3>정보 상세</h3><div class="detail-heading"><img class="detail-symbol" src="${icons[selected]}" alt=""><div><h2>${names[selected]}</h2><small>상회 ${state.shopStage}단계 공개 정보</small></div></div><p>${descriptions[selected]}</p><section class="info-result tavern-live-result info-${selected}">${informationResult(selected)}</section><p class="tavern-rule">정보 구매 없이 세 정보상을 자유롭게 확인할 수 있습니다.</p>`;
   const effectiveStage = Math.max(1, Math.min(3, state.shopStage));
   const stageRows = [
     { stage: 1, competitors: '경쟁자 1명', catalog: '이름', forecast: '시세 2개' },
