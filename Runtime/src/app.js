@@ -401,7 +401,7 @@ function renderExchange(message = '') {
     const now = path[state.day - 1]; const previous = state.day > 1 ? path[state.day - 2] : 1; const delta = now - previous;
     const trend = delta >= 0 ? 'rise' : 'fall';
     return `<div><img src="${categoryIconUrl(key)}" alt=""><b>${CATEGORY_LABELS[key]}</b><strong>${Math.round(now * 100)}%</strong><span class="${trend}"><img class="trend-icon" src="./assets/ui/action-icons/market-${trend}.png" alt="">${Math.abs(delta * 100).toFixed(0)}%</span></div>`;
-  }).join('')}</div><section class="set-bonus-guide"><h4>세트 보너스</h4><div><span data-set-rule="same-2">동일 계열 2점 <b>×1.20</b></span><span data-set-rule="same-3">동일 계열 3점 <b>×1.80</b></span><span data-set-rule="high-3">영웅 이상 3점 <b>×2.40</b></span><span data-set-rule="grade-3">희귀도 3종 <b>×2.60</b></span><span data-set-rule="all-6">전 계열 6종 <b>×1.40</b></span></div><small>성립한 조합 중 가장 높은 배율이 적용됩니다.</small></section>`;
+  }).join('')}</div><section class="set-bonus-guide"><h4>세트 보너스</h4><div><span data-set-rule="same-2">한 계열을 2점 이상 선택 <b>×1.20</b></span><span data-set-rule="same-3">한 계열을 3점 이상 선택 <b>×1.80</b></span><span data-set-rule="high-3">같은 계열의 영웅 이상 3점 <b>×2.40</b></span><span data-set-rule="grade-3">같은 계열에서 서로 다른 희귀도 3종 <b>×2.60</b></span><span data-set-rule="all-6">모든 6개 계열을 1점 이상 선택 <b>×1.40</b></span></div><small>동시에 만족한 조건은 각각 한 번씩 곱하여 중첩됩니다. 예: 동일 계열 3점은 ×1.20과 ×1.80이 함께 적용됩니다.</small><strong id="set-bonus-summary">적용 보너스 없음 · 최종 ×1.00</strong></section>`;
   const syncBulkActions = () => {
     const ids = [...document.querySelectorAll('[data-item-select]:checked')].map((input) => input.dataset.itemSelect);
     const items = ownedItems().filter((item) => ids.includes(item.lotId) && !item.collateral);
@@ -416,6 +416,10 @@ function renderExchange(message = '') {
       'all-6': new Set(items.map((item) => item.category)).size >= 6,
     };
     document.querySelectorAll('[data-set-rule]').forEach((rule) => rule.classList.toggle('is-active', activeRules[rule.dataset.setRule]));
+    const activeCount = Object.values(activeRules).filter(Boolean).length;
+    document.querySelector('#set-bonus-summary').textContent = activeCount
+      ? `적용 조건 ${activeCount}개 · 최종 ×${quote.multiplier.toFixed(2)} · 예상 판매액 ${money(quote.revenue)}`
+      : `적용 보너스 없음 · 최종 ×${quote.multiplier.toFixed(2)} · 예상 판매액 ${money(quote.revenue)}`;
   };
   document.querySelectorAll('[data-item-select]').forEach((input) => { input.onchange = syncBulkActions; });
   document.querySelector('#sell-selected').textContent = '판매';

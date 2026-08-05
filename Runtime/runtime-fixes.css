@@ -666,12 +666,14 @@ button.secondary:disabled { background-image: url("./assets/ui/skin-v1/button-se
 [data-scene="exchange"] .set-bonus-guide span.is-active { border-color: #e4aa39; background: #8b5c1c99; box-shadow: inset 0 0 0 1px #fff2b888; }
 [data-scene="exchange"] .set-bonus-guide span.is-active b { color: #fff0ad; }
 [data-scene="exchange"] .set-bonus-guide small { display: block; margin-top: 6px; color: #d9c9ae; font-size: clamp(9px,.72vw,12px); }
+[data-scene="exchange"] #set-bonus-summary { display: block; margin-top: 6px; color: #ffe18a; font-size: clamp(11px,.84vw,14px); text-align: right; }
 @media (max-width: 1300px) {
   [data-scene="exchange"] .set-bonus-guide { margin-top: 4px; padding: 4px 6px; border-width: 7px; border-image-width: 7px; }
   [data-scene="exchange"] .set-bonus-guide h4 { margin-bottom: 3px; font-size: 13px; }
   [data-scene="exchange"] .set-bonus-guide > div { grid-template-columns: repeat(3,minmax(0,1fr)); gap: 2px 4px; }
   [data-scene="exchange"] .set-bonus-guide span { padding: 1px 3px; font-size: 10px; }
-  [data-scene="exchange"] .set-bonus-guide small { display: none; }
+  [data-scene="exchange"] .set-bonus-guide small { margin-top: 3px; font-size: 9px; line-height: 1.25; }
+  [data-scene="exchange"] #set-bonus-summary { margin-top: 3px; font-size: 10px; }
 }
 [data-scene="exchange"] .actions {
   left: 42%; bottom: .35%; width: 20%; height: 5.5%;

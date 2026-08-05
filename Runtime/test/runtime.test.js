@@ -5,7 +5,7 @@ import { createRunSchedule, normalizeVisualEffects, validateSchedule, VISUAL_EFF
 import { createSetGraph } from '../src/set-graph.js';
 import { FallbackContentProvider, GenerationBuffer } from '../src/generation-buffer.js';
 import { createInitialState, resolveLot, advanceDay, prepareAuctionEntry } from '../src/game-state.js';
-import { resolveAuction, appraiseAll, appraiseItem, sellAll, sellItems, quoteItemsSale, acceptQuest, takeLoan, botBidForLot, estimateBotDailyAssets, buyInformation, missedDeadline, isBankrupt, deliverQuestItem, refreshDailyQuestOffers, repayLoanEarly } from '../src/systems.js';
+import { resolveAuction, appraiseAll, appraiseItem, sellAll, sellItems, quoteItemsSale, bestSetMultiplier, acceptQuest, takeLoan, botBidForLot, estimateBotDailyAssets, buyInformation, missedDeadline, isBankrupt, deliverQuestItem, refreshDailyQuestOffers, repayLoanEarly } from '../src/systems.js';
 import { recordEvent, runMetrics } from '../src/telemetry.js';
 import { GenerationApiProvider } from '../src/generation-api-provider.js';
 import { SaveStore } from '../src/save-store.js';
@@ -293,6 +293,15 @@ test('exchange quote matches the actual bundle sale without mutating inventory',
   assert.ok(quote.multiplier >= 1.2);
   assert.equal(state.inventory.some((item) => item.sold), false);
   assert.equal(sellItems(state, balance, ['cer-1', 'cer-2']), quote.revenue);
+});
+
+test('exchange set bonuses stack once for every condition met', () => {
+  const items = [
+    { category: 'CER', grade: 'COMMON', sold: false, collateral: false },
+    { category: 'CER', grade: 'RARE', sold: false, collateral: false },
+    { category: 'CER', grade: 'EPIC', sold: false, collateral: false },
+  ];
+  assert.equal(bestSetMultiplier(items, balance, [], 0), 1.2 * 1.8 * 2.6);
 });
 
 test('generation API sends only narrative identifiers and accepts fixed-order content', async () => {

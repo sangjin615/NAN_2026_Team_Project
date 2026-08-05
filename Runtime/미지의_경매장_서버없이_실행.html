@@ -674,12 +674,14 @@ button.secondary:disabled { background-image: url("./assets/ui/skin-v1/button-se
 [data-scene="exchange"] .set-bonus-guide span.is-active { border-color: #e4aa39; background: #8b5c1c99; box-shadow: inset 0 0 0 1px #fff2b888; }
 [data-scene="exchange"] .set-bonus-guide span.is-active b { color: #fff0ad; }
 [data-scene="exchange"] .set-bonus-guide small { display: block; margin-top: 6px; color: #d9c9ae; font-size: clamp(9px,.72vw,12px); }
+[data-scene="exchange"] #set-bonus-summary { display: block; margin-top: 6px; color: #ffe18a; font-size: clamp(11px,.84vw,14px); text-align: right; }
 @media (max-width: 1300px) {
   [data-scene="exchange"] .set-bonus-guide { margin-top: 4px; padding: 4px 6px; border-width: 7px; border-image-width: 7px; }
   [data-scene="exchange"] .set-bonus-guide h4 { margin-bottom: 3px; font-size: 13px; }
   [data-scene="exchange"] .set-bonus-guide > div { grid-template-columns: repeat(3,minmax(0,1fr)); gap: 2px 4px; }
   [data-scene="exchange"] .set-bonus-guide span { padding: 1px 3px; font-size: 10px; }
-  [data-scene="exchange"] .set-bonus-guide small { display: none; }
+  [data-scene="exchange"] .set-bonus-guide small { margin-top: 3px; font-size: 9px; line-height: 1.25; }
+  [data-scene="exchange"] #set-bonus-summary { margin-top: 3px; font-size: 10px; }
 }
 [data-scene="exchange"] .actions {
   left: 42%; bottom: .35%; width: 20%; height: 5.5%;
@@ -3405,13 +3407,17 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
     const active = inventory.filter((item) => !item.sold && !item.collateral);
     const byCategory = Object.groupBy(active, (item) => item.category);
     let multiplier = 1;
-    for (const items of Object.values(byCategory)) {
-      if (items.length >= 2) multiplier = Math.max(multiplier, 1.2);
-      if (items.length >= 3) multiplier = Math.max(multiplier, 1.8);
-      if (items.filter((x) => ["EPIC", "LEGENDARY"].includes(x.grade)).length >= 3) multiplier = Math.max(multiplier, 2.4);
-      if (new Set(items.map((x) => x.grade)).size >= 3) multiplier = Math.max(multiplier, 2.6);
+    const groups = Object.values(byCategory);
+    const rules = [
+      [groups.some((items) => items.length >= 2), 1.2],
+      [groups.some((items) => items.length >= 3), 1.8],
+      [groups.some((items) => items.filter((x) => ["EPIC", "LEGENDARY"].includes(x.grade)).length >= 3), 2.4],
+      [groups.some((items) => new Set(items.map((x) => x.grade)).size >= 3), 2.6],
+      [new Set(active.map((item) => item.category)).size >= 6, 1.4]
+    ];
+    for (const [matches, bonus] of rules) {
+      if (matches) multiplier *= bonus;
     }
-    if (new Set(active.map((item) => item.category)).size >= 6) multiplier = Math.max(multiplier, 1.4);
     if (multiplier > 1) multiplier *= 1 + (balance2.shop.setBonus?.[shopStage] ?? 0);
     return multiplier + (relics.includes("house-crest") && multiplier > 1 ? 0.2 : 0);
   }
@@ -4131,7 +4137,7 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
       const delta = now - previous;
       const trend = delta >= 0 ? "rise" : "fall";
       return `<div><img src="${categoryIconUrl(key)}" alt=""><b>${CATEGORY_LABELS[key]}</b><strong>${Math.round(now * 100)}%</strong><span class="${trend}"><img class="trend-icon" src="./assets/ui/action-icons/market-${trend}.png" alt="">${Math.abs(delta * 100).toFixed(0)}%</span></div>`;
-    }).join("")}</div><section class="set-bonus-guide"><h4>\uC138\uD2B8 \uBCF4\uB108\uC2A4</h4><div><span data-set-rule="same-2">\uB3D9\uC77C \uACC4\uC5F4 2\uC810 <b>\xD71.20</b></span><span data-set-rule="same-3">\uB3D9\uC77C \uACC4\uC5F4 3\uC810 <b>\xD71.80</b></span><span data-set-rule="high-3">\uC601\uC6C5 \uC774\uC0C1 3\uC810 <b>\xD72.40</b></span><span data-set-rule="grade-3">\uD76C\uADC0\uB3C4 3\uC885 <b>\xD72.60</b></span><span data-set-rule="all-6">\uC804 \uACC4\uC5F4 6\uC885 <b>\xD71.40</b></span></div><small>\uC131\uB9BD\uD55C \uC870\uD569 \uC911 \uAC00\uC7A5 \uB192\uC740 \uBC30\uC728\uC774 \uC801\uC6A9\uB429\uB2C8\uB2E4.</small></section>`;
+    }).join("")}</div><section class="set-bonus-guide"><h4>\uC138\uD2B8 \uBCF4\uB108\uC2A4</h4><div><span data-set-rule="same-2">\uD55C \uACC4\uC5F4\uC744 2\uC810 \uC774\uC0C1 \uC120\uD0DD <b>\xD71.20</b></span><span data-set-rule="same-3">\uD55C \uACC4\uC5F4\uC744 3\uC810 \uC774\uC0C1 \uC120\uD0DD <b>\xD71.80</b></span><span data-set-rule="high-3">\uAC19\uC740 \uACC4\uC5F4\uC758 \uC601\uC6C5 \uC774\uC0C1 3\uC810 <b>\xD72.40</b></span><span data-set-rule="grade-3">\uAC19\uC740 \uACC4\uC5F4\uC5D0\uC11C \uC11C\uB85C \uB2E4\uB978 \uD76C\uADC0\uB3C4 3\uC885 <b>\xD72.60</b></span><span data-set-rule="all-6">\uBAA8\uB4E0 6\uAC1C \uACC4\uC5F4\uC744 1\uC810 \uC774\uC0C1 \uC120\uD0DD <b>\xD71.40</b></span></div><small>\uB3D9\uC2DC\uC5D0 \uB9CC\uC871\uD55C \uC870\uAC74\uC740 \uAC01\uAC01 \uD55C \uBC88\uC529 \uACF1\uD558\uC5EC \uC911\uCCA9\uB429\uB2C8\uB2E4. \uC608: \uB3D9\uC77C \uACC4\uC5F4 3\uC810\uC740 \xD71.20\uACFC \xD71.80\uC774 \uD568\uAED8 \uC801\uC6A9\uB429\uB2C8\uB2E4.</small><strong id="set-bonus-summary">\uC801\uC6A9 \uBCF4\uB108\uC2A4 \uC5C6\uC74C \xB7 \uCD5C\uC885 \xD71.00</strong></section>`;
     const syncBulkActions = () => {
       const ids = [...document.querySelectorAll("[data-item-select]:checked")].map((input) => input.dataset.itemSelect);
       const items = ownedItems().filter((item) => ids.includes(item.lotId) && !item.collateral);
@@ -4146,6 +4152,8 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
         "all-6": new Set(items.map((item) => item.category)).size >= 6
       };
       document.querySelectorAll("[data-set-rule]").forEach((rule) => rule.classList.toggle("is-active", activeRules[rule.dataset.setRule]));
+      const activeCount = Object.values(activeRules).filter(Boolean).length;
+      document.querySelector("#set-bonus-summary").textContent = activeCount ? `\uC801\uC6A9 \uC870\uAC74 ${activeCount}\uAC1C \xB7 \uCD5C\uC885 \xD7${quote.multiplier.toFixed(2)} \xB7 \uC608\uC0C1 \uD310\uB9E4\uC561 ${money(quote.revenue)}` : `\uC801\uC6A9 \uBCF4\uB108\uC2A4 \uC5C6\uC74C \xB7 \uCD5C\uC885 \xD7${quote.multiplier.toFixed(2)} \xB7 \uC608\uC0C1 \uD310\uB9E4\uC561 ${money(quote.revenue)}`;
     };
     document.querySelectorAll("[data-item-select]").forEach((input) => {
       input.onchange = syncBulkActions;
