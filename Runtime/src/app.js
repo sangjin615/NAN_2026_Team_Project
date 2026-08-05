@@ -549,7 +549,7 @@ function renderMuseum(returnTo = 'city') {
   document.querySelector('#relic-list').innerHTML = relics.map((relic, index) => {
     const isOwned = owned.has(relic.id);
     const art = relicArt[relic.id];
-    return `<article class="${isOwned ? 'is-owned' : 'is-locked'}" role="button" tabindex="0" aria-label="${isOwned ? relic.name : '미획득 유물'}" data-slot="${index + 1}" data-relic="${relic.id}">${isOwned && art ? `<img src="./assets/relics/${encodeURIComponent(art)}" alt=""><b>${relic.name}</b><span>${relic.effect}</span>` : ''}</article>`;
+    return `<article class="${isOwned ? 'is-owned' : 'is-empty'}" ${isOwned ? `role="button" tabindex="0" aria-label="${relic.name}" data-relic="${relic.id}"` : 'aria-label="빈 진열장"'}>${isOwned && art ? `<img src="./assets/relics/${encodeURIComponent(art)}" alt=""><b>${relic.name}</b><span>${relic.effect}</span>` : ''}</article>`;
   }).join('');
   const showRelicDetail = (relic) => {
     const isOwned = owned.has(relic.id); const art = relicArt[relic.id];
