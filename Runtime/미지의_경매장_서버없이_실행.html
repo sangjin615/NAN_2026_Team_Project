@@ -814,17 +814,19 @@ button.secondary:disabled { background-image: url("./assets/ui/skin-v1/button-se
 [data-scene="guild"] #guild-message p { display: inline; margin-left: 12px; }
 [data-scene="guild"] .return-city {
   position: absolute; left: 7.7%; bottom: 1.4%; width: 17%; height: 6.2%;
-  color: #2b2015 !important; text-shadow: none; opacity: 1 !important; filter: none !important;
-  background: transparent url("./assets/ui/clean-v1/buttons/button-parchment.png") center / 100% 100% no-repeat !important;
+  z-index: 8; color: #fff7df !important; font-weight: 900; text-shadow: 0 2px 2px #000;
+  opacity: 1 !important; filter: none !important; pointer-events: auto;
+  background: #17130f url("./assets/ui/skin-v1/button-secondary.png") center / 100% 100% no-repeat !important;
 }
 [data-scene="guild"] #guild-return,
 [data-scene="guild"] #guild-return:hover,
 [data-scene="guild"] #guild-return:active {
   border: 0 !important;
   border-image: none !important;
-  background-color: transparent !important;
-  background-image: url("./assets/ui/clean-v1/buttons/button-parchment.png") !important;
-  color: #24180f !important;
+  background-color: #17130f !important;
+  background-image: url("./assets/ui/skin-v1/button-secondary.png") !important;
+  color: #fff7df !important;
+  text-shadow: 0 2px 2px #000 !important;
   opacity: 1 !important;
   filter: none !important;
 }
