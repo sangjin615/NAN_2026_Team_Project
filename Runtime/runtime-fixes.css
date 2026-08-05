@@ -2137,6 +2137,63 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
   margin: 0;
   overflow-wrap: anywhere;
 }
+
+/* The success mockup supplied by VSL is identical to the title background.
+   Keep that room as atmosphere, but place the actual result on a dedicated
+   parchment so the end-of-run information never overlaps the title artwork. */
+[data-scene="result"]::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: rgba(19, 12, 7, .34);
+  pointer-events: none;
+}
+[data-scene="result"] > h2,
+[data-scene="result"] #run-summary,
+[data-scene="result"] #return-title { z-index: 2; }
+[data-scene="result"]:not(.is-failure) > h2 {
+  left: 35%;
+  right: 35%;
+  top: 8.5%;
+  width: auto;
+  color: #f4e5c5;
+  text-shadow: 0 2px 2px #160d08;
+}
+[data-scene="result"]:not(.is-failure) #run-summary {
+  left: 29%;
+  top: 4%;
+  width: 42%;
+  height: 91%;
+  box-sizing: border-box;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 42% 58%;
+  padding: 17% 8% 10%;
+  background: url("./assets/ui/vsl-v6.4/popups/auction-result.png") center / 100% 100% no-repeat;
+  filter: drop-shadow(0 14px 18px #0009);
+}
+[data-scene="result"]:not(.is-failure) #run-summary > section {
+  box-sizing: border-box;
+  min-width: 0;
+  padding: 3% 6%;
+  color: #2c2014;
+}
+[data-scene="result"]:not(.is-failure) #run-summary h3 { margin: 0 0 4%; }
+[data-scene="result"]:not(.is-failure) .result-ending {
+  align-content: center;
+  justify-items: center;
+  text-align: center;
+}
+[data-scene="result"]:not(.is-failure) .result-ending p { margin: 2% 0; }
+[data-scene="result"]:not(.is-failure) .result-ending strong { margin-top: 3%; }
+[data-scene="result"]:not(.is-failure) .result-stats p { padding: 2.8% 0; }
+[data-scene="result"]:not(.is-failure) #return-title {
+  left: 40%;
+  bottom: 3.2%;
+  width: 20%;
+  height: 7.5%;
+}
 [data-scene="result"].is-failure .result-stats {
   display: grid;
   grid-template-rows: auto repeat(5, minmax(0, 1fr));

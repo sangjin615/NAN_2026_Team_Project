@@ -723,6 +723,16 @@ function finishRelic(bid) {
 }
 
 function renderResult() {
+  const journeyFinished = state.day >= balance.run.days;
+  const relicAuctionFinished = (state.relicRound || 0) >= 3 || new Set(state.metaRelics || []).size >= 9;
+  if (!state.failure && !(journeyFinished && relicAuctionFinished)) {
+    state.completed = false;
+    state.phase = journeyFinished ? 'relic' : 'hub';
+    save();
+    return journeyFinished
+      ? startRelicAuction()
+      : renderHub('런 결과는 12일차 최종 유물 경매가 끝난 뒤에 확인할 수 있습니다.');
+  }
   clearActionTimer(); audio.playBgm('settlement'); state.completed = true; state.phase = 'result'; adapter.showScene('result');
   document.querySelector('[data-scene="result"]').classList.toggle('is-failure', Boolean(state.failure));
   const unsold = ownedItems().reduce((sum, item) => sum + item.trueValue, 0);
