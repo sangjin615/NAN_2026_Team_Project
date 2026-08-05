@@ -2049,32 +2049,45 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
 [data-scene="auction"] > .actions button { flex: 1; font-size: clamp(11px,1.05vw,17px); }
 
 [data-scene="settlement"]::after { background: #05040312; }
-[data-scene="settlement"] > p { left: 32%; top: 17%; width: 36%; color: #e9dcc5; font-size: clamp(11px,1.1vw,18px); }
+[data-scene="settlement"] > p { left: 32%; top: 18.3%; width: 36%; color: #e9dcc5; font-size: clamp(9px,.9vw,14px); }
 [data-scene="settlement"] #settlement-summary {
-  left: 8.8%; top: 22%; width: 82.4%; height: 64%; display: grid;
-  grid-template-columns: 29% 35% 36%; place-content: stretch; gap: .7%; padding: 0;
+  left: 11.3%; top: 21.5%; width: 77.9%; height: 62.5%; display: grid;
+  grid-template-columns: 29.1% 38.7% 29.6%; place-content: stretch; gap: 1.3%; padding: 0;
   color: #2c2014; text-align: left;
 }
-[data-scene="settlement"] #settlement-summary > section { min-width: 0; padding: 5% 4%; overflow: hidden; }
-[data-scene="settlement"] #settlement-summary h3 { margin: 0 0 5%; font-size: clamp(13px,1.35vw,22px); }
+[data-scene="settlement"] #settlement-summary > section { position: relative; min-width: 0; padding: 0; overflow: hidden; }
+[data-scene="settlement"] #settlement-summary h3 {
+  position: absolute; left: 5%; right: 5%; top: 4%; height: 7%; margin: 0;
+  color: #eadfc9; font-size: clamp(12px,1.25vw,20px); line-height: 1; text-shadow: 0 1px 2px #000;
+}
 [data-scene="settlement"] .settlement-lots p {
   display: grid; grid-template-columns: 1fr .8fr 1fr 1.3fr; align-items: center;
-  gap: 4px; margin: 0; padding: 2.2% 0; border-bottom: 1px solid #b9a386; font-size: clamp(8px,.78vw,13px);
+  gap: 4px; margin: 0 5%; padding: 2% 0; border-bottom: 1px solid #b9a386; font-size: clamp(8px,.76vw,12px);
 }
+[data-scene="settlement"] .settlement-lots p:first-of-type { margin-top: 14%; }
 [data-scene="settlement"] .settlement-lots p > * { font-style: normal; }
 [data-scene="settlement"] .settlement-lots p strong { text-align: right; }
 [data-scene="settlement"] .settlement-lots .won { color: #356927; font-weight: 900; }
 [data-scene="settlement"] .settlement-lots .lost { color: #a02d22; font-weight: 900; }
 [data-scene="settlement"] .settlement-owned {
+  position: absolute; left: 5%; right: 5%; top: 14%;
   display: grid; grid-template-columns: 1fr auto; gap: 5px; align-items: center;
-  margin-bottom: 4%; padding: 5%; border: 1px solid #baa383; background: #ead9bf88;
+  height: 17%; margin: 0; padding: 3% 5%; border: 1px solid #baa383; background: #ead9bf88;
 }
 [data-scene="settlement"] .settlement-owned strong { color: #376c28; font-size: clamp(18px,2vw,32px); }
 [data-scene="settlement"] .settlement-owned span { grid-column: 1 / -1; }
+[data-scene="settlement"] .settlement-money { position: absolute; left: 5%; right: 5%; }
+[data-scene="settlement"] .settlement-finance { top: 35%; height: 27%; }
+[data-scene="settlement"] .settlement-progress { top: 68%; height: 27%; }
+[data-scene="settlement"] .settlement-money h4 {
+  height: 29%; margin: 0; color: #eadfc9; font-size: clamp(10px,1vw,16px); line-height: 1; text-shadow: 0 1px 2px #000;
+}
 [data-scene="settlement"] .settlement-money p,
-[data-scene="settlement"] .settlement-market p { display: flex; align-items: center; gap: 8px; margin: 0; padding: 4% 2%; border-bottom: 1px solid #b9a386; }
+[data-scene="settlement"] .settlement-market p { display: flex; align-items: center; gap: 8px; margin: 0; padding: 2.5% 2%; border-bottom: 1px solid #b9a386; font-size: clamp(9px,.84vw,13px); }
 [data-scene="settlement"] .settlement-money p strong { margin-left: auto; }
-[data-scene="settlement"] .settlement-market p { display: grid; grid-template-columns: 25% 1fr auto; }
+[data-scene="settlement"] .settlement-market p { display: grid; grid-template-columns: 30% minmax(40px,1fr) minmax(42px,auto); margin-left: 5%; margin-right: 5%; padding: 3.4% 2%; }
+[data-scene="settlement"] .settlement-market p:first-of-type { margin-top: 14%; }
+[data-scene="settlement"] .settlement-market p strong { min-width: 42px; color: #342417; text-align: right; }
 [data-scene="settlement"] .market-line { height: 5px; background: linear-gradient(90deg,#477936 var(--market),#a88f6c var(--market)); box-shadow: 0 1px 0 #fff8; }
 [data-scene="settlement"] #next-day { left: 34%; bottom: 2.7%; width: 32%; height: 8.5%; font-size: clamp(17px,1.8vw,29px); }
 
