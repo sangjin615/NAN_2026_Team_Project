@@ -34,7 +34,14 @@
     "offersPerDay": 3,
     "deliveryMode": "manual-item-delivery-at-office",
     "deadline": "three-auction-opportunities",
-    "day12Delivery": "before-final-settlement-sale"
+    "day12Delivery": "before-final-settlement-sale",
+    "rewardPolicy": {
+      "mode": "deliveredBasePlusFeePlusBonus",
+      "completionBonus": 3000,
+      "refundAcceptanceFee": true,
+      "shopBonusScope": "none",
+      "formula": "제출 물품 기준가 + 수주비 + 3,000"
+    }
   },
   "generation": {
     "engineOwns": ["basePrice", "trueValue", "quality", "numericRules", "judgement"],

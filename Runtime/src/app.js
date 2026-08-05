@@ -259,10 +259,16 @@ function questIconUrl(questId) {
   return `./assets/ui/quest-icons/${icon}.png`;
 }
 
+function questRewardLabel(quest) {
+  return quest.rewardMode === 'deliveredBasePlusFeePlusBonus'
+    ? `물품 기준가 + 수주비 + ${money(quest.completionBonus || 0)}`
+    : money(quest.reward);
+}
+
 function renderQuestOffice(message = '') {
   clearActionTimer(); audio.playBgm('workplace'); state.phase = 'quests'; adapter.showScene('quests'); syncHeader();
   document.querySelector('#quest-offers').innerHTML = state.questOffers.map((quest) => `
-    <article><img class="quest-icon" src="${questIconUrl(quest.id)}" alt=""><b>${questTitle(quest)}</b><small>${questRequirement(quest)}</small><span>수주비 ${money(quest.fee)} · 보상 ${money(quest.reward)}</span>
+    <article><img class="quest-icon" src="${questIconUrl(quest.id)}" alt=""><b>${questTitle(quest)}</b><small>${questRequirement(quest)}</small><span>수주비 ${money(quest.fee)} · 보상 ${questRewardLabel(quest)}</span>
     <button data-quest="${quest.id}" ${quest.accepted ? 'disabled' : ''}>${quest.accepted ? '수주 완료' : '수주'}</button></article>`).join('');
   const active = state.activeQuests.filter((quest) => !quest.completed);
   const activeMarkup = active.length ? active.map((quest) => {
