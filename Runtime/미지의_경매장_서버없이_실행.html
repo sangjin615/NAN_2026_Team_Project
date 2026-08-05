@@ -2227,21 +2227,28 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
 [data-scene="museum"] .relic-list article { min-width: 0; min-height: 0; width: 100%; height: 100%; padding: 3% 4% 12% !important; overflow: hidden !important; }
 [data-scene="museum"] .relic-list article::before { left: 2%; top: 1%; width: 18%; max-width: 30px; }
 [data-scene="museum"] .relic-list article.is-locked::after {
-  left: 34%; top: 27%; width: 32%; height: 39%; border-width: 2px;
+  left: 34%; top: 30.5%; width: 32%; height: 39%; border-width: 2px;
   font-size: clamp(14px,1.6vw,25px); box-shadow: inset 0 3px 0 #8b7f6a66,0 4px 4px #0004;
 }
 [data-scene="museum"] .relic-list article.is-owned img { width: 68%; height: 66%; max-width: 82px; max-height: 82px; }
-[data-scene="museum"] #relic-detail { left: 74.1%; top: 20.3%; width: 17.7%; height: 28.2%; padding: 2.3%; }
-[data-scene="museum"] #museum-progress { left: 73.8%; top: 52.6%; width: 18.2%; height: 25.2%; padding: 2.2%; }
+[data-scene="museum"] #relic-detail {
+  left: 74%; top: 20.3%; width: 18%; height: 28.2%; padding: 2.3%; box-sizing: border-box;
+  justify-items: center; align-items: center; text-align: center;
+}
+[data-scene="museum"] #museum-progress {
+  left: 74%; top: 52.6%; width: 18%; height: 25.2%; padding: 2.2%; box-sizing: border-box;
+  justify-content: center; align-items: center; text-align: center;
+}
 [data-scene="museum"] .museum-effects {
-  position: absolute; left: 9.2%; top: 79.5%; width: 31.5%; height: 8.5%; box-sizing: border-box;
-  display: grid; grid-template-columns: repeat(3,1fr); gap: 5px; align-content: center; padding: .3% .5%; color: #2b2015;
+  position: absolute; left: 7.2%; top: 83.5%; width: 33.4%; height: 8%; box-sizing: border-box;
+  display: grid; grid-template-columns: repeat(3,1fr); grid-template-rows: auto 1fr;
+  gap: 3px 5px; align-content: center; padding: .4% .7%; color: #2b2015; overflow: hidden;
 }
 [data-scene="museum"] .museum-effects h3 { grid-column: 1/-1; margin: 0; color: #80591e; font-size: clamp(9px,.82vw,13px); }
-[data-scene="museum"] .museum-effects p { display: grid; gap: 2px; margin: 0; padding: 6px; border-left: 2px solid #ae8240; background: #ead9bd88; }
+[data-scene="museum"] .museum-effects p { display: grid; gap: 1px; margin: 0; padding: 3px 6px; border-left: 2px solid #ae8240; background: #ead9bd88; }
 [data-scene="museum"] .museum-effects b { font-size: clamp(9px,.78vw,13px); }
 [data-scene="museum"] .museum-effects span { font-size: clamp(7px,.6vw,10px); }
-[data-scene="museum"] > #museum-back { z-index: 5; left: 7.5%; bottom: 4.4%; width: 14.5%; height: 5.8%; }
+[data-scene="museum"] > #museum-back { z-index: 5; left: 7.5%; bottom: .6%; width: 14.5%; height: 5.8%; }
 
 @media (max-aspect-ratio: 4/3) {
   [data-scene="shop"] .shop-storage-slot { grid-template-columns: 34px minmax(0,1fr); padding: 4px 6px; }
