@@ -569,7 +569,7 @@ function renderMuseum(returnTo = 'city') {
     card.onclick = select; card.onkeydown = (event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); select(); } };
   });
   const ownedCount = relics.filter((relic) => owned.has(relic.id)).length;
-  document.querySelector('#museum-progress').innerHTML = `<b>수집 현황</b><strong>${ownedCount} / ${relics.length}</strong><span>하급 ${relics.filter((relic) => relic.tier === 'low' && owned.has(relic.id)).length}/3 · 중급 ${relics.filter((relic) => relic.tier === 'mid' && owned.has(relic.id)).length}/3 · 상급 ${relics.filter((relic) => relic.tier === 'high' && owned.has(relic.id)).length}/3</span>`;
+  document.querySelector('#museum-progress').innerHTML = `<b>수집 현황</b><strong>${ownedCount} / ${relics.length}</strong>`;
 }
 
 function renderCatalog() {

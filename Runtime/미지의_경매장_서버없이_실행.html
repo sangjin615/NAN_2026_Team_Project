@@ -2598,33 +2598,50 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
 }
 [data-scene="museum"] .relic-list article.is-empty { pointer-events: none; }
 [data-scene="museum"] .relic-list article.is-owned img {
-  width: 72%;
-  height: 64%;
-  max-width: 100px;
-  max-height: 100px;
+  z-index: 1;
+  width: 100%;
+  height: 82%;
+  max-width: none;
+  max-height: none;
   object-fit: contain;
+  transform: scale(1.18) translateY(-5%);
+  transform-origin: center;
 }
 [data-scene="museum"] .relic-list article.is-owned b {
-  max-width: 94%;
-  color: #3a2516;
-  font-size: clamp(9px, .78vw, 13px);
+  z-index: 3;
+  left: 5%;
+  right: 5%;
+  bottom: 2.5%;
+  max-width: none;
+  padding: 4px 7px;
+  border: 1px solid #ba8734;
+  background: #25170ee8;
+  color: #fff1c8;
+  font-size: clamp(11px, .92vw, 16px);
+  line-height: 1.2;
+  text-align: center;
+  text-shadow: 0 2px 2px #000;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 [data-scene="museum"] #museum-progress {
-  left: 12.9% !important;
-  top: 34.2% !important;
-  width: 9.1% !important;
-  height: 42.5% !important;
-  padding: 1.2% .7% !important;
-  gap: 6px !important;
+  left: 10.7% !important;
+  top: 45.2% !important;
+  width: 13.4% !important;
+  height: 18.5% !important;
+  padding: 1.1% 1.25% !important;
+  gap: 4px !important;
+  border: 13px solid transparent;
+  border-image: url("./assets/ui/skin-v1/status-card.png") 18 fill / 13px / 0 stretch;
+  background: #1d1510d9;
   color: #f3d994 !important;
   text-shadow: 0 2px 2px #281006;
+  box-shadow: 0 8px 18px #160b0677;
 }
-[data-scene="museum"] #museum-progress b { color: #f3d994; }
-[data-scene="museum"] #museum-progress strong { font-size: clamp(24px, 2.5vw, 40px); }
-[data-scene="museum"] #museum-progress span { max-width: 9em; color: #f7e9bf; }
+[data-scene="museum"] #museum-progress b { color: #f3d994; font-size: clamp(12px, 1vw, 17px); }
+[data-scene="museum"] #museum-progress strong { font-size: clamp(27px, 2.7vw, 44px); }
+[data-scene="museum"] #museum-progress span { display: none !important; }
 [data-scene="museum"] .museum-effects {
   display: none !important;
 }
@@ -4205,7 +4222,7 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
       };
     });
     const ownedCount = relics.filter((relic) => owned.has(relic.id)).length;
-    document.querySelector("#museum-progress").innerHTML = `<b>\uC218\uC9D1 \uD604\uD669</b><strong>${ownedCount} / ${relics.length}</strong><span>\uD558\uAE09 ${relics.filter((relic) => relic.tier === "low" && owned.has(relic.id)).length}/3 \xB7 \uC911\uAE09 ${relics.filter((relic) => relic.tier === "mid" && owned.has(relic.id)).length}/3 \xB7 \uC0C1\uAE09 ${relics.filter((relic) => relic.tier === "high" && owned.has(relic.id)).length}/3</span>`;
+    document.querySelector("#museum-progress").innerHTML = `<b>\uC218\uC9D1 \uD604\uD669</b><strong>${ownedCount} / ${relics.length}</strong>`;
   }
   function renderCatalog() {
     clearActionTimer();
