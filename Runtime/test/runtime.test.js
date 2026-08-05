@@ -5,7 +5,7 @@ import { createRunSchedule, normalizeVisualEffects, validateSchedule, VISUAL_EFF
 import { createSetGraph } from '../src/set-graph.js';
 import { FallbackContentProvider, GenerationBuffer } from '../src/generation-buffer.js';
 import { createInitialState, resolveLot, advanceDay } from '../src/game-state.js';
-import { resolveAuction, appraiseAll, appraiseItem, sellAll, sellItems, quoteItemsSale, acceptQuest, takeLoan, botBidForLot, buyInformation, missedDeadline, isBankrupt, deliverQuestItem, repayLoanEarly } from '../src/systems.js';
+import { resolveAuction, appraiseAll, appraiseItem, sellAll, sellItems, quoteItemsSale, acceptQuest, takeLoan, botBidForLot, buyInformation, missedDeadline, isBankrupt, deliverQuestItem, refreshDailyQuestOffers, repayLoanEarly } from '../src/systems.js';
 import { recordEvent, runMetrics } from '../src/telemetry.js';
 import { GenerationApiProvider } from '../src/generation-api-provider.js';
 import { SaveStore } from '../src/save-store.js';
@@ -142,6 +142,22 @@ test('each day allows every offered quest even when earlier quests are still act
   assert.equal(acceptQuest(state, 'multi', balance), true);
   assert.equal(acceptQuest(state, 'designated', balance), true);
   assert.equal(state.activeQuests.length, 6);
+});
+
+test('daily quest refresh keeps yesterday offers and gives new offers distinct identities', () => {
+  const schedule = createRunSchedule({ catalog, balance, seed: 'quest-refresh' });
+  const sets = createSetGraph(schedule, 'quest-refresh');
+  const state = createInitialState({ schedule, sets, balance, startCash: 1000000 });
+  const [first, second, carried] = state.questOffers;
+  assert.equal(acceptQuest(state, first.offerId, balance), true);
+  assert.equal(acceptQuest(state, second.offerId, balance), true);
+  state.activeQuests.forEach((quest) => { quest.completed = true; });
+  advanceDay(state);
+  refreshDailyQuestOffers(state, balance, state.metaRelics);
+  assert.equal(state.questOffers.length, 4);
+  assert.equal(state.questOffers[0].offerId, carried.offerId);
+  assert.equal(acceptQuest(state, carried.offerId, balance), true);
+  assert.equal(new Set(state.questOffers.map((quest) => quest.offerId)).size, state.questOffers.length);
 });
 
 test('V6.2 loan unlocks at stage two and early repayment costs principal only', () => {

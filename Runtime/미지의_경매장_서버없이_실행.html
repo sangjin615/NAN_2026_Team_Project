@@ -2964,6 +2964,9 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
     const rewardPolicy = balance2.quests?.rewardPolicy || {};
     const families = shuffle(["CER", "CLK", "PNT", "BOK", "MET", "JEW"], createRng(`${seed}:quest-targets:${day}`));
     return shuffle(QUEST_IDS, createRng(`${seed}:quests:${day}`)).slice(0, count).map((id, index) => ({
+      offerId: `day-${day}-${id}-${index + 1}`,
+      offeredDay: day,
+      acceptDeadlineDay: Math.min(12, day + 1),
       id,
       fee: balance2.quests[id].fee,
       reward: balance2.quests[id].reward,
@@ -2976,6 +2979,16 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
       acceptedDay: null,
       deadlineDay: null
     }));
+  }
+  function refreshDailyQuestOffers(state2, balance2, relics = []) {
+    const previous = (state2.questOffers || []).map((quest) => {
+      const offeredDay = quest.offeredDay ?? Math.max(1, state2.day - 1);
+      return { ...quest, offerId: quest.offerId || `legacy-day-${offeredDay}-${quest.id}`, offeredDay, acceptDeadlineDay: quest.acceptDeadlineDay ?? Math.min(12, offeredDay + 1) };
+    });
+    const carried = previous.filter((quest) => !quest.accepted && state2.day <= quest.acceptDeadlineDay);
+    const fresh = createDailyQuestOffers(balance2, state2.day, state2.seed, relics);
+    state2.questOffers = [...carried, ...fresh];
+    return state2.questOffers;
   }
   function botBidForLot({ lot, day, balance: balance2, marketIndex, seed }) {
     const rng = createRng(`${seed}:bots:${lot.lotId}`);
@@ -3057,7 +3070,7 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
     return true;
   }
   function acceptQuest(state2, questId, balance2) {
-    const quest = state2.questOffers.find((entry) => entry.id === questId && !entry.accepted);
+    const quest = state2.questOffers.find((entry) => (entry.offerId === questId || entry.id === questId) && !entry.accepted);
     if (!quest || state2.cash < quest.fee) return false;
     state2.cash -= quest.fee;
     quest.accepted = true;
@@ -3073,7 +3086,7 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
     return ["EPIC", "LEGENDARY"].includes(item.grade);
   }
   function deliverQuestItem(state2, questId, lotId) {
-    const quest = state2.activeQuests.find((entry) => entry.id === questId && !entry.completed);
+    const quest = state2.activeQuests.find((entry) => (entry.offerId === questId || entry.id === questId) && !entry.completed);
     const item = state2.inventory.find((entry) => entry.lotId === lotId);
     if (!quest || state2.day > quest.deadlineDay || !questMatchesItem(quest, item)) return false;
     item.delivered = true;
@@ -3646,13 +3659,13 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
     syncHeader();
     document.querySelector("#quest-offers").innerHTML = state.questOffers.map((quest) => `
     <article><img class="quest-icon" src="${questIconUrl(quest.id)}" alt=""><b>${questTitle(quest)}</b><small>${questRequirement(quest)}</small><span>\uC218\uC8FC\uBE44 ${money(quest.fee)} \xB7 \uBCF4\uC0C1 ${questRewardLabel(quest)}</span>
-    <button data-quest="${quest.id}" ${quest.accepted ? "disabled" : ""}>${quest.accepted ? "\uC218\uC8FC \uC644\uB8CC" : "\uC218\uC8FC"}</button></article>`).join("");
+    <button data-quest="${quest.offerId || quest.id}" ${quest.accepted ? "disabled" : ""}>${quest.accepted ? "\uC218\uC8FC \uC644\uB8CC" : "\uC218\uC8FC"}</button></article>`).join("");
     const active = state.activeQuests.filter((quest) => !quest.completed);
     const activeMarkup = active.length ? active.map((quest) => {
       const candidates = ownedItems().filter((item) => questMatchesItem(quest, item));
       return `<article><img class="quest-icon" src="${questIconUrl(quest.id)}" alt=""><b>${questTitle(quest)}</b><span>${quest.deadlineDay}\uC77C\uCC28 \uACBD\uB9E4 \uC804\uAE4C\uC9C0</span>
-      <select data-delivery-select="${quest.id}"><option value="">\uC81C\uCD9C\uD560 \uBB3C\uD488 \uC120\uD0DD</option>${candidates.map((item) => `<option value="${item.lotId}">${item.name} \xB7 ${gradeLabel(item.grade)}</option>`).join("")}</select>
-      <button data-deliver-quest="${quest.id}" ${candidates.length ? "" : "disabled"}>\uBB3C\uD488 \uC81C\uCD9C</button></article>`;
+      <select data-delivery-select="${quest.offerId || quest.id}"><option value="">\uC81C\uCD9C\uD560 \uBB3C\uD488 \uC120\uD0DD</option>${candidates.map((item) => `<option value="${item.lotId}">${item.name} \xB7 ${gradeLabel(item.grade)}</option>`).join("")}</select>
+      <button data-deliver-quest="${quest.offerId || quest.id}" ${candidates.length ? "" : "disabled"}>\uBB3C\uD488 \uC81C\uCD9C</button></article>`;
     }).join("") : '<p class="empty-note">\uC218\uC8FC\uD55C \uC758\uB8B0\uAC00 \uC5C6\uC2B5\uB2C8\uB2E4.</p>';
     const appraisalMarkup = ownedItems().length ? ownedItems().map((item) => {
       const lot = scheduledLot(item.lotId);
@@ -4067,7 +4080,7 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
     const nextDayButton = document.querySelector("#next-day");
     nextDayButton.disabled = true;
     advanceDay(state);
-    state.questOffers = createDailyQuestOffers(balance, state.day, state.seed, state.metaRelics);
+    refreshDailyQuestOffers(state, balance, state.metaRelics);
     state.settledDay = null;
     save();
     try {

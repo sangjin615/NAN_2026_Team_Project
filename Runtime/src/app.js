@@ -7,9 +7,9 @@ import { SaveStore } from './save-store.js';
 import { advanceDay, createInitialState, resolveLot } from './game-state.js';
 import { VslRuntimeAdapter } from './vsl-adapter.js';
 import {
-  acceptQuest, appraiseItem, botBidForLot, buyInformation, createDailyQuestOffers,
+  acceptQuest, appraiseItem, botBidForLot, buyInformation,
   deliverQuestItem, expireQuestsBeforeAuction, missedDeadline, questMatchesItem,
-  quoteItemsSale, repayLoanEarly, sellItems, settleLoan, settleQuests, takeLoan, upgradeShop,
+  quoteItemsSale, refreshDailyQuestOffers, repayLoanEarly, sellItems, settleLoan, settleQuests, takeLoan, upgradeShop,
 } from './systems.js';
 import { downloadRunLog, recordEvent } from './telemetry.js';
 import { AudioBus } from './audio-bus.js';
@@ -317,13 +317,13 @@ function renderQuestOffice(message = '') {
   clearActionTimer(); audio.playBgm('workplace'); state.phase = 'quests'; adapter.showScene('quests'); syncHeader();
   document.querySelector('#quest-offers').innerHTML = state.questOffers.map((quest) => `
     <article><img class="quest-icon" src="${questIconUrl(quest.id)}" alt=""><b>${questTitle(quest)}</b><small>${questRequirement(quest)}</small><span>수주비 ${money(quest.fee)} · 보상 ${questRewardLabel(quest)}</span>
-    <button data-quest="${quest.id}" ${quest.accepted ? 'disabled' : ''}>${quest.accepted ? '수주 완료' : '수주'}</button></article>`).join('');
+    <button data-quest="${quest.offerId || quest.id}" ${quest.accepted ? 'disabled' : ''}>${quest.accepted ? '수주 완료' : '수주'}</button></article>`).join('');
   const active = state.activeQuests.filter((quest) => !quest.completed);
   const activeMarkup = active.length ? active.map((quest) => {
     const candidates = ownedItems().filter((item) => questMatchesItem(quest, item));
     return `<article><img class="quest-icon" src="${questIconUrl(quest.id)}" alt=""><b>${questTitle(quest)}</b><span>${quest.deadlineDay}일차 경매 전까지</span>
-      <select data-delivery-select="${quest.id}"><option value="">제출할 물품 선택</option>${candidates.map((item) => `<option value="${item.lotId}">${item.name} · ${gradeLabel(item.grade)}</option>`).join('')}</select>
-      <button data-deliver-quest="${quest.id}" ${candidates.length ? '' : 'disabled'}>물품 제출</button></article>`;
+      <select data-delivery-select="${quest.offerId || quest.id}"><option value="">제출할 물품 선택</option>${candidates.map((item) => `<option value="${item.lotId}">${item.name} · ${gradeLabel(item.grade)}</option>`).join('')}</select>
+      <button data-deliver-quest="${quest.offerId || quest.id}" ${candidates.length ? '' : 'disabled'}>물품 제출</button></article>`;
   }).join('') : '<p class="empty-note">수주한 의뢰가 없습니다.</p>';
   const appraisalMarkup = ownedItems().length ? ownedItems().map((item) => {
     const lot = scheduledLot(item.lotId);
@@ -655,7 +655,7 @@ async function nextDay() {
   if (state.day === 12) return startRelicAuction();
   const nextDayButton = document.querySelector('#next-day');
   nextDayButton.disabled = true;
-  advanceDay(state); state.questOffers = createDailyQuestOffers(balance, state.day, state.seed, state.metaRelics); state.settledDay = null;
+  advanceDay(state); refreshDailyQuestOffers(state, balance, state.metaRelics); state.settledDay = null;
   save();
   try {
     await generation.ensure({ currentDay: state.day, schedule: state.schedule, sets: state.sets });

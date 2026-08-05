@@ -25,11 +25,23 @@ export function createDailyQuestOffers(balance, day, seed, relics = []) {
   const rewardPolicy = balance.quests?.rewardPolicy || {};
   const families = shuffle(['CER', 'CLK', 'PNT', 'BOK', 'MET', 'JEW'], createRng(`${seed}:quest-targets:${day}`));
   return shuffle(QUEST_IDS, createRng(`${seed}:quests:${day}`)).slice(0, count).map((id, index) => ({
+    offerId: `day-${day}-${id}-${index + 1}`, offeredDay: day, acceptDeadlineDay: Math.min(12, day + 1),
     id, fee: balance.quests[id].fee, reward: balance.quests[id].reward,
     rewardMode: rewardPolicy.mode, completionBonus: rewardPolicy.completionBonus,
     rule: balance.quests[id].rule, accepted: false, completed: false,
     targetCategory: families[index % families.length], acceptedDay: null, deadlineDay: null
   }));
+}
+
+export function refreshDailyQuestOffers(state, balance, relics = []) {
+  const previous = (state.questOffers || []).map((quest) => {
+    const offeredDay = quest.offeredDay ?? Math.max(1, state.day - 1);
+    return { ...quest, offerId: quest.offerId || `legacy-day-${offeredDay}-${quest.id}`, offeredDay, acceptDeadlineDay: quest.acceptDeadlineDay ?? Math.min(12, offeredDay + 1) };
+  });
+  const carried = previous.filter((quest) => !quest.accepted && state.day <= quest.acceptDeadlineDay);
+  const fresh = createDailyQuestOffers(balance, state.day, state.seed, relics);
+  state.questOffers = [...carried, ...fresh];
+  return state.questOffers;
 }
 
 export function botBidForLot({ lot, day, balance, marketIndex, seed }) {
@@ -154,7 +166,7 @@ export function buyInformation(state, balance, kind) {
 }
 
 export function acceptQuest(state, questId, balance) {
-  const quest = state.questOffers.find((entry) => entry.id === questId && !entry.accepted);
+  const quest = state.questOffers.find((entry) => (entry.offerId === questId || entry.id === questId) && !entry.accepted);
   if (!quest || state.cash < quest.fee) return false;
   state.cash -= quest.fee; quest.accepted = true;
   state.activeQuests.push({ ...quest, acceptedDay: state.day, deadlineDay: Math.min(12, state.day + 2) });
@@ -171,7 +183,7 @@ export function questMatchesItem(quest, item) {
 }
 
 export function deliverQuestItem(state, questId, lotId) {
-  const quest = state.activeQuests.find((entry) => entry.id === questId && !entry.completed);
+  const quest = state.activeQuests.find((entry) => (entry.offerId === questId || entry.id === questId) && !entry.completed);
   const item = state.inventory.find((entry) => entry.lotId === lotId);
   if (!quest || state.day > quest.deadlineDay || !questMatchesItem(quest, item)) return false;
   item.delivered = true; item.sold = true; item.salePrice = 0;
