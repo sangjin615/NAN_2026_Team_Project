@@ -376,24 +376,13 @@ function renderExchange(message = '') {
   document.querySelector('#exchange-market').innerHTML = `<h3>최근 시세</h3><div class="market-rates">${Object.entries(state.marketPath).map(([key, path]) => {
     const now = path[state.day - 1]; const previous = state.day > 1 ? path[state.day - 2] : 1; const delta = now - previous;
     return `<div><img src="${categoryIconUrl(key)}" alt=""><b>${CATEGORY_LABELS[key]}</b><strong>${Math.round(now * 100)}%</strong><span class="${delta >= 0 ? 'rise' : 'fall'}">${delta >= 0 ? '▲' : '▼'} ${Math.abs(delta * 100).toFixed(0)}%</span></div>`;
-  }).join('')}</div><section class="bundle-sale-panel"><h4>묶음 판매</h4><p>같은 계열과 희귀도 조합을 함께 팔면 묶음 보너스가 적용됩니다.</p><div class="bundle-sale-summary"><span>선택 <b id="bundle-count">0개</b></span><span>조합 <b id="bundle-label">선택 없음</b></span><span>배율 <b id="bundle-multiplier">×1.00</b></span><strong id="bundle-estimate">예상 0 G</strong></div></section><section class="set-bonus-guide"><h4>세트 보너스</h4><div><span data-set-rule="same-2">동일 계열 2점 <b>×1.20</b></span><span data-set-rule="same-3">동일 계열 3점 <b>×1.80</b></span><span data-set-rule="high-3">영웅 이상 3점 <b>×2.40</b></span><span data-set-rule="grade-3">희귀도 3종 <b>×2.60</b></span><span data-set-rule="all-6">전 계열 6종 <b>×1.40</b></span></div><small>성립한 조합 중 가장 높은 배율이 적용됩니다.</small></section>`;
+  }).join('')}</div><section class="set-bonus-guide"><h4>세트 보너스</h4><div><span data-set-rule="same-2">동일 계열 2점 <b>×1.20</b></span><span data-set-rule="same-3">동일 계열 3점 <b>×1.80</b></span><span data-set-rule="high-3">영웅 이상 3점 <b>×2.40</b></span><span data-set-rule="grade-3">희귀도 3종 <b>×2.60</b></span><span data-set-rule="all-6">전 계열 6종 <b>×1.40</b></span></div><small>성립한 조합 중 가장 높은 배율이 적용됩니다.</small></section>`;
   const syncBulkActions = () => {
     const ids = [...document.querySelectorAll('[data-item-select]:checked')].map((input) => input.dataset.itemSelect);
     const items = ownedItems().filter((item) => ids.includes(item.lotId) && !item.collateral);
     const quote = quoteItemsSale(state, balance, ids);
     const groups = Object.values(Object.groupBy(items, (item) => item.category));
-    const categories = groups.map((group) => group.length);
-    const distinctGrades = new Set(items.map((item) => item.grade)).size;
-    let label = items.length ? '일반 묶음' : '선택 없음';
-    if (categories.some((count) => count >= 3) && distinctGrades >= 3) label = '혼합 희귀도 세트';
-    else if (categories.some((count) => count >= 3)) label = '동일 계열 3점';
-    else if (categories.some((count) => count >= 2)) label = '동일 계열 2점';
-    else if (new Set(items.map((item) => item.category)).size >= 6) label = '전 계열 컬렉션';
     document.querySelector('#sell-selected').disabled = !quote.count;
-    document.querySelector('#bundle-count').textContent = `${quote.count}개`;
-    document.querySelector('#bundle-label').textContent = label;
-    document.querySelector('#bundle-multiplier').textContent = `×${quote.multiplier.toFixed(2)}`;
-    document.querySelector('#bundle-estimate').textContent = `예상 ${money(quote.revenue)}`;
     const activeRules = {
       'same-2': groups.some((group) => group.length >= 2),
       'same-3': groups.some((group) => group.length >= 3),

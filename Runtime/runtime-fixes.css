@@ -647,40 +647,25 @@ button.secondary:disabled { background-image: url("./assets/ui/skin-v1/button-se
 [data-scene="exchange"] .market-rates { gap: 2px; }
 [data-scene="exchange"] .market-rates { order: 1; }
 [data-scene="exchange"] .set-bonus-guide { order: 2; }
-[data-scene="exchange"] .bundle-sale-panel { order: 3; }
 [data-scene="exchange"] .market-rates > div { padding: 5px 3px; }
-[data-scene="exchange"] .bundle-sale-panel {
+[data-scene="exchange"] .set-bonus-guide {
   margin-top: 12px;
-  padding: 4px 7px;
+  padding: 7px 10px;
   color: #f3ead9;
   background: none;
   border: 12px solid transparent;
   border-image: url("./assets/ui/exchange/bundle-sale-panel.png") 40 48 fill / 12px / 0 stretch;
   box-shadow: 0 4px 10px #38230b33;
 }
-[data-scene="exchange"] .bundle-sale-panel h4 { margin: 0 0 5px; color: #f2c75c; font-size: 1.12em; }
-[data-scene="exchange"] .bundle-sale-panel p { margin: 0 0 9px; color: #d9c9ae; font-size: .86em; line-height: 1.35; }
-[data-scene="exchange"] .bundle-sale-summary { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px 8px; font-size: .82em; }
-[data-scene="exchange"] .bundle-sale-summary span { display: flex; justify-content: space-between; gap: 5px; }
-[data-scene="exchange"] .bundle-sale-summary b { color: #fff2c8; }
-[data-scene="exchange"] #bundle-estimate { grid-column: 1 / -1; padding-top: 6px; border-top: 1px solid #76582e; color: #f2c75c; text-align: right; font-size: 1.18em; }
-[data-scene="exchange"] .set-bonus-guide { margin-top: 10px; padding: 9px 10px; border-top: 2px solid #8b6b3f; border-bottom: 1px solid #b69a72; color: #493722; }
-[data-scene="exchange"] .set-bonus-guide h4 { margin: 0 0 6px; color: #68491f; font-size: clamp(15px,1.15vw,19px); }
+[data-scene="exchange"] .set-bonus-guide h4 { margin: 0 0 7px; color: #f2c75c; font-size: clamp(15px,1.15vw,19px); }
 [data-scene="exchange"] .set-bonus-guide > div { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 4px 9px; }
-[data-scene="exchange"] .set-bonus-guide span { display: flex; justify-content: space-between; gap: 5px; padding: 3px 5px; border: 1px solid #9b805c66; background: #e9d7bd88; font-size: clamp(11px,.86vw,14px); }
-[data-scene="exchange"] .set-bonus-guide span b { color: #6d4c20; white-space: nowrap; }
-[data-scene="exchange"] .set-bonus-guide span.is-active { border-color: #be8624; background: #f0cc7a99; box-shadow: inset 0 0 0 1px #fff2b888; }
-[data-scene="exchange"] .set-bonus-guide span.is-active b { color: #9b4f08; }
-[data-scene="exchange"] .set-bonus-guide small { display: block; margin-top: 5px; color: #78644b; font-size: clamp(9px,.72vw,12px); }
+[data-scene="exchange"] .set-bonus-guide span { display: flex; justify-content: space-between; gap: 5px; padding: 3px 5px; border: 1px solid #7f633b88; background: #5b422966; font-size: clamp(11px,.86vw,14px); }
+[data-scene="exchange"] .set-bonus-guide span b { color: #f7d985; white-space: nowrap; }
+[data-scene="exchange"] .set-bonus-guide span.is-active { border-color: #e4aa39; background: #8b5c1c99; box-shadow: inset 0 0 0 1px #fff2b888; }
+[data-scene="exchange"] .set-bonus-guide span.is-active b { color: #fff0ad; }
+[data-scene="exchange"] .set-bonus-guide small { display: block; margin-top: 6px; color: #d9c9ae; font-size: clamp(9px,.72vw,12px); }
 @media (max-width: 1300px) {
-  [data-scene="exchange"] .bundle-sale-panel {
-    margin-top: 4px; padding: 1px 4px; border-width: 7px;
-    border-image-width: 7px;
-  }
-  [data-scene="exchange"] .bundle-sale-panel h4 { margin-bottom: 2px; }
-  [data-scene="exchange"] .bundle-sale-panel p { margin-bottom: 4px; line-height: 1.15; }
-  [data-scene="exchange"] #bundle-estimate { padding-top: 3px; }
-  [data-scene="exchange"] .set-bonus-guide { margin-top: 4px; padding: 4px 6px; }
+  [data-scene="exchange"] .set-bonus-guide { margin-top: 4px; padding: 4px 6px; border-width: 7px; border-image-width: 7px; }
   [data-scene="exchange"] .set-bonus-guide h4 { margin-bottom: 3px; font-size: 13px; }
   [data-scene="exchange"] .set-bonus-guide > div { grid-template-columns: repeat(3,minmax(0,1fr)); gap: 2px 4px; }
   [data-scene="exchange"] .set-bonus-guide span { padding: 1px 3px; font-size: 10px; }
