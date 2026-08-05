@@ -6,7 +6,12 @@ function normalizedGradeWeights(balance) {
   return Object.fromEntries(GRADES.map((grade) => [grade, source[grade] ?? source[grade.toLowerCase()] ?? DEFAULT_GRADE_WEIGHTS[grade]]));
 }
 
-export const VISUAL_EFFECTS_PER_LOT = 3;
+export const VISUAL_EFFECTS_PER_GRADE = Object.freeze({
+  COMMON: 1,
+  RARE: 2,
+  EPIC: 3,
+  LEGENDARY: 4,
+});
 
 const GRADE_EFFECTS = Object.freeze({
   COMMON: ['display-shadow', 'soft-halo'],
@@ -18,7 +23,8 @@ const GRADE_EFFECTS = Object.freeze({
 export function normalizeVisualEffects(category, grade, effects = []) {
   const gradeEffects = GRADE_EFFECTS[grade] || GRADE_EFFECTS.COMMON;
   const categoryEffects = CATEGORY_EFFECTS[category] || ['dust-motes'];
-  return [...new Set([...gradeEffects, ...effects, ...categoryEffects, ...VISUAL_EFFECTS])].slice(0, VISUAL_EFFECTS_PER_LOT);
+  const count = VISUAL_EFFECTS_PER_GRADE[grade] || VISUAL_EFFECTS_PER_GRADE.COMMON;
+  return [...new Set([...gradeEffects, ...effects, ...categoryEffects, ...VISUAL_EFFECTS])].slice(0, count);
 }
 
 export function selectVisualEffects(category, grade, rng) {

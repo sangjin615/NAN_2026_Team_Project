@@ -2651,7 +2651,12 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
     const source = balance2?.lotPool?.gradeWeights || DEFAULT_GRADE_WEIGHTS;
     return Object.fromEntries(GRADES.map((grade) => [grade, source[grade] ?? source[grade.toLowerCase()] ?? DEFAULT_GRADE_WEIGHTS[grade]]));
   }
-  var VISUAL_EFFECTS_PER_LOT = 3;
+  var VISUAL_EFFECTS_PER_GRADE = Object.freeze({
+    COMMON: 1,
+    RARE: 2,
+    EPIC: 3,
+    LEGENDARY: 4
+  });
   var GRADE_EFFECTS = Object.freeze({
     COMMON: ["display-shadow", "soft-halo"],
     RARE: ["display-shadow", "rim-glow"],
@@ -2661,7 +2666,8 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
   function normalizeVisualEffects(category, grade, effects = []) {
     const gradeEffects = GRADE_EFFECTS[grade] || GRADE_EFFECTS.COMMON;
     const categoryEffects = CATEGORY_EFFECTS[category] || ["dust-motes"];
-    return [.../* @__PURE__ */ new Set([...gradeEffects, ...effects, ...categoryEffects, ...VISUAL_EFFECTS])].slice(0, VISUAL_EFFECTS_PER_LOT);
+    const count = VISUAL_EFFECTS_PER_GRADE[grade] || VISUAL_EFFECTS_PER_GRADE.COMMON;
+    return [.../* @__PURE__ */ new Set([...gradeEffects, ...effects, ...categoryEffects, ...VISUAL_EFFECTS])].slice(0, count);
   }
   function selectVisualEffects(category, grade, rng) {
     const categoryEffects = shuffle(CATEGORY_EFFECTS[category] || ["dust-motes"], rng);
