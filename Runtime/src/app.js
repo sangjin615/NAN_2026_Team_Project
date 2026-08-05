@@ -464,7 +464,7 @@ function renderTavern(message = '') {
     const grouped = Object.groupBy(estimates, (bot) => bot.name);
     return `<p><b>${stage}명 공개</b></p><ul>${Object.entries(grouped).slice(0, stage).map(([name, entries]) => { const interest = [...entries].sort((a, b) => b.maxBid - a.maxBid)[0]; return `<li><b>${name}</b> · ${escapeHtml(interest.lot.content?.displayName || interest.lot.baseName)}</li>`; }).join('')}</ul>`;
   };
-  document.querySelector('#tavern-detail').innerHTML = `<h3>정보 상세</h3><div class="detail-heading"><img class="detail-symbol" src="${icons[selected]}" alt=""><div><h2>${names[selected]}</h2><small>상회 ${state.shopStage}단계 공개 정보</small></div></div><p>${descriptions[selected]}</p><section class="info-result tavern-live-result info-${selected}">${informationResult(selected)}</section><p class="tavern-rule">정보 구매 없이 세 정보상을 자유롭게 확인할 수 있습니다.</p>`;
+  document.querySelector('#tavern-detail').innerHTML = `<h3>정보 상세</h3><div class="detail-heading"><img class="detail-symbol" src="${icons[selected]}" alt=""><div><h2>${names[selected]}</h2><small>상회 ${state.shopStage}단계 공개 정보</small></div></div><p>${descriptions[selected]}</p><section class="info-result tavern-live-result info-${selected}">${informationResult(selected)}</section>`;
   const effectiveStage = Math.max(1, Math.min(3, state.shopStage));
   const stageRows = [
     { stage: 1, competitors: '경쟁자 1명', catalog: '이름', forecast: '시세 2개' },
