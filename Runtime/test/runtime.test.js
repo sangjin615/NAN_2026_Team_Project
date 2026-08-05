@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
-import { createRunSchedule, validateSchedule } from '../src/schedule.js';
+import { createRunSchedule, normalizeVisualEffects, validateSchedule, VISUAL_EFFECTS_PER_LOT } from '../src/schedule.js';
 import { createSetGraph } from '../src/set-graph.js';
 import { FallbackContentProvider, GenerationBuffer } from '../src/generation-buffer.js';
 import { createInitialState, resolveLot, advanceDay } from '../src/game-state.js';
@@ -41,6 +41,15 @@ test('generation buffer prepares current day plus two and falls back without blo
   assert.ok(schedule.days.slice(0, 3).every((day) => day.lots.every((lot) => lot.content?.provenance === 'local-fallback')));
   assert.ok(schedule.days.slice(0, 3).every((day) => day.lots.every((lot) => lot.content?.description.includes('테마와 연결된'))));
   assert.ok(schedule.days.slice(0, 3).every((day) => day.lots.every((lot) => lot.content?.rumor && lot.content?.setHint && lot.content?.npcReaction)));
+});
+
+test('every grade uses the same number of distinct visual effects', () => {
+  const schedule = createRunSchedule({ catalog, balance, seed: 'equal-vfx-count' });
+  const lots = schedule.days.flatMap((day) => day.lots);
+  assert.ok(lots.every((lot) => lot.visualEffects.length === VISUAL_EFFECTS_PER_LOT));
+  assert.ok(lots.every((lot) => new Set(lot.visualEffects).size === VISUAL_EFFECTS_PER_LOT));
+  assert.equal(normalizeVisualEffects('CER', 'COMMON', ['display-shadow']).length, VISUAL_EFFECTS_PER_LOT);
+  assert.equal(normalizeVisualEffects('JEW', 'LEGENDARY', ['display-shadow', 'sparkle', 'soft-halo', 'rising-particles']).length, VISUAL_EFFECTS_PER_LOT);
 });
 
 test('core state can finish all 12 days without a VSL implementation', () => {

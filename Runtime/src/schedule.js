@@ -1,4 +1,4 @@
-import { CATEGORY_EFFECTS, DEFAULT_GRADE_WEIGHTS, GRADES, LOTS_PER_DAY, RUN_DAYS } from './constants.js';
+import { CATEGORY_EFFECTS, DEFAULT_GRADE_WEIGHTS, GRADES, LOTS_PER_DAY, RUN_DAYS, VISUAL_EFFECTS } from './constants.js';
 import { createRng, shuffle, weightedChoice } from './rng.js';
 
 function normalizedGradeWeights(balance) {
@@ -6,10 +6,24 @@ function normalizedGradeWeights(balance) {
   return Object.fromEntries(GRADES.map((grade) => [grade, source[grade] ?? source[grade.toLowerCase()] ?? DEFAULT_GRADE_WEIGHTS[grade]]));
 }
 
+export const VISUAL_EFFECTS_PER_LOT = 3;
+
+const GRADE_EFFECTS = Object.freeze({
+  COMMON: ['display-shadow', 'soft-halo'],
+  RARE: ['display-shadow', 'rim-glow'],
+  EPIC: ['display-shadow', 'light-sweep'],
+  LEGENDARY: ['display-shadow', 'sparkle'],
+});
+
+export function normalizeVisualEffects(category, grade, effects = []) {
+  const gradeEffects = GRADE_EFFECTS[grade] || GRADE_EFFECTS.COMMON;
+  const categoryEffects = CATEGORY_EFFECTS[category] || ['dust-motes'];
+  return [...new Set([...gradeEffects, ...effects, ...categoryEffects, ...VISUAL_EFFECTS])].slice(0, VISUAL_EFFECTS_PER_LOT);
+}
+
 export function selectVisualEffects(category, grade, rng) {
-  const candidates = shuffle(CATEGORY_EFFECTS[category] || ['rim-glow'], rng);
-  const count = grade === 'LEGENDARY' ? 3 : grade === 'EPIC' ? 2 : grade === 'RARE' ? 1 : 0;
-  return ['display-shadow', ...candidates.slice(0, count)];
+  const categoryEffects = shuffle(CATEGORY_EFFECTS[category] || ['dust-motes'], rng);
+  return normalizeVisualEffects(category, grade, categoryEffects);
 }
 
 export function createRunSchedule({ catalog, balance, seed }) {

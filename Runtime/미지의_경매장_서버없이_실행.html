@@ -2651,10 +2651,21 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
     const source = balance2?.lotPool?.gradeWeights || DEFAULT_GRADE_WEIGHTS;
     return Object.fromEntries(GRADES.map((grade) => [grade, source[grade] ?? source[grade.toLowerCase()] ?? DEFAULT_GRADE_WEIGHTS[grade]]));
   }
+  var VISUAL_EFFECTS_PER_LOT = 3;
+  var GRADE_EFFECTS = Object.freeze({
+    COMMON: ["display-shadow", "soft-halo"],
+    RARE: ["display-shadow", "rim-glow"],
+    EPIC: ["display-shadow", "light-sweep"],
+    LEGENDARY: ["display-shadow", "sparkle"]
+  });
+  function normalizeVisualEffects(category, grade, effects = []) {
+    const gradeEffects = GRADE_EFFECTS[grade] || GRADE_EFFECTS.COMMON;
+    const categoryEffects = CATEGORY_EFFECTS[category] || ["dust-motes"];
+    return [.../* @__PURE__ */ new Set([...gradeEffects, ...effects, ...categoryEffects, ...VISUAL_EFFECTS])].slice(0, VISUAL_EFFECTS_PER_LOT);
+  }
   function selectVisualEffects(category, grade, rng) {
-    const candidates = shuffle(CATEGORY_EFFECTS[category] || ["rim-glow"], rng);
-    const count = grade === "LEGENDARY" ? 3 : grade === "EPIC" ? 2 : grade === "RARE" ? 1 : 0;
-    return ["display-shadow", ...candidates.slice(0, count)];
+    const categoryEffects = shuffle(CATEGORY_EFFECTS[category] || ["dust-motes"], rng);
+    return normalizeVisualEffects(category, grade, categoryEffects);
   }
   function createRunSchedule({ catalog: catalog2, balance: balance2, seed }) {
     const rng = createRng(seed);
@@ -3938,13 +3949,16 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
     state.phase = "catalog";
     adapter.showScene("catalog");
     syncHeader();
-    document.querySelector("#catalog-grid").innerHTML = state.schedule.days[state.day - 1].lots.map((lot, index) => `<article class="lot-card catalog-lot-${index + 1}" tabindex="0" aria-label="\uACBD\uB9E4\uD488 ${index + 1} ${escapeHtml(lot.content.displayName)} \uC0C1\uC138 \uC815\uBCF4">
+    document.querySelector("#catalog-grid").innerHTML = state.schedule.days[state.day - 1].lots.map((lot, index) => {
+      const visualEffects = normalizeVisualEffects(lot.category, lot.grade, lot.visualEffects);
+      return `<article class="lot-card catalog-lot-${index + 1}" tabindex="0" aria-label="\uACBD\uB9E4\uD488 ${index + 1} ${escapeHtml(lot.content.displayName)} \uC0C1\uC138 \uC815\uBCF4">
     <b class="catalog-number">${String(index + 1).padStart(2, "0")}</b>
-    <div class="mini-sprite ${lot.visualEffects.map((effect) => `vfx-${effect}`).join(" ")}"><img src="${spriteUrl(lot, lot.grade)}" alt=""></div>
+    <div class="mini-sprite ${visualEffects.map((effect) => `vfx-${effect}`).join(" ")}"><img src="${spriteUrl(lot, lot.grade)}" alt=""></div>
     <span class="catalog-grade">${gradeLabel(lot.grade)}</span><h3>${escapeHtml(lot.content.displayName)}</h3>
     <p class="catalog-meta"><span>${escapeHtml(categoryLabel(lot.category))}</span><strong>${money(lot.pricing.basePrice)}</strong></p>
     <aside class="catalog-tooltip" role="tooltip"><b>${escapeHtml(lot.content.displayName)}</b><span>${gradeLabel(lot.grade)} \xB7 ${escapeHtml(categoryLabel(lot.category))}</span><p>${escapeHtml(lot.content.description)}</p>${lot.content.setHint ? `<em>${escapeHtml(lot.content.setHint)}</em>` : ""}<strong>\uAE30\uC900\uAC00 ${money(lot.pricing.basePrice)}</strong></aside>
-  </article>`).join("");
+  </article>`;
+    }).join("");
   }
   function renderAuction() {
     const lot = state.schedule.days[state.day - 1].lots[state.lotIndex];
@@ -3967,7 +3981,7 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
     adapter.setText("current-bid", money(state.auctionSession.currentPrice));
     adapter.setText("cash", money(state.cash));
     adapter.setSprite("current-lot", spriteUrl(lot, lot.grade));
-    adapter.setEffects("current-lot", lot.visualEffects);
+    adapter.setEffects("current-lot", normalizeVisualEffects(lot.category, lot.grade, lot.visualEffects));
     document.querySelector("#auction-feed").innerHTML = state.auctionSession.feed.slice(-4).map((line) => `<p>${escapeHtml(line)}</p>`).join("");
     const participants = [
       { name: "\uB2F9\uC2E0", budget: state.cash, leader: state.auctionSession.leader === "player", player: true },

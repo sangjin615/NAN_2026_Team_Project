@@ -1,5 +1,5 @@
 import { loadCatalog, spriteUrl } from './catalog.js';
-import { createRunSchedule, validateSchedule } from './schedule.js';
+import { createRunSchedule, normalizeVisualEffects, validateSchedule } from './schedule.js';
 import { createSetGraph } from './set-graph.js';
 import { GenerationBuffer } from './generation-buffer.js';
 import { GenerationApiProvider } from './generation-api-provider.js';
@@ -560,13 +560,13 @@ function renderMuseum(returnTo = 'city') {
 
 function renderCatalog() {
   clearActionTimer(); audio.playBgm('workplace'); state.phase = 'catalog'; adapter.showScene('catalog'); syncHeader();
-  document.querySelector('#catalog-grid').innerHTML = state.schedule.days[state.day - 1].lots.map((lot, index) => `<article class="lot-card catalog-lot-${index + 1}" tabindex="0" aria-label="경매품 ${index + 1} ${escapeHtml(lot.content.displayName)} 상세 정보">
+  document.querySelector('#catalog-grid').innerHTML = state.schedule.days[state.day - 1].lots.map((lot, index) => { const visualEffects = normalizeVisualEffects(lot.category, lot.grade, lot.visualEffects); return `<article class="lot-card catalog-lot-${index + 1}" tabindex="0" aria-label="경매품 ${index + 1} ${escapeHtml(lot.content.displayName)} 상세 정보">
     <b class="catalog-number">${String(index + 1).padStart(2, '0')}</b>
-    <div class="mini-sprite ${lot.visualEffects.map((effect) => `vfx-${effect}`).join(' ')}"><img src="${spriteUrl(lot, lot.grade)}" alt=""></div>
+    <div class="mini-sprite ${visualEffects.map((effect) => `vfx-${effect}`).join(' ')}"><img src="${spriteUrl(lot, lot.grade)}" alt=""></div>
     <span class="catalog-grade">${gradeLabel(lot.grade)}</span><h3>${escapeHtml(lot.content.displayName)}</h3>
     <p class="catalog-meta"><span>${escapeHtml(categoryLabel(lot.category))}</span><strong>${money(lot.pricing.basePrice)}</strong></p>
     <aside class="catalog-tooltip" role="tooltip"><b>${escapeHtml(lot.content.displayName)}</b><span>${gradeLabel(lot.grade)} · ${escapeHtml(categoryLabel(lot.category))}</span><p>${escapeHtml(lot.content.description)}</p>${lot.content.setHint ? `<em>${escapeHtml(lot.content.setHint)}</em>` : ''}<strong>기준가 ${money(lot.pricing.basePrice)}</strong></aside>
-  </article>`).join('');
+  </article>`; }).join('');
 }
 
 function renderAuction() {
@@ -583,7 +583,7 @@ function renderAuction() {
   adapter.showScene('auction');
   adapter.setText('lot-progress', `${state.day}일차 · 경매품 ${state.lotIndex + 1} / 8`); adapter.setText('lot-name', lot.content.displayName);
   adapter.setText('lot-grade', lot.grade); adapter.setText('lot-description', lot.content.description); adapter.setText('base-price', money(lot.pricing.basePrice));
-  adapter.setText('current-bid', money(state.auctionSession.currentPrice)); adapter.setText('cash', money(state.cash)); adapter.setSprite('current-lot', spriteUrl(lot, lot.grade)); adapter.setEffects('current-lot', lot.visualEffects);
+  adapter.setText('current-bid', money(state.auctionSession.currentPrice)); adapter.setText('cash', money(state.cash)); adapter.setSprite('current-lot', spriteUrl(lot, lot.grade)); adapter.setEffects('current-lot', normalizeVisualEffects(lot.category, lot.grade, lot.visualEffects));
   document.querySelector('#auction-feed').innerHTML = state.auctionSession.feed.slice(-4).map((line) => `<p>${escapeHtml(line)}</p>`).join('');
   const participants = [
     { name: '당신', budget: state.cash, leader: state.auctionSession.leader === 'player', player: true },
