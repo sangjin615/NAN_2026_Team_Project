@@ -12,3 +12,15 @@ export function resolveLot(state, { action, playerBid = 0, auctionResult }) {
 }
 
 export function advanceDay(state) { state.day += 1; state.lotIndex = 0; state.phase = 'hub'; }
+
+export function prepareAuctionEntry(state) {
+  const lots = state.schedule?.days?.[state.day - 1]?.lots || [];
+  const resolvedCount = state.history?.filter((entry) => entry.day === state.day).length || 0;
+  const parsedIndex = Number(state.lotIndex);
+  const validIndex = Number.isInteger(parsedIndex) && parsedIndex >= resolvedCount && parsedIndex < lots.length;
+
+  state.lotIndex = validIndex ? parsedIndex : Math.min(resolvedCount, lots.length);
+  const currentLot = lots[state.lotIndex];
+  if (!currentLot || state.auctionSession?.lotId !== currentLot.lotId) state.auctionSession = null;
+  return currentLot || null;
+}

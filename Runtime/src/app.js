@@ -4,7 +4,7 @@ import { createSetGraph } from './set-graph.js';
 import { GenerationBuffer } from './generation-buffer.js';
 import { GenerationApiProvider } from './generation-api-provider.js';
 import { SaveStore } from './save-store.js';
-import { advanceDay, createInitialState, resolveLot } from './game-state.js';
+import { advanceDay, createInitialState, prepareAuctionEntry, resolveLot } from './game-state.js';
 import { VslRuntimeAdapter } from './vsl-adapter.js';
 import {
   acceptQuest, appraiseItem, botBidForLot,
@@ -574,7 +574,7 @@ function renderCatalog() {
 }
 
 function renderAuction() {
-  const lot = state.schedule.days[state.day - 1].lots[state.lotIndex];
+  const lot = prepareAuctionEntry(state);
   if (!lot) return renderSettlement();
   const expired = expireQuestsBeforeAuction(state);
   state.phase = 'auction'; audio.playBgm('auction');
@@ -772,7 +772,10 @@ document.querySelector('#continue-run').onclick = () => {
   generation.blueprint = state.generationBlueprint || null;
   ({ auction: renderAuction, settlement: renderSettlement, relic: renderRelic, result: renderResult, quests: renderQuestOffice, tavern: renderTavern, exchange: renderExchange, shop: renderShop, guild: renderGuild, museum: () => renderMuseum('city'), catalog: renderCatalog }[state.phase] || renderHub)();
 };
-document.querySelector('#start-auction').onclick = renderAuction;
+document.querySelector('#start-auction').onclick = () => {
+  prepareAuctionEntry(state);
+  renderAuction();
+};
 document.querySelectorAll('[data-raise]').forEach((button) => button.onclick = () => finishLot('bid', Number(button.dataset.raise)));
 document.querySelector('#pass').onclick = () => finishLot('pass'); document.querySelector('#next-day').onclick = nextDay;
 document.querySelector('#buy-relic').onclick = () => finishRelic(true); document.querySelector('#skip-relic').onclick = () => finishRelic(false);

@@ -3312,6 +3312,16 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
     state2.lotIndex = 0;
     state2.phase = "hub";
   }
+  function prepareAuctionEntry(state2) {
+    const lots = state2.schedule?.days?.[state2.day - 1]?.lots || [];
+    const resolvedCount = state2.history?.filter((entry) => entry.day === state2.day).length || 0;
+    const parsedIndex = Number(state2.lotIndex);
+    const validIndex = Number.isInteger(parsedIndex) && parsedIndex >= resolvedCount && parsedIndex < lots.length;
+    state2.lotIndex = validIndex ? parsedIndex : Math.min(resolvedCount, lots.length);
+    const currentLot = lots[state2.lotIndex];
+    if (!currentLot || state2.auctionSession?.lotId !== currentLot.lotId) state2.auctionSession = null;
+    return currentLot || null;
+  }
 
   // src/vsl-adapter.js
   var VslRuntimeAdapter = class {
@@ -4093,7 +4103,7 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
     }).join("");
   }
   function renderAuction() {
-    const lot = state.schedule.days[state.day - 1].lots[state.lotIndex];
+    const lot = prepareAuctionEntry(state);
     if (!lot) return renderSettlement();
     const expired = expireQuestsBeforeAuction(state);
     state.phase = "auction";
@@ -4342,7 +4352,10 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
     generation.blueprint = state.generationBlueprint || null;
     ({ auction: renderAuction, settlement: renderSettlement, relic: renderRelic, result: renderResult, quests: renderQuestOffice, tavern: renderTavern, exchange: renderExchange, shop: renderShop, guild: renderGuild, museum: () => renderMuseum("city"), catalog: renderCatalog }[state.phase] || renderHub)();
   };
-  document.querySelector("#start-auction").onclick = renderAuction;
+  document.querySelector("#start-auction").onclick = () => {
+    prepareAuctionEntry(state);
+    renderAuction();
+  };
   document.querySelectorAll("[data-raise]").forEach((button) => button.onclick = () => finishLot("bid", Number(button.dataset.raise)));
   document.querySelector("#pass").onclick = () => finishLot("pass");
   document.querySelector("#next-day").onclick = nextDay;

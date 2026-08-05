@@ -4,7 +4,7 @@ import { readFile } from 'node:fs/promises';
 import { createRunSchedule, normalizeVisualEffects, validateSchedule, VISUAL_EFFECTS_PER_GRADE } from '../src/schedule.js';
 import { createSetGraph } from '../src/set-graph.js';
 import { FallbackContentProvider, GenerationBuffer } from '../src/generation-buffer.js';
-import { createInitialState, resolveLot, advanceDay } from '../src/game-state.js';
+import { createInitialState, resolveLot, advanceDay, prepareAuctionEntry } from '../src/game-state.js';
 import { resolveAuction, appraiseAll, appraiseItem, sellAll, sellItems, quoteItemsSale, acceptQuest, takeLoan, botBidForLot, buyInformation, missedDeadline, isBankrupt, deliverQuestItem, refreshDailyQuestOffers, repayLoanEarly } from '../src/systems.js';
 import { recordEvent, runMetrics } from '../src/telemetry.js';
 import { GenerationApiProvider } from '../src/generation-api-provider.js';
@@ -41,6 +41,29 @@ test('generation buffer prepares current day plus two and falls back without blo
   assert.ok(schedule.days.slice(0, 3).every((day) => day.lots.every((lot) => lot.content?.provenance === 'local-fallback')));
   assert.ok(schedule.days.slice(0, 3).every((day) => day.lots.every((lot) => lot.content?.description.includes('테마와 연결된'))));
   assert.ok(schedule.days.slice(0, 3).every((day) => day.lots.every((lot) => lot.content?.rumor && lot.content?.setHint && lot.content?.npcReaction)));
+});
+
+test('repairs the first-day auction cursor after generated lot content changes', () => {
+  const schedule = createRunSchedule({ catalog, balance, seed: 'auction-entry-repair' });
+  const state = createInitialState({ schedule, sets: createSetGraph(schedule, 'auction-entry-repair'), balance });
+  const firstLot = schedule.days[0].lots[0];
+  state.lotIndex = 'missing';
+  state.auctionSession = { lotId: 'stale-lot' };
+  firstLot.content = { ...firstLot.content, displayName: '새로 생성된 첫 경매품' };
+
+  assert.equal(prepareAuctionEntry(state), firstLot);
+  assert.equal(state.lotIndex, 0);
+  assert.equal(state.auctionSession, null);
+});
+
+test('resumes auction entry at the first unresolved lot', () => {
+  const schedule = createRunSchedule({ catalog, balance, seed: 'auction-entry-resume' });
+  const state = createInitialState({ schedule, sets: createSetGraph(schedule, 'auction-entry-resume'), balance });
+  state.history.push({ day: 1, lotId: schedule.days[0].lots[0].lotId });
+  state.lotIndex = 99;
+
+  assert.equal(prepareAuctionEntry(state), schedule.days[0].lots[1]);
+  assert.equal(state.lotIndex, 1);
 });
 
 test('visual effect counts are consistent within a grade and increase by grade', () => {
