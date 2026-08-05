@@ -2129,7 +2129,54 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
 [data-scene="result"] .result-stats b { color: #315f27; text-align: right; }
 [data-scene="result"] #return-title { left: 62%; bottom: 2%; width: 27%; height: 10%; color: #f1e4d0; }
 [data-scene="result"].is-failure #run-summary { left: 9%; top: 22%; width: 82%; height: 64%; display: grid; grid-template-columns: 38% 62%; }
-[data-scene="result"].is-failure #run-summary > section { padding: 8%; }
+[data-scene="result"].is-failure #run-summary > section {
+  box-sizing: border-box;
+  min-width: 0;
+  height: 100%;
+  padding: 6% 8%;
+  overflow: hidden;
+}
+[data-scene="result"].is-failure .result-ending {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: clamp(10px, 1.2vw, 20px);
+}
+[data-scene="result"].is-failure .result-ending h3,
+[data-scene="result"].is-failure .result-ending p,
+[data-scene="result"].is-failure .result-ending strong {
+  width: 100%;
+  box-sizing: border-box;
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+[data-scene="result"].is-failure .result-stats {
+  display: grid;
+  grid-template-rows: auto repeat(5, minmax(0, 1fr));
+  align-content: stretch;
+  padding: 4% 7%;
+}
+[data-scene="result"].is-failure .result-stats h3 {
+  align-self: center;
+  margin: 0;
+  padding-bottom: 2%;
+  text-align: center;
+}
+[data-scene="result"].is-failure .result-stats p {
+  min-width: 0;
+  min-height: 0;
+  box-sizing: border-box;
+  align-items: center;
+  margin: 0;
+  padding: 0 2%;
+  font-size: clamp(11px, 1.05vw, 17px);
+}
+[data-scene="result"].is-failure .result-stats p span,
+[data-scene="result"].is-failure .result-stats p b {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
 [data-scene="result"].is-failure #return-title { left: 62%; bottom: 2%; }
 
 /* Keep the four upper facility nameplates crisp at every viewport size.
