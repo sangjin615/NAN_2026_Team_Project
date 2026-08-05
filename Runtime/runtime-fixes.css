@@ -1791,8 +1791,11 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
   padding: 0; border: 0; border-image: none; background: transparent; box-shadow: none;
 }
 [data-scene="quests"] .office-layout .quest-grid {
-  gap: 1%; grid-template-rows: repeat(5,minmax(0,1fr));
+  gap: 1%; grid-template-rows: repeat(3,minmax(0,1fr));
   align-content: stretch; overflow: hidden;
+}
+[data-scene="quests"] .office-layout .quest-grid:has(article:nth-child(4)) {
+  grid-template-rows: repeat(5,minmax(0,1fr));
 }
 [data-scene="quests"] .quest-grid article {
   min-height: 0; padding: 4px 22% 4px 15%;

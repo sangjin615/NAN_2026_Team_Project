@@ -144,7 +144,7 @@ test('each day allows every offered quest even when earlier quests are still act
   assert.equal(state.activeQuests.length, 6);
 });
 
-test('daily quest refresh replaces yesterday offers with five new offers', () => {
+test('daily quest refresh replaces yesterday offers with three new offers', () => {
   const schedule = createRunSchedule({ catalog, balance, seed: 'quest-refresh' });
   const sets = createSetGraph(schedule, 'quest-refresh');
   const state = createInitialState({ schedule, sets, balance, startCash: 1000000 });
@@ -154,10 +154,19 @@ test('daily quest refresh replaces yesterday offers with five new offers', () =>
   state.activeQuests.forEach((quest) => { quest.completed = true; });
   advanceDay(state);
   refreshDailyQuestOffers(state, balance, state.metaRelics);
-  assert.equal(state.questOffers.length, 5);
+  assert.equal(state.questOffers.length, 3);
   assert.equal(state.questOffers.every((quest) => quest.offeredDay === 2), true);
   assert.equal(state.questOffers.some((quest) => quest.offerId === first.offerId || quest.offerId === second.offerId), false);
   assert.equal(new Set(state.questOffers.map((quest) => quest.offerId)).size, state.questOffers.length);
+});
+
+test('royal charter expands the refreshed daily quest offers from three to five', () => {
+  const schedule = createRunSchedule({ catalog, balance, seed: 'quest-royal-charter' });
+  const state = createInitialState({ schedule, sets: createSetGraph(schedule, 'quest-royal-charter'), balance, startCash: 100000 });
+  state.metaRelics = ['royal-charter'];
+  refreshDailyQuestOffers(state, balance, state.metaRelics);
+  assert.equal(state.questOffers.length, 5);
+  assert.equal(state.questOffers.every((quest) => quest.offeredDay === state.day), true);
 });
 
 test('disabled bargain quests are not generated or carried into a new day', () => {

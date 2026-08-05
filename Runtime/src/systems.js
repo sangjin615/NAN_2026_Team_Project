@@ -21,7 +21,7 @@ export function createMarketPath(balance, seed) {
 }
 
 export function createDailyQuestOffers(balance, day, seed, relics = []) {
-  const count = Math.min(5, relics.includes('royal-charter') ? 5 : balance.quests?.offering?.perDay || 5);
+  const count = Math.min(5, relics.includes('royal-charter') ? 5 : balance.quests?.offering?.perDay || 3);
   const enabledQuestIds = QUEST_IDS.filter((id) => balance.quests[id]?.enabled !== false);
   const rewardPolicy = balance.quests?.rewardPolicy || {};
   const families = shuffle(['CER', 'CLK', 'PNT', 'BOK', 'MET', 'JEW'], createRng(`${seed}:quest-targets:${day}`));
