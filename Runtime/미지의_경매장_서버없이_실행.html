@@ -2272,6 +2272,34 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
 }
 [data-scene="result"].is-failure #return-title { left: 62%; bottom: 2%; }
 
+/* Illustrated action icons supplied for the final VSL runtime pass. */
+[data-scene="auction"] > .actions button,
+[data-scene="relic"] > .actions button,
+[data-scene="settlement"] #next-day {
+  display: inline-flex; align-items: center; justify-content: center; gap: clamp(5px,.65vw,11px);
+}
+[data-scene="auction"] > .actions button img,
+[data-scene="relic"] > .actions button img,
+[data-scene="settlement"] #next-day img {
+  width: clamp(24px,2.6vw,43px); height: clamp(24px,2.6vw,43px); object-fit: contain;
+  filter: drop-shadow(0 2px 2px #0008); pointer-events: none;
+}
+[data-scene="settlement"] .settlement-money p img,
+[data-scene="settlement"] .settlement-market p img {
+  flex: 0 0 auto; width: clamp(16px,1.4vw,23px); height: clamp(16px,1.4vw,23px); object-fit: contain;
+}
+[data-scene="settlement"] .settlement-market p {
+  grid-template-columns: auto 25% minmax(40px,1fr) minmax(42px,auto);
+}
+[data-scene="result"] .result-status-icon {
+  width: clamp(50px,6.5vw,105px); height: clamp(50px,6.5vw,105px); margin: 0 auto 2%; object-fit: contain;
+  filter: drop-shadow(0 5px 6px #0007);
+}
+[data-scene="result"].is-failure .result-status-icon { width: clamp(42px,5.2vw,84px); height: clamp(42px,5.2vw,84px); }
+.trend-icon { width: 1.45em !important; height: 1.45em !important; object-fit: contain; vertical-align: middle; }
+#market-indices .market-quote i { display: inline-flex; align-items: center; justify-content: center; }
+#exchange-market .market-rates span { display: inline-flex; align-items: center; justify-content: flex-end; gap: 3px; }
+
 /* Keep the four upper facility nameplates crisp at every viewport size.
    The old rule stretched the complete bitmap; border-image only stretches its center. */
 [data-scene="hub"] .place-grid button:is(
@@ -2618,10 +2646,10 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
     <div class="auction-layout"><div class="sprite-stage" data-effects="current-lot"><img data-sprite="current-lot" alt="경매 물품"></div><article><span class="grade" data-bind="lot-grade"></span><p data-bind="lot-description"></p><dl><div><dt>기준가</dt><dd data-bind="base-price"></dd></div><div><dt>현재 호가</dt><dd data-bind="current-bid"></dd></div></dl></article></div>
     <aside id="auction-participants"></aside>
     <div id="auction-feed" class="auction-feed"></div>
-    <div class="actions"><button data-raise="1">최소 호가</button><button data-raise="1.15">+15%</button><button id="pass" class="secondary">포기/낙찰 확정</button></div>
+    <div class="actions"><button data-raise="1"><img src="./assets/ui/action-icons/bid.png" alt="">최소 호가</button><button data-raise="1.15"><img src="./assets/ui/action-icons/bid.png" alt="">+15%</button><button id="pass" class="secondary"><img src="./assets/ui/action-icons/pass.png" alt="">포기/낙찰 확정</button></div>
   </section>
-  <section class="scene" data-scene="settlement" hidden><p class="eyebrow">DAILY SETTLEMENT</p><h2><span data-bind="day"></span>일차 결산</h2><p>오늘의 경매품 8개가 모두 종료되었습니다. 다음 이틀의 경매품을 준비합니다.</p><div id="settlement-summary"></div><button id="next-day">다음 날</button></section>
-  <section class="scene relic" data-scene="relic" hidden><p class="eyebrow">RELIC AUCTION</p><aside id="relic-participants"></aside><div id="relic-card"></div><div id="relic-feed" class="auction-feed"></div><div class="actions"><button id="buy-relic">유물 입찰</button><button id="skip-relic" class="secondary">포기</button></div></section>
+  <section class="scene" data-scene="settlement" hidden><p class="eyebrow">DAILY SETTLEMENT</p><h2><span data-bind="day"></span>일차 결산</h2><p>오늘의 경매품 8개가 모두 종료되었습니다. 다음 이틀의 경매품을 준비합니다.</p><div id="settlement-summary"></div><button id="next-day"><img src="./assets/ui/action-icons/next-day.png" alt="">다음 날</button></section>
+  <section class="scene relic" data-scene="relic" hidden><p class="eyebrow">RELIC AUCTION</p><aside id="relic-participants"></aside><div id="relic-card"></div><div id="relic-feed" class="auction-feed"></div><div class="actions"><button id="buy-relic"><img src="./assets/ui/action-icons/bid.png" alt="">유물 입찰</button><button id="skip-relic" class="secondary"><img src="./assets/ui/action-icons/pass.png" alt="">포기</button></div></section>
   <section class="scene" data-scene="result" hidden><p class="eyebrow">RUN RESULT</p><h2 id="result-title">12일 여정 종료</h2><div id="run-summary"></div><button id="return-title">타이틀로 돌아가기</button></section>
 </main><dialog id="settings-dialog"><h2>설정</h2><p class="settings-lead">게임의 전체 소리를 설정합니다.</p><button id="sound-toggle" type="button" aria-pressed="true"><span>전체 소리</span><strong>켜짐</strong></button><button id="close-settings" class="secondary">닫기</button></dialog>
 <script>
@@ -3686,7 +3714,8 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
       }
       const points = pointList.join(" ");
       const [lastX, lastY] = points.split(" ").at(-1).split(",");
-      return `<span class="market-spark ${trend}" data-category="${family}"><span class="market-quote"><img src="${categoryIconUrl(family)}" alt=""><b>${CATEGORY_LABELS[family]}</b><em>${(current * 100).toFixed(0)}</em><i aria-label="${trend === "rise" ? "\uC0C1\uC2B9" : trend === "fall" ? "\uD558\uB77D" : "\uBCC0\uB3D9 \uC5C6\uC74C"}">${arrow}</i></span><svg viewBox="0 0 100 46" preserveAspectRatio="none" aria-hidden="true"><line x1="0" y1="25" x2="100" y2="25"></line><polyline points="${points}"></polyline><circle cx="${lastX}" cy="${lastY}" r="3.4"></circle></svg></span>`;
+      const trendImage = trend === "flat" ? "" : `<img class="trend-icon" src="./assets/ui/action-icons/market-${trend}.png" alt="">`;
+      return `<span class="market-spark ${trend}" data-category="${family}"><span class="market-quote"><img src="${categoryIconUrl(family)}" alt=""><b>${CATEGORY_LABELS[family]}</b><em>${(current * 100).toFixed(0)}</em><i aria-label="${trend === "rise" ? "\uC0C1\uC2B9" : trend === "fall" ? "\uD558\uB77D" : "\uBCC0\uB3D9 \uC5C6\uC74C"}">${trendImage || arrow}</i></span><svg viewBox="0 0 100 46" preserveAspectRatio="none" aria-hidden="true"><line x1="0" y1="25" x2="100" y2="25"></line><polyline points="${points}"></polyline><circle cx="${lastX}" cy="${lastY}" r="3.4"></circle></svg></span>`;
     }).join("")}</div>`;
     document.querySelector("#loan-status").textContent = state.loan ? `\uB9CC\uAE30 ${state.loan.dueDay}\uC77C \xB7 ${money(state.loan.due)}` : state.guildLocked ? "\uC870\uD569 \uC774\uC6A9 \uC81C\uD55C" : "\uB300\uCD9C \uC5C6\uC74C";
     document.querySelector("#hub-message").textContent = message;
@@ -3836,7 +3865,8 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
       const now = path[state.day - 1];
       const previous = state.day > 1 ? path[state.day - 2] : 1;
       const delta = now - previous;
-      return `<div><img src="${categoryIconUrl(key)}" alt=""><b>${CATEGORY_LABELS[key]}</b><strong>${Math.round(now * 100)}%</strong><span class="${delta >= 0 ? "rise" : "fall"}">${delta >= 0 ? "\u25B2" : "\u25BC"} ${Math.abs(delta * 100).toFixed(0)}%</span></div>`;
+      const trend = delta >= 0 ? "rise" : "fall";
+      return `<div><img src="${categoryIconUrl(key)}" alt=""><b>${CATEGORY_LABELS[key]}</b><strong>${Math.round(now * 100)}%</strong><span class="${trend}"><img class="trend-icon" src="./assets/ui/action-icons/market-${trend}.png" alt="">${Math.abs(delta * 100).toFixed(0)}%</span></div>`;
     }).join("")}</div><section class="set-bonus-guide"><h4>\uC138\uD2B8 \uBCF4\uB108\uC2A4</h4><div><span data-set-rule="same-2">\uB3D9\uC77C \uACC4\uC5F4 2\uC810 <b>\xD71.20</b></span><span data-set-rule="same-3">\uB3D9\uC77C \uACC4\uC5F4 3\uC810 <b>\xD71.80</b></span><span data-set-rule="high-3">\uC601\uC6C5 \uC774\uC0C1 3\uC810 <b>\xD72.40</b></span><span data-set-rule="grade-3">\uD76C\uADC0\uB3C4 3\uC885 <b>\xD72.60</b></span><span data-set-rule="all-6">\uC804 \uACC4\uC5F4 6\uC885 <b>\xD71.40</b></span></div><small>\uC131\uB9BD\uD55C \uC870\uD569 \uC911 \uAC00\uC7A5 \uB192\uC740 \uBC30\uC728\uC774 \uC801\uC6A9\uB429\uB2C8\uB2E4.</small></section>`;
     const syncBulkActions = () => {
       const ids = [...document.querySelectorAll("[data-item-select]:checked")].map((input) => input.dataset.itemSelect);
@@ -4135,12 +4165,14 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
     const categories = [...new Set(dayLots.map((lot) => lot.category))].slice(0, 4);
     document.querySelector("#settlement-summary").innerHTML = `
     <section class="settlement-lots"><h3>\uB099\uCC30 / \uC720\uCC30 \uACB0\uACFC (\uACBD\uB9E4\uD488 8\uAC1C)</h3>${dayHistory.map((entry, index) => `<p><b>\uACBD\uB9E4\uD488 ${index + 1}</b><span class="${entry.won ? "won" : "lost"}">${entry.won ? "\uB099\uCC30" : "\uC720\uCC30"}</span><em>${entry.won ? "\uB2F9\uC2E0" : "\uACBD\uC7C1\uC790"}</em><strong>${money(entry.price)}</strong></p>`).join("")}</section>
-    <section class="settlement-center"><h3>\uC624\uB298\uC758 \uC815\uC0B0</h3><div class="settlement-owned"><b>\uD68D\uB4DD \uBB3C\uD488</b><strong>${wins.length}\uAC1C</strong><span>\uD604\uC7AC \uBCF4\uAD00 ${ownedItems().length} / ${state.storage}</span></div><div class="settlement-money settlement-finance"><h4>\uC790\uAE08 \uD604\uD669</h4><p><span>\uCD1D \uC9C0\uCD9C \uAE08\uC561</span><strong>${money(spent)}</strong></p><p><span>\uD604\uC7AC \uC790\uC0B0</span><strong>${money(state.cash)}</strong></p></div><div class="settlement-money settlement-progress"><h4>\uC6B4\uC601 \uD604\uD669</h4><p><span>\uC644\uB8CC \uC758\uB8B0</span><strong>${state.lastSettlement.quests}\uAC74</strong></p><p><span>\uB300\uCD9C \uC0C1\uD0DC</span><strong>${loanResult}</strong></p></div></section>
+    <section class="settlement-center"><h3>\uC624\uB298\uC758 \uC815\uC0B0</h3><div class="settlement-owned"><b>\uD68D\uB4DD \uBB3C\uD488</b><strong>${wins.length}\uAC1C</strong><span>\uD604\uC7AC \uBCF4\uAD00 ${ownedItems().length} / ${state.storage}</span></div><div class="settlement-money settlement-finance"><h4>\uC790\uAE08 \uD604\uD669</h4><p><img src="./assets/ui/action-icons/total-spent.png" alt=""><span>\uCD1D \uC9C0\uCD9C \uAE08\uC561</span><strong>${money(spent)}</strong></p><p><img src="./assets/ui/action-icons/current-assets.png" alt=""><span>\uD604\uC7AC \uC790\uC0B0</span><strong>${money(state.cash)}</strong></p></div><div class="settlement-money settlement-progress"><h4>\uC6B4\uC601 \uD604\uD669</h4><p><span>\uC644\uB8CC \uC758\uB8B0</span><strong>${state.lastSettlement.quests}\uAC74</strong></p><p><span>\uB300\uCD9C \uC0C1\uD0DC</span><strong>${loanResult}</strong></p></div></section>
     <section class="settlement-market"><h3>\uACC4\uC5F4\uBCC4 \uC2DC\uC138 \uC694\uC57D</h3>${categories.map((category) => {
       const value = state.marketPath[category]?.[state.day - 1] ?? 100;
-      return `<p><b>${categoryLabel(category)}</b><span class="market-line" style="--market:${Math.max(15, Math.min(95, value - 40))}%"></span><strong>${value.toFixed(2)}</strong></p>`;
+      const trendIcon = value >= 100 ? "market-rise.png" : "market-fall.png";
+      return `<p><img src="./assets/ui/action-icons/${trendIcon}" alt=""><b>${categoryLabel(category)}</b><span class="market-line" style="--market:${Math.max(15, Math.min(95, value - 40))}%"></span><strong>${value.toFixed(2)}</strong></p>`;
     }).join("")}</section>`;
-    document.querySelector("#next-day").textContent = state.failure ? "\uC2E4\uD328 \uACB0\uACFC \uD655\uC778" : state.day === 12 ? "\uCD5C\uC885 \uC720\uBB3C \uACBD\uB9E4\uB85C" : `${state.day + 1}\uC77C\uCC28\uB85C`;
+    const nextDayLabel = state.failure ? "\uC2E4\uD328 \uACB0\uACFC \uD655\uC778" : state.day === 12 ? "\uCD5C\uC885 \uC720\uBB3C \uACBD\uB9E4\uB85C" : `${state.day + 1}\uC77C\uCC28\uB85C`;
+    document.querySelector("#next-day").innerHTML = `<img src="./assets/ui/action-icons/next-day.png" alt=""><span>${nextDayLabel}</span>`;
     save();
   }
   async function nextDay() {
@@ -4196,8 +4228,8 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
     const participants = [{ id: "player", name: "\uB2F9\uC2E0", budget: state.cash }, ...session.bots.map((bot) => ({ ...bot, budget: bot.maxBid }))];
     document.querySelector("#relic-participants").innerHTML = `<h3>\uCD5C\uC885 \uACBD\uB9E4 \uCC38\uAC00\uC790</h3>${participants.map((participant) => `<div class="participant ${session.leader === participant.id ? "is-leading" : ""}"><b>${participant.name}</b><strong>${money(participant.budget)}</strong></div>`).join("")}`;
     document.querySelector("#relic-feed").innerHTML = session.feed.slice(-4).map((line) => `<p>${line}</p>`).join("");
-    document.querySelector("#buy-relic").textContent = `10% \uC778\uC0C1 \uC785\uCC30`;
-    document.querySelector("#skip-relic").textContent = "\uBB3C\uB7EC\uB098\uAE30";
+    document.querySelector("#buy-relic").innerHTML = `<img src="./assets/ui/action-icons/bid.png" alt=""><span>10% \uC778\uC0C1 \uC785\uCC30</span>`;
+    document.querySelector("#skip-relic").innerHTML = `<img src="./assets/ui/action-icons/pass.png" alt=""><span>\uBB3C\uB7EC\uB098\uAE30</span>`;
     document.querySelector("#buy-relic").disabled = state.cash < Math.ceil(session.currentPrice * 1.1);
     armActionTimer("#relic-timer", session.deadline, () => finishRelic(false));
   }
@@ -4256,7 +4288,8 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
     document.querySelector("#result-title").textContent = state.failure ? "\uC5EC\uC815 \uC2E4\uD328" : "12\uC77C \uC5EC\uC815 \uC644\uB8CC";
     const wonCount = state.history.filter((entry) => entry.won).length;
     const acquiredRelics = (state.relicChoices || []).map((id) => balance.relics.list.find((entry) => entry.id === id)?.name || id);
-    document.querySelector("#run-summary").innerHTML = `<section class="result-ending"><h3>${state.failure ? "\uC5EC\uC815 \uC2E4\uD328" : `\uC0C1\uD68C ${state.shopStage}\uB2E8\uACC4 \uB2EC\uC131`}</h3>${state.failure ? `<p class="failure">${state.failure}</p>` : "<p>\uC2E0\uC911\uD55C \uAC70\uB798\uC640 \uAFB8\uC900\uD55C \uC131\uC7A5\uC73C\uB85C \uC5EC\uC815\uC744 \uB9C8\uCCE4\uC2B5\uB2C8\uB2E4.</p>"}<strong>${state.failure ? "\uB9C8\uAC10 \uC870\uAC74\uC744 \uB2E4\uC2DC \uD655\uC778\uD558\uC138\uC694." : "\uC644\uC8FC \uC131\uACF5"}</strong></section><section class="result-stats"><h3>\uC5EC\uC815 \uC694\uC57D</h3><p><span>\uC644\uC8FC \uC77C\uC218</span><b>${state.day}\uC77C</b></p><p><span>\uCD5C\uC885 \uC0C1\uD68C \uB2E8\uACC4</span><b>${state.shopStage}\uB2E8\uACC4</b></p><p><span>\uCD5C\uC885 \uC790\uC0B0</span><b>${money(state.cash + unsold)}</b></p><p><span>\uB099\uCC30 / \uC644\uB8CC \uC758\uB8B0</span><b>${wonCount}\uAC74 / ${state.completedQuestCount}\uAC74</b></p><p><span>\uD68D\uB4DD \uC720\uBB3C</span><b>${acquiredRelics.join(", ") || "\uC5C6\uC74C"}</b></p></section>`;
+    const resultIcon = state.failure ? "restart.png" : "clear.png";
+    document.querySelector("#run-summary").innerHTML = `<section class="result-ending"><img class="result-status-icon" src="./assets/ui/action-icons/${resultIcon}" alt=""><h3>${state.failure ? "\uC5EC\uC815 \uC2E4\uD328" : `\uC0C1\uD68C ${state.shopStage}\uB2E8\uACC4 \uB2EC\uC131`}</h3>${state.failure ? `<p class="failure">${state.failure}</p>` : "<p>\uC2E0\uC911\uD55C \uAC70\uB798\uC640 \uAFB8\uC900\uD55C \uC131\uC7A5\uC73C\uB85C \uC5EC\uC815\uC744 \uB9C8\uCCE4\uC2B5\uB2C8\uB2E4.</p>"}<strong>${state.failure ? "\uB9C8\uAC10 \uC870\uAC74\uC744 \uB2E4\uC2DC \uD655\uC778\uD558\uC138\uC694." : "\uC644\uC8FC \uC131\uACF5"}</strong></section><section class="result-stats"><h3>\uC5EC\uC815 \uC694\uC57D</h3><p><span>\uC644\uC8FC \uC77C\uC218</span><b>${state.day}\uC77C</b></p><p><span>\uCD5C\uC885 \uC0C1\uD68C \uB2E8\uACC4</span><b>${state.shopStage}\uB2E8\uACC4</b></p><p><span>\uCD5C\uC885 \uC790\uC0B0</span><b>${money(state.cash + unsold)}</b></p><p><span>\uB099\uCC30 / \uC644\uB8CC \uC758\uB8B0</span><b>${wonCount}\uAC74 / ${state.completedQuestCount}\uAC74</b></p><p><span>\uD68D\uB4DD \uC720\uBB3C</span><b>${acquiredRelics.join(", ") || "\uC5C6\uC74C"}</b></p></section>`;
     save();
   }
   var placeRenderers = { city: renderHub, quests: renderQuestOffice, tavern: renderTavern, exchange: renderExchange, shop: renderShop, guild: renderGuild, museum: () => renderMuseum("city"), catalog: renderCatalog };

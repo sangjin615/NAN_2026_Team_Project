@@ -2264,6 +2264,34 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
 }
 [data-scene="result"].is-failure #return-title { left: 62%; bottom: 2%; }
 
+/* Illustrated action icons supplied for the final VSL runtime pass. */
+[data-scene="auction"] > .actions button,
+[data-scene="relic"] > .actions button,
+[data-scene="settlement"] #next-day {
+  display: inline-flex; align-items: center; justify-content: center; gap: clamp(5px,.65vw,11px);
+}
+[data-scene="auction"] > .actions button img,
+[data-scene="relic"] > .actions button img,
+[data-scene="settlement"] #next-day img {
+  width: clamp(24px,2.6vw,43px); height: clamp(24px,2.6vw,43px); object-fit: contain;
+  filter: drop-shadow(0 2px 2px #0008); pointer-events: none;
+}
+[data-scene="settlement"] .settlement-money p img,
+[data-scene="settlement"] .settlement-market p img {
+  flex: 0 0 auto; width: clamp(16px,1.4vw,23px); height: clamp(16px,1.4vw,23px); object-fit: contain;
+}
+[data-scene="settlement"] .settlement-market p {
+  grid-template-columns: auto 25% minmax(40px,1fr) minmax(42px,auto);
+}
+[data-scene="result"] .result-status-icon {
+  width: clamp(50px,6.5vw,105px); height: clamp(50px,6.5vw,105px); margin: 0 auto 2%; object-fit: contain;
+  filter: drop-shadow(0 5px 6px #0007);
+}
+[data-scene="result"].is-failure .result-status-icon { width: clamp(42px,5.2vw,84px); height: clamp(42px,5.2vw,84px); }
+.trend-icon { width: 1.45em !important; height: 1.45em !important; object-fit: contain; vertical-align: middle; }
+#market-indices .market-quote i { display: inline-flex; align-items: center; justify-content: center; }
+#exchange-market .market-rates span { display: inline-flex; align-items: center; justify-content: flex-end; gap: 3px; }
+
 /* Keep the four upper facility nameplates crisp at every viewport size.
    The old rule stretched the complete bitmap; border-image only stretches its center. */
 [data-scene="hub"] .place-grid button:is(
