@@ -35,6 +35,7 @@ const RELIC_TIER_LABELS = { low: '하급', mid: '중급', high: '상급' };
 const CATEGORY_LABELS = { CER: '도자기', CLK: '시계', PNT: '회화', BOK: '고서', MET: '금은세공', JEW: '장신구' };
 const categoryIconUrl = (category) => `./assets/ui/market-categories/${category.toLowerCase()}.png`;
 const gradeLabel = (grade) => GRADE_LABELS[grade] || grade;
+const categoryLabel = (category) => CATEGORY_LABELS[category] || category;
 const escapeHtml = (value = '') => String(value).replace(/[&<>"']/g, (character) => ({
   '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
 }[character]));
@@ -279,7 +280,7 @@ function renderQuestOffice(message = '') {
       : `<span>감정 비용 ${money(cost)}</span>`;
     return `<article class="appraisal-card">
       <img src="${lot ? spriteUrl(lot, item.grade) : ''}" alt="${item.name}">
-      <div><b>${item.name}</b><small>${gradeLabel(item.grade)} · ${item.category}</small>${result}</div>
+      <div><b>${item.name}</b><small>${gradeLabel(item.grade)} · ${categoryLabel(item.category)}</small>${result}</div>
       <button data-office-appraise="${item.lotId}" ${item.appraised || item.collateral || state.cash < cost ? 'disabled' : ''}>${item.appraised ? '감정 완료' : item.collateral ? '담보 설정됨' : '정밀 감정'}</button>
     </article>`;
   }).join('') : '<p class="empty-note">감정할 보유 물품이 없습니다.</p>';
@@ -317,7 +318,7 @@ function renderExchange(message = '') {
   const maxStorage = Math.max(...balance.shop.storage);
   const occupiedCards = exchangeItems.map((item) => `
     <article><label><input type="checkbox" data-item-select="${item.lotId}"> <b>${item.name}</b></label>
-    <span>${gradeLabel(item.grade)} · ${item.category}</span><span>매입 ${money(item.paid)} · ${item.appraised ? `감정 ${money(item.trueValue)} ±${money(item.appraisalRange)}` : '미감정'}</span>
+    <span>${gradeLabel(item.grade)} · ${categoryLabel(item.category)}</span><span>매입 ${money(item.paid)} · ${item.appraised ? `감정 ${money(item.trueValue)} ±${money(item.appraisalRange)}` : '미감정'}</span>
     <button data-sell-item="${item.lotId}" ${item.collateral ? 'disabled' : ''}>즉시 처분</button></article>`).join('');
   const emptyCards = Array.from({ length: Math.max(0, state.storage - exchangeItems.length) }, (_, index) => `
     <article class="empty-inventory-slot" aria-label="빈 보관칸 ${exchangeItems.length + index + 1}">
@@ -530,8 +531,8 @@ function renderCatalog() {
     <b class="catalog-number">${String(index + 1).padStart(2, '0')}</b>
     <div class="mini-sprite ${lot.visualEffects.map((effect) => `vfx-${effect}`).join(' ')}"><img src="${spriteUrl(lot, lot.grade)}" alt=""></div>
     <span class="catalog-grade">${gradeLabel(lot.grade)}</span><h3>${escapeHtml(lot.content.displayName)}</h3>
-    <p class="catalog-meta"><span>${escapeHtml(lot.category)}</span><strong>${money(lot.pricing.basePrice)}</strong></p>
-    <aside class="catalog-tooltip" role="tooltip"><b>${escapeHtml(lot.content.displayName)}</b><span>${gradeLabel(lot.grade)} · ${escapeHtml(lot.category)}</span><p>${escapeHtml(lot.content.description)}</p>${lot.content.setHint ? `<em>${escapeHtml(lot.content.setHint)}</em>` : ''}<strong>기준가 ${money(lot.pricing.basePrice)}</strong></aside>
+    <p class="catalog-meta"><span>${escapeHtml(categoryLabel(lot.category))}</span><strong>${money(lot.pricing.basePrice)}</strong></p>
+    <aside class="catalog-tooltip" role="tooltip"><b>${escapeHtml(lot.content.displayName)}</b><span>${gradeLabel(lot.grade)} · ${escapeHtml(categoryLabel(lot.category))}</span><p>${escapeHtml(lot.content.description)}</p>${lot.content.setHint ? `<em>${escapeHtml(lot.content.setHint)}</em>` : ''}<strong>기준가 ${money(lot.pricing.basePrice)}</strong></aside>
   </article>`).join('');
 }
 
