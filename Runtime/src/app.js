@@ -474,6 +474,7 @@ function renderGuild(message = '') {
   document.querySelector('#guild-collateral-list').innerHTML = `<header><h3>담보 보유품 <small>(미판매 물품)</small></h3><b>${collateralCount} / ${state.storage}</b></header><div class="guild-collateral-scroll">${collateralMarkup}</div><footer><span>선택 담보 대출 한도</span><strong id="guild-limit-total">0 G</strong></footer>`;
   document.querySelector('#guild-loan').disabled = locked || Boolean(state.loan) || state.guildLocked || !collateralCount;
   document.querySelector('#guild-repay').disabled = !state.loan || state.day >= state.loan?.dueDay;
+  document.querySelector('#guild-return').disabled = false;
   document.querySelector('#guild-message').innerHTML = message ? `<b>${message}</b>` : `<b>대출 안내</b><p>선택한 물품은 상환 전까지 판매·감정·의뢰 제출이 제한됩니다.</p><p>만기 ${balance.loan.termDays}일 · 만기 상환액은 원금의 ${Math.round(balance.loan.repayMultiplier * 100)}%</p>`;
   const picker = document.querySelector('#guild-collateral');
   if (picker) {
