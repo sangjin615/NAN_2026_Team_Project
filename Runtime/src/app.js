@@ -7,7 +7,7 @@ import { SaveStore } from './save-store.js';
 import { advanceDay, createInitialState, prepareAuctionEntry, resolveLot } from './game-state.js';
 import { VslRuntimeAdapter } from './vsl-adapter.js';
 import {
-  acceptQuest, appraiseItem, botBidForLot,
+  acceptQuest, appraiseItem, botBidForLot, estimateBotDailyAssets,
   deliverQuestItem, expireQuestsBeforeAuction, missedDeadline, questMatchesItem,
   quoteItemsSale, refreshDailyQuestOffers, repayLoanEarly, sellItems, settleLoan, settleQuests, takeLoan, upgradeShop,
 } from './systems.js';
@@ -595,7 +595,9 @@ function renderAuction() {
   if (state.auctionSession?.lotId !== lot.lotId) {
     const marketIndex = state.marketPath[lot.category][state.day - 1];
     const generatedFeed = [lot.content.rumor, lot.content.setHint, lot.content.npcReaction].filter(Boolean);
-    state.auctionSession = { lotId: lot.lotId, currentPrice: Math.max(1, Math.round(lot.pricing.basePrice * balance.auction.startBidRatio)), leader: null, bots: botBidForLot({ lot, day: state.day, balance, marketIndex, seed: state.seed }), deadline: Date.now() + 15000, feed: [...(expired ? [`기한이 지난 의뢰 ${expired}건이 만료됐습니다.`] : ['경매가 시작되었습니다.']), ...generatedFeed] };
+    const dailyAssets = estimateBotDailyAssets({ state, balance });
+    const bots = botBidForLot({ lot, day: state.day, balance, marketIndex, seed: state.seed }).map((bot) => ({ ...bot, maxBid: Math.min(bot.maxBid, dailyAssets[bot.id]?.remaining || 0) }));
+    state.auctionSession = { lotId: lot.lotId, currentPrice: Math.max(1, Math.round(lot.pricing.basePrice * balance.auction.startBidRatio)), leader: null, bots, deadline: Date.now() + 15000, feed: [...(expired ? [`기한이 지난 의뢰 ${expired}건이 만료됐습니다.`] : ['경매가 시작되었습니다.']), ...generatedFeed] };
   }
   state.auctionSession.deadline ||= Date.now() + 15000;
   adapter.showScene('auction');
@@ -605,14 +607,14 @@ function renderAuction() {
   document.querySelector('#auction-feed').innerHTML = state.auctionSession.feed.slice(-4).map((line) => `<p>${escapeHtml(line)}</p>`).join('');
   const participants = [
     { name: '당신', budget: state.cash, leader: state.auctionSession.leader === 'player', player: true },
-    ...state.auctionSession.bots.map((bot) => ({ id: bot.id, name: bot.name, budget: bot.maxBid, leader: state.auctionSession.leader === bot.id })),
+    ...state.auctionSession.bots.map((bot) => ({ id: bot.id, name: bot.name, budget: estimateBotDailyAssets({ state, balance })[bot.id]?.remaining || 0, leader: state.auctionSession.leader === bot.id })),
   ];
   const competitorPortraits = {
     nemesis: './assets/ui/auction/competitors/galeo.png',
     'drifter-a': './assets/ui/auction/competitors/moira.png',
     'drifter-b': './assets/ui/auction/competitors/ines.png',
   };
-  document.querySelector('#auction-participants').innerHTML = `<h3>참가자 명단 (${participants.length} / 4)</h3>${participants.map((participant) => `<div class="participant ${participant.leader ? 'is-leading' : ''}">${participant.player ? '<span class="player-mark">나</span>' : `<img class="competitor-portrait" src="${competitorPortraits[participant.id]}" alt="${participant.name} 초상">`}<b>${participant.name}</b><strong>${money(participant.budget)}</strong></div>`).join('')}`;
+  document.querySelector('#auction-participants').innerHTML = `<h3>참가자 명단 (${participants.length} / 4)</h3>${participants.map((participant) => `<div class="participant ${participant.leader ? 'is-leading' : ''}">${participant.player ? '<span class="player-mark">나</span>' : `<img class="competitor-portrait" src="${competitorPortraits[participant.id]}" alt="${participant.name} 초상">`}<b>${participant.name}</b><small>${participant.player ? '보유 자산' : '추정 자산'}</small><strong>${money(participant.budget)}</strong></div>`).join('')}`;
   document.querySelector('#auction-lot-status').innerHTML = `<b>경매 ${state.lotIndex + 1} / 8</b><span>${gradeLabel(lot.grade)}</span><strong>${money(state.auctionSession.currentPrice)}</strong><em id="auction-timer" aria-label="남은 시간"></em>`;
   armActionTimer('#auction-timer', state.auctionSession.deadline, () => finishLot('pass'));
 }

@@ -56,6 +56,26 @@ export function botBidForLot({ lot, day, balance, marketIndex, seed }) {
   return bids.map((bot) => ({ ...bot, maxBid: Math.max(0, Math.round(Math.min(bot.cap, publicEstimate * (bot.target === lot.category ? 1.18 : 1) * ({ COMMON: 0.9, RARE: 1, EPIC: 1.05, LEGENDARY: 1.1 }[lot.grade] ?? 1) * bot.factor))) }));
 }
 
+export function estimateBotDailyAssets({ state, balance, day = state.day }) {
+  const lots = state.schedule?.days?.[day - 1]?.lots || [];
+  const totals = {};
+  for (const lot of lots) {
+    const marketIndex = state.marketPath[lot.category][day - 1];
+    for (const bot of botBidForLot({ lot, day, balance, marketIndex, seed: state.seed })) {
+      totals[bot.id] = (totals[bot.id] || 0) + bot.maxBid;
+    }
+  }
+  const spent = {};
+  for (const entry of state.history || []) {
+    if (entry.day !== day || entry.winner === 'player') continue;
+    spent[entry.winner] = (spent[entry.winner] || 0) + Number(entry.price || 0);
+  }
+  return Object.fromEntries(Object.entries(totals).map(([id, total]) => [id, {
+    initial: Math.round(total * 0.6),
+    remaining: Math.max(0, Math.round(total * 0.6) - (spent[id] || 0)),
+  }]));
+}
+
 export function resolveAuction({ state, lot, playerBid, balance }) {
   const marketIndex = state.marketPath[lot.category][state.day - 1];
   const bots = botBidForLot({ lot, day: state.day, balance, marketIndex, seed: state.seed });

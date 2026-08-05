@@ -5,7 +5,7 @@ import { createRunSchedule, normalizeVisualEffects, validateSchedule, VISUAL_EFF
 import { createSetGraph } from '../src/set-graph.js';
 import { FallbackContentProvider, GenerationBuffer } from '../src/generation-buffer.js';
 import { createInitialState, resolveLot, advanceDay, prepareAuctionEntry } from '../src/game-state.js';
-import { resolveAuction, appraiseAll, appraiseItem, sellAll, sellItems, quoteItemsSale, acceptQuest, takeLoan, botBidForLot, buyInformation, missedDeadline, isBankrupt, deliverQuestItem, refreshDailyQuestOffers, repayLoanEarly } from '../src/systems.js';
+import { resolveAuction, appraiseAll, appraiseItem, sellAll, sellItems, quoteItemsSale, acceptQuest, takeLoan, botBidForLot, estimateBotDailyAssets, buyInformation, missedDeadline, isBankrupt, deliverQuestItem, refreshDailyQuestOffers, repayLoanEarly } from '../src/systems.js';
 import { recordEvent, runMetrics } from '../src/telemetry.js';
 import { GenerationApiProvider } from '../src/generation-api-provider.js';
 import { SaveStore } from '../src/save-store.js';
@@ -41,6 +41,18 @@ test('generation buffer prepares current day plus two and falls back without blo
   assert.ok(schedule.days.slice(0, 3).every((day) => day.lots.every((lot) => lot.content?.provenance === 'local-fallback')));
   assert.ok(schedule.days.slice(0, 3).every((day) => day.lots.every((lot) => lot.content?.description.includes('테마와 연결된'))));
   assert.ok(schedule.days.slice(0, 3).every((day) => day.lots.every((lot) => lot.content?.rumor && lot.content?.setHint && lot.content?.npcReaction)));
+});
+
+test('competitor estimated assets stay fixed for the day and decrease after a win', () => {
+  const schedule = createRunSchedule({ catalog, balance, seed: 'daily-assets' });
+  const state = createInitialState({ schedule, sets: [], balance });
+  const before = estimateBotDailyAssets({ state, balance });
+  const winner = 'nemesis';
+  state.history.push({ day: 1, winner, price: 3000 });
+  const after = estimateBotDailyAssets({ state, balance });
+  assert.equal(after[winner].initial, before[winner].initial);
+  assert.equal(after[winner].remaining, before[winner].remaining - 3000);
+  assert.equal(after['drifter-a'].remaining, before['drifter-a'].remaining);
 });
 
 test('repairs the first-day auction cursor after generated lot content changes', () => {
