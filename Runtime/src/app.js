@@ -401,8 +401,8 @@ function renderExchange(message = '') {
 function renderTavern(message = '') {
   clearActionTimer(); audio.playBgm('tavern'); state.phase = 'tavern'; adapter.showScene('tavern'); syncHeader();
   const bought = Object.keys(state.information?.[state.day] || {});
-  const names = { forecast: '수요 동향', catalog: '출품 명세', competitors: '경쟁자 예산' };
-  const descriptions = { forecast: '현재 시장에서 수요가 높은 계열과 방향을 분석합니다.', catalog: '주요 경매품의 예상 등급과 계열 분포를 알려드립니다.', competitors: '경매 참가자들의 보유 예산 범위를 추정합니다.' };
+  const names = { forecast: '내일 동향', catalog: '출품 명세', competitors: '경쟁자 예산' };
+  const descriptions = { forecast: '내일 시장에서 수요가 높을 계열과 등락 방향을 예측합니다.', catalog: '주요 경매품의 예상 등급과 계열 분포를 알려드립니다.', competitors: '경매 참가자들의 보유 예산 범위를 추정합니다.' };
   const icons = { forecast: './assets/ui/tavern/demand-trend.png', catalog: './assets/ui/tavern/lot-specification.png', competitors: './assets/ui/tavern/competitor-budget.png' };
   const precision = { forecast: ['★★★★☆', '높음'], catalog: ['★★★☆☆', '보통'], competitors: ['★★★☆☆', '보통'] };
   const lots = state.schedule.days[state.day - 1].lots;
@@ -430,8 +430,9 @@ function renderTavern(message = '') {
   const categoryNames = { CER: '도자기', CLK: '시계', PNT: '회화', BOK: '고서', MET: '금은세공', JEW: '장신구' };
   const informationResult = (kind) => {
     if (kind === 'forecast') {
-      const ranked = Object.entries(state.marketPath).map(([key, path]) => [key, path[state.day - 1]]).sort((a, b) => b[1] - a[1]).slice(0, 2);
-      return `<ul>${ranked.map(([key, value]) => `<li>${categoryNames[key]} 수요 <b>${Math.round(value * 100)}%</b> · ${value >= 1 ? '상승 우세' : '하락 주의'}</li>`).join('')}</ul>`;
+      const forecastDayIndex = Math.min(state.day, state.schedule.days.length - 1);
+      const ranked = Object.entries(state.marketPath).map(([key, path]) => [key, path[forecastDayIndex]]).sort((a, b) => b[1] - a[1]).slice(0, 2);
+      return `<p><b>${forecastDayIndex + 1}일차 예상</b></p><ul>${ranked.map(([key, value]) => `<li>${categoryNames[key]} 수요 <b>${Math.round(value * 100)}%</b> · ${value >= 1 ? '상승 우세' : '하락 주의'}</li>`).join('')}</ul>`;
     }
     if (kind === 'catalog') {
       const grades = Object.entries(Object.groupBy(lots, (lot) => lot.grade)).map(([grade, entries]) => `${gradeLabel(grade)} ${entries.length}점`).join(' · ');
