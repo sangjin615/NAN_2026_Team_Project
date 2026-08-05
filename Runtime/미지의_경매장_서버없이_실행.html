@@ -1776,6 +1776,38 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
   background: linear-gradient(135deg,#9a2f16,#5f170d 72%);
 }
 
+/* Use the supplied gold-trimmed ribbon for every save-slot number.
+   This final rule intentionally overrides the older CSS polygon badges. */
+[data-scene="save"] .save-slot .slot-number,
+[data-scene="save"][data-mode="new"] .save-slot .slot-number,
+[data-scene="save"][data-mode="continue"] .save-slot .slot-number,
+[data-scene="save"] .save-slot.is-empty .slot-number,
+[data-scene="save"] .save-slot.is-empty.slot-1 .slot-number,
+[data-scene="save"] .save-slot.slot-3:not(.is-empty) .slot-number {
+  position: absolute;
+  left: 3.15%;
+  top: 5%;
+  z-index: 5;
+  display: grid;
+  place-items: start center;
+  width: 7.2%;
+  height: auto;
+  aspect-ratio: 434 / 557;
+  box-sizing: border-box;
+  overflow: visible;
+  clip: auto;
+  clip-path: none;
+  padding-top: clamp(9px,1.05vw,17px);
+  border: 0;
+  border-radius: 0;
+  background: transparent url("./assets/ui/save-slots/slot-number-ribbon.png") center / 100% 100% no-repeat;
+  color: #fff7e8;
+  font: 600 clamp(14px,1.75vw,29px)/1 Georgia,"Times New Roman",serif;
+  text-shadow: 0 2px 2px #140c08;
+  filter: drop-shadow(0 3px 2px #0007);
+  white-space: normal;
+}
+
 @media (max-height: 650px) {
   [data-scene="save"] #save-guide {
     padding: 4px 8px; border-width: 7px; border-image-width: 7px;
