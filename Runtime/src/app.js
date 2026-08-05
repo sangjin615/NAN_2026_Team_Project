@@ -29,6 +29,7 @@ let slotMode = 'new';
 let museumReturn = 'city';
 let actionTimer = null;
 let questMessageTimer = null;
+let shopMessageTimer = null;
 let selectedInfoKind = 'competitors';
 
 const GRADE_LABELS = { COMMON: '일반', RARE: '희귀', EPIC: '영웅', LEGENDARY: '전설' };
@@ -278,6 +279,18 @@ function showQuestMessage(message) {
   }, 3500);
 }
 
+function showShopMessage(message) {
+  if (shopMessageTimer) window.clearTimeout(shopMessageTimer);
+  shopMessageTimer = null;
+  const element = document.querySelector('#shop-message');
+  element.textContent = message;
+  if (!message) return;
+  shopMessageTimer = window.setTimeout(() => {
+    if (element.textContent === message) element.textContent = '';
+    shopMessageTimer = null;
+  }, 3500);
+}
+
 function renderQuestOffice(message = '') {
   clearActionTimer(); audio.playBgm('workplace'); state.phase = 'quests'; adapter.showScene('quests'); syncHeader();
   document.querySelector('#quest-offers').innerHTML = state.questOffers.map((quest) => `
@@ -472,7 +485,7 @@ function renderShop(message = '') {
   document.querySelector('#shop-detail').innerHTML = `<section class="shop-upgrade-panel"><header><h3>${maxed ? '상회 최고 단계' : `상회 ${next}단계 승급 조건`}</h3></header><ul class="shop-requirements"><li class="${questReady ? 'is-ready' : ''}"><span>▣ 의뢰 달성 조건</span><b>${state.completedQuestCount} / ${required}건</b></li><li class="${cashReady ? 'is-ready' : ''}"><span>● 승급비</span><b>${money(cost)}</b></li><li class="${cashReady ? 'is-ready' : ''}"><span>● 현재 자산</span><b>${money(state.cash)}</b></li></ul><h4>다음 단계 효과</h4><ul class="shop-benefits"><li>보관함 +${Math.max(0, nextStorage - state.storage)}</li><li>정보 구매 비용 ${Math.round((nextDiscount || 0) * 100)}% 할인</li>${next >= 3 ? '<li>유물 전시관 해금 확대</li>' : '<li>의뢰 동시 수주 강화</li>'}</ul></section><section class="shop-inventory-panel"><header><div><small>STORAGE</small><h3>보유품 관리</h3></div><b>${inventory.length} / ${state.storage}</b></header><div class="shop-storage-grid">${slots}</div><p class="shop-storage-note">※ 보유품 슬롯은 상회 단계에 따라 증가합니다.</p></section>`;
   document.querySelector('#shop-upgrade').textContent = maxed ? '최고 단계 달성' : `${next}단계로 승급하기`;
   document.querySelector('#shop-upgrade').disabled = maxed || state.cash < cost || state.completedQuestCount < required;
-  document.querySelector('#shop-message').textContent = message;
+  showShopMessage(message);
 }
 
 function renderGuild(message = '') {

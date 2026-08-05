@@ -3306,6 +3306,7 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
   var museumReturn = "city";
   var actionTimer = null;
   var questMessageTimer = null;
+  var shopMessageTimer = null;
   var selectedInfoKind = "competitors";
   var GRADE_LABELS = { COMMON: "\uC77C\uBC18", RARE: "\uD76C\uADC0", EPIC: "\uC601\uC6C5", LEGENDARY: "\uC804\uC124" };
   var RELIC_TIER_LABELS = { low: "\uD558\uAE09", mid: "\uC911\uAE09", high: "\uC0C1\uAE09" };
@@ -3552,6 +3553,17 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
       questMessageTimer = null;
     }, 3500);
   }
+  function showShopMessage(message) {
+    if (shopMessageTimer) window.clearTimeout(shopMessageTimer);
+    shopMessageTimer = null;
+    const element = document.querySelector("#shop-message");
+    element.textContent = message;
+    if (!message) return;
+    shopMessageTimer = window.setTimeout(() => {
+      if (element.textContent === message) element.textContent = "";
+      shopMessageTimer = null;
+    }, 3500);
+  }
   function renderQuestOffice(message = "") {
     clearActionTimer();
     audio.playBgm("workplace");
@@ -3789,7 +3801,7 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
     document.querySelector("#shop-detail").innerHTML = `<section class="shop-upgrade-panel"><header><h3>${maxed ? "\uC0C1\uD68C \uCD5C\uACE0 \uB2E8\uACC4" : `\uC0C1\uD68C ${next}\uB2E8\uACC4 \uC2B9\uAE09 \uC870\uAC74`}</h3></header><ul class="shop-requirements"><li class="${questReady ? "is-ready" : ""}"><span>\u25A3 \uC758\uB8B0 \uB2EC\uC131 \uC870\uAC74</span><b>${state.completedQuestCount} / ${required}\uAC74</b></li><li class="${cashReady ? "is-ready" : ""}"><span>\u25CF \uC2B9\uAE09\uBE44</span><b>${money(cost)}</b></li><li class="${cashReady ? "is-ready" : ""}"><span>\u25CF \uD604\uC7AC \uC790\uC0B0</span><b>${money(state.cash)}</b></li></ul><h4>\uB2E4\uC74C \uB2E8\uACC4 \uD6A8\uACFC</h4><ul class="shop-benefits"><li>\uBCF4\uAD00\uD568 +${Math.max(0, nextStorage - state.storage)}</li><li>\uC815\uBCF4 \uAD6C\uB9E4 \uBE44\uC6A9 ${Math.round((nextDiscount || 0) * 100)}% \uD560\uC778</li>${next >= 3 ? "<li>\uC720\uBB3C \uC804\uC2DC\uAD00 \uD574\uAE08 \uD655\uB300</li>" : "<li>\uC758\uB8B0 \uB3D9\uC2DC \uC218\uC8FC \uAC15\uD654</li>"}</ul></section><section class="shop-inventory-panel"><header><div><small>STORAGE</small><h3>\uBCF4\uC720\uD488 \uAD00\uB9AC</h3></div><b>${inventory.length} / ${state.storage}</b></header><div class="shop-storage-grid">${slots}</div><p class="shop-storage-note">\u203B \uBCF4\uC720\uD488 \uC2AC\uB86F\uC740 \uC0C1\uD68C \uB2E8\uACC4\uC5D0 \uB530\uB77C \uC99D\uAC00\uD569\uB2C8\uB2E4.</p></section>`;
     document.querySelector("#shop-upgrade").textContent = maxed ? "\uCD5C\uACE0 \uB2E8\uACC4 \uB2EC\uC131" : `${next}\uB2E8\uACC4\uB85C \uC2B9\uAE09\uD558\uAE30`;
     document.querySelector("#shop-upgrade").disabled = maxed || state.cash < cost || state.completedQuestCount < required;
-    document.querySelector("#shop-message").textContent = message;
+    showShopMessage(message);
   }
   function renderGuild(message = "") {
     clearActionTimer();
