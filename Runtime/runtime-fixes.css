@@ -2005,7 +2005,8 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
 [data-scene="catalog"]::before { background-size: cover; background-position: center; }
 [data-scene="catalog"]::after { background: #06040242; }
 [data-scene="catalog"] .catalog-grid {
-  position: absolute; left: 15%; right: 15%; top: 9%; bottom: 8%;
+  position: absolute; left: 50%; right: auto; top: 9%; bottom: 8%; width: 70%;
+  transform: translateX(-50%);
   display: block; margin: 0; padding: 0; overflow: visible;
   background: transparent url("./assets/ui/auction-catalog-book.png") center / 100% 100% no-repeat;
   filter: drop-shadow(0 14px 18px #0008);
@@ -2090,7 +2091,10 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
 [data-scene="catalog"] .catalog-tooltip em { color: #d2b874; font-size: clamp(9px,.72vw,12px); }
 [data-scene="catalog"] .catalog-tooltip strong { color: #8fd273; text-align: right; }
 [data-scene="catalog"] > .catalog-return { left: 4%; bottom: 2%; }
-[data-scene="catalog"] #start-auction { z-index: 20; bottom: 2%; width: 24%; }
+[data-scene="catalog"] #start-auction {
+  left: 50%; right: auto; z-index: 20; bottom: 2%; width: 24%;
+  transform: translateX(-50%);
+}
 
 [data-scene="auction"] > header { top: 5.5%; height: 11%; }
 [data-scene="auction"] #auction-feed { left: 6.1%; top: 60%; width: 13.6%; height: 25%; padding: 14px; }
