@@ -10,6 +10,7 @@ import { recordEvent, runMetrics } from '../src/telemetry.js';
 import { GenerationApiProvider } from '../src/generation-api-provider.js';
 import { SaveStore } from '../src/save-store.js';
 import { qualityErrors } from '../generation-server.js';
+import { RELIC_AUCTION_DAY, RUN_DAYS } from '../src/constants.js';
 
 const catalog = JSON.parse(await readFile(new URL('../assets/items/catalog.json', import.meta.url), 'utf8'));
 const balance = JSON.parse(await readFile(new URL('../data/balance.json', import.meta.url), 'utf8'));
@@ -165,6 +166,19 @@ test('delivery quest reward refunds base price and fee, then adds a fixed 3000 c
   assert.equal(deliverQuestItem(state, 'designated', lot.lotId), true);
   assert.equal(state.cash - beforeDelivery, 7400);
   assert.equal(state.activeQuests[0].paidReward, 7400);
+});
+
+test('the 12 normal auction days advance to a separate day 13 relic-auction hub', () => {
+  const schedule = createRunSchedule({ catalog, balance, seed: 'relic-day-transition' });
+  const state = createInitialState({ schedule, sets: [], balance });
+  state.day = RUN_DAYS;
+  state.phase = 'settlement';
+
+  advanceDay(state);
+
+  assert.equal(state.day, RELIC_AUCTION_DAY);
+  assert.equal(state.phase, 'hub');
+  assert.equal(state.schedule.days.length, RUN_DAYS);
 });
 
 test('each day allows every offered quest even when earlier quests are still active', () => {

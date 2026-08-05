@@ -1,4 +1,6 @@
 export const RUN_DAYS = 12;
+export const RELIC_AUCTION_DAY = RUN_DAYS + 1;
+export const JOURNEY_DAYS = RELIC_AUCTION_DAY;
 export const LOTS_PER_DAY = 8;
 export const BUFFER_AHEAD_DAYS = 2;
 export const GRADES = ['COMMON', 'RARE', 'EPIC', 'LEGENDARY'];

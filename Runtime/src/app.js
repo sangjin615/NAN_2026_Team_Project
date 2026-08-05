@@ -14,6 +14,7 @@ import {
 import { downloadRunLog, recordEvent } from './telemetry.js';
 import { AudioBus } from './audio-bus.js';
 import { createRng } from './rng.js';
+import { JOURNEY_DAYS, RELIC_AUCTION_DAY, RUN_DAYS } from './constants.js';
 
 const root = document.querySelector('#app');
 const adapter = new VslRuntimeAdapter(root);
@@ -217,7 +218,7 @@ function syncHeader() {
       scene.prepend(hud);
     }
     const loan = state.loan ? `${state.loan.dueDay}일 만기` : '대출 없음';
-    hud.innerHTML = `<span class="hud-day"><b>${state.day}일차 / 12</b></span><span class="hud-cash"><b>${money(state.cash)}</b></span><span class="hud-storage"><small>보관칸</small><b>${ownedItems().length} / ${state.storage}</b></span><span class="hud-stage"><b>${state.shopStage}단계</b><small>상회 단계</small></span><span class="hud-loan"><small>담보 대출</small><b>${loan}</b></span><button class="scene-hud-settings" aria-label="설정">설정</button>`;
+    hud.innerHTML = `<span class="hud-day"><b>${state.day}일차 / ${JOURNEY_DAYS}</b></span><span class="hud-cash"><b>${money(state.cash)}</b></span><span class="hud-storage"><small>보관칸</small><b>${ownedItems().length} / ${state.storage}</b></span><span class="hud-stage"><b>${state.shopStage}단계</b><small>상회 단계</small></span><span class="hud-loan"><small>담보 대출</small><b>${loan}</b></span><button class="scene-hud-settings" aria-label="설정">설정</button>`;
     hud.querySelector('.scene-hud-settings').onclick = () => document.querySelector('#settings-dialog').showModal();
   }
 }
@@ -585,6 +586,7 @@ function renderMuseum(returnTo = 'city') {
 }
 
 function renderCatalog() {
+  if (state.day >= RELIC_AUCTION_DAY) return startRelicAuction();
   clearActionTimer(); audio.playBgm('workplace'); state.phase = 'catalog'; adapter.showScene('catalog'); syncHeader();
   document.querySelector('#catalog-grid').innerHTML = state.schedule.days[state.day - 1].lots.map((lot, index) => { const visualEffects = normalizeVisualEffects(lot.category, lot.grade, lot.visualEffects); return `<article class="lot-card catalog-lot-${index + 1}" tabindex="0" aria-label="경매품 ${index + 1} ${escapeHtml(lot.content.displayName)} 상세 정보">
     <b class="catalog-number">${String(index + 1).padStart(2, '0')}</b>
@@ -669,7 +671,7 @@ function renderSettlement() {
     <section class="settlement-lots"><h3>낙찰 / 유찰 결과 (경매품 8개)</h3>${dayHistory.map((entry, index) => `<p><b>경매품 ${index + 1}</b><span class="${entry.won ? 'won' : 'lost'}">${entry.won ? '낙찰' : '유찰'}</span><em>${entry.won ? '당신' : '경쟁자'}</em><strong>${money(entry.price)}</strong></p>`).join('')}</section>
     <section class="settlement-center"><h3>오늘의 정산</h3><div class="settlement-owned"><b>획득 물품</b><strong>${wins.length}개</strong><span>현재 보관 ${ownedItems().length} / ${state.storage}</span></div><div class="settlement-money settlement-finance"><h4>자금 현황</h4><p><img src="./assets/ui/action-icons/total-spent.png" alt=""><span>총 지출 금액</span><strong>${money(spent)}</strong></p><p><img src="./assets/ui/action-icons/current-assets.png" alt=""><span>현재 자산</span><strong>${money(state.cash)}</strong></p></div><div class="settlement-money settlement-progress"><h4>운영 현황</h4><p><span>완료 의뢰</span><strong>${state.lastSettlement.quests}건</strong></p><p><span>대출 상태</span><strong>${loanResult}</strong></p></div></section>
     <section class="settlement-market"><h3>계열별 시세 요약</h3>${categories.map((category) => { const value = state.marketPath[category]?.[state.day - 1] ?? 100; const trendIcon = value >= 100 ? 'market-rise.png' : 'market-fall.png'; return `<p><img src="./assets/ui/action-icons/${trendIcon}" alt=""><b>${categoryLabel(category)}</b><span class="market-line" style="--market:${Math.max(15, Math.min(95, value - 40))}%"></span><strong>${value.toFixed(2)}</strong></p>`; }).join('')}</section>`;
-  const nextDayLabel = state.failure ? '실패 결과 확인' : state.day === 12 ? '최종 유물 경매로' : `${state.day + 1}일차로`;
+  const nextDayLabel = state.failure ? '실패 결과 확인' : state.day === RUN_DAYS ? `${RELIC_AUCTION_DAY}일차 도시로` : `${state.day + 1}일차로`;
   document.querySelector('#next-day').innerHTML = `<img src="./assets/ui/action-icons/next-day.png" alt=""><span>${nextDayLabel}</span>`;
   save();
 }
@@ -677,11 +679,16 @@ function renderSettlement() {
 async function nextDay() {
   audio.playSfx('day');
   if (state.failure) return renderResult();
-  if (state.day === 12) return startRelicAuction();
   const nextDayButton = document.querySelector('#next-day');
   nextDayButton.disabled = true;
-  advanceDay(state); refreshDailyQuestOffers(state, balance, state.metaRelics); state.settledDay = null;
+  advanceDay(state); state.settledDay = null;
+  if (state.day <= RUN_DAYS) refreshDailyQuestOffers(state, balance, state.metaRelics);
   save();
+  if (state.day === RELIC_AUCTION_DAY) {
+    renderHub('12일차 경매가 끝났습니다. 경매장으로 이동해 최종 유물 경매를 시작하세요.');
+    nextDayButton.disabled = false;
+    return;
+  }
   try {
     await generation.ensure({ currentDay: state.day, schedule: state.schedule, sets: state.sets });
     renderHub();
@@ -748,7 +755,7 @@ function finishRelic(bid) {
 }
 
 function renderResult() {
-  const journeyFinished = state.day >= balance.run.days;
+  const journeyFinished = state.day >= RELIC_AUCTION_DAY;
   const relicAuctionFinished = (state.relicRound || 0) >= 3 || new Set(state.metaRelics || []).size >= 9;
   if (!state.failure && !(journeyFinished && relicAuctionFinished)) {
     state.completed = false;
@@ -756,13 +763,13 @@ function renderResult() {
     save();
     return journeyFinished
       ? startRelicAuction()
-      : renderHub('런 결과는 12일차 최종 유물 경매가 끝난 뒤에 확인할 수 있습니다.');
+      : renderHub(`런 결과는 ${RELIC_AUCTION_DAY}일차 유물 경매가 끝난 뒤에 확인할 수 있습니다.`);
   }
   clearActionTimer(); audio.playBgm('settlement'); state.completed = true; state.phase = 'result'; adapter.showScene('result');
   document.querySelector('[data-scene="result"]').classList.toggle('is-failure', Boolean(state.failure));
   const unsold = ownedItems().reduce((sum, item) => sum + item.trueValue, 0);
   const relics = [...new Set([...state.metaRelics, ...(state.relicChoices || [])])]; localStorage.setItem('unknown-auction:relics', JSON.stringify(relics));
-  document.querySelector('#result-title').textContent = state.failure ? '여정 실패' : '12일 여정 완료';
+  document.querySelector('#result-title').textContent = state.failure ? '여정 실패' : `${JOURNEY_DAYS}일 여정 완료`;
   const wonCount = state.history.filter((entry) => entry.won).length;
   const acquiredRelics = (state.relicChoices || []).map((id) => balance.relics.list.find((entry) => entry.id === id)?.name || id);
   const resultIcon = state.failure ? 'restart.png' : 'clear.png';
@@ -802,6 +809,7 @@ document.querySelector('#continue-run').onclick = () => {
   ({ auction: renderAuction, settlement: renderSettlement, relic: renderRelic, result: renderResult, quests: renderQuestOffice, tavern: renderTavern, exchange: renderExchange, shop: renderShop, guild: renderGuild, museum: () => renderMuseum('city'), catalog: renderCatalog }[state.phase] || renderHub)();
 };
 document.querySelector('#start-auction').onclick = () => {
+  if (state.day >= RELIC_AUCTION_DAY) return startRelicAuction();
   prepareAuctionEntry(state);
   renderAuction();
 };
