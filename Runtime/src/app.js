@@ -28,6 +28,7 @@ let selectedSlot = 1;
 let slotMode = 'new';
 let museumReturn = 'city';
 let actionTimer = null;
+let auctionBotTimer = null;
 let questMessageTimer = null;
 let shopMessageTimer = null;
 let selectedInfoKind = 'competitors';
@@ -44,7 +45,28 @@ const escapeHtml = (value = '') => String(value).replace(/[&<>"']/g, (character)
 
 function clearActionTimer() {
   if (actionTimer) window.clearInterval(actionTimer);
+  if (auctionBotTimer) window.clearTimeout(auctionBotTimer);
   actionTimer = null;
+  auctionBotTimer = null;
+}
+
+function queueAuctionBotResponse(lotId, playerPrice) {
+  if (auctionBotTimer) window.clearTimeout(auctionBotTimer);
+  const delay = 1000 + Math.floor(Math.random() * 1001);
+  auctionBotTimer = window.setTimeout(() => {
+    auctionBotTimer = null;
+    const session = state.auctionSession;
+    if (!session || session.lotId !== lotId || session.leader !== 'player' || session.currentPrice !== playerPrice) return;
+    const raise = Math.max(1, Math.ceil(session.currentPrice * balance.auction.minRaiseRate));
+    const challenger = [...session.bots].filter((bot) => bot.maxBid > session.currentPrice).sort((a, b) => b.maxBid - a.maxBid)[0];
+    if (!challenger) { finishLot('pass'); return; }
+    session.currentPrice = Math.min(challenger.maxBid, session.currentPrice + raise);
+    session.leader = challenger.id;
+    session.feed.push(`${challenger.name} ${money(session.currentPrice)}`);
+    session.deadline = Date.now() + 15000;
+    audio.playSfx('bot-bid');
+    renderAuction();
+  }, delay);
 }
 
 function armActionTimer(selector, deadline, onExpire) {
@@ -594,9 +616,9 @@ function finishLot(action, multiplier = 1) {
     if (ownedItems().length >= state.storage) { session.feed.push('보관칸이 가득 찼습니다.'); return renderAuction(); }
     session.currentPrice = proposed; session.leader = 'player'; session.feed.push(`플레이어 ${money(proposed)}`); audio.playSfx('bid');
     session.deadline = Date.now() + 15000;
-    const challenger = [...session.bots].filter((bot) => bot.maxBid > proposed).sort((a, b) => b.maxBid - a.maxBid)[0];
-    if (challenger) { session.currentPrice = Math.min(challenger.maxBid, proposed + raise); session.leader = challenger.id; session.feed.push(`${challenger.name} ${money(session.currentPrice)}`); audio.playSfx('bot-bid'); return renderAuction(); }
-    result = { winner: 'player', price: proposed, bots: session.bots };
+    renderAuction();
+    queueAuctionBotResponse(lot.lotId, proposed);
+    return;
   } else {
     const leader = [...session.bots].sort((a, b) => b.maxBid - a.maxBid)[0];
     result = session.leader === 'player' ? { winner: 'player', price: session.currentPrice, bots: session.bots } : { winner: leader.id, price: Math.max(1, session.currentPrice), bots: session.bots };
