@@ -21,7 +21,10 @@ createServer(async (request, response) => {
     if (!resolved.startsWith(repositoryRoot + path.sep)) throw new Error('outside repository');
     const info = await stat(resolved);
     const file = info.isDirectory() ? path.join(resolved, 'index.html') : resolved;
-    response.writeHead(200, { 'content-type': mime.get(path.extname(file).toLowerCase()) || 'application/octet-stream' });
+    response.writeHead(200, {
+      'content-type': mime.get(path.extname(file).toLowerCase()) || 'application/octet-stream',
+      'cache-control': 'no-store',
+    });
     response.end(await readFile(file));
   } catch {
     response.writeHead(404, { 'content-type': 'text/plain; charset=utf-8' });

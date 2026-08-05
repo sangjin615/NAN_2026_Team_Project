@@ -2448,4 +2448,1679 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
   <section class="scene" data-scene="settlement" hidden><p class="eyebrow">DAILY SETTLEMENT</p><h2><span data-bind="day"></span>일차 결산</h2><p>오늘의 8 LOT이 종료되었습니다. 생성 버퍼는 다음 2일을 준비합니다.</p><div id="settlement-summary"></div><button id="next-day">다음 날</button></section>
   <section class="scene relic" data-scene="relic" hidden><p class="eyebrow">RELIC AUCTION</p><aside id="relic-participants"></aside><div id="relic-card"></div><div id="relic-feed" class="auction-feed"></div><div class="actions"><button id="buy-relic">유물 입찰</button><button id="skip-relic" class="secondary">포기</button></div></section>
   <section class="scene" data-scene="result" hidden><p class="eyebrow">RUN RESULT</p><h2 id="result-title">12일 여정 종료</h2><div id="run-summary"></div><button id="return-title">타이틀로 돌아가기</button></section>
-</main><dialog id="settings-dialog"><h2>설정</h2><p class="settings-lead">게임의 전체 소리를 설정합니다.</p><button id="sound-toggle" type="button" aria-pressed="true"><span>전체 소리</span><strong>켜짐</strong></button><button id="close-settings" class="secondary">닫기</button></dialog><script type="module" src="./src/app.js?v=20260805-category-ko"></script></body></html>
+</main><dialog id="settings-dialog"><h2>설정</h2><p class="settings-lead">게임의 전체 소리를 설정합니다.</p><button id="sound-toggle" type="button" aria-pressed="true"><span>전체 소리</span><strong>켜짐</strong></button><button id="close-settings" class="secondary">닫기</button></dialog>
+<script>
+  (() => {
+    const embedded = {"./contracts/vsl-map.template.json":{"schemaVersion":"2.0","projectId":"unknown-auction-v6.2","resolution":{"width":1600,"height":900},"coordinatePolicy":"VSL layout JSON is authoritative in its 1536x1024 editor space; Runtime transforms mapped coordinates into the 16:9 background content rect.","scenes":[{"runtimeSceneId":"title","vslSceneId":"scene-title","actions":[{"selector":"#open-new-slots","vslActionId":"action-open-new-slots"},{"selector":"#open-continue-slots","vslActionId":"action-open-continue-slots"},{"selector":"#title-museum","vslActionId":"action-open-museum"},{"selector":"#title-exit","vslActionId":"action-exit-game"},{"selector":"#title-settings","vslActionId":"action-open-settings"}],"dataBindings":[]},{"runtimeSceneId":"save","vslSceneId":"scene-save-slot","actions":[{"selector":"#new-run","vslActionId":"action-run-new"},{"selector":"#continue-run","vslActionId":"action-run-continue"},{"selector":"#back-title","vslActionId":"action-return-title"},{"selector":"[data-save-slot]","vslActionId":"action-save-slot-select"}],"dataBindings":[{"selector":"#save-slots","vslDataPath":"save.slots"}]},{"runtimeSceneId":"hub","vslSceneId":"scene-city","actions":[{"selector":"[data-place=quests]","vslActionId":"action-open-office"},{"selector":"[data-place=tavern]","vslActionId":"action-open-tavern"},{"selector":"[data-place=catalog]","vslActionId":"action-open-auction"},{"selector":"[data-place=exchange]","vslActionId":"action-open-exchange"},{"selector":"[data-place=shop]","vslActionId":"action-open-shop"},{"selector":"[data-place=guild]","vslActionId":"action-open-guild"},{"selector":"[data-place=museum]","vslActionId":"action-open-museum"}],"dataBindings":[{"selector":"[data-bind=day]","vslDataPath":"run.day"},{"selector":"[data-bind=cash]","vslDataPath":"player.cash"},{"selector":"#market-indices","vslDataPath":"market.indices"}]},{"runtimeSceneId":"tavern","vslSceneId":"scene-tavern","actions":[{"selector":"[data-info=forecast]","vslActionId":"action-buy-forecast"},{"selector":"[data-info=catalog]","vslActionId":"action-buy-catalog"},{"selector":"[data-info=competitors]","vslActionId":"action-buy-competitors"}],"dataBindings":[{"selector":"#tavern-owned","vslDataPath":"daily.info"}]},{"runtimeSceneId":"quests","vslSceneId":"scene-office","actions":[{"selector":"[data-quest-accept]","vslActionId":"action-quest-accept"},{"selector":"[data-quest-deliver]","vslActionId":"action-quest-deliver"}],"dataBindings":[{"selector":"#quest-offers","vslDataPath":"quests.dailyOffers"},{"selector":"#active-quests","vslDataPath":"quests.accepted"}]},{"runtimeSceneId":"exchange","vslSceneId":"scene-exchange","actions":[{"selector":"#appraise-selected","vslActionId":"action-item-appraise"},{"selector":"#sell-selected","vslActionId":"action-item-sell"}],"dataBindings":[{"selector":"#inventory-list","vslDataPath":"player.inventory"}]},{"runtimeSceneId":"shop","vslSceneId":"scene-merchant","actions":[{"selector":"#shop-upgrade","vslActionId":"action-shop-upgrade"}],"dataBindings":[{"selector":"#shop-detail","vslDataPath":"shop.stage"}]},{"runtimeSceneId":"guild","vslSceneId":"scene-guild","actions":[{"selector":"#guild-loan","vslActionId":"action-loan-take"},{"selector":"#guild-repay","vslActionId":"action-loan-repay-early"}],"dataBindings":[{"selector":"#guild-detail","vslDataPath":"player.loan"}]},{"runtimeSceneId":"museum","vslSceneId":"scene-museum","actions":[],"dataBindings":[{"selector":"#relic-list","vslDataPath":"meta.relics"}]},{"runtimeSceneId":"catalog","vslSceneId":"scene-auction-catalog","actions":[{"selector":"#start-auction","vslActionId":"action-auction-start"}],"dataBindings":[{"selector":"#catalog-grid","vslDataPath":"auction.dailyLots"}]},{"runtimeSceneId":"auction","vslSceneId":"scene-auction-live","actions":[{"selector":"[data-raise]","vslActionId":"action-bid-raise"},{"selector":"#pass","vslActionId":"action-bid-pass"}],"dataBindings":[{"selector":"[data-bind=current-bid]","vslDataPath":"auction.currentBid"},{"selector":"[data-sprite=current-lot]","vslDataPath":"auction.currentLot.sprite"}]},{"runtimeSceneId":"settlement","vslSceneId":"scene-summary","actions":[{"selector":"#next-day","vslActionId":"action-day-next"}],"dataBindings":[{"selector":"#settlement-summary","vslDataPath":"run.dailySettlement"}]},{"runtimeSceneId":"relic","vslSceneId":"scene-final-auction","actions":[{"selector":"#buy-relic","vslActionId":"action-relic-bid"},{"selector":"#skip-relic","vslActionId":"action-relic-pass"}],"dataBindings":[{"selector":"#relic-card","vslDataPath":"relic.currentRound"}]},{"runtimeSceneId":"result","vslSceneId":"scene-result","actions":[{"selector":"#return-title","vslActionId":"action-return-title"}],"dataBindings":[{"selector":"#run-summary","vslDataPath":"run.result"}]}],"audio":{"bgm":["title","city","auction"],"sfx":["navigate","bid","win","sell","upgrade"]},"transitions":[{"from":"scene-city","to":"scene-auction-catalog","event":"action-open-auction"}]},"./data/api-config.json":{"enabled":true,"endpoint":"http://127.0.0.1:8787/generate","timeoutMs":60000,"retries":0,"schemaVersion":"1.0"},"./data/balance.json":{"status":"aligned-to-simulation-v6-96pool","run":{"days":12,"lotsPerDay":8,"startCash":20000,"growth":1,"growthNote":"시뮬레이션은 기저가가 고정이다. 난이도는 물가가 아니라 봇 자본 곡선이 만든다"},"quality":{"table":[{"value":0.6,"label":"손상","weight":15},{"value":0.9,"label":"보통","weight":40},{"value":1.1,"label":"양호","weight":25},{"value":1.35,"label":"수려","weight":15},{"value":1.6,"label":"완품","weight":5}],"note":"6.2 — 기대값 1.0075 · 표준편차 0.2585. 가중치를 바꿔도 기대값은 1.00 ±0.02 안에 둔다"},"gradeBeta":{"common":0.27,"rare":1,"epic":2.09,"legendary":3.64},"appraisal":{"types":1,"typeNote":"정밀 하나만. 약식은 REQ-3 으로 삭제(2026-07-30)","rate":0.095,"rateNote":"기저가의 9%. 손익분기가 약 14% 이고 값어치/2.5 는 5.6% 인데, 정밀 하나만 남았으므로 옛 약식 5% 보다 비싸고 옛 정밀 18% 보다 싸야 한다. 실측: 1% +42,440 · 5% +11,860 · 9% +8,330 · 15% -4,110","errorByDay":{"1-3":0.35,"4-6":0.2,"7-12":0.1},"structuralFinding":"봇이 품질을 알면 가격 신탁 노릇을 해 무엇을 사도 안전하고 정보가 팔 것이 없다. 봇이 모르면 좋은 것도 나쁜 것도 같은 값에 올라가 그 차이를 정보가 먹는다","offersPerDay":4},"informationRate":{"competitors":0.008,"catalog":0.007,"forecast":0.004,"order":null,"note":"측정으로 매겼다(6.20). 값어치 = 쓰는 정책 - 안 쓰는 정책, 가격 = 값어치/2.5. 총 기저가 64,000 대비 비율","orderNote":"출품 순서는 값이 안 나온다. 정책 셋을 다 태웠고 전부 음수 - 보관칸 3~6, 하루 8점이라 아껴둘 여지가 작다. 보류","previous":{"order":0.005,"competitors":0.007,"forecast":0.01},"removedChannels":{"relicClue":"2026-07-30 삭제. 유물 경매를 경제 밖으로 두기로 했다 - 최적화할 여지가 없으면 정보가 팔 것도 없다. RELIC-6(거물은 이름만 표시)과도 앞뒤가 맞는다"}},"loan":{"limitFromDisposalValue":0.35,"repayMultiplier":1.9,"earlyRepayMultiplier":1,"termDays":2,"concurrent":1,"minShopStage":2,"collateral":"재고. 담보로 잡히면 잠겨서 못 판다. 현금은 담보가 아니다","overdue":"담보 압류 + 조합 거래 제한(guildLocked)","measured":{"loansPerRun":0.77,"seizureRate":0.292,"interestPerRun":1428,"deadlineFailWithout":32.1,"deadlineFailWith":28.7,"policy":"measurementPolicy.withLoan"},"note":"값어치는 이익이 아니라 생존이다. 마감 실패를 35.2% -> 22.7% 로 낮춘다. 여정당 0.87회 - 자주 쓰는 것이 아니라 한 번쯤 오는 위기에 쓰는 장치다","whyNotV5":"V5 의 70%/x1.10 은 이자가 542 라 사실상 공짜다. x1.45 는 이자 1,869 · 압류율 18% 로 쓸지 말지가 판단이 된다","correction6_10":"6.10 의 \"차익 0\" 은 절반만 맞다. 유동성 수단인 것은 맞지만 생존 중앙값이 203,290 -> 236,620 으로 오른다 - 개시 마감이라는 절벽이 있어 빌려서 승급하는 것이 그 자체로 이득이다","previous2":{"limitFromDisposalValue":0.6,"repayMultiplier":1.45,"termDays":3,"minShopStage":2,"at":"2026-07-31 이전"},"tightenedAt":"2026-07-31","tightenedWhy":"대출을 켜면 도달 67.7% 로 밴드(45~60)를 벗어났다. 상환배수만 올려서는 안 깎인다 - x1.45 -> x2.20 으로 올려도 67.7 -> 66.6 이다. 이득의 출처가 이자가 아니라 개시 마감 회피이기 때문이다. 한도·만기·해금을 같이 조여서 도달 59.3% 로 넣었다","tightenedMeasured":{"reach":59.3,"deadlineFail":28.3,"survivorMedian":206100,"loansPerRun":0.77,"seizureRate":0.26,"interestPerRun":1997,"seeds":900,"policy":"measurementPolicy.withLoan"}},"shop":{"upgradeCost":[0,7500,11500,17500],"questRequirement":[0,1,2,3],"storage":[0,3,4,5,6],"auctionFee":[0,0.05,0.03,0.01,0],"upgradeCostNote":"합 37,000. 2026-07-31 재산정 - 시뮬을 balance.json 에 맞추고 의뢰 보상을 다시 매긴 뒤 다시 잡았다. 도달 55.9% · 마감실패 31.0% · 생존중앙값 193,280 (씨앗 900). 옛 값 32,500 은 6.36 에서 낡은 시뮬로 잡은 것이다","upgradeCostPrevious":[0,9000,14500,21500],"upgradeCostDependsOn":"의뢰 하루 수주량. 1건/일 기준이다 - 3건/일 이면 같은 밴드가 207,000 근처로 옮겨간다","storageNote":"4/5/6/7 에서 조였다. 후반에 자산이 하루 총 기저가(64,000)를 넘으면 자산이 아니라 보관칸이 한도가 되어 생존 중앙값이 25만까지 갔다. 3/4/5/6 으로 19.6만(목표의 1.96배)이 된다","storagePrevious":[0,4,5,6,7],"storageFullhouseNote":"풀하우스(6계열 각 1점)가 3단계 -> 4단계로 밀린다. 2026-07-30 사용자 결정. 판정표 #18 의 계열 6종 = 풀하우스 근거는 그대로이고 닿는 시점만 늦어진다. 대신 풀하우스가 최종 단계 전용 보상이 된다. 3/4/4/5 로 더 조이면 풀하우스가 아예 불가능해져 그 근거가 끊어지므로 여기서 멈췄다","derivedFromStage":["auctionFee","infoDiscount","setBonus","questBonus","storage"],"derivedNote":"상회 단계 하나가 여덟을 다 준다(V5 방식): 보관칸·수수료·정보할인·세트배수·의뢰보상. 6.27 에서 분리안을 기각했다. 계단값은 V5 원본이고 이번에 문서로 옮겼다","setBonus":[0,0.1,0.2,0.3,0.4],"questBonus":[0,0.1,0.2,0.3,0.4],"infoDiscount":[0,0.1,0.2,0.3,0.4],"upgradeCostPrevious2":[0,6500,10500,15500]},"quests":{"designated":{"fee":300,"reward":4250,"previous":1300,"completionRate":0.306,"difficulty":2.4,"rule":"지정 계열 1점을 낙찰한다","completionsPerRun":4.33,"previousReward":3300,"previousCompletionRate":0.534,"previousReward2":4800},"multi":{"fee":500,"reward":2050,"previous":4700,"completionRate":0.733,"difficulty":1,"rule":"서로 다른 계열 2점을 낙찰한다","completionsPerRun":6,"previousReward":2000,"previousCompletionRate":0.885,"previousReward2":2000},"bargain":{"fee":400,"reward":2350,"previous":3000,"completionRate":0.598,"difficulty":1.22,"rule":"기준가의 85% 이하에 낙찰한다","completionsPerRun":3.71,"previousReward":2800,"previousCompletionRate":0.631,"previousReward2":2450},"restraint":{"fee":400,"reward":2750,"previous":1900,"completionRate":0.511,"difficulty":1.43,"rule":"낙찰하되 그날 시작 자금의 60% 를 남긴다 (40% 에서 강화, 2026-07-30)","completionsPerRun":5.19,"previousReward":2100,"previousCompletionRate":0.846,"previousReward2":2850},"block":{"fee":600,"reward":3250,"previous":2500,"completionRate":0.493,"difficulty":1.49,"rule":"내가 부른 값 위에서 표적 봇이 낙찰한 금액이 1,500 이상 (2026-07-30 행동 기반으로 변경)","completionsPerRun":2.19,"previousRule":"표적 봇이 8,000 이상 지출 - 내가 아무것도 안 해도 달성될 수 있었다","previousReward":4250,"previousCompletionRate":0.419,"previousReward2":3000},"formula":"보상 = (목표 기대값 1000 + 수수료) / 달성률. 다섯의 기대값을 같게 맞춘다","note":"보상 = 2,000 x 난이도비. 난이도비는 **의뢰를 쫓는 정책**에서의 달성률로 잰 것이다(6.33). 쫓지 않는 정책으로 재면 순서가 달라진다 - 절제가 44%에서 88%로 뛴다","exclusivityBroken":"6.12 의 배타성(#11 동시 수주 상한 불필요의 근거)이 실측으로 성립하지 않는다. 둘씩 같이 받으면 완료가 오히려 는다(+0.52 ~ +3.31). 절제·견제가 \"축이 반대인 것\" 이 아니라 \"저절로 되는 것\" 이기 때문이다","perDayNote":"하루 2건이 전제다(6.19). 1건이면 누적 의뢰가 모자라 마감 실패가 67% 로 뛴다","tightened":{"restraintKeepRate":0.6,"previousKeepRate":0.4,"blockSpendThreshold":8000,"previousThreshold":3500,"effect":"절제 완료 4.22->2.62 · 견제 3.45->2.20. 저절로 되던 것이 조건이 됐다"},"exclusivity":{"measured":"2026-07-30, 의뢰를 쫓는 정책으로","holds":{"지정+차익":-31.5,"절제+다중":-27.1,"절제+지정":-6.3,"절제+견제":-12.4},"fails":{"차익+견제":21.6},"note":"견제를 행동 기반으로 바꾼 뒤 6.12 예측 다섯 중 넷이 맞는다(전 셋). 남은 하나(차익 x 견제)는 시너지다 - 둘 다 \"올리다가 빠진다\" 라는 같은 행동을 쓴다. 편승은 +17.2%p 에서 +4.7%p 로 사라졌다","openDecision":"견제의 편승. (1) 같이 못 받게 한다 (2) 조건을 내 행동에 묶는다 - 권장 (3) 인정하고 보상을 낮춘다"},"restraintWarning":"절제는 12일 마감이 있는 판에서 독이다. 안 사는 축인데 승급이 사는 것에 달려 있다. 고정 메뉴로 받으면 +6,262 지만 무작위 제시에 섞이면 여정이 죽는다","offering":{"mode":"random3of5","perDay":3,"acceptMax":3,"note":"하루 5종 중 3종을 무작위 제시하고 제시된 3건을 모두 수주할 수 있다. 물품 하나는 한 의뢰에만 제출할 수 있다.","acceptancePolicy":"플레이어가 제시된 의뢰를 자유롭게 조합하도록 의뢰 간 수주 충돌을 적용하지 않는다."},"remeasuredAt":{"at":"2026-07-31","seeds":900,"method":"의뢰마다 고정 메뉴로 하루 1건만 받게 하고 여정 900회. 섞어 받으면 정책이 섞인다","why":"v6-sim 이 balance.json 을 읽게 고친 뒤 처음 잰 값이다. 옛 시뮬은 6.19·6.25·6.34·6.36 이전 상수였다","reversal":"기록은 견제가 제일 어렵다고 했는데(4,250) 격리해서 재니 지정이 제일 어렵다. 순서가 뒤집혔다"},"blockNeverOffered":{"at":"2026-07-31","finding":"무작위 3종 제시 + 최대 2건 수주 + 선호순 수락이면 견제는 한 번도 수주되지 않는다. 900판에서 0회다","why":"선호순(지정-다중-차익-절제-견제)에서 견제가 꼴찌라, 3종 중 견제가 껴도 나머지 둘이 먼저 두 자리를 채운다","measuredHow":"고정 메뉴로 강제하면 달성률 49.3% 다. 보상 3,000 은 그 값으로 매긴 것이다","meaning":"지금 규칙대로면 견제는 화면에 뜨기만 하고 안 팔린다. 선호순은 정책이지 규칙이 아니므로 사람이 고를 수는 있다","needsDecision":false,"resolvedAt":"2026-07-31","resolution":"고정 선호순을 버리고 기대값 순으로 고르게 했고, 보상 산식을 기대값이 같아지게 바꿨다(보상 = (1,000 + 수수료) / 달성률). 기대값이 같으니 남는 차이는 50 단위 반올림 잔차뿐이라 그날 무작위(폭 40)로 가른다. 지금은 다섯이 14~23% 로 고르게 수주된다 - 견제 14.1%, 달성 50.5%"},"formulaWhy":"옛 산식(2,000 x 난이도비)은 수수료를 안 봤다. 그래서 수수료가 제일 비싼 견제가 기대값 꼴찌였고, 3종 제시 x 2건 수주에서는 전역 꼴찌가 구조적으로 절대 안 뽑힌다 - 900판 0회였다. 기대값을 맞추면 고르는 이유가 숫자가 아니라 오늘 판에 맞는지가 된다","formulaAt":"2026-07-31"},"source":"docs/plan/SIMULATION-STATUS.md 6절 · rules.js (6절 검산 15건 통과)","alignedAt":"2026-07-30 (96종 고정 풀)","decidedBy":"사용자 — \"니가 시뮬레이션 할때 쓴거에 맞춰\"","bots":{"nemesisInitial":25000,"growthPerDay":1.155,"capitalFormula":"25000 * 1.155^day  (day 는 1..12. 1일차 28,875 · 12일차 140,904)","bidCapRatio":1,"drifterRatio":0.4,"drifterCount":2,"note":"6.7 · 6.15 — 자본은 플레이어와 무관한 절대값이다. 입찰 상한이 자본의 15% 라 한 물건에 다 못 건다","bidCapNote":"0.15 -> 1.00 으로 올렸다. 0.15 는 1일차 상한이 4,331 인데 전설 시작가가 12,500 이라 초반 고가품이 무경쟁이었다 - 마진 전부가 거기서 나왔다. 실측: 상한 15% 도달률 49.3% vs 100% 6.5%","qualityKnowledge":"none","qualityKnowledgeNote":"봇은 숨은 품질을 아예 안 본다 - 공개 기저가와 시세로만 부른다. V5 v1.5 의 \"일반 봇이 숨은 실제 품질을 직접 읽지 않도록 수정\" 의 충실한 이식이다. 잡음(±25%)으로 옮겼더니 감정이 죽었다 - 한 줄 차이로 감정의 부호가 뒤집힌다(-38,480 -> +47,820)"},"market":{"model":"AR1","formula":"I_f(d) = 1 + 0.7 x (I_f(d-1) - 1) + N(0, 0.0761),  clamp 0.6~1.6","phi":0.7,"shockSd":0.0761,"indexSd":0.1065,"idiosyncraticSd":0.087,"expectedDemand":1.05,"demandFormula":"M = 1.05 + beta(등급) x (I_f - 1) + N(0, 0.0870)","pathFixedAtRunStart":true,"pathNote":"12일치 경로를 여정 시작에 고정 생성한다. 그래야 수요 동향 채널이 \"앞으로 3일\" 을 팔 수 있다","narrative":{"source":"V5 MARKET_EVENTS 문구 목록","rule":"그날 |충격| 이 가장 큰 계열에 문구를 붙인다. 충격의 부호와 크기로 폭등/상승/하락/폭락을 고른다","measured":"하루 최대 충격 중앙값 0.1217 · 0.08 이상인 날 87.3%. 이벤트 표의 폭 0.12~0.20 과 같은 대역이다"},"why":["6.13 값을 재현한다 - AR(1) sd 0.1022 대 정한 값 0.1065. 이벤트 표는 0.1617 로 52% 넓다","평균회귀가 있어야 \"언제 팔까\" 가 판단이 된다 - 이벤트 표는 1 로 돌아오는 비율이 7.9% 다","전설(beta 3.64)이 사고가 되지 않는다 - 12일차 시세 폭 ±0.39 대 이벤트 표 ±0.78"],"rejected":"이벤트 표를 폭 결정에 쓰는 것. 문구 목록으로는 남긴다"},"breakeven":{"line":"basePrice","value":1.005,"formula":"E[k] x E[M] x (1 - 수수료) = 1.0075 x 1.05 x 0.95","note":"6.14 — 기준가에 사면 본전이다"},"gradeBetaNote":"6.13 — 같은 계열 지수라도 등급이 높을수록 시세가 크게 흔들린다","lotPool":{"total":96,"families":6,"perFamily":16,"gradesPerFamily":{"common":4,"rare":6,"epic":4,"legendary":2},"note":"V5_경매품96종 시트. 여정 시작에 96점을 고정 생성하고 12일 x 8점으로 나눈다 - 매일 무작위 생성이 아니다. API 연결 시 이 축만 주고 표현을 생성한다","gradeWeights":{"common":0.25,"rare":0.375,"epic":0.25,"legendary":0.125},"previousWeights":{"common":0.3,"rare":0.43,"epic":0.195,"legendary":0.075},"avgBasePrice":8000,"dailyTotalBase":64000,"previousDailyTotalBase":51080},"auction":{"startBidRatio":0.5,"minRaiseRate":0.1,"startBidNote":"기저가의 절반. 0.3~1.0 을 훑어 정했다 - 0.3 은 초반 폭주, 1.0 은 마진 0","minRaiseNote":"결과를 거의 안 바꾼다(도달률 49.8/49.3/48.8/49.8). 밸런스가 아니라 조작감으로 10% 를 골랐다"},"measuredAt":{"seeds":900,"policy":"measurementPolicy.baseline","reach":54.7,"deadlineFail":32.1,"ruin":0,"survivorMedian":208790,"setsPerRun":7.99,"questsPerRun":8.03,"loansPerRun":0,"seizureRate":0,"interestPerRun":0},"relicAuction":{"scope":"outside-economy","note":"2026-07-30 결정. 유물 경매는 경제적 판단이 아니라 번 돈을 영구 성장에 붓는 자리다. 유물 1점의 골드 환산가를 정하지 않는다 - 실측 지출 48,973 대 낡은 저울 효과 8,000 상당(6배)","rounds":3,"tiers":["low","mid","high"],"startBid":[12000,25000,45000],"tierNote":"티어는 유지한다. 유물 9종 세부기획서가 하급=빠른 출발 · 중급=무료 정보 · 상급=규칙 변경으로 티어를 구조로 쓴다"},"sets":{"formula":"배수 = 1.20 + 0.08 x (난이도비 - 1)","difficultyMethod":"돈 없이 모으기만 시뮬(여정 3000회). 낙찰률 23.4% 는 6.19 실측","conditionsRelaxed":{"align":"같은 계열+같은 등급 3점 -> 2점","straight":"같은 계열 4등급 각 1점 -> 3등급","at":"2026-07-30","why":"완화 전 성립이 0.02·0.01건/여정이라 사실상 불가능했다"},"table":[{"id":"pair","name":"페어","rule":"같은 계열 2점","need":2,"perRun":4.47,"ratio":1,"mult":1.2},{"id":"fullhouse","name":"풀하우스","rule":"6계열 각 1점","need":6,"perRun":1.2,"ratio":3.73,"mult":1.4},{"id":"align","name":"정렬","rule":"같은 계열 + 같은 등급 2점","need":2,"perRun":0.8,"ratio":5.58,"mult":1.6},{"id":"triple","name":"트리플","rule":"같은 계열 3점","need":3,"perRun":0.5,"ratio":8.96,"mult":1.8},{"id":"royal","name":"로열","rule":"같은 계열 3점, 전부 에픽 이상","need":3,"perRun":0.28,"ratio":16.25,"mult":2.4},{"id":"straight","name":"스트레이트","rule":"같은 계열, 서로 다른 등급 3점","need":3,"perRun":0.24,"ratio":18.72,"mult":2.6}],"note":"족보형(상시·기한없음). 배수 폭이 1.3~5.2 에서 1.2~2.6 으로 좁아졌다 - 여섯이 다 서면 한 족보에 몰아줄 이유가 없다","measured":{"reach":54.7,"deadlineFail":32.1,"survivorMedian":208790,"setsPerRun":7.99,"seeds":900,"policy":"measurementPolicy.baseline"}},"damagedPenalty":{"enabled":false,"damagedK":0.6,"saleMultiplier":1,"excludeFromSets":false,"note":"2026-07-30 측정. 넣어봤으나 감정을 살리지 못하고 경제만 좁힌다 - 꺼둔다. 족보 제외는 도달률을 55%->22% 로 무너뜨린다 / 6.25 확정: 필요 없다. 봇이 손상품을 제값에 올려주는 것이 이미 페널티다"},"growthBranches":{"enabled":false,"decision":"V5 의 shopStage 파생 방식을 쓴다. 6.6 의 별도 축 분리는 기각(2026-07-30)","why":["분리하면 브랜치가 선택이 아니라 필수가 된다 - 아무것도 안 사면 12일 중앙값 33,390 (목표의 1/3)","어떤 가격을 매겨도 지배 전략이 남는다 - 6.6 표 그대로 1.89배, 값어치/2.5 재산정 7.95배","축별 값어치가 고르지 않다 - 보관 +95,560 대 정보 -6,730. 세트가 수입의 대부분이라 보관이 셋을 합친 만큼 세다","6.6 이 원한 판단축은 이미 셋 있다 - 족보 선택 · 감정 여부 · 정보 채널 선택"],"table":{"info":{"effect":[0,0.1,0.2,0.3,0.4],"cost":[0,600,1250,1900,2550],"measuredValue":-6730},"trade":{"effect":[0.05,0.03,0.01,0],"cost":[0,1250,2550,3200],"measuredValue":27760},"storage":{"effect":[0,0.1,0.2,0.3,0.4],"cost":[0,1050,2100,3200,4250],"measuredValue":95560},"network":{"effect":[0,0.1,0.2,0.3,0.4],"cost":[0,1250,2550,3850,5100],"measuredValue":24000}},"keptFor":"세트의 무게가 줄어 축별 값어치가 고르게 되면 다시 본다. 표는 지우지 않는다"},"deadlines":{"requiredStageByDay":{"1-3":1,"4-6":2,"7-9":3,"10-12":4},"source":"index.html requiredStageForDay","note":"일차가 기한이고 누적 의뢰가 자격이다 - 둘은 다른 것을 맡는다(#17)"},"bankruptcy":{"condition":"cash <= 0 AND 활성 보유품 0 AND 담보 대출 불가","loanBlockedWhen":["shopStage < 2","guildLocked","이미 대출이 있음","담보 잡을 보유품 없음"],"source":"index.html bankruptcyCheck","note":"현금 0 하나로는 파산이 아니다. 담보 대출이 가능하면 살아난다 - 6.10 의 \"유동성 수단\" 이 여기서 규칙이 된다. 내 시뮬의 cash<=0 판정은 실제보다 헐거웠다","simulatorNote":"시뮬레이터도 실제 규칙으로 고쳤다(2026-07-30). 이전 cash<=0 판정은 실제보다 헐거웠다"},"meta":{"carryRate":0.4,"carryRateWithSafe":0.6,"nextRunStart":"20,000 + 이월금. 낡은 저울이 있으면 그 합에 x1.4","source":"index.html endRun / newRun"},"relics":{"count":9,"tiers":{"low":3,"mid":3,"high":3},"list":[{"id":"old-scale","tier":"low","name":"낡은 저울","effect":"다음 여정 시작 자금 +10%","measuredValue":35930,"previousEffect":"다음 여정 기본 시작 자금 +40%"},{"id":"leather-ledger","tier":"low","name":"가죽 장부","effect":"1단계 보관칸만 +1","measuredValue":2170,"previousEffect":"보관칸 전 단계 +1"},{"id":"worn-seal","tier":"low","name":"닳은 인장","effect":"1->2단계 승급 조건 면제","measuredValue":4600,"previousEffect":"1->2단계 승급 조건 면제"},{"id":"magnifier","tier":"mid","name":"감정사의 확대경","effect":"매일 경쟁자 예산 채널 무료","redefinedAt":"2026-07-30","why":"약식만 빼면 그대로 성립한다. 정밀 하나뿐이므로 문구만 고쳤다","measuredValue":15810,"previousEffect":"매일 감정 1회 무료"},{"id":"compass","tier":"mid","name":"뱃사람의 나침반","effect":"매일 수요 동향 채널 무료","measuredValue":7070,"previousEffect":"매일 시장 예보 1종 무료"},{"id":"broker-card","tier":"mid","name":"거간꾼의 명함","effect":"매일 출품 목록 채널 무료","redefinedAt":"2026-07-30","why":"중급의 역할이 무료 정보다. 나침반(시장 예보 무료)과 짝이 된다. 값어치 약 5,400","rejected":"족보 배수 +0.2 (값어치 +85,610 - 중급 하나가 상급 전부보다 세진다) · 보관칸 +1 (가죽 장부와 중복)","measuredValue":13380,"previousEffect":"매일 출품 목록 채널 무료"},{"id":"royal-charter","tier":"high","name":"왕실 인가장","effect":"의뢰 5종 전부 제시","measuredValue":73640,"previousEffect":"의뢰 매일 5종 전부 제시"},{"id":"house-crest","tier":"high","name":"명가의 문장","effect":"족보 배수 +0.2","redefinedAt":"2026-07-30","why":"상급의 역할이 규칙 변경이다. 값어치 +12,040","measuredValue":70530,"previousEffect":"감정 오차를 한 단계 낮춘다 (1~3일 ±20% · 4~12일 ±10%)","previousId":"crystal-ball","previousName":"예언자의 수정구","identity":"흩어진 물건들이 한 집안의 것이었음을 증명하는 낡은 문장","icon":"🏵️","visual":"은실로 수놓은 문장 조각. 네 귀가 닳았고 봉랍 자국이 남아 있다. 여섯 계열 어디에도 안 속하는 무늬여야 한다"},{"id":"merchant-safe","tier":"high","name":"대상인의 금고","effect":"이월률 40 -> 45%","measuredValue":64900,"previousEffect":"이월률 40% -> 60%"}],"source":"미지의경매장_V5_유물9종_세부기획서.docx","measurementLimit":"확대경의 -6,770 은 잡음 안이다. 씨앗 800개로도 이 크기는 부호가 안 정해진다","tierAverages":{"low":14233,"mid":12087,"high":69690},"note":"9종을 같은 축에서 재서 다시 매겼다(6.36). 티어 평균 하급 14,233 · 중급 12,087 · 상급 69,690. 중급 셋이 정보 채널 셋(경쟁자·수요·출품)을 하나씩 맡는다","idMigration":{"crystal-ball":"house-crest","note":"meta.relics 는 저장 데이터다. 옛 저장을 읽을 때 옮기지 않으면 이미 딴 유물이 사라진다"}},"gradeBase":{"common":1500,"rare":4000,"epic":12000,"legendary":25000},"gradeBaseNote":"등급별 기준가. 코드(gen-rules.py · v6-sim.js)에만 있던 값을 2026-07-31 에 기록으로 옮겼다 - 값은 안 바꿨다. 계열은 같은 값을 쓰고 차이는 등급과 품질과 시세가 만든다","measurementPolicy":{"at":"2026-07-31","simulator":"sim/v6-sim.js (balance.json 을 읽는다. 상수를 직접 안 들고 있다)","seeds":900,"seedBase":900000,"seedStep":7,"baseline":{"opts":{},"means":"기준 정책 - 감정하고, 추정 범위 아래를 노리고, 족보가 서면 판다. 대출도 의뢰 추격도 안 한다","result":{"reach":54.7,"deadlineFail":32.1,"ruin":0,"survivorMedian":208790,"setsPerRun":7.99,"questsPerRun":8.03,"loansPerRun":0,"seizureRate":0,"interestPerRun":0}},"withLoan":{"opts":{"useLoan":true,"loanTrigger":8000},"means":"위에 대출만 켠다. 6.29 의 대출 수치는 이 정책에서 나온 것이다","result":{"reach":58.3,"deadlineFail":28.7,"ruin":0,"survivorMedian":213170,"setsPerRun":8.41,"questsPerRun":8.33,"loansPerRun":0.77,"seizureRate":0.292,"interestPerRun":1428}},"why":"수치만 적고 정책을 안 적으면 재현이 안 된다. 2026-07-30 의 55.6% 를 재현 못 한 것이 그 이유였다"}},"./assets/items/catalog.json":{"description":"미지의 경매장 출품품 60종, 품목별 4등급 AI 판독용 구조","canvas":[128,128],"category_order":["CER","CLK","PNT","BOK","MET","JEW"],"grade_order":["COMMON","RARE","EPIC","LEGENDARY"],"item_count":60,"sprite_count":240,"items":[{"base_id":"BASE-CER-01","item_name_ko":"청화 약탕기","category":"CER","category_name_ko":"도자기","canvas":[128,128],"grades":{"COMMON":"01_CER_도자기/01_BASE-CER-01_청화_약탕기/01_COMMON_일반/BASE-CER-01_COMMON.png","RARE":"01_CER_도자기/01_BASE-CER-01_청화_약탕기/02_RARE_레어/BASE-CER-01_RARE.png","EPIC":"01_CER_도자기/01_BASE-CER-01_청화_약탕기/03_EPIC_에픽/BASE-CER-01_EPIC.png","LEGENDARY":"01_CER_도자기/01_BASE-CER-01_청화_약탕기/04_LEGENDARY_전설/BASE-CER-01_LEGENDARY.png"}},{"base_id":"BASE-CER-02","item_name_ko":"청록 뚜껑 소금단지","category":"CER","category_name_ko":"도자기","canvas":[128,128],"grades":{"COMMON":"01_CER_도자기/02_BASE-CER-02_청록_뚜껑_소금단지/01_COMMON_일반/BASE-CER-02_COMMON.png","RARE":"01_CER_도자기/02_BASE-CER-02_청록_뚜껑_소금단지/02_RARE_레어/BASE-CER-02_RARE.png","EPIC":"01_CER_도자기/02_BASE-CER-02_청록_뚜껑_소금단지/03_EPIC_에픽/BASE-CER-02_EPIC.png","LEGENDARY":"01_CER_도자기/02_BASE-CER-02_청록_뚜껑_소금단지/04_LEGENDARY_전설/BASE-CER-02_LEGENDARY.png"}},{"base_id":"BASE-CER-03","item_name_ko":"제비문 찻잔 한 쌍","category":"CER","category_name_ko":"도자기","canvas":[128,128],"grades":{"COMMON":"01_CER_도자기/03_BASE-CER-03_제비문_찻잔_한_쌍/01_COMMON_일반/BASE-CER-03_COMMON.png","RARE":"01_CER_도자기/03_BASE-CER-03_제비문_찻잔_한_쌍/02_RARE_레어/BASE-CER-03_RARE.png","EPIC":"01_CER_도자기/03_BASE-CER-03_제비문_찻잔_한_쌍/03_EPIC_에픽/BASE-CER-03_EPIC.png","LEGENDARY":"01_CER_도자기/03_BASE-CER-03_제비문_찻잔_한_쌍/04_LEGENDARY_전설/BASE-CER-03_LEGENDARY.png"}},{"base_id":"BASE-CER-04","item_name_ko":"쌍어문 청록 화병","category":"CER","category_name_ko":"도자기","canvas":[128,128],"grades":{"COMMON":"01_CER_도자기/04_BASE-CER-04_쌍어문_청록_화병/01_COMMON_일반/BASE-CER-04_COMMON.png","RARE":"01_CER_도자기/04_BASE-CER-04_쌍어문_청록_화병/02_RARE_레어/BASE-CER-04_RARE.png","EPIC":"01_CER_도자기/04_BASE-CER-04_쌍어문_청록_화병/03_EPIC_에픽/BASE-CER-04_EPIC.png","LEGENDARY":"01_CER_도자기/04_BASE-CER-04_쌍어문_청록_화병/04_LEGENDARY_전설/BASE-CER-04_LEGENDARY.png"}},{"base_id":"BASE-CER-05","item_name_ko":"황동뚜껑 육각 항아리","category":"CER","category_name_ko":"도자기","canvas":[128,128],"grades":{"COMMON":"01_CER_도자기/05_BASE-CER-05_황동뚜껑_육각_항아리/01_COMMON_일반/BASE-CER-05_COMMON.png","RARE":"01_CER_도자기/05_BASE-CER-05_황동뚜껑_육각_항아리/02_RARE_레어/BASE-CER-05_RARE.png","EPIC":"01_CER_도자기/05_BASE-CER-05_황동뚜껑_육각_항아리/03_EPIC_에픽/BASE-CER-05_EPIC.png","LEGENDARY":"01_CER_도자기/05_BASE-CER-05_황동뚜껑_육각_항아리/04_LEGENDARY_전설/BASE-CER-05_LEGENDARY.png"}},{"base_id":"BASE-CER-06","item_name_ko":"과실문 주전자","category":"CER","category_name_ko":"도자기","canvas":[128,128],"grades":{"COMMON":"01_CER_도자기/06_BASE-CER-06_과실문_주전자/01_COMMON_일반/BASE-CER-06_COMMON.png","RARE":"01_CER_도자기/06_BASE-CER-06_과실문_주전자/02_RARE_레어/BASE-CER-06_RARE.png","EPIC":"01_CER_도자기/06_BASE-CER-06_과실문_주전자/03_EPIC_에픽/BASE-CER-06_EPIC.png","LEGENDARY":"01_CER_도자기/06_BASE-CER-06_과실문_주전자/04_LEGENDARY_전설/BASE-CER-06_LEGENDARY.png"}},{"base_id":"BASE-CER-07","item_name_ko":"진수 기념 대접","category":"CER","category_name_ko":"도자기","canvas":[128,128],"grades":{"COMMON":"01_CER_도자기/07_BASE-CER-07_진수_기념_대접/01_COMMON_일반/BASE-CER-07_COMMON.png","RARE":"01_CER_도자기/07_BASE-CER-07_진수_기념_대접/02_RARE_레어/BASE-CER-07_RARE.png","EPIC":"01_CER_도자기/07_BASE-CER-07_진수_기념_대접/03_EPIC_에픽/BASE-CER-07_EPIC.png","LEGENDARY":"01_CER_도자기/07_BASE-CER-07_진수_기념_대접/04_LEGENDARY_전설/BASE-CER-07_LEGENDARY.png"}},{"base_id":"BASE-CER-08","item_name_ko":"항해도 월백유 매병","category":"CER","category_name_ko":"도자기","canvas":[128,128],"grades":{"COMMON":"01_CER_도자기/08_BASE-CER-08_항해도_월백유_매병/01_COMMON_일반/BASE-CER-08_COMMON.png","RARE":"01_CER_도자기/08_BASE-CER-08_항해도_월백유_매병/02_RARE_레어/BASE-CER-08_RARE.png","EPIC":"01_CER_도자기/08_BASE-CER-08_항해도_월백유_매병/03_EPIC_에픽/BASE-CER-08_EPIC.png","LEGENDARY":"01_CER_도자기/08_BASE-CER-08_항해도_월백유_매병/04_LEGENDARY_전설/BASE-CER-08_LEGENDARY.png"}},{"base_id":"BASE-CER-09","item_name_ko":"삼색 사자손잡이 용기","category":"CER","category_name_ko":"도자기","canvas":[128,128],"grades":{"COMMON":"01_CER_도자기/09_BASE-CER-09_삼색_사자손잡이_용기/01_COMMON_일반/BASE-CER-09_COMMON.png","RARE":"01_CER_도자기/09_BASE-CER-09_삼색_사자손잡이_용기/02_RARE_레어/BASE-CER-09_RARE.png","EPIC":"01_CER_도자기/09_BASE-CER-09_삼색_사자손잡이_용기/03_EPIC_에픽/BASE-CER-09_EPIC.png","LEGENDARY":"01_CER_도자기/09_BASE-CER-09_삼색_사자손잡이_용기/04_LEGENDARY_전설/BASE-CER-09_LEGENDARY.png"}},{"base_id":"BASE-CER-10","item_name_ko":"푸른 동백 대형병","category":"CER","category_name_ko":"도자기","canvas":[128,128],"grades":{"COMMON":"01_CER_도자기/10_BASE-CER-10_푸른_동백_대형병/01_COMMON_일반/BASE-CER-10_COMMON.png","RARE":"01_CER_도자기/10_BASE-CER-10_푸른_동백_대형병/02_RARE_레어/BASE-CER-10_RARE.png","EPIC":"01_CER_도자기/10_BASE-CER-10_푸른_동백_대형병/03_EPIC_에픽/BASE-CER-10_EPIC.png","LEGENDARY":"01_CER_도자기/10_BASE-CER-10_푸른_동백_대형병/04_LEGENDARY_전설/BASE-CER-10_LEGENDARY.png"}},{"base_id":"BASE-CLK-01","item_name_ko":"접이식 탁상시계","category":"CLK","category_name_ko":"시계","canvas":[128,128],"grades":{"COMMON":"02_CLK_시계/01_BASE-CLK-01_접이식_탁상시계/01_COMMON_일반/BASE-CLK-01_COMMON.png","RARE":"02_CLK_시계/01_BASE-CLK-01_접이식_탁상시계/02_RARE_레어/BASE-CLK-01_RARE.png","EPIC":"02_CLK_시계/01_BASE-CLK-01_접이식_탁상시계/03_EPIC_에픽/BASE-CLK-01_EPIC.png","LEGENDARY":"02_CLK_시계/01_BASE-CLK-01_접이식_탁상시계/04_LEGENDARY_전설/BASE-CLK-01_LEGENDARY.png"}},{"base_id":"BASE-CLK-02","item_name_ko":"구리 종 벽시계","category":"CLK","category_name_ko":"시계","canvas":[128,128],"grades":{"COMMON":"02_CLK_시계/02_BASE-CLK-02_구리_종_벽시계/01_COMMON_일반/BASE-CLK-02_COMMON.png","RARE":"02_CLK_시계/02_BASE-CLK-02_구리_종_벽시계/02_RARE_레어/BASE-CLK-02_RARE.png","EPIC":"02_CLK_시계/02_BASE-CLK-02_구리_종_벽시계/03_EPIC_에픽/BASE-CLK-02_EPIC.png","LEGENDARY":"02_CLK_시계/02_BASE-CLK-02_구리_종_벽시계/04_LEGENDARY_전설/BASE-CLK-02_LEGENDARY.png"}},{"base_id":"BASE-CLK-03","item_name_ko":"선실용 모래시계","category":"CLK","category_name_ko":"시계","canvas":[128,128],"grades":{"COMMON":"02_CLK_시계/03_BASE-CLK-03_선실용_모래시계/01_COMMON_일반/BASE-CLK-03_COMMON.png","RARE":"02_CLK_시계/03_BASE-CLK-03_선실용_모래시계/02_RARE_레어/BASE-CLK-03_RARE.png","EPIC":"02_CLK_시계/03_BASE-CLK-03_선실용_모래시계/03_EPIC_에픽/BASE-CLK-03_EPIC.png","LEGENDARY":"02_CLK_시계/03_BASE-CLK-03_선실용_모래시계/04_LEGENDARY_전설/BASE-CLK-03_LEGENDARY.png"}},{"base_id":"BASE-CLK-04","item_name_ko":"월상표시 회중시계","category":"CLK","category_name_ko":"시계","canvas":[128,128],"grades":{"COMMON":"02_CLK_시계/04_BASE-CLK-04_월상표시_회중시계/01_COMMON_일반/BASE-CLK-04_COMMON.png","RARE":"02_CLK_시계/04_BASE-CLK-04_월상표시_회중시계/02_RARE_레어/BASE-CLK-04_RARE.png","EPIC":"02_CLK_시계/04_BASE-CLK-04_월상표시_회중시계/03_EPIC_에픽/BASE-CLK-04_EPIC.png","LEGENDARY":"02_CLK_시계/04_BASE-CLK-04_월상표시_회중시계/04_LEGENDARY_전설/BASE-CLK-04_LEGENDARY.png"}},{"base_id":"BASE-CLK-05","item_name_ko":"갑판 크로노미터","category":"CLK","category_name_ko":"시계","canvas":[128,128],"grades":{"COMMON":"02_CLK_시계/05_BASE-CLK-05_갑판_크로노미터/01_COMMON_일반/BASE-CLK-05_COMMON.png","RARE":"02_CLK_시계/05_BASE-CLK-05_갑판_크로노미터/02_RARE_레어/BASE-CLK-05_RARE.png","EPIC":"02_CLK_시계/05_BASE-CLK-05_갑판_크로노미터/03_EPIC_에픽/BASE-CLK-05_EPIC.png","LEGENDARY":"02_CLK_시계/05_BASE-CLK-05_갑판_크로노미터/04_LEGENDARY_전설/BASE-CLK-05_LEGENDARY.png"}},{"base_id":"BASE-CLK-06","item_name_ko":"가면문 알림시계","category":"CLK","category_name_ko":"시계","canvas":[128,128],"grades":{"COMMON":"02_CLK_시계/06_BASE-CLK-06_가면문_알림시계/01_COMMON_일반/BASE-CLK-06_COMMON.png","RARE":"02_CLK_시계/06_BASE-CLK-06_가면문_알림시계/02_RARE_레어/BASE-CLK-06_RARE.png","EPIC":"02_CLK_시계/06_BASE-CLK-06_가면문_알림시계/03_EPIC_에픽/BASE-CLK-06_EPIC.png","LEGENDARY":"02_CLK_시계/06_BASE-CLK-06_가면문_알림시계/04_LEGENDARY_전설/BASE-CLK-06_LEGENDARY.png"}},{"base_id":"BASE-CLK-07","item_name_ko":"자동인형 시계","category":"CLK","category_name_ko":"시계","canvas":[128,128],"grades":{"COMMON":"02_CLK_시계/07_BASE-CLK-07_자동인형_시계/01_COMMON_일반/BASE-CLK-07_COMMON.png","RARE":"02_CLK_시계/07_BASE-CLK-07_자동인형_시계/02_RARE_레어/BASE-CLK-07_RARE.png","EPIC":"02_CLK_시계/07_BASE-CLK-07_자동인형_시계/03_EPIC_에픽/BASE-CLK-07_EPIC.png","LEGENDARY":"02_CLK_시계/07_BASE-CLK-07_자동인형_시계/04_LEGENDARY_전설/BASE-CLK-07_LEGENDARY.png"}},{"base_id":"BASE-CLK-08","item_name_ko":"유리돔 골격시계","category":"CLK","category_name_ko":"시계","canvas":[128,128],"grades":{"COMMON":"02_CLK_시계/08_BASE-CLK-08_유리돔_골격시계/01_COMMON_일반/BASE-CLK-08_COMMON.png","RARE":"02_CLK_시계/08_BASE-CLK-08_유리돔_골격시계/02_RARE_레어/BASE-CLK-08_RARE.png","EPIC":"02_CLK_시계/08_BASE-CLK-08_유리돔_골격시계/03_EPIC_에픽/BASE-CLK-08_EPIC.png","LEGENDARY":"02_CLK_시계/08_BASE-CLK-08_유리돔_골격시계/04_LEGENDARY_전설/BASE-CLK-08_LEGENDARY.png"}},{"base_id":"BASE-CLK-09","item_name_ko":"다층 천문시계","category":"CLK","category_name_ko":"시계","canvas":[128,128],"grades":{"COMMON":"02_CLK_시계/09_BASE-CLK-09_다층_천문시계/01_COMMON_일반/BASE-CLK-09_COMMON.png","RARE":"02_CLK_시계/09_BASE-CLK-09_다층_천문시계/02_RARE_레어/BASE-CLK-09_RARE.png","EPIC":"02_CLK_시계/09_BASE-CLK-09_다층_천문시계/03_EPIC_에픽/BASE-CLK-09_EPIC.png","LEGENDARY":"02_CLK_시계/09_BASE-CLK-09_다층_천문시계/04_LEGENDARY_전설/BASE-CLK-09_LEGENDARY.png"}},{"base_id":"BASE-CLK-10","item_name_ko":"직사각 점프아워 시계","category":"CLK","category_name_ko":"시계","canvas":[128,128],"grades":{"COMMON":"02_CLK_시계/10_BASE-CLK-10_직사각_점프아워_시계/01_COMMON_일반/BASE-CLK-10_COMMON.png","RARE":"02_CLK_시계/10_BASE-CLK-10_직사각_점프아워_시계/02_RARE_레어/BASE-CLK-10_RARE.png","EPIC":"02_CLK_시계/10_BASE-CLK-10_직사각_점프아워_시계/03_EPIC_에픽/BASE-CLK-10_EPIC.png","LEGENDARY":"02_CLK_시계/10_BASE-CLK-10_직사각_점프아워_시계/04_LEGENDARY_전설/BASE-CLK-10_LEGENDARY.png"}},{"base_id":"BASE-PNT-01","item_name_ko":"창가의 재봉사","category":"PNT","category_name_ko":"회화","canvas":[128,128],"grades":{"COMMON":"03_PNT_회화/01_BASE-PNT-01_창가의_재봉사/01_COMMON_일반/BASE-PNT-01_COMMON.png","RARE":"03_PNT_회화/01_BASE-PNT-01_창가의_재봉사/02_RARE_레어/BASE-PNT-01_RARE.png","EPIC":"03_PNT_회화/01_BASE-PNT-01_창가의_재봉사/03_EPIC_에픽/BASE-PNT-01_EPIC.png","LEGENDARY":"03_PNT_회화/01_BASE-PNT-01_창가의_재봉사/04_LEGENDARY_전설/BASE-PNT-01_LEGENDARY.png"}},{"base_id":"BASE-PNT-02","item_name_ko":"여름 선창의 범선","category":"PNT","category_name_ko":"회화","canvas":[128,128],"grades":{"COMMON":"03_PNT_회화/02_BASE-PNT-02_여름_선창의_범선/01_COMMON_일반/BASE-PNT-02_COMMON.png","RARE":"03_PNT_회화/02_BASE-PNT-02_여름_선창의_범선/02_RARE_레어/BASE-PNT-02_RARE.png","EPIC":"03_PNT_회화/02_BASE-PNT-02_여름_선창의_범선/03_EPIC_에픽/BASE-PNT-02_EPIC.png","LEGENDARY":"03_PNT_회화/02_BASE-PNT-02_여름_선창의_범선/04_LEGENDARY_전설/BASE-PNT-02_LEGENDARY.png"}},{"base_id":"BASE-PNT-03","item_name_ko":"붉은 장갑의 배우","category":"PNT","category_name_ko":"회화","canvas":[128,128],"grades":{"COMMON":"03_PNT_회화/03_BASE-PNT-03_붉은_장갑의_배우/01_COMMON_일반/BASE-PNT-03_COMMON.png","RARE":"03_PNT_회화/03_BASE-PNT-03_붉은_장갑의_배우/02_RARE_레어/BASE-PNT-03_RARE.png","EPIC":"03_PNT_회화/03_BASE-PNT-03_붉은_장갑의_배우/03_EPIC_에픽/BASE-PNT-03_EPIC.png","LEGENDARY":"03_PNT_회화/03_BASE-PNT-03_붉은_장갑의_배우/04_LEGENDARY_전설/BASE-PNT-03_LEGENDARY.png"}},{"base_id":"BASE-PNT-04","item_name_ko":"폐쇄된 온실","category":"PNT","category_name_ko":"회화","canvas":[128,128],"grades":{"COMMON":"03_PNT_회화/04_BASE-PNT-04_폐쇄된_온실/01_COMMON_일반/BASE-PNT-04_COMMON.png","RARE":"03_PNT_회화/04_BASE-PNT-04_폐쇄된_온실/02_RARE_레어/BASE-PNT-04_RARE.png","EPIC":"03_PNT_회화/04_BASE-PNT-04_폐쇄된_온실/03_EPIC_에픽/BASE-PNT-04_EPIC.png","LEGENDARY":"03_PNT_회화/04_BASE-PNT-04_폐쇄된_온실/04_LEGENDARY_전설/BASE-PNT-04_LEGENDARY.png"}},{"base_id":"BASE-PNT-05","item_name_ko":"개항 파노라마","category":"PNT","category_name_ko":"회화","canvas":[128,128],"grades":{"COMMON":"03_PNT_회화/05_BASE-PNT-05_개항_파노라마/01_COMMON_일반/BASE-PNT-05_COMMON.png","RARE":"03_PNT_회화/05_BASE-PNT-05_개항_파노라마/02_RARE_레어/BASE-PNT-05_RARE.png","EPIC":"03_PNT_회화/05_BASE-PNT-05_개항_파노라마/03_EPIC_에픽/BASE-PNT-05_EPIC.png","LEGENDARY":"03_PNT_회화/05_BASE-PNT-05_개항_파노라마/04_LEGENDARY_전설/BASE-PNT-05_LEGENDARY.png"}},{"base_id":"BASE-PNT-06","item_name_ko":"푸른 부두","category":"PNT","category_name_ko":"회화","canvas":[128,128],"grades":{"COMMON":"03_PNT_회화/06_BASE-PNT-06_푸른_부두/01_COMMON_일반/BASE-PNT-06_COMMON.png","RARE":"03_PNT_회화/06_BASE-PNT-06_푸른_부두/02_RARE_레어/BASE-PNT-06_RARE.png","EPIC":"03_PNT_회화/06_BASE-PNT-06_푸른_부두/03_EPIC_에픽/BASE-PNT-06_EPIC.png","LEGENDARY":"03_PNT_회화/06_BASE-PNT-06_푸른_부두/04_LEGENDARY_전설/BASE-PNT-06_LEGENDARY.png"}},{"base_id":"BASE-PNT-07","item_name_ko":"등대 창가의 가족","category":"PNT","category_name_ko":"회화","canvas":[128,128],"grades":{"COMMON":"03_PNT_회화/07_BASE-PNT-07_등대_창가의_가족/01_COMMON_일반/BASE-PNT-07_COMMON.png","RARE":"03_PNT_회화/07_BASE-PNT-07_등대_창가의_가족/02_RARE_레어/BASE-PNT-07_RARE.png","EPIC":"03_PNT_회화/07_BASE-PNT-07_등대_창가의_가족/03_EPIC_에픽/BASE-PNT-07_EPIC.png","LEGENDARY":"03_PNT_회화/07_BASE-PNT-07_등대_창가의_가족/04_LEGENDARY_전설/BASE-PNT-07_LEGENDARY.png"}},{"base_id":"BASE-PNT-08","item_name_ko":"북문 거리 행렬","category":"PNT","category_name_ko":"회화","canvas":[128,128],"grades":{"COMMON":"03_PNT_회화/08_BASE-PNT-08_북문_거리_행렬/01_COMMON_일반/BASE-PNT-08_COMMON.png","RARE":"03_PNT_회화/08_BASE-PNT-08_북문_거리_행렬/02_RARE_레어/BASE-PNT-08_RARE.png","EPIC":"03_PNT_회화/08_BASE-PNT-08_북문_거리_행렬/03_EPIC_에픽/BASE-PNT-08_EPIC.png","LEGENDARY":"03_PNT_회화/08_BASE-PNT-08_북문_거리_행렬/04_LEGENDARY_전설/BASE-PNT-08_LEGENDARY.png"}},{"base_id":"BASE-PNT-09","item_name_ko":"푸른 예배당 예행연습","category":"PNT","category_name_ko":"회화","canvas":[128,128],"grades":{"COMMON":"03_PNT_회화/09_BASE-PNT-09_푸른_예배당_예행연습/01_COMMON_일반/BASE-PNT-09_COMMON.png","RARE":"03_PNT_회화/09_BASE-PNT-09_푸른_예배당_예행연습/02_RARE_레어/BASE-PNT-09_RARE.png","EPIC":"03_PNT_회화/09_BASE-PNT-09_푸른_예배당_예행연습/03_EPIC_에픽/BASE-PNT-09_EPIC.png","LEGENDARY":"03_PNT_회화/09_BASE-PNT-09_푸른_예배당_예행연습/04_LEGENDARY_전설/BASE-PNT-09_LEGENDARY.png"}},{"base_id":"BASE-PNT-10","item_name_ko":"여왕의 항해 초상","category":"PNT","category_name_ko":"회화","canvas":[128,128],"grades":{"COMMON":"03_PNT_회화/10_BASE-PNT-10_여왕의_항해_초상/01_COMMON_일반/BASE-PNT-10_COMMON.png","RARE":"03_PNT_회화/10_BASE-PNT-10_여왕의_항해_초상/02_RARE_레어/BASE-PNT-10_RARE.png","EPIC":"03_PNT_회화/10_BASE-PNT-10_여왕의_항해_초상/03_EPIC_에픽/BASE-PNT-10_EPIC.png","LEGENDARY":"03_PNT_회화/10_BASE-PNT-10_여왕의_항해_초상/04_LEGENDARY_전설/BASE-PNT-10_LEGENDARY.png"}},{"base_id":"BASE-BOK-01","item_name_ko":"부두 노동자 노래책","category":"BOK","category_name_ko":"고서","canvas":[128,128],"grades":{"COMMON":"04_BOK_고서/01_BASE-BOK-01_부두_노동자_노래책/01_COMMON_일반/BASE-BOK-01_COMMON.png","RARE":"04_BOK_고서/01_BASE-BOK-01_부두_노동자_노래책/02_RARE_레어/BASE-BOK-01_RARE.png","EPIC":"04_BOK_고서/01_BASE-BOK-01_부두_노동자_노래책/03_EPIC_에픽/BASE-BOK-01_EPIC.png","LEGENDARY":"04_BOK_고서/01_BASE-BOK-01_부두_노동자_노래책/04_LEGENDARY_전설/BASE-BOK-01_LEGENDARY.png"}},{"base_id":"BASE-BOK-02","item_name_ko":"제본공 견본첩","category":"BOK","category_name_ko":"고서","canvas":[128,128],"grades":{"COMMON":"04_BOK_고서/02_BASE-BOK-02_제본공_견본첩/01_COMMON_일반/BASE-BOK-02_COMMON.png","RARE":"04_BOK_고서/02_BASE-BOK-02_제본공_견본첩/02_RARE_레어/BASE-BOK-02_RARE.png","EPIC":"04_BOK_고서/02_BASE-BOK-02_제본공_견본첩/03_EPIC_에픽/BASE-BOK-02_EPIC.png","LEGENDARY":"04_BOK_고서/02_BASE-BOK-02_제본공_견본첩/04_LEGENDARY_전설/BASE-BOK-02_LEGENDARY.png"}},{"base_id":"BASE-BOK-03","item_name_ko":"붉은 무대막 희곡집","category":"BOK","category_name_ko":"고서","canvas":[128,128],"grades":{"COMMON":"04_BOK_고서/03_BASE-BOK-03_붉은_무대막_희곡집/01_COMMON_일반/BASE-BOK-03_COMMON.png","RARE":"04_BOK_고서/03_BASE-BOK-03_붉은_무대막_희곡집/02_RARE_레어/BASE-BOK-03_RARE.png","EPIC":"04_BOK_고서/03_BASE-BOK-03_붉은_무대막_희곡집/03_EPIC_에픽/BASE-BOK-03_EPIC.png","LEGENDARY":"04_BOK_고서/03_BASE-BOK-03_붉은_무대막_희곡집/04_LEGENDARY_전설/BASE-BOK-03_LEGENDARY.png"}},{"base_id":"BASE-BOK-04","item_name_ko":"식물 채색 도감","category":"BOK","category_name_ko":"고서","canvas":[128,128],"grades":{"COMMON":"04_BOK_고서/04_BASE-BOK-04_식물_채색_도감/01_COMMON_일반/BASE-BOK-04_COMMON.png","RARE":"04_BOK_고서/04_BASE-BOK-04_식물_채색_도감/02_RARE_레어/BASE-BOK-04_RARE.png","EPIC":"04_BOK_고서/04_BASE-BOK-04_식물_채색_도감/03_EPIC_에픽/BASE-BOK-04_EPIC.png","LEGENDARY":"04_BOK_고서/04_BASE-BOK-04_식물_채색_도감/04_LEGENDARY_전설/BASE-BOK-04_LEGENDARY.png"}},{"base_id":"BASE-BOK-05","item_name_ko":"대륙 우편 지도첩","category":"BOK","category_name_ko":"고서","canvas":[128,128],"grades":{"COMMON":"04_BOK_고서/05_BASE-BOK-05_대륙_우편_지도첩/01_COMMON_일반/BASE-BOK-05_COMMON.png","RARE":"04_BOK_고서/05_BASE-BOK-05_대륙_우편_지도첩/02_RARE_레어/BASE-BOK-05_RARE.png","EPIC":"04_BOK_고서/05_BASE-BOK-05_대륙_우편_지도첩/03_EPIC_에픽/BASE-BOK-05_EPIC.png","LEGENDARY":"04_BOK_고서/05_BASE-BOK-05_대륙_우편_지도첩/04_LEGENDARY_전설/BASE-BOK-05_LEGENDARY.png"}},{"base_id":"BASE-BOK-06","item_name_ko":"건국항로 해도집","category":"BOK","category_name_ko":"고서","canvas":[128,128],"grades":{"COMMON":"04_BOK_고서/06_BASE-BOK-06_건국항로_해도집/01_COMMON_일반/BASE-BOK-06_COMMON.png","RARE":"04_BOK_고서/06_BASE-BOK-06_건국항로_해도집/02_RARE_레어/BASE-BOK-06_RARE.png","EPIC":"04_BOK_고서/06_BASE-BOK-06_건국항로_해도집/03_EPIC_에픽/BASE-BOK-06_EPIC.png","LEGENDARY":"04_BOK_고서/06_BASE-BOK-06_건국항로_해도집/04_LEGENDARY_전설/BASE-BOK-06_LEGENDARY.png"}},{"base_id":"BASE-BOK-07","item_name_ko":"달과 파도 조수력","category":"BOK","category_name_ko":"고서","canvas":[128,128],"grades":{"COMMON":"04_BOK_고서/07_BASE-BOK-07_달과_파도_조수력/01_COMMON_일반/BASE-BOK-07_COMMON.png","RARE":"04_BOK_고서/07_BASE-BOK-07_달과_파도_조수력/02_RARE_레어/BASE-BOK-07_RARE.png","EPIC":"04_BOK_고서/07_BASE-BOK-07_달과_파도_조수력/03_EPIC_에픽/BASE-BOK-07_EPIC.png","LEGENDARY":"04_BOK_고서/07_BASE-BOK-07_달과_파도_조수력/04_LEGENDARY_전설/BASE-BOK-07_LEGENDARY.png"}},{"base_id":"BASE-BOK-08","item_name_ko":"약초 처방집","category":"BOK","category_name_ko":"고서","canvas":[128,128],"grades":{"COMMON":"04_BOK_고서/08_BASE-BOK-08_약초_처방집/01_COMMON_일반/BASE-BOK-08_COMMON.png","RARE":"04_BOK_고서/08_BASE-BOK-08_약초_처방집/02_RARE_레어/BASE-BOK-08_RARE.png","EPIC":"04_BOK_고서/08_BASE-BOK-08_약초_처방집/03_EPIC_에픽/BASE-BOK-08_EPIC.png","LEGENDARY":"04_BOK_고서/08_BASE-BOK-08_약초_처방집/04_LEGENDARY_전설/BASE-BOK-08_LEGENDARY.png"}},{"base_id":"BASE-BOK-09","item_name_ko":"끈잠금 통역 수첩","category":"BOK","category_name_ko":"고서","canvas":[128,128],"grades":{"COMMON":"04_BOK_고서/09_BASE-BOK-09_끈잠금_통역_수첩/01_COMMON_일반/BASE-BOK-09_COMMON.png","RARE":"04_BOK_고서/09_BASE-BOK-09_끈잠금_통역_수첩/02_RARE_레어/BASE-BOK-09_RARE.png","EPIC":"04_BOK_고서/09_BASE-BOK-09_끈잠금_통역_수첩/03_EPIC_에픽/BASE-BOK-09_EPIC.png","LEGENDARY":"04_BOK_고서/09_BASE-BOK-09_끈잠금_통역_수첩/04_LEGENDARY_전설/BASE-BOK-09_LEGENDARY.png"}},{"base_id":"BASE-BOK-10","item_name_ko":"일식 관측 필사본","category":"BOK","category_name_ko":"고서","canvas":[128,128],"grades":{"COMMON":"04_BOK_고서/10_BASE-BOK-10_일식_관측_필사본/01_COMMON_일반/BASE-BOK-10_COMMON.png","RARE":"04_BOK_고서/10_BASE-BOK-10_일식_관측_필사본/02_RARE_레어/BASE-BOK-10_RARE.png","EPIC":"04_BOK_고서/10_BASE-BOK-10_일식_관측_필사본/03_EPIC_에픽/BASE-BOK-10_EPIC.png","LEGENDARY":"04_BOK_고서/10_BASE-BOK-10_일식_관측_필사본/04_LEGENDARY_전설/BASE-BOK-10_LEGENDARY.png"}},{"base_id":"BASE-MET-01","item_name_ko":"꽃문양 은제 성냥갑","category":"MET","category_name_ko":"금은세공","canvas":[128,128],"grades":{"COMMON":"05_MET_금은세공/01_BASE-MET-01_꽃문양_은제_성냥갑/01_COMMON_일반/BASE-MET-01_COMMON.png","RARE":"05_MET_금은세공/01_BASE-MET-01_꽃문양_은제_성냥갑/02_RARE_레어/BASE-MET-01_RARE.png","EPIC":"05_MET_금은세공/01_BASE-MET-01_꽃문양_은제_성냥갑/03_EPIC_에픽/BASE-MET-01_EPIC.png","LEGENDARY":"05_MET_금은세공/01_BASE-MET-01_꽃문양_은제_성냥갑/04_LEGENDARY_전설/BASE-MET-01_LEGENDARY.png"}},{"base_id":"BASE-MET-02","item_name_ko":"잎문양 소형 촛대","category":"MET","category_name_ko":"금은세공","canvas":[128,128],"grades":{"COMMON":"05_MET_금은세공/02_BASE-MET-02_잎문양_소형_촛대/01_COMMON_일반/BASE-MET-02_COMMON.png","RARE":"05_MET_금은세공/02_BASE-MET-02_잎문양_소형_촛대/02_RARE_레어/BASE-MET-02_RARE.png","EPIC":"05_MET_금은세공/02_BASE-MET-02_잎문양_소형_촛대/03_EPIC_에픽/BASE-MET-02_EPIC.png","LEGENDARY":"05_MET_금은세공/02_BASE-MET-02_잎문양_소형_촛대/04_LEGENDARY_전설/BASE-MET-02_LEGENDARY.png"}},{"base_id":"BASE-MET-03","item_name_ko":"밧줄문 계량컵","category":"MET","category_name_ko":"금은세공","canvas":[128,128],"grades":{"COMMON":"05_MET_금은세공/03_BASE-MET-03_밧줄문_계량컵/01_COMMON_일반/BASE-MET-03_COMMON.png","RARE":"05_MET_금은세공/03_BASE-MET-03_밧줄문_계량컵/02_RARE_레어/BASE-MET-03_RARE.png","EPIC":"05_MET_금은세공/03_BASE-MET-03_밧줄문_계량컵/03_EPIC_에픽/BASE-MET-03_EPIC.png","LEGENDARY":"05_MET_금은세공/03_BASE-MET-03_밧줄문_계량컵/04_LEGENDARY_전설/BASE-MET-03_LEGENDARY.png"}},{"base_id":"BASE-MET-04","item_name_ko":"파도문 은제 티포트","category":"MET","category_name_ko":"금은세공","canvas":[128,128],"grades":{"COMMON":"05_MET_금은세공/04_BASE-MET-04_파도문_은제_티포트/01_COMMON_일반/BASE-MET-04_COMMON.png","RARE":"05_MET_금은세공/04_BASE-MET-04_파도문_은제_티포트/02_RARE_레어/BASE-MET-04_RARE.png","EPIC":"05_MET_금은세공/04_BASE-MET-04_파도문_은제_티포트/03_EPIC_에픽/BASE-MET-04_EPIC.png","LEGENDARY":"05_MET_금은세공/04_BASE-MET-04_파도문_은제_티포트/04_LEGENDARY_전설/BASE-MET-04_LEGENDARY.png"}},{"base_id":"BASE-MET-05","item_name_ko":"산호손잡이 금박 고블릿","category":"MET","category_name_ko":"금은세공","canvas":[128,128],"grades":{"COMMON":"05_MET_금은세공/05_BASE-MET-05_산호손잡이_금박_고블릿/01_COMMON_일반/BASE-MET-05_COMMON.png","RARE":"05_MET_금은세공/05_BASE-MET-05_산호손잡이_금박_고블릿/02_RARE_레어/BASE-MET-05_RARE.png","EPIC":"05_MET_금은세공/05_BASE-MET-05_산호손잡이_금박_고블릿/03_EPIC_에픽/BASE-MET-05_EPIC.png","LEGENDARY":"05_MET_금은세공/05_BASE-MET-05_산호손잡이_금박_고블릿/04_LEGENDARY_전설/BASE-MET-05_LEGENDARY.png"}},{"base_id":"BASE-MET-06","item_name_ko":"바다사자 문장 장식","category":"MET","category_name_ko":"금은세공","canvas":[128,128],"grades":{"COMMON":"05_MET_금은세공/06_BASE-MET-06_바다사자_문장_장식/01_COMMON_일반/BASE-MET-06_COMMON.png","RARE":"05_MET_금은세공/06_BASE-MET-06_바다사자_문장_장식/02_RARE_레어/BASE-MET-06_RARE.png","EPIC":"05_MET_금은세공/06_BASE-MET-06_바다사자_문장_장식/03_EPIC_에픽/BASE-MET-06_EPIC.png","LEGENDARY":"05_MET_금은세공/06_BASE-MET-06_바다사자_문장_장식/04_LEGENDARY_전설/BASE-MET-06_LEGENDARY.png"}},{"base_id":"BASE-MET-07","item_name_ko":"파문 금제 담뱃갑","category":"MET","category_name_ko":"금은세공","canvas":[128,128],"grades":{"COMMON":"05_MET_금은세공/07_BASE-MET-07_파문_금제_담뱃갑/01_COMMON_일반/BASE-MET-07_COMMON.png","RARE":"05_MET_금은세공/07_BASE-MET-07_파문_금제_담뱃갑/02_RARE_레어/BASE-MET-07_RARE.png","EPIC":"05_MET_금은세공/07_BASE-MET-07_파문_금제_담뱃갑/03_EPIC_에픽/BASE-MET-07_EPIC.png","LEGENDARY":"05_MET_금은세공/07_BASE-MET-07_파문_금제_담뱃갑/04_LEGENDARY_전설/BASE-MET-07_LEGENDARY.png"}},{"base_id":"BASE-MET-08","item_name_ko":"올리브문 쌍촛대","category":"MET","category_name_ko":"금은세공","canvas":[128,128],"grades":{"COMMON":"05_MET_금은세공/08_BASE-MET-08_올리브문_쌍촛대/01_COMMON_일반/BASE-MET-08_COMMON.png","RARE":"05_MET_금은세공/08_BASE-MET-08_올리브문_쌍촛대/02_RARE_레어/BASE-MET-08_RARE.png","EPIC":"05_MET_금은세공/08_BASE-MET-08_올리브문_쌍촛대/03_EPIC_에픽/BASE-MET-08_EPIC.png","LEGENDARY":"05_MET_금은세공/08_BASE-MET-08_올리브문_쌍촛대/04_LEGENDARY_전설/BASE-MET-08_LEGENDARY.png"}},{"base_id":"BASE-MET-09","item_name_ko":"항로문 금은 상감함","category":"MET","category_name_ko":"금은세공","canvas":[128,128],"grades":{"COMMON":"05_MET_금은세공/09_BASE-MET-09_항로문_금은_상감함/01_COMMON_일반/BASE-MET-09_COMMON.png","RARE":"05_MET_금은세공/09_BASE-MET-09_항로문_금은_상감함/02_RARE_레어/BASE-MET-09_RARE.png","EPIC":"05_MET_금은세공/09_BASE-MET-09_항로문_금은_상감함/03_EPIC_에픽/BASE-MET-09_EPIC.png","LEGENDARY":"05_MET_금은세공/09_BASE-MET-09_항로문_금은_상감함/04_LEGENDARY_전설/BASE-MET-09_LEGENDARY.png"}},{"base_id":"BASE-MET-10","item_name_ko":"등대와 선박 센터피스","category":"MET","category_name_ko":"금은세공","canvas":[128,128],"grades":{"COMMON":"05_MET_금은세공/10_BASE-MET-10_등대와_선박_센터피스/01_COMMON_일반/BASE-MET-10_COMMON.png","RARE":"05_MET_금은세공/10_BASE-MET-10_등대와_선박_센터피스/02_RARE_레어/BASE-MET-10_RARE.png","EPIC":"05_MET_금은세공/10_BASE-MET-10_등대와_선박_센터피스/03_EPIC_에픽/BASE-MET-10_EPIC.png","LEGENDARY":"05_MET_금은세공/10_BASE-MET-10_등대와_선박_센터피스/04_LEGENDARY_전설/BASE-MET-10_LEGENDARY.png"}},{"base_id":"BASE-JEW-01","item_name_ko":"산호구슬 귀걸이","category":"JEW","category_name_ko":"장신구","canvas":[128,128],"grades":{"COMMON":"06_JEW_장신구/01_BASE-JEW-01_산호구슬_귀걸이/01_COMMON_일반/BASE-JEW-01_COMMON.png","RARE":"06_JEW_장신구/01_BASE-JEW-01_산호구슬_귀걸이/02_RARE_레어/BASE-JEW-01_RARE.png","EPIC":"06_JEW_장신구/01_BASE-JEW-01_산호구슬_귀걸이/03_EPIC_에픽/BASE-JEW-01_EPIC.png","LEGENDARY":"06_JEW_장신구/01_BASE-JEW-01_산호구슬_귀걸이/04_LEGENDARY_전설/BASE-JEW-01_LEGENDARY.png"}},{"base_id":"BASE-JEW-02","item_name_ko":"제비문 은 브로치","category":"JEW","category_name_ko":"장신구","canvas":[128,128],"grades":{"COMMON":"06_JEW_장신구/02_BASE-JEW-02_제비문_은_브로치/01_COMMON_일반/BASE-JEW-02_COMMON.png","RARE":"06_JEW_장신구/02_BASE-JEW-02_제비문_은_브로치/02_RARE_레어/BASE-JEW-02_RARE.png","EPIC":"06_JEW_장신구/02_BASE-JEW-02_제비문_은_브로치/03_EPIC_에픽/BASE-JEW-02_EPIC.png","LEGENDARY":"06_JEW_장신구/02_BASE-JEW-02_제비문_은_브로치/04_LEGENDARY_전설/BASE-JEW-02_LEGENDARY.png"}},{"base_id":"BASE-JEW-03","item_name_ko":"카메오 펜던트","category":"JEW","category_name_ko":"장신구","canvas":[128,128],"grades":{"COMMON":"06_JEW_장신구/03_BASE-JEW-03_카메오_펜던트/01_COMMON_일반/BASE-JEW-03_COMMON.png","RARE":"06_JEW_장신구/03_BASE-JEW-03_카메오_펜던트/02_RARE_레어/BASE-JEW-03_RARE.png","EPIC":"06_JEW_장신구/03_BASE-JEW-03_카메오_펜던트/03_EPIC_에픽/BASE-JEW-03_EPIC.png","LEGENDARY":"06_JEW_장신구/03_BASE-JEW-03_카메오_펜던트/04_LEGENDARY_전설/BASE-JEW-03_LEGENDARY.png"}},{"base_id":"BASE-JEW-04","item_name_ko":"자개 부채 머리빗","category":"JEW","category_name_ko":"장신구","canvas":[128,128],"grades":{"COMMON":"06_JEW_장신구/04_BASE-JEW-04_자개_부채_머리빗/01_COMMON_일반/BASE-JEW-04_COMMON.png","RARE":"06_JEW_장신구/04_BASE-JEW-04_자개_부채_머리빗/02_RARE_레어/BASE-JEW-04_RARE.png","EPIC":"06_JEW_장신구/04_BASE-JEW-04_자개_부채_머리빗/03_EPIC_에픽/BASE-JEW-04_EPIC.png","LEGENDARY":"06_JEW_장신구/04_BASE-JEW-04_자개_부채_머리빗/04_LEGENDARY_전설/BASE-JEW-04_LEGENDARY.png"}},{"base_id":"BASE-JEW-05","item_name_ko":"흑진주 리본 목걸이","category":"JEW","category_name_ko":"장신구","canvas":[128,128],"grades":{"COMMON":"06_JEW_장신구/05_BASE-JEW-05_흑진주_리본_목걸이/01_COMMON_일반/BASE-JEW-05_COMMON.png","RARE":"06_JEW_장신구/05_BASE-JEW-05_흑진주_리본_목걸이/02_RARE_레어/BASE-JEW-05_RARE.png","EPIC":"06_JEW_장신구/05_BASE-JEW-05_흑진주_리본_목걸이/03_EPIC_에픽/BASE-JEW-05_EPIC.png","LEGENDARY":"06_JEW_장신구/05_BASE-JEW-05_흑진주_리본_목걸이/04_LEGENDARY_전설/BASE-JEW-05_LEGENDARY.png"}},{"base_id":"BASE-JEW-06","item_name_ko":"에메랄드 인탈리오 반지","category":"JEW","category_name_ko":"장신구","canvas":[128,128],"grades":{"COMMON":"06_JEW_장신구/06_BASE-JEW-06_에메랄드_인탈리오_반지/01_COMMON_일반/BASE-JEW-06_COMMON.png","RARE":"06_JEW_장신구/06_BASE-JEW-06_에메랄드_인탈리오_반지/02_RARE_레어/BASE-JEW-06_RARE.png","EPIC":"06_JEW_장신구/06_BASE-JEW-06_에메랄드_인탈리오_반지/03_EPIC_에픽/BASE-JEW-06_EPIC.png","LEGENDARY":"06_JEW_장신구/06_BASE-JEW-06_에메랄드_인탈리오_반지/04_LEGENDARY_전설/BASE-JEW-06_LEGENDARY.png"}},{"base_id":"BASE-JEW-07","item_name_ko":"석류석 진주 초커","category":"JEW","category_name_ko":"장신구","canvas":[128,128],"grades":{"COMMON":"06_JEW_장신구/07_BASE-JEW-07_석류석_진주_초커/01_COMMON_일반/BASE-JEW-07_COMMON.png","RARE":"06_JEW_장신구/07_BASE-JEW-07_석류석_진주_초커/02_RARE_레어/BASE-JEW-07_RARE.png","EPIC":"06_JEW_장신구/07_BASE-JEW-07_석류석_진주_초커/03_EPIC_에픽/BASE-JEW-07_EPIC.png","LEGENDARY":"06_JEW_장신구/07_BASE-JEW-07_석류석_진주_초커/04_LEGENDARY_전설/BASE-JEW-07_LEGENDARY.png"}},{"base_id":"BASE-JEW-08","item_name_ko":"별자리 사파이어 팔찌","category":"JEW","category_name_ko":"장신구","canvas":[128,128],"grades":{"COMMON":"06_JEW_장신구/08_BASE-JEW-08_별자리_사파이어_팔찌/01_COMMON_일반/BASE-JEW-08_COMMON.png","RARE":"06_JEW_장신구/08_BASE-JEW-08_별자리_사파이어_팔찌/02_RARE_레어/BASE-JEW-08_RARE.png","EPIC":"06_JEW_장신구/08_BASE-JEW-08_별자리_사파이어_팔찌/03_EPIC_에픽/BASE-JEW-08_EPIC.png","LEGENDARY":"06_JEW_장신구/08_BASE-JEW-08_별자리_사파이어_팔찌/04_LEGENDARY_전설/BASE-JEW-08_LEGENDARY.png"}},{"base_id":"BASE-JEW-09","item_name_ko":"세 갈래 다이아몬드 티아라","category":"JEW","category_name_ko":"장신구","canvas":[128,128],"grades":{"COMMON":"06_JEW_장신구/09_BASE-JEW-09_세_갈래_다이아몬드_티아라/01_COMMON_일반/BASE-JEW-09_COMMON.png","RARE":"06_JEW_장신구/09_BASE-JEW-09_세_갈래_다이아몬드_티아라/02_RARE_레어/BASE-JEW-09_RARE.png","EPIC":"06_JEW_장신구/09_BASE-JEW-09_세_갈래_다이아몬드_티아라/03_EPIC_에픽/BASE-JEW-09_EPIC.png","LEGENDARY":"06_JEW_장신구/09_BASE-JEW-09_세_갈래_다이아몬드_티아라/04_LEGENDARY_전설/BASE-JEW-09_LEGENDARY.png"}},{"base_id":"BASE-JEW-10","item_name_ko":"루비 타이핀·커프스 세트","category":"JEW","category_name_ko":"장신구","canvas":[128,128],"grades":{"COMMON":"06_JEW_장신구/10_BASE-JEW-10_루비_타이핀·커프스_세트/01_COMMON_일반/BASE-JEW-10_COMMON.png","RARE":"06_JEW_장신구/10_BASE-JEW-10_루비_타이핀·커프스_세트/02_RARE_레어/BASE-JEW-10_RARE.png","EPIC":"06_JEW_장신구/10_BASE-JEW-10_루비_타이핀·커프스_세트/03_EPIC_에픽/BASE-JEW-10_EPIC.png","LEGENDARY":"06_JEW_장신구/10_BASE-JEW-10_루비_타이핀·커프스_세트/04_LEGENDARY_전설/BASE-JEW-10_LEGENDARY.png"}}]},"./data/audio-map.json":{"schemaVersion":"1.1","sourceContract":"V6.4 sound-3.4-city-weight-appraisal-soften","masterVolume":0.8,"bgm":{"title":{"file":"./assets/audio/bgm/bgm-01-title__loop.wav","volume":0.72,"loop":true},"city":{"file":"./assets/audio/bgm/bgm-02-city__loop.wav","volume":0.72,"loop":true},"workplace":{"file":"./assets/audio/bgm/bgm-07-loading-workshop__loop.wav","volume":0.68,"loop":true},"tavern":{"file":"./assets/audio/bgm/bgm-11-tavern-whispers__loop.wav","volume":0.68,"loop":true},"auction":{"file":"./assets/audio/bgm/bgm-03-auction__L1.wav","volume":0.74,"loop":true},"relic":{"file":"./assets/audio/bgm/bgm-04-relic__L1.wav","volume":0.76,"loop":true},"settlement":{"file":"./assets/audio/bgm/bgm-05-settlement__L1.wav","volume":0.7,"loop":true},"museum":{"file":"./assets/audio/bgm/bgm-06-archive__loop.wav","volume":0.66,"loop":true}},"sfx":{"navigate":{"file":"./assets/audio/sfx/sfx-venue-enter.wav","volume":0.72},"back":{"file":"./assets/audio/sfx/sfx-ui-back.wav","volume":0.7},"bid":{"file":"./assets/audio/sfx/sfx-bid-place.wav","volume":0.78},"bot-bid":{"file":"./assets/audio/sfx/sfx-bid-bot.wav","volume":0.68},"pass":{"file":"./assets/audio/sfx/sfx-pass.wav","volume":0.7},"gavel":{"file":"./assets/audio/sfx/sfx-gavel.wav","volume":0.82},"appraise":{"file":"./assets/audio/sfx/sfx-appraise-start.wav","volume":0.72},"sell":{"file":"./assets/audio/sfx/sfx-sale-confirm.wav","volume":0.76},"quest":{"file":"./assets/audio/sfx/sfx-quest-accept.wav","volume":0.72},"information":{"file":"./assets/audio/sfx/sfx-info-buy.wav","volume":0.7},"loan":{"file":"./assets/audio/sfx/sfx-loan-seal.wav","volume":0.78},"repay":{"file":"./assets/audio/sfx/sfx-loan-repay.wav","volume":0.74},"upgrade":{"file":"./assets/audio/sfx/sfx-upgrade.wav","volume":0.8},"day":{"file":"./assets/audio/sfx/sfx-day-advance.wav","volume":0.72},"relic-bid":{"file":"./assets/audio/sfx/sfx-relic-bid.wav","volume":0.8},"relic-pass":{"file":"./assets/audio/sfx/sfx-relic-pass.wav","volume":0.72},"relic-gavel":{"file":"./assets/audio/sfx/sfx-relic-gavel.wav","volume":0.84},"museum":{"file":"./assets/audio/sfx/sfx-museum-inspect.wav","volume":0.65}}}};
+    const nativeFetch = window.fetch.bind(window);
+    window.fetch = (input, init) => {
+      const key = typeof input === 'string' ? input : input?.url;
+      if (Object.prototype.hasOwnProperty.call(embedded, key)) {
+        return Promise.resolve(new Response(JSON.stringify(embedded[key]), {
+          status: 200,
+          headers: { 'content-type': 'application/json' },
+        }));
+      }
+      return nativeFetch(input, init);
+    };
+  })();
+</script>
+<script>(() => {
+  // src/catalog.js
+  function validateCatalog(catalog2) {
+    const errors = [];
+    if (!catalog2 || !Array.isArray(catalog2.items)) errors.push("catalog.items must be an array");
+    if (catalog2?.items?.length !== 60) errors.push(`expected 60 base items, received ${catalog2?.items?.length ?? 0}`);
+    for (const item of catalog2?.items || []) {
+      if (!item.base_id || !item.category || !item.item_name_ko) errors.push(`invalid item metadata: ${item?.base_id || "unknown"}`);
+      for (const grade of ["COMMON", "RARE", "EPIC", "LEGENDARY"]) {
+        if (!item.grades?.[grade]) errors.push(`${item.base_id} is missing ${grade} sprite`);
+      }
+    }
+    return errors;
+  }
+  async function loadCatalog(url = "./assets/items/catalog.json") {
+    const response = await fetch(url);
+    if (!response.ok) throw new Error(`catalog load failed: ${response.status}`);
+    const catalog2 = await response.json();
+    const errors = validateCatalog(catalog2);
+    if (errors.length) throw new Error(errors.join("\n"));
+    return catalog2;
+  }
+  function spriteUrl(item, grade, catalogBase = "./assets/items/") {
+    const relativePath = item.spritePath || item.grades?.[grade];
+    if (!relativePath) throw new Error(`sprite path is missing for ${item.baseItemId || item.base_id || "unknown item"}`);
+    const pageBase = globalThis.document?.baseURI || globalThis.location?.href;
+    return new URL(relativePath.split("\\").join("/"), new URL(catalogBase, pageBase)).href;
+  }
+
+  // src/constants.js
+  var RUN_DAYS = 12;
+  var LOTS_PER_DAY = 8;
+  var BUFFER_AHEAD_DAYS = 2;
+  var GRADES = ["COMMON", "RARE", "EPIC", "LEGENDARY"];
+  var DEFAULT_GRADE_WEIGHTS = { COMMON: 55, RARE: 28, EPIC: 13, LEGENDARY: 4 };
+  var VISUAL_EFFECTS = Object.freeze([
+    "display-shadow",
+    "rim-glow",
+    "soft-halo",
+    "sparkle",
+    "light-sweep",
+    "dust-motes",
+    "rising-particles",
+    "focus-pulse"
+  ]);
+  var CATEGORY_EFFECTS = Object.freeze({
+    CER: ["light-sweep", "soft-halo"],
+    CLK: ["focus-pulse", "rim-glow"],
+    PNT: ["dust-motes", "soft-halo"],
+    BOK: ["dust-motes", "rim-glow"],
+    MET: ["light-sweep", "sparkle"],
+    JEW: ["sparkle", "soft-halo", "rising-particles"]
+  });
+
+  // src/rng.js
+  function hashSeed(value) {
+    let hash = 2166136261;
+    for (const char of String(value)) {
+      hash ^= char.codePointAt(0);
+      hash = Math.imul(hash, 16777619);
+    }
+    return hash >>> 0;
+  }
+  function createRng(seed) {
+    let state2 = hashSeed(seed) || 1;
+    return () => {
+      state2 += 1831565813;
+      let next = state2;
+      next = Math.imul(next ^ next >>> 15, next | 1);
+      next ^= next + Math.imul(next ^ next >>> 7, next | 61);
+      return ((next ^ next >>> 14) >>> 0) / 4294967296;
+    };
+  }
+  function shuffle(values, rng) {
+    const result = [...values];
+    for (let index = result.length - 1; index > 0; index -= 1) {
+      const swap = Math.floor(rng() * (index + 1));
+      [result[index], result[swap]] = [result[swap], result[index]];
+    }
+    return result;
+  }
+  function weightedChoice(entries, rng) {
+    const total = entries.reduce((sum, [, weight]) => sum + Math.max(0, Number(weight) || 0), 0);
+    let cursor = rng() * total;
+    for (const [value, weight] of entries) {
+      cursor -= Math.max(0, Number(weight) || 0);
+      if (cursor <= 0) return value;
+    }
+    return entries.at(-1)?.[0];
+  }
+
+  // src/schedule.js
+  function normalizedGradeWeights(balance2) {
+    const source = balance2?.lotPool?.gradeWeights || DEFAULT_GRADE_WEIGHTS;
+    return Object.fromEntries(GRADES.map((grade) => [grade, source[grade] ?? source[grade.toLowerCase()] ?? DEFAULT_GRADE_WEIGHTS[grade]]));
+  }
+  function selectVisualEffects(category, grade, rng) {
+    const candidates = shuffle(CATEGORY_EFFECTS[category] || ["rim-glow"], rng);
+    const count = grade === "LEGENDARY" ? 3 : grade === "EPIC" ? 2 : grade === "RARE" ? 1 : 0;
+    return ["display-shadow", ...candidates.slice(0, count)];
+  }
+  function createRunSchedule({ catalog: catalog2, balance: balance2, seed }) {
+    const rng = createRng(seed);
+    const itemPool = [];
+    while (itemPool.length < RUN_DAYS * LOTS_PER_DAY) itemPool.push(...shuffle(catalog2.items, rng));
+    const weights = normalizedGradeWeights(balance2);
+    const gradeEntries = GRADES.map((grade) => [grade, weights[grade]]);
+    const gradeBase = balance2?.gradeBase || { common: 8e3, rare: 16e3, epic: 32e3, legendary: 64e3 };
+    const qualityTable = balance2?.quality?.table || [{ value: 1, label: "\uBCF4\uD1B5", weight: 1 }];
+    const days = Array.from({ length: RUN_DAYS }, (_, dayIndex) => ({
+      day: dayIndex + 1,
+      lots: Array.from({ length: LOTS_PER_DAY }, (_2, lotIndex) => {
+        const item = itemPool[dayIndex * LOTS_PER_DAY + lotIndex];
+        const grade = weightedChoice(gradeEntries, rng);
+        const quality = weightedChoice(qualityTable.map((entry) => [entry, entry.weight]), rng);
+        const basePrice = Number(gradeBase[grade.toLowerCase()] || 8e3);
+        const trueValue = Math.round(basePrice * Number(quality.value || 1));
+        return {
+          lotId: `${seed}-d${dayIndex + 1}-l${lotIndex + 1}`,
+          day: dayIndex + 1,
+          order: lotIndex + 1,
+          baseItemId: item.base_id,
+          baseName: item.item_name_ko,
+          category: item.category,
+          categoryName: item.category_name_ko,
+          grade,
+          spritePath: item.grades[grade],
+          quality: { label: quality.label, multiplier: quality.value },
+          pricing: { basePrice, trueValue },
+          visualEffects: selectVisualEffects(item.category, grade, rng),
+          content: null
+        };
+      })
+    }));
+    return { seed: String(seed), days };
+  }
+  function validateSchedule(schedule) {
+    const lots = schedule?.days?.flatMap((day) => day.lots) || [];
+    return {
+      valid: schedule?.days?.length === RUN_DAYS && lots.length === RUN_DAYS * LOTS_PER_DAY,
+      days: schedule?.days?.length || 0,
+      lots: lots.length,
+      uniqueBaseItems: new Set(lots.map((lot) => lot.baseItemId)).size
+    };
+  }
+
+  // src/set-graph.js
+  function createSetGraph(schedule, seed) {
+    const rng = createRng(`${seed}:sets`);
+    const lots = shuffle(schedule.days.flatMap((day) => day.lots), rng);
+    const setCount = 12;
+    const sets = Array.from({ length: setCount }, (_, index) => ({
+      setId: `set-${String(index + 1).padStart(2, "0")}`,
+      themeKey: ["voyage", "dynasty", "guild", "astronomy", "theatre", "botany"][index % 6],
+      lotIds: []
+    }));
+    lots.forEach((lot, index) => {
+      const set = sets[index % sets.length];
+      set.lotIds.push(lot.lotId);
+      lot.setId = set.setId;
+    });
+    return sets;
+  }
+
+  // src/generation-buffer.js
+  var fallbackThemes = {
+    voyage: "\uD56D\uB85C\uC640 \uBC14\uB2E4\uC758 \uD754\uC801",
+    dynasty: "\uBAB0\uB77D\uD55C \uAC00\uBB38\uC758 \uAE30\uB85D",
+    guild: "\uC0C1\uC778 \uC870\uD569\uC758 \uBE44\uBC00",
+    astronomy: "\uBCC4\uACFC \uC2DC\uAC04\uC758 \uAD00\uCE21",
+    theatre: "\uBB34\uB300 \uB4A4\uC758 \uC774\uC57C\uAE30",
+    botany: "\uC57D\uCD08\uC640 \uC815\uC6D0\uC758 \uAE30\uC5B5"
+  };
+  var FallbackContentProvider = class {
+    async generateDay({ day, lots, sets }) {
+      const setById = new Map(sets.map((set) => [set.setId, set]));
+      return lots.map((lot) => {
+        const set = setById.get(lot.setId);
+        const theme = fallbackThemes[set?.themeKey] || "\uB3C4\uC2DC\uC758 \uC54C\uB824\uC9C0\uC9C0 \uC54A\uC740 \uC0AC\uC5F0";
+        return {
+          lotId: lot.lotId,
+          displayName: lot.baseName,
+          description: `${lot.baseName}. ${theme} \uD14C\uB9C8\uC640 \uC5F0\uACB0\uB41C ${{ COMMON: "\uC77C\uBC18", RARE: "\uD76C\uADC0", EPIC: "\uC601\uC6C5", LEGENDARY: "\uC804\uC124" }[lot.grade] || lot.grade} \uB4F1\uAE09 \uCD9C\uD488\uD488\uC774\uB2E4.`,
+          rumor: `${theme} \uAD00\uB828 \uCD9C\uCC98 \uAE30\uB85D\uC774 \uC788\uB2E4\uB294 \uC18C\uBB38\uC774 \uB3C8\uB2E4.`,
+          setHint: `${theme} \uACC4\uC5F4\uC5D0\uC11C \uBC18\uBCF5\uB418\uB294 \uD45C\uC2DD\uC774 \uBCF4\uC778\uB2E4.`,
+          npcReaction: `\uCC38\uAC00\uC790\uB4E4\uC774 ${lot.baseName}\uC758 \uBCF4\uC874 \uC0C1\uD0DC\uB97C \uC0B4\uD540\uB2E4.`,
+          setId: lot.setId,
+          provenance: "local-fallback",
+          generatedForDay: day
+        };
+      });
+    }
+  };
+  var GenerationBuffer = class {
+    constructor({ provider = new FallbackContentProvider(), fallback = new FallbackContentProvider() } = {}) {
+      this.provider = provider;
+      this.fallback = fallback;
+      this.readyDays = /* @__PURE__ */ new Map();
+      this.failures = [];
+      this.blueprint = null;
+    }
+    async prepareRun(input) {
+      if (!this.provider.generateBlueprint) return null;
+      try {
+        this.blueprint = await this.provider.generateBlueprint(input);
+        return this.blueprint;
+      } catch (error) {
+        this.failures.push({ day: 0, message: error.message });
+        return null;
+      }
+    }
+    async ensure({ currentDay, schedule, sets, aheadDays = BUFFER_AHEAD_DAYS }) {
+      const lastDay = Math.min(RUN_DAYS, currentDay + aheadDays);
+      for (let day = currentDay; day <= lastDay; day += 1) {
+        if (this.readyDays.has(day)) continue;
+        const lots = schedule.days[day - 1].lots;
+        let generated;
+        try {
+          generated = await this.provider.generateDay({ day, lots, sets, blueprint: this.blueprint });
+          if (!Array.isArray(generated) || generated.length !== lots.length) throw new Error("provider returned an incomplete day");
+        } catch (error) {
+          this.failures.push({ day, message: error.message });
+          generated = await this.fallback.generateDay({ day, lots, sets });
+        }
+        generated.forEach((content, index) => {
+          lots[index].content = content;
+        });
+        this.readyDays.set(day, generated);
+      }
+      return { readyThrough: lastDay, failures: [...this.failures] };
+    }
+  };
+
+  // src/generation-api-provider.js
+  var GenerationApiProvider = class {
+    constructor(config) {
+      this.config = config;
+    }
+    async request(body) {
+      if (!this.config?.enabled || !this.config.endpoint) throw new Error("generation API is disabled");
+      let lastError;
+      for (let attempt = 0; attempt <= (this.config.retries || 0); attempt += 1) {
+        const controller = new AbortController();
+        const timer = setTimeout(() => controller.abort(), this.config.timeoutMs || 8e3);
+        try {
+          const response = await fetch(this.config.endpoint, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(body), signal: controller.signal });
+          if (!response.ok) throw new Error(`generation API ${response.status}`);
+          return await response.json();
+        } catch (error) {
+          lastError = error;
+        } finally {
+          clearTimeout(timer);
+        }
+      }
+      throw lastError;
+    }
+    async generateBlueprint({ runSeed, sets, market }) {
+      const categories = Object.keys(market);
+      const marketSignals = Array.from({ length: 12 }, (_, index) => {
+        const leadingCategory = categories.reduce((best, category) => Math.abs(market[category][index] - 1) > Math.abs(market[best][index] - 1) ? category : best, categories[0]);
+        const value = market[leadingCategory][index];
+        return { day: index + 1, leadingCategory, direction: value > 1.04 ? "\uC0C1\uC2B9" : value < 0.96 ? "\uD558\uB77D" : "\uBCF4\uD569" };
+      });
+      const request = {
+        schemaVersion: this.config.schemaVersion || "1.0",
+        mode: "run-blueprint",
+        runSeed,
+        sets: sets.map(({ setId, themeKey }) => ({ setId, themeKey })),
+        marketSignals
+      };
+      const payload = await this.request(request);
+      if (payload.schemaVersion !== request.schemaVersion || payload.runSeed !== runSeed || !Array.isArray(payload.marketArc) || payload.marketArc.length !== 12) throw new Error("blueprint response contract mismatch");
+      if (JSON.stringify(payload.sets?.map(({ setId }) => setId)) !== JSON.stringify(request.sets.map(({ setId }) => setId))) throw new Error("blueprint set IDs mismatch");
+      return payload;
+    }
+    async generateDay({ day, lots, sets, blueprint }) {
+      const relevantSetIds = new Set(lots.map(({ setId }) => setId));
+      const request = {
+        schemaVersion: this.config.schemaVersion || "1.0",
+        mode: "daily-content",
+        runSeed: blueprint?.runSeed || lots[0]?.lotId.split("-d")[0] || "unknown",
+        day,
+        context: {
+          premise: blueprint?.premise || "",
+          market: blueprint?.marketArc?.[day - 1] || null,
+          sets: (blueprint?.sets || sets).filter(({ setId }) => relevantSetIds.has(setId))
+        },
+        lots: lots.map(({ lotId, baseName, category, grade, setId }) => ({ lotId, baseName, category, grade, setId }))
+      };
+      const payload = await this.request(request);
+      if (payload.schemaVersion !== request.schemaVersion || payload.day !== day || !Array.isArray(payload.lots) || payload.lots.length !== lots.length) throw new Error("generation response contract mismatch");
+      if (JSON.stringify(payload.lots.map(({ lotId }) => lotId)) !== JSON.stringify(request.lots.map(({ lotId }) => lotId))) throw new Error("generation LOT IDs mismatch");
+      if (payload.lots.some((lot) => !lot.displayName || !lot.description)) throw new Error("generation response contains invalid LOT data");
+      return payload.lots.map((lot) => ({ ...lot, provenance: "generation-api", generatedForDay: day }));
+    }
+  };
+
+  // src/save-store.js
+  var LEGACY_SAVE_KEY = "unknown-auction:vsl-runtime:save:v1";
+  var SAVE_PREFIX = "unknown-auction:vsl-runtime:save:v2";
+  function isState(value) {
+    return Boolean(value && typeof value === "object" && value.schedule && Number.isInteger(value.day) && value.day >= 1 && value.day <= 12);
+  }
+  function parse(raw) {
+    if (!raw) return null;
+    try {
+      const value = JSON.parse(raw);
+      return value?.version === 2 && isState(value.state) ? value : null;
+    } catch {
+      return null;
+    }
+  }
+  var SaveStore = class {
+    constructor(storage = globalThis.localStorage) {
+      this.storage = storage;
+    }
+    key(slot, kind) {
+      return `${SAVE_PREFIX}:slot:${slot}:${kind}`;
+    }
+    save(state2, slot = state2?.saveSlot || 1) {
+      if (!this.storage || !isState(state2) || slot < 1 || slot > 3) return false;
+      state2.saveSlot = slot;
+      const packet = JSON.stringify({ version: 2, savedAt: (/* @__PURE__ */ new Date()).toISOString(), state: state2 });
+      const tempKey = this.key(slot, "temp");
+      const currentKey = this.key(slot, "current");
+      const backupKey = this.key(slot, "backup");
+      this.storage.setItem(tempKey, packet);
+      if (!parse(this.storage.getItem(tempKey))) {
+        this.storage.removeItem(tempKey);
+        return false;
+      }
+      const current = this.storage.getItem(currentKey);
+      if (parse(current)) this.storage.setItem(backupKey, current);
+      this.storage.setItem(currentKey, packet);
+      this.storage.removeItem(tempKey);
+      return true;
+    }
+    load(slot = 1) {
+      if (!this.storage) return null;
+      for (const kind of ["current", "backup"]) {
+        const packet = parse(this.storage.getItem(this.key(slot, kind)));
+        if (packet) {
+          packet.state.saveSlot = slot;
+          if (kind === "backup") this.storage.setItem(this.key(slot, "current"), JSON.stringify(packet));
+          return packet.state;
+        }
+      }
+      if (slot === 1) return this.migrateLegacy();
+      return null;
+    }
+    migrateLegacy() {
+      try {
+        const legacy = JSON.parse(this.storage?.getItem(LEGACY_SAVE_KEY) || "null");
+        if (legacy?.version !== 1 || !isState(legacy.state)) return null;
+        legacy.state.saveSlot = 1;
+        this.save(legacy.state, 1);
+        this.storage.removeItem(LEGACY_SAVE_KEY);
+        return legacy.state;
+      } catch {
+        return null;
+      }
+    }
+    list() {
+      return [1, 2, 3].map((slot) => {
+        const packet = parse(this.storage?.getItem(this.key(slot, "current")));
+        const state2 = packet?.state;
+        return {
+          slot,
+          empty: !state2,
+          day: state2?.day || null,
+          cash: state2?.cash || null,
+          shopStage: state2?.shopStage || null,
+          savedAt: packet?.savedAt || null
+        };
+      });
+    }
+    clear(slot = 1) {
+      for (const kind of ["current", "backup", "temp"]) this.storage?.removeItem(this.key(slot, kind));
+      if (slot === 1) this.storage?.removeItem(LEGACY_SAVE_KEY);
+    }
+  };
+
+  // src/systems.js
+  var QUEST_IDS = ["designated", "multi", "bargain", "restraint", "block"];
+  var GRADE_BETA = { COMMON: 0.27, RARE: 1, EPIC: 2.09, LEGENDARY: 3.64 };
+  function createMarketPath(balance2, seed) {
+    const rng = createRng(`${seed}:market`);
+    const families = ["CER", "CLK", "PNT", "BOK", "MET", "JEW"];
+    const phi = balance2.market?.phi ?? 0.7;
+    const shock = balance2.market?.shockSd ?? 0.0761;
+    const path = {};
+    for (const family of families) {
+      let index = 1;
+      path[family] = Array.from({ length: 12 }, () => {
+        const noise = (rng() + rng() + rng() + rng() - 2) * shock * 1.7;
+        index = Math.max(0.6, Math.min(1.6, 1 + phi * (index - 1) + noise));
+        return Number(index.toFixed(4));
+      });
+    }
+    return path;
+  }
+  function createDailyQuestOffers(balance2, day, seed, relics = []) {
+    const count = relics.includes("royal-charter") ? 5 : balance2.quests?.offering?.perDay || 3;
+    const families = shuffle(["CER", "CLK", "PNT", "BOK", "MET", "JEW"], createRng(`${seed}:quest-targets:${day}`));
+    return shuffle(QUEST_IDS, createRng(`${seed}:quests:${day}`)).slice(0, count).map((id, index) => ({
+      id,
+      fee: balance2.quests[id].fee,
+      reward: balance2.quests[id].reward,
+      rule: balance2.quests[id].rule,
+      accepted: false,
+      completed: false,
+      targetCategory: families[index % families.length],
+      acceptedDay: null,
+      deadlineDay: null
+    }));
+  }
+  function botBidForLot({ lot, day, balance: balance2, marketIndex, seed }) {
+    const rng = createRng(`${seed}:bots:${lot.lotId}`);
+    const nemesisCapital = balance2.bots.nemesisInitial * balance2.bots.growthPerDay ** day;
+    const demand = (balance2.market.expectedDemand ?? 1.05) + (GRADE_BETA[lot.grade] ?? 1) * (marketIndex - 1);
+    const publicEstimate = lot.pricing.basePrice * demand;
+    const families = ["CER", "CLK", "PNT", "BOK", "MET", "JEW"];
+    const target = () => families[Math.floor(rng() * families.length)];
+    const bids = [
+      { id: "nemesis", name: "\uAC08\uB808\uC624", target: target(), cap: nemesisCapital, factor: 0.78 + rng() * 0.3 },
+      { id: "drifter-a", name: "\uBAA8\uC774\uB77C", target: target(), cap: nemesisCapital * balance2.bots.drifterRatio * (0.85 + rng() * 0.3), factor: 0.78 + rng() * 0.3 },
+      { id: "drifter-b", name: "\uC774\uB124\uC2A4", target: target(), cap: nemesisCapital * balance2.bots.drifterRatio * (0.85 + rng() * 0.3), factor: 0.78 + rng() * 0.3 }
+    ];
+    return bids.map((bot) => ({ ...bot, maxBid: Math.max(0, Math.round(Math.min(bot.cap, publicEstimate * (bot.target === lot.category ? 1.18 : 1) * ({ COMMON: 0.9, RARE: 1, EPIC: 1.05, LEGENDARY: 1.1 }[lot.grade] ?? 1) * bot.factor))) }));
+  }
+  function appraisalError(balance2, day) {
+    const key = day <= 3 ? "1-3" : day <= 6 ? "4-6" : "7-12";
+    return balance2.appraisal.errorByDay[key];
+  }
+  function appraiseItem(state2, balance2, lotId) {
+    const item = state2.inventory.find((entry) => entry.lotId === lotId && !entry.sold && !entry.appraised && !entry.collateral);
+    if (!item) return false;
+    const discount = 1 - (balance2.shop.infoDiscount?.[state2.shopStage] ?? 0);
+    const cost = Math.ceil(item.basePrice * balance2.appraisal.rate * discount / 100) * 100;
+    if (state2.cash < cost) return false;
+    state2.cash -= cost;
+    item.appraised = true;
+    item.appraisalRange = Math.round(item.trueValue * appraisalError(balance2, state2.day));
+    return true;
+  }
+  function bestSetMultiplier(inventory, balance2, relics = [], shopStage = 1) {
+    const active = inventory.filter((item) => !item.sold && !item.collateral);
+    const byCategory = Object.groupBy(active, (item) => item.category);
+    let multiplier = 1;
+    for (const items of Object.values(byCategory)) {
+      if (items.length >= 2) multiplier = Math.max(multiplier, 1.2);
+      if (items.length >= 3) multiplier = Math.max(multiplier, 1.8);
+      if (items.filter((x) => ["EPIC", "LEGENDARY"].includes(x.grade)).length >= 3) multiplier = Math.max(multiplier, 2.4);
+      if (new Set(items.map((x) => x.grade)).size >= 3) multiplier = Math.max(multiplier, 2.6);
+    }
+    if (new Set(active.map((item) => item.category)).size >= 6) multiplier = Math.max(multiplier, 1.4);
+    if (multiplier > 1) multiplier *= 1 + (balance2.shop.setBonus?.[shopStage] ?? 0);
+    return multiplier + (relics.includes("house-crest") && multiplier > 1 ? 0.2 : 0);
+  }
+  function sellItems(state2, balance2, lotIds) {
+    const quote = quoteItemsSale(state2, balance2, lotIds);
+    const selected = new Set(lotIds);
+    const items = state2.inventory.filter((entry) => selected.has(entry.lotId) && !entry.sold && !entry.collateral);
+    for (const item of items) {
+      const sale = quote.sales[item.lotId];
+      item.sold = true;
+      item.salePrice = sale;
+    }
+    state2.cash += quote.revenue;
+    return quote.revenue;
+  }
+  function quoteItemsSale(state2, balance2, lotIds) {
+    const selected = new Set(lotIds);
+    const fee = balance2.shop.auctionFee[state2.shopStage] ?? 0.05;
+    const items = state2.inventory.filter((entry) => selected.has(entry.lotId) && !entry.sold && !entry.collateral);
+    const multiplier = bestSetMultiplier(items, balance2, state2.metaRelics, state2.shopStage);
+    const sales = Object.fromEntries(items.map((item) => [
+      item.lotId,
+      Math.round(item.trueValue * state2.marketPath[item.category][state2.day - 1] * multiplier * (1 - fee))
+    ]));
+    return { count: items.length, multiplier, revenue: Object.values(sales).reduce((sum, sale) => sum + sale, 0), sales };
+  }
+  function buyInformation(state2, balance2, kind) {
+    const rate = balance2.informationRate?.[kind];
+    if (!rate || Object.keys(state2.information?.[state2.day] || {}).length) return false;
+    const lots = state2.schedule.days[state2.day - 1].lots;
+    const discount = 1 - (balance2.shop.infoDiscount?.[state2.shopStage] ?? 0);
+    const cost = Math.ceil(lots.reduce((sum, lot) => sum + lot.pricing.basePrice, 0) * rate * discount / 100) * 100;
+    if (state2.cash < cost) return false;
+    state2.cash -= cost;
+    state2.information ??= {};
+    state2.information[state2.day] ??= {};
+    state2.information[state2.day][kind] = { cost, boughtAt: Date.now() };
+    return true;
+  }
+  function acceptQuest(state2, questId, balance2) {
+    if (state2.activeQuests.length >= (balance2.quests.offering.acceptMax || 3)) return false;
+    const quest = state2.questOffers.find((entry) => entry.id === questId && !entry.accepted);
+    if (!quest || state2.cash < quest.fee) return false;
+    state2.cash -= quest.fee;
+    quest.accepted = true;
+    state2.activeQuests.push({ ...quest, acceptedDay: state2.day, deadlineDay: Math.min(12, state2.day + 2) });
+    return true;
+  }
+  function questMatchesItem(quest, item) {
+    if (!quest || !item || item.sold || item.collateral || item.delivered) return false;
+    if (quest.id === "designated") return item.category === quest.targetCategory;
+    if (quest.id === "multi") return ["RARE", "EPIC", "LEGENDARY"].includes(item.grade);
+    if (quest.id === "bargain") return item.paid <= item.basePrice * 0.85;
+    if (quest.id === "restraint") return ["COMMON", "RARE"].includes(item.grade);
+    return ["EPIC", "LEGENDARY"].includes(item.grade);
+  }
+  function deliverQuestItem(state2, questId, lotId) {
+    const quest = state2.activeQuests.find((entry) => entry.id === questId && !entry.completed);
+    const item = state2.inventory.find((entry) => entry.lotId === lotId);
+    if (!quest || state2.day > quest.deadlineDay || !questMatchesItem(quest, item)) return false;
+    item.delivered = true;
+    item.sold = true;
+    item.salePrice = 0;
+    quest.completed = true;
+    quest.deliveredLotId = lotId;
+    quest.completedDay = state2.day;
+    const reward = Math.round(quest.reward * (1 + (state2.balanceQuestBonus?.[state2.shopStage] ?? 0)));
+    state2.cash += reward;
+    state2.completedQuestCount += 1;
+    return true;
+  }
+  function expireQuestsBeforeAuction(state2) {
+    const expired = state2.activeQuests.filter((quest) => !quest.completed && state2.day > quest.deadlineDay);
+    state2.activeQuests = state2.activeQuests.filter((quest) => !quest.completed && state2.day <= quest.deadlineDay);
+    return expired.length;
+  }
+  function settleQuests(state2) {
+    const completed = state2.activeQuests.filter((quest) => quest.completed).length;
+    state2.activeQuests = state2.activeQuests.filter((quest) => !quest.completed);
+    return completed;
+  }
+  function upgradeShop(state2, balance2) {
+    if (state2.shopStage >= 4) return false;
+    const next = state2.shopStage + 1;
+    const cost = balance2.shop.upgradeCost[next - 1] || 0;
+    const required = balance2.shop.questRequirement[next - 1] || 0;
+    if (state2.cash < cost || state2.completedQuestCount < required) return false;
+    state2.cash -= cost;
+    state2.shopStage = next;
+    state2.storage = balance2.shop.storage[next];
+    return true;
+  }
+  function takeLoan(state2, balance2, lotId = null) {
+    if (state2.loan || state2.shopStage < balance2.loan.minShopStage || state2.guildLocked) return false;
+    const collateral = state2.inventory.find((item) => !item.sold && !item.collateral && !item.delivered && (!lotId || item.lotId === lotId));
+    if (!collateral) return false;
+    const principal = Math.round(collateral.trueValue * balance2.loan.limitFromDisposalValue);
+    collateral.collateral = true;
+    state2.cash += principal;
+    state2.loan = { principal, due: Math.round(principal * balance2.loan.repayMultiplier), dueDay: state2.day + balance2.loan.termDays, lotId: collateral.lotId };
+    return true;
+  }
+  function settleLoan(state2) {
+    if (!state2.loan || state2.day < state2.loan.dueDay) return "none";
+    const collateral = state2.inventory.find((item) => item.lotId === state2.loan.lotId);
+    if (state2.cash >= state2.loan.due) {
+      state2.cash -= state2.loan.due;
+      collateral.collateral = false;
+      state2.loan = null;
+      return "repaid";
+    }
+    collateral.sold = true;
+    collateral.collateral = false;
+    state2.guildLocked = true;
+    state2.loan = null;
+    return "seized";
+  }
+  function repayLoanEarly(state2, balance2) {
+    if (!state2.loan || state2.day >= state2.loan.dueDay) return false;
+    const amount = Math.round(state2.loan.principal * (balance2.loan.earlyRepayMultiplier ?? 1));
+    if (state2.cash < amount) return false;
+    const collateral = state2.inventory.find((item) => item.lotId === state2.loan.lotId);
+    state2.cash -= amount;
+    if (collateral) collateral.collateral = false;
+    state2.loan = null;
+    return true;
+  }
+  function missedDeadline(state2) {
+    const required = { 3: 2, 6: 3, 9: 4 }[state2.day];
+    return required ? state2.shopStage < required : false;
+  }
+
+  // src/game-state.js
+  function createInitialState({ schedule, sets, balance: balance2, startCash = 2e4, metaRelics = [] }) {
+    return { version: 1, seed: schedule.seed, day: 1, lotIndex: 0, cash: startCash, inventory: [], history: [], events: [], information: {}, schedule, sets, phase: "hub", completed: false, marketPath: createMarketPath(balance2, schedule.seed), shopStage: 1, storage: balance2.shop.storage[1], completedQuestCount: 0, activeQuests: [], questOffers: createDailyQuestOffers(balance2, 1, schedule.seed, metaRelics), questTarget: "CER", loan: null, guildLocked: false, metaRelics, balanceQuestBonus: balance2.shop.questBonus };
+  }
+  function resolveLot(state2, { action, playerBid = 0, auctionResult }) {
+    const lot = state2.schedule.days[state2.day - 1].lots[state2.lotIndex];
+    const won = auctionResult.winner === "player";
+    if (won) {
+      state2.cash -= auctionResult.price;
+      state2.inventory.push({ lotId: lot.lotId, name: lot.content?.displayName || lot.baseName, paid: auctionResult.price, basePrice: lot.pricing.basePrice, trueValue: lot.pricing.trueValue, category: lot.category, grade: lot.grade, appraised: false, sold: false, collateral: false });
+    }
+    state2.history.push({ day: state2.day, lotId: lot.lotId, action, playerBid, botPrice: Math.max(...auctionResult.bots.map((x) => x.maxBid)), price: auctionResult.price, winner: auctionResult.winner, won });
+    state2.lotIndex += 1;
+    if (state2.lotIndex >= state2.schedule.days[state2.day - 1].lots.length) state2.phase = "settlement";
+    return { lot, won };
+  }
+  function advanceDay(state2) {
+    state2.day += 1;
+    state2.lotIndex = 0;
+    state2.phase = "hub";
+  }
+
+  // src/vsl-adapter.js
+  var VslRuntimeAdapter = class {
+    constructor(root2) {
+      this.root = root2;
+      this.contract = null;
+    }
+    async loadContract(url = "./contracts/vsl-map.template.json") {
+      const response = await fetch(url);
+      if (!response.ok) throw new Error(`VSL contract load failed: ${response.status}`);
+      this.contract = await response.json();
+      this.applyContractMetadata();
+      return this.contract;
+    }
+    applyContractMetadata() {
+      const scenes = this.contract?.scenes || [];
+      scenes.forEach(({ runtimeSceneId, vslSceneId, actions = [], dataBindings = [] }) => {
+        const scene = this.root.querySelector(`[data-scene="${runtimeSceneId}"]`);
+        if (!scene) return;
+        scene.dataset.vslScene = vslSceneId;
+        actions.forEach(({ selector, vslActionId }) => {
+          scene.querySelectorAll(selector).forEach((element) => {
+            element.dataset.vslAction = vslActionId;
+          });
+        });
+        dataBindings.forEach(({ selector, vslDataPath }) => {
+          scene.querySelectorAll(selector).forEach((element) => {
+            element.dataset.vslData = vslDataPath;
+          });
+        });
+      });
+    }
+    showScene(sceneId) {
+      this.applyContractMetadata();
+      this.root.querySelectorAll("[data-scene]").forEach((scene) => {
+        scene.hidden = scene.dataset.scene !== sceneId;
+      });
+      this.root.dataset.currentScene = sceneId;
+      this.root.dataset.currentVslScene = this.contract?.scenes?.find((scene) => scene.runtimeSceneId === sceneId)?.vslSceneId || "";
+    }
+    setText(binding, value) {
+      this.root.querySelectorAll(`[data-bind="${binding}"]`).forEach((element) => {
+        element.textContent = value;
+      });
+    }
+    setSprite(binding, source) {
+      this.root.querySelectorAll(`[data-sprite="${binding}"]`).forEach((element) => {
+        element.src = source;
+      });
+    }
+    setEffects(binding, effects) {
+      this.root.querySelectorAll(`[data-effects="${binding}"]`).forEach((element) => {
+        element.dataset.vfx = effects.join(" ");
+        element.className = `sprite-stage ${effects.map((effect) => `vfx-${effect}`).join(" ")}`;
+      });
+    }
+  };
+
+  // src/telemetry.js
+  function recordEvent(state2, type, detail = {}) {
+    state2.events ??= [];
+    state2.events.push({ sequence: state2.events.length + 1, at: (/* @__PURE__ */ new Date()).toISOString(), elapsedMs: Math.round(performance.now()), day: state2.day, phase: state2.phase, type, cash: state2.cash, ...detail });
+  }
+  function runMetrics(state2) {
+    return {
+      version: 1,
+      seed: state2.seed,
+      result: state2.failure || (state2.completed ? "complete" : "active"),
+      dayReached: state2.day,
+      cash: state2.cash,
+      shopStage: state2.shopStage,
+      auctions: state2.history.length,
+      wins: state2.history.filter((entry) => entry.won).length,
+      questsCompleted: state2.completedQuestCount,
+      loans: state2.events?.filter((event) => event.type === "loan").length || 0,
+      relics: state2.relicChoices || [],
+      events: state2.events || []
+    };
+  }
+  function downloadRunLog(state2) {
+    const blob = new Blob([JSON.stringify(runMetrics(state2), null, 2)], { type: "application/json" });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = `unknown-auction-${state2.seed}-day${state2.day}.json`;
+    link.click();
+    URL.revokeObjectURL(link.href);
+  }
+
+  // src/audio-bus.js
+  var AudioBus = class {
+    constructor() {
+      this.map = { bgm: {}, sfx: {} };
+      this.currentBgm = null;
+      this.requestedBgm = null;
+      this.activeSfx = /* @__PURE__ */ new Set();
+      this.playbackVersion = 0;
+      this.enabled = true;
+    }
+    async load(url = "./data/audio-map.json") {
+      const response = await fetch(url);
+      if (response.ok) this.map = await response.json();
+      return this;
+    }
+    playSfx(id) {
+      const entry = this.map.sfx[id];
+      if (!this.enabled || !entry) return false;
+      const audio2 = new Audio(entry.file);
+      audio2.volume = entry.volume ?? this.map.masterVolume ?? 0.8;
+      this.activeSfx.add(audio2);
+      audio2.onended = () => this.activeSfx.delete(audio2);
+      audio2.play().then(() => {
+        if (!this.enabled || !this.activeSfx.has(audio2)) {
+          audio2.muted = true;
+          audio2.pause();
+        }
+      }).catch(() => this.activeSfx.delete(audio2));
+      return true;
+    }
+    playBgm(id) {
+      this.requestedBgm = id;
+      const entry = this.map.bgm[id];
+      if (!this.enabled || !entry || this.currentBgm?.dataset.id === id && !this.currentBgm.paused) return false;
+      const version = ++this.playbackVersion;
+      if (this.currentBgm) {
+        this.currentBgm.muted = true;
+        this.currentBgm.pause();
+      }
+      const audio2 = new Audio(entry.file);
+      audio2.dataset.id = id;
+      audio2.loop = entry.loop ?? true;
+      audio2.volume = entry.volume ?? this.map.masterVolume ?? 0.8;
+      this.currentBgm = audio2;
+      audio2.play().then(() => {
+        if (!this.enabled || version !== this.playbackVersion || this.currentBgm !== audio2) {
+          audio2.muted = true;
+          audio2.pause();
+        }
+      }).catch(() => {
+      });
+      return true;
+    }
+    setEnabled(enabled) {
+      this.enabled = Boolean(enabled);
+      if (!this.enabled) {
+        this.stop(false);
+        this.activeSfx.forEach((audio2) => {
+          audio2.muted = true;
+          audio2.pause();
+        });
+        this.activeSfx.clear();
+      } else if (this.requestedBgm) {
+        this.playBgm(this.requestedBgm);
+      }
+      return this.enabled;
+    }
+    stop(clearRequest = true) {
+      this.playbackVersion += 1;
+      if (this.currentBgm) {
+        this.currentBgm.muted = true;
+        this.currentBgm.pause();
+        try {
+          this.currentBgm.currentTime = 0;
+        } catch {
+        }
+      }
+      this.currentBgm = null;
+      if (clearRequest) this.requestedBgm = null;
+    }
+  };
+
+  // src/app.js
+  var root = document.querySelector("#app");
+  var adapter = new VslRuntimeAdapter(root);
+  var store = new SaveStore();
+  var audio = new AudioBus();
+  audio.setEnabled(localStorage.getItem("unknown-auction:sound") !== "off");
+  var generation = new GenerationBuffer();
+  var state;
+  var catalog;
+  var balance;
+  var selectedSlot = 1;
+  var slotMode = "new";
+  var museumReturn = "city";
+  var actionTimer = null;
+  var selectedInfoKind = "competitors";
+  var GRADE_LABELS = { COMMON: "\uC77C\uBC18", RARE: "\uD76C\uADC0", EPIC: "\uC601\uC6C5", LEGENDARY: "\uC804\uC124" };
+  var RELIC_TIER_LABELS = { low: "\uD558\uAE09", mid: "\uC911\uAE09", high: "\uC0C1\uAE09" };
+  var CATEGORY_LABELS = { CER: "\uB3C4\uC790\uAE30", CLK: "\uC2DC\uACC4", PNT: "\uD68C\uD654", BOK: "\uACE0\uC11C", MET: "\uAE08\uC740\uC138\uACF5", JEW: "\uC7A5\uC2E0\uAD6C" };
+  var categoryIconUrl = (category) => `./assets/ui/market-categories/${category.toLowerCase()}.png`;
+  var gradeLabel = (grade) => GRADE_LABELS[grade] || grade;
+  var categoryLabel = (category) => CATEGORY_LABELS[category] || category;
+  var escapeHtml = (value = "") => String(value).replace(/[&<>"']/g, (character) => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;"
+  })[character]);
+  function clearActionTimer() {
+    if (actionTimer) window.clearInterval(actionTimer);
+    actionTimer = null;
+  }
+  function armActionTimer(selector, deadline, onExpire) {
+    clearActionTimer();
+    let expired = false;
+    const update = () => {
+      const remaining = Math.max(0, deadline - Date.now());
+      const element = document.querySelector(selector);
+      if (element) element.textContent = `${Math.ceil(remaining / 1e3)}\uCD08`;
+      if (!remaining && !expired) {
+        expired = true;
+        clearActionTimer();
+        onExpire();
+      }
+    };
+    update();
+    actionTimer = window.setInterval(update, 200);
+  }
+  var relicArt = {
+    "old-scale": "\uD669\uAE08 \uC800\uC6B8\uC758 \uC2EC\uC7A5.png",
+    "leather-ledger": "\uB05D\uB098\uC9C0 \uC54A\uB294 \uC7A5\uBD80.png",
+    "worn-seal": "\uBD09\uC778\uB41C \uC720\uB9AC\uC794.png",
+    magnifier: "\uCE68\uBB35\uD558\uB294 \uAC10\uC815\uC548.png",
+    compass: "\uC0C1\uC778\uC758 \uBCC4 \uB098\uCE68\uBC18.png",
+    "broker-card": "\uB9DD\uAC01\uC758 \uB099\uCC30\uD45C.png",
+    "royal-charter": "\uB3C4\uC2DC\uC758 \uCD95\uC18C \uBAA8\uD615.png",
+    "house-crest": "\uB9C8\uC9C0\uB9C9 \uC0C1\uD68C\uC758 \uBB38\uC7A5.png",
+    "merchant-safe": "\uAC80\uC740 \uAE08\uACE0\uC758 \uC5F4\uC1E0.png"
+  };
+  var money = (value) => `${Math.round(Number(value || 0)).toLocaleString("ko-KR")} G`;
+  var status = (text, tone = "ready") => {
+    const element = document.querySelector("#boot-status");
+    element.textContent = text;
+    element.dataset.tone = tone;
+  };
+  var ownedItems = () => state.inventory.filter((item) => !item.sold && !item.delivered);
+  var scheduledLot = (lotId) => state.schedule.days.flatMap((day) => day.lots).find((lot) => lot.lotId === lotId);
+  var save = () => store.save(state, state.saveSlot);
+  function loadMeta() {
+    try {
+      return JSON.parse(localStorage.getItem("unknown-auction:relics") || "[]");
+    } catch {
+      return [];
+    }
+  }
+  function renderSaveSlots() {
+    const slots = store.list();
+    const savedTime = (value) => value ? new Intl.DateTimeFormat("ko-KR", { month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", hour12: false }).format(new Date(value)) : "";
+    document.querySelector("#save-slots").innerHTML = slots.map((slot) => `
+    <button class="save-slot slot-${slot.slot} ${slot.empty ? "is-empty" : ""} ${slot.slot === selectedSlot ? "is-selected" : ""}" data-save-slot="${slot.slot}">
+      <b class="slot-number">${String(slot.slot).padStart(2, "0")}</b>
+      <span class="slot-preview ${slot.empty ? "is-empty" : ""}" aria-hidden="true">${slot.empty ? "+" : ""}</span>
+      ${slot.empty ? '<span class="empty-slot-copy"><strong>\uBE48 \uC800\uC7A5\uCE78</strong><small>\uC0C8 \uAC8C\uC784\uC744 \uC2DC\uC791\uD558\uC5EC \uC800\uC7A5\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4.</small></span>' : `
+        <span class="slot-stat"><small>\uD604\uC7AC \uC77C\uCC28</small><strong>${slot.day}\uC77C\uCC28</strong></span>
+        <span class="slot-stat"><small>\uBCF4\uC720 \uC790\uC0B0</small><strong>${money(slot.cash)}</strong></span>
+        <span class="slot-stat"><small>\uC0C1\uD68C \uB2E8\uACC4</small><strong>${slot.shopStage}\uB2E8\uACC4</strong></span>
+        <span class="slot-stat saved-at"><small>\uB9C8\uC9C0\uB9C9 \uC800\uC7A5</small><strong>${savedTime(slot.savedAt)}</strong></span>`}
+    </button>`).join("");
+    document.querySelectorAll("[data-save-slot]").forEach((button) => {
+      button.onclick = () => {
+        selectedSlot = Number(button.dataset.saveSlot);
+        renderSaveSlots();
+      };
+    });
+    document.querySelector("#continue-run").disabled = store.list().find((slot) => slot.slot === selectedSlot)?.empty ?? true;
+    const selected = slots.find((slot) => slot.slot === selectedSlot);
+    document.querySelector("#new-run").textContent = selected?.empty ? "\uC0C8 \uC5EC\uC815 \uC2DC\uC791" : "\uC120\uD0DD \uC2AC\uB86F \uB36E\uC5B4\uC4F0\uAE30";
+    document.querySelector("#new-run").hidden = slotMode !== "new";
+    document.querySelector("#continue-run").hidden = slotMode !== "continue";
+    document.querySelector("#delete-save").hidden = slotMode !== "continue";
+    document.querySelector("#delete-save").disabled = selected?.empty ?? true;
+    document.querySelector("#save-guide").textContent = slotMode === "continue" ? "\uC800\uC7A5 \uC2AC\uB86F\uC744 \uC120\uD0DD\uD55C \uD6C4 \uC774\uC5B4\uD558\uAE30 \uBC84\uD2BC\uC744 \uB20C\uB7EC \uC9C4\uD589\uD558\uC138\uC694." : "\uC0C8 \uC5EC\uC815\uC744 \uC800\uC7A5\uD560 \uC2AC\uB86F\uC744 \uC120\uD0DD\uD558\uC138\uC694.";
+    document.querySelector("#save-mode-title").textContent = slotMode === "new" ? "\uC0C8 \uC5EC\uC815 \uC2AC\uB86F \uC120\uD0DD" : "\uC774\uC5B4\uD560 \uC5EC\uC815 \uC120\uD0DD";
+  }
+  function openSlotScene(mode) {
+    slotMode = mode;
+    document.querySelector('[data-scene="save"]').dataset.mode = mode;
+    adapter.showScene("save");
+    renderSaveSlots();
+  }
+  var waitForPaint = () => new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+  function updateRunLoading(progress, message, completedSteps = [], activeStep = "") {
+    const scene = document.querySelector('[data-scene="loading"]');
+    const value = Math.max(0, Math.min(100, Math.round(progress)));
+    document.querySelector("#loading-message").textContent = message;
+    document.querySelector("#loading-progress-fill").style.width = `${value}%`;
+    document.querySelector("#loading-percent").textContent = `${value}%`;
+    scene.querySelector(".loading-progress").setAttribute("aria-valuenow", String(value));
+    scene.querySelectorAll("[data-loading-step]").forEach((step) => {
+      step.classList.toggle("is-complete", completedSteps.includes(step.dataset.loadingStep));
+      step.classList.toggle("is-active", step.dataset.loadingStep === activeStep);
+    });
+  }
+  async function boot() {
+    try {
+      await adapter.loadContract();
+      const apiConfig = await fetch("./data/api-config.json").then((response) => response.json());
+      generation = new GenerationBuffer({ provider: new GenerationApiProvider(apiConfig) });
+      [catalog, balance] = await Promise.all([
+        loadCatalog(),
+        fetch("./data/balance.json").then((response) => response.json()),
+        audio.load()
+      ]);
+      status(`\uAE30\uBCF8 \uD488\uBAA9 ${catalog.items.length}\uC885 \xB7 \uB4F1\uAE09 \uC2A4\uD504\uB77C\uC774\uD2B8 240\uAC1C \xB7 V6.2 \uC900\uBE44 \uC644\uB8CC`);
+      renderSaveSlots();
+    } catch (error) {
+      status(`\uCD08\uAE30\uD654 \uC2E4\uD328: ${error.message}`, "error");
+    }
+  }
+  async function newRun(seed) {
+    const loadingStartedAt = performance.now();
+    adapter.showScene("loading");
+    updateRunLoading(6, "\uC800\uC7A5 \uC2AC\uB86F\uACFC \uC0C8 \uC5EC\uC815\uC744 \uC900\uBE44\uD558\uACE0 \uC788\uC2B5\uB2C8\uB2E4.", [], "schedule");
+    await waitForPaint();
+    updateRunLoading(18, "12\uC77C \uACBD\uB9E4 \uC77C\uC815\uC744 \uAD6C\uC131\uD588\uC2B5\uB2C8\uB2E4.", ["schedule"], "sets");
+    const schedule = createRunSchedule({ catalog, balance, seed });
+    if (!validateSchedule(schedule).valid) throw new Error("96 LOT \uC0DD\uC131 \uC2E4\uD328");
+    updateRunLoading(38, "\uD488\uBAA9 \uC138\uD2B8\uC640 \uC2DC\uC7A5 \uD750\uB984\uC744 \uC5F0\uACB0\uD558\uACE0 \uC788\uC2B5\uB2C8\uB2E4.", ["schedule"], "sets");
+    const sets = createSetGraph(schedule, seed);
+    state = createInitialState({ schedule, sets, balance, startCash: balance.run.startCash, metaRelics: loadMeta() });
+    state.saveSlot = selectedSlot;
+    state.version = 2;
+    recordEvent(state, "run-start", { saveSlot: selectedSlot });
+    updateRunLoading(58, "\uCCAB\uB0A0 \uACBD\uB9E4\uC640 \uB3C4\uC2DC \uC815\uBCF4\uB97C \uC0DD\uC131\uD558\uACE0 \uC788\uC2B5\uB2C8\uB2E4.", ["schedule", "sets"], "content");
+    state.generationBlueprint = await generation.prepareRun({
+      runSeed: seed,
+      sets,
+      market: state.marketPath
+    });
+    await generation.ensure({ currentDay: 1, schedule, sets, aheadDays: 0 });
+    updateRunLoading(88, `SLOT ${selectedSlot}\uC5D0 \uC0C8 \uC5EC\uC815\uC744 \uC800\uC7A5\uD558\uACE0 \uC788\uC2B5\uB2C8\uB2E4.`, ["schedule", "sets", "content"], "save");
+    save();
+    const remainingMs = 900 - (performance.now() - loadingStartedAt);
+    if (remainingMs > 0) await new Promise((resolve) => window.setTimeout(resolve, remainingMs));
+    updateRunLoading(100, "\uC900\uBE44\uAC00 \uC644\uB8CC\uB418\uC5C8\uC2B5\uB2C8\uB2E4. \uB3C4\uC2DC\uB85C \uC774\uB3D9\uD569\uB2C8\uB2E4.", ["schedule", "sets", "content", "save"]);
+    await waitForPaint();
+    audio.playBgm("city");
+    renderHub();
+    generation.ensure({ currentDay: 1, schedule, sets }).then(save);
+  }
+  function syncHeader() {
+    adapter.setText("day", state.day);
+    adapter.setText("cash", money(state.cash));
+    const scene = document.querySelector(".scene:not([hidden])");
+    const facilityScenes = /* @__PURE__ */ new Set(["hub", "quests", "tavern", "catalog", "exchange", "shop", "guild", "museum"]);
+    if (scene && facilityScenes.has(scene.dataset.scene)) {
+      let hud = scene.querySelector(".scene-hud");
+      if (!hud) {
+        hud = document.createElement("div");
+        hud.className = "scene-hud";
+        hud.setAttribute("aria-label", "\uD604\uC7AC \uC5EC\uC815 \uC0C1\uD0DC");
+        scene.prepend(hud);
+      }
+      const loan = state.loan ? `${state.loan.dueDay}\uC77C \uB9CC\uAE30` : "\uB300\uCD9C \uC5C6\uC74C";
+      hud.innerHTML = `<span class="hud-day"><b>${state.day}\uC77C\uCC28 / 12</b></span><span class="hud-cash"><b>${money(state.cash)}</b></span><span class="hud-storage"><small>\uBCF4\uAD00\uCE78</small><b>${ownedItems().length} / ${state.storage}</b></span><span class="hud-stage"><b>${state.shopStage}\uB2E8\uACC4</b><small>\uC0C1\uD68C \uB2E8\uACC4</small></span><span class="hud-loan"><small>\uB2F4\uBCF4 \uB300\uCD9C</small><b>${loan}</b></span><button class="scene-hud-settings" aria-label="\uC124\uC815">\uC124\uC815</button>`;
+      hud.querySelector(".scene-hud-settings").onclick = () => document.querySelector("#settings-dialog").showModal();
+    }
+  }
+  function renderHub(message = "") {
+    clearActionTimer();
+    audio.playBgm("city");
+    state.phase = "hub";
+    adapter.showScene("hub");
+    syncHeader();
+    const values = {
+      day: state.day,
+      cash: money(state.cash),
+      stage: state.shopStage,
+      storage: `${ownedItems().length} / ${state.storage}`,
+      quests: state.completedQuestCount
+    };
+    for (const [key, value] of Object.entries(values)) adapter.setText(key, value);
+    document.querySelector("#market-indices").innerHTML = `<strong>\uC624\uB298\uC758 \uC2DC\uC138</strong><div class="market-sparklines">${Object.entries(state.marketPath).map(([family, valuesByDay]) => {
+      const visible = valuesByDay.slice(0, state.day);
+      const current = visible.at(-1);
+      const previous = visible.at(-2) ?? current;
+      const trend = current > previous ? "rise" : current < previous ? "fall" : "flat";
+      const arrow = trend === "rise" ? "\u25B2" : trend === "fall" ? "\u25BC" : "\u2014";
+      const pointList = visible.map((value, index) => {
+        const x = visible.length === 1 ? 50 : 3 + index / (visible.length - 1) * 94;
+        const y = 40 - Math.max(0, Math.min(1, (value - 0.7) / 0.6)) * 32;
+        return `${x.toFixed(1)},${y.toFixed(1)}`;
+      });
+      if (pointList.length === 1) {
+        const y = pointList[0].split(",")[1];
+        pointList.splice(0, 1, `3,${y}`, `97,${y}`);
+      }
+      const points = pointList.join(" ");
+      const [lastX, lastY] = points.split(" ").at(-1).split(",");
+      return `<span class="market-spark ${trend}" data-category="${family}"><span class="market-quote"><img src="${categoryIconUrl(family)}" alt=""><b>${CATEGORY_LABELS[family]}</b><em>${(current * 100).toFixed(0)}</em><i aria-label="${trend === "rise" ? "\uC0C1\uC2B9" : trend === "fall" ? "\uD558\uB77D" : "\uBCC0\uB3D9 \uC5C6\uC74C"}">${arrow}</i></span><svg viewBox="0 0 100 46" preserveAspectRatio="none" aria-hidden="true"><line x1="0" y1="25" x2="100" y2="25"></line><polyline points="${points}"></polyline><circle cx="${lastX}" cy="${lastY}" r="3.4"></circle></svg></span>`;
+    }).join("")}</div>`;
+    document.querySelector("#loan-status").textContent = state.loan ? `\uB9CC\uAE30 ${state.loan.dueDay}\uC77C \xB7 ${money(state.loan.due)}` : state.guildLocked ? "\uC870\uD569 \uC774\uC6A9 \uC81C\uD55C" : "\uB300\uCD9C \uC5C6\uC74C";
+    document.querySelector("#hub-message").textContent = message;
+    save();
+  }
+  function questTitle(quest) {
+    const names = { designated: "\uC9C0\uC815 \uACC4\uC5F4", multi: "\uD76C\uADC0\uD488 \uC778\uB3C4", bargain: "\uC800\uAC00 \uB9E4\uC785\uD488", restraint: "\uC2E4\uC18D\uD488 \uC778\uB3C4", block: "\uACE0\uB4F1\uAE09 \uC778\uB3C4" };
+    return `${names[quest.id] || quest.id}${quest.id === "designated" ? ` \xB7 ${quest.targetCategory}` : ""}`;
+  }
+  function questRequirement(quest) {
+    if (quest.id === "designated") return `${quest.targetCategory} \uACC4\uC5F4 \uBB3C\uD488 1\uAC1C\uB97C \uC778\uB3C4\uD55C\uB2E4.`;
+    if (quest.id === "multi") return "\uD76C\uADC0 \uB4F1\uAE09 \uC774\uC0C1 \uBB3C\uD488 1\uAC1C\uB97C \uC778\uB3C4\uD55C\uB2E4.";
+    if (quest.id === "bargain") return "\uAE30\uC900\uAC00\uC758 85% \uC774\uD558\uC5D0 \uB099\uCC30\uD55C \uBB3C\uD488\uC744 \uC778\uB3C4\uD55C\uB2E4.";
+    if (quest.id === "restraint") return "\uC77C\uBC18 \uB610\uB294 \uD76C\uADC0 \uB4F1\uAE09 \uBB3C\uD488 1\uAC1C\uB97C \uC778\uB3C4\uD55C\uB2E4.";
+    return "\uC601\uC6C5 \uB610\uB294 \uC804\uC124 \uB4F1\uAE09 \uBB3C\uD488 1\uAC1C\uB97C \uC778\uB3C4\uD55C\uB2E4.";
+  }
+  function questIconUrl(questId) {
+    const icon = {
+      designated: "designated",
+      multi: "multi",
+      bargain: "bargain",
+      restraint: "restraint",
+      block: "block"
+    }[questId] || "quest-board";
+    return `./assets/ui/quest-icons/${icon}.png`;
+  }
+  function renderQuestOffice(message = "") {
+    clearActionTimer();
+    audio.playBgm("workplace");
+    state.phase = "quests";
+    adapter.showScene("quests");
+    syncHeader();
+    document.querySelector("#quest-offers").innerHTML = state.questOffers.map((quest) => `
+    <article><img class="quest-icon" src="${questIconUrl(quest.id)}" alt=""><b>${questTitle(quest)}</b><small>${questRequirement(quest)}</small><span>\uC218\uC8FC\uBE44 ${money(quest.fee)} \xB7 \uBCF4\uC0C1 ${money(quest.reward)}</span>
+    <button data-quest="${quest.id}" ${quest.accepted ? "disabled" : ""}>${quest.accepted ? "\uC218\uC8FC \uC644\uB8CC" : "\uC218\uC8FC"}</button></article>`).join("");
+    const active = state.activeQuests.filter((quest) => !quest.completed);
+    const activeMarkup = active.length ? active.map((quest) => {
+      const candidates = ownedItems().filter((item) => questMatchesItem(quest, item));
+      return `<article><img class="quest-icon" src="${questIconUrl(quest.id)}" alt=""><b>${questTitle(quest)}</b><span>${quest.deadlineDay}\uC77C\uCC28 \uACBD\uB9E4 \uC804\uAE4C\uC9C0</span>
+      <select data-delivery-select="${quest.id}"><option value="">\uC81C\uCD9C\uD560 \uBB3C\uD488 \uC120\uD0DD</option>${candidates.map((item) => `<option value="${item.lotId}">${item.name} \xB7 ${gradeLabel(item.grade)}</option>`).join("")}</select>
+      <button data-deliver-quest="${quest.id}" ${candidates.length ? "" : "disabled"}>\uBB3C\uD488 \uC81C\uCD9C</button></article>`;
+    }).join("") : '<p class="empty-note">\uC218\uC8FC\uD55C \uC758\uB8B0\uAC00 \uC5C6\uC2B5\uB2C8\uB2E4.</p>';
+    const appraisalMarkup = ownedItems().length ? ownedItems().map((item) => {
+      const lot = scheduledLot(item.lotId);
+      const discount = 1 - (balance.shop.infoDiscount?.[state.shopStage] ?? 0);
+      const cost = Math.ceil(item.basePrice * balance.appraisal.rate * discount / 100) * 100;
+      const result = item.appraised ? `<strong>${money(item.trueValue)} <small>\xB1 ${money(item.appraisalRange)}</small></strong>` : `<span>\uAC10\uC815 \uBE44\uC6A9 ${money(cost)}</span>`;
+      return `<article class="appraisal-card">
+      <img src="${lot ? spriteUrl(lot, item.grade) : ""}" alt="${item.name}">
+      <div><b>${item.name}</b><small>${gradeLabel(item.grade)} \xB7 ${categoryLabel(item.category)}</small>${result}</div>
+      <button data-office-appraise="${item.lotId}" ${item.appraised || item.collateral || state.cash < cost ? "disabled" : ""}>${item.appraised ? "\uAC10\uC815 \uC644\uB8CC" : item.collateral ? "\uB2F4\uBCF4 \uC124\uC815\uB428" : "\uC815\uBC00 \uAC10\uC815"}</button>
+    </article>`;
+    }).join("") : '<p class="empty-note">\uAC10\uC815\uD560 \uBCF4\uC720 \uBB3C\uD488\uC774 \uC5C6\uC2B5\uB2C8\uB2E4.</p>';
+    document.querySelector("#active-quests").innerHTML = `
+    <section class="accepted-quests"><h4>\uC218\uC8FC \uC758\uB8B0 \xB7 \uBB3C\uD488 \uC81C\uCD9C</h4>${activeMarkup}</section>
+    <section class="appraisal-office"><h4>\uBCF4\uC720 \uBB3C\uD488 \xB7 \uC815\uBC00 \uAC10\uC815</h4><div class="appraisal-grid">${appraisalMarkup}</div></section>`;
+    document.querySelectorAll("[data-quest]").forEach((button) => {
+      button.onclick = () => {
+        const ok = acceptQuest(state, button.dataset.quest, balance);
+        if (ok) {
+          recordEvent(state, "quest-accept", { questId: button.dataset.quest });
+          audio.playSfx("quest");
+        }
+        renderQuestOffice(ok ? "\uC758\uB8B0\uB97C \uC218\uC8FC\uD588\uC2B5\uB2C8\uB2E4." : "\uC218\uC8FC\uBE44\uC640 \uC624\uB298 \uC81C\uC2DC\uB41C \uC758\uB8B0\uC778\uC9C0 \uD655\uC778\uD558\uC138\uC694.");
+      };
+    });
+    document.querySelectorAll("[data-deliver-quest]").forEach((button) => {
+      button.onclick = () => {
+        const select = document.querySelector(`[data-delivery-select="${button.dataset.deliverQuest}"]`);
+        const ok = deliverQuestItem(state, button.dataset.deliverQuest, select.value);
+        if (ok) recordEvent(state, "quest-deliver", { questId: button.dataset.deliverQuest, lotId: select.value });
+        renderQuestOffice(ok ? "\uBB3C\uD488\uC744 \uC81C\uCD9C\uD558\uACE0 \uBCF4\uC0C1\uC744 \uBC1B\uC558\uC2B5\uB2C8\uB2E4." : "\uC81C\uCD9C \uC870\uAC74\uACFC \uBB3C\uD488\uC744 \uD655\uC778\uD558\uC138\uC694.");
+      };
+    });
+    document.querySelectorAll("[data-office-appraise]").forEach((button) => {
+      button.onclick = () => {
+        const ok = appraiseItem(state, balance, button.dataset.officeAppraise);
+        if (ok) {
+          recordEvent(state, "appraisal", { lotId: button.dataset.officeAppraise, location: "quest-office" });
+          audio.playSfx("appraise");
+        }
+        renderQuestOffice(ok ? "\uC815\uBC00 \uAC10\uC815\uC744 \uC644\uB8CC\uD588\uC2B5\uB2C8\uB2E4." : "\uAC10\uC815 \uBE44\uC6A9 \uB610\uB294 \uBB3C\uD488 \uC0C1\uD0DC\uB97C \uD655\uC778\uD558\uC138\uC694.");
+      };
+    });
+    document.querySelector("#quest-message").textContent = message;
+  }
+  function renderExchange(message = "") {
+    clearActionTimer();
+    audio.playBgm("workplace");
+    state.phase = "exchange";
+    adapter.showScene("exchange");
+    syncHeader();
+    const exchangeItems = ownedItems();
+    const maxStorage = Math.max(...balance.shop.storage);
+    const occupiedCards = exchangeItems.map((item) => `
+    <article><label><input type="checkbox" data-item-select="${item.lotId}"> <b>${item.name}</b></label>
+    <span>${gradeLabel(item.grade)} \xB7 ${categoryLabel(item.category)}</span><span>\uB9E4\uC785 ${money(item.paid)} \xB7 ${item.appraised ? `\uAC10\uC815 ${money(item.trueValue)} \xB1${money(item.appraisalRange)}` : "\uBBF8\uAC10\uC815"}</span>
+    <button data-sell-item="${item.lotId}" ${item.collateral ? "disabled" : ""}>\uC989\uC2DC \uCC98\uBD84</button></article>`).join("");
+    const emptyCards = Array.from({ length: Math.max(0, state.storage - exchangeItems.length) }, (_, index) => `
+    <article class="empty-inventory-slot" aria-label="\uBE48 \uBCF4\uAD00\uCE78 ${exchangeItems.length + index + 1}">
+      <span class="empty-slot-number">${String(exchangeItems.length + index + 1).padStart(2, "0")}</span>
+      <span class="empty-slot-icon"><img src="./assets/ui/exchange/storage-empty.png" alt=""></span>
+      <span><b>\uBE48 \uBCF4\uAD00\uCE78</b><small>\uB099\uCC30\uD55C \uBB3C\uD488\uC774 \uC774\uACF3\uC5D0 \uD45C\uC2DC\uB429\uB2C8\uB2E4.</small></span>
+    </article>`).join("");
+    const lockedCards = Array.from({ length: Math.max(0, maxStorage - state.storage) }, (_, index) => {
+      const slotNumber = state.storage + index + 1;
+      const unlockStage = balance.shop.storage.findIndex((capacity) => capacity >= slotNumber);
+      return `<article class="empty-inventory-slot locked-inventory-slot" aria-label="\uC7A0\uAE34 \uBCF4\uAD00\uCE78 ${slotNumber}">
+      <span class="empty-slot-number">${String(slotNumber).padStart(2, "0")}</span>
+      <span class="empty-slot-icon" aria-hidden="true"><img src="./assets/ui/exchange/storage-locked.png" alt=""></span>
+      <span><b>\uC7A0\uAE34 \uBCF4\uAD00\uCE78</b><small>\uC0C1\uD68C ${unlockStage}\uB2E8\uACC4\uC5D0\uC11C \uD574\uAE08\uB429\uB2C8\uB2E4.</small></span>
+    </article>`;
+    }).join("");
+    document.querySelector("#inventory-list").innerHTML = occupiedCards + emptyCards + lockedCards;
+    document.querySelectorAll("[data-sell-item]").forEach((button) => button.onclick = () => {
+      const revenue = sellItems(state, balance, [button.dataset.sellItem]);
+      if (revenue) audio.playSfx("sell");
+      renderExchange(`${money(revenue)}\uC5D0 \uCC98\uBD84\uD588\uC2B5\uB2C8\uB2E4.`);
+    });
+    document.querySelector("#exchange-market").innerHTML = `<h3>\uCD5C\uADFC \uC2DC\uC138</h3><div class="market-rates">${Object.entries(state.marketPath).map(([key, path]) => {
+      const now = path[state.day - 1];
+      const previous = state.day > 1 ? path[state.day - 2] : 1;
+      const delta = now - previous;
+      return `<div><img src="${categoryIconUrl(key)}" alt=""><b>${CATEGORY_LABELS[key]}</b><strong>${Math.round(now * 100)}%</strong><span class="${delta >= 0 ? "rise" : "fall"}">${delta >= 0 ? "\u25B2" : "\u25BC"} ${Math.abs(delta * 100).toFixed(0)}%</span></div>`;
+    }).join("")}</div><section class="bundle-sale-panel"><h4>\uBB36\uC74C \uD310\uB9E4</h4><p>\uAC19\uC740 \uACC4\uC5F4\uACFC \uD76C\uADC0\uB3C4 \uC870\uD569\uC744 \uD568\uAED8 \uD314\uBA74 \uBB36\uC74C \uBCF4\uB108\uC2A4\uAC00 \uC801\uC6A9\uB429\uB2C8\uB2E4.</p><div class="bundle-sale-summary"><span>\uC120\uD0DD <b id="bundle-count">0\uAC1C</b></span><span>\uC870\uD569 <b id="bundle-label">\uC120\uD0DD \uC5C6\uC74C</b></span><span>\uBC30\uC728 <b id="bundle-multiplier">\xD71.00</b></span><strong id="bundle-estimate">\uC608\uC0C1 0 G</strong></div></section><section class="set-bonus-guide"><h4>\uC138\uD2B8 \uBCF4\uB108\uC2A4</h4><div><span data-set-rule="same-2">\uB3D9\uC77C \uACC4\uC5F4 2\uC810 <b>\xD71.20</b></span><span data-set-rule="same-3">\uB3D9\uC77C \uACC4\uC5F4 3\uC810 <b>\xD71.80</b></span><span data-set-rule="high-3">\uC601\uC6C5 \uC774\uC0C1 3\uC810 <b>\xD72.40</b></span><span data-set-rule="grade-3">\uD76C\uADC0\uB3C4 3\uC885 <b>\xD72.60</b></span><span data-set-rule="all-6">\uC804 \uACC4\uC5F4 6\uC885 <b>\xD71.40</b></span></div><small>\uC131\uB9BD\uD55C \uC870\uD569 \uC911 \uAC00\uC7A5 \uB192\uC740 \uBC30\uC728\uC774 \uC801\uC6A9\uB429\uB2C8\uB2E4.</small></section>`;
+    const syncBulkActions = () => {
+      const ids = [...document.querySelectorAll("[data-item-select]:checked")].map((input) => input.dataset.itemSelect);
+      const items = ownedItems().filter((item) => ids.includes(item.lotId) && !item.collateral);
+      const quote = quoteItemsSale(state, balance, ids);
+      const groups = Object.values(Object.groupBy(items, (item) => item.category));
+      const categories = groups.map((group) => group.length);
+      const distinctGrades = new Set(items.map((item) => item.grade)).size;
+      let label = items.length ? "\uC77C\uBC18 \uBB36\uC74C" : "\uC120\uD0DD \uC5C6\uC74C";
+      if (categories.some((count) => count >= 3) && distinctGrades >= 3) label = "\uD63C\uD569 \uD76C\uADC0\uB3C4 \uC138\uD2B8";
+      else if (categories.some((count) => count >= 3)) label = "\uB3D9\uC77C \uACC4\uC5F4 3\uC810";
+      else if (categories.some((count) => count >= 2)) label = "\uB3D9\uC77C \uACC4\uC5F4 2\uC810";
+      else if (new Set(items.map((item) => item.category)).size >= 6) label = "\uC804 \uACC4\uC5F4 \uCEEC\uB809\uC158";
+      document.querySelector("#sell-selected").disabled = !quote.count;
+      document.querySelector("#bundle-count").textContent = `${quote.count}\uAC1C`;
+      document.querySelector("#bundle-label").textContent = label;
+      document.querySelector("#bundle-multiplier").textContent = `\xD7${quote.multiplier.toFixed(2)}`;
+      document.querySelector("#bundle-estimate").textContent = `\uC608\uC0C1 ${money(quote.revenue)}`;
+      const activeRules = {
+        "same-2": groups.some((group) => group.length >= 2),
+        "same-3": groups.some((group) => group.length >= 3),
+        "high-3": groups.some((group) => group.filter((item) => ["EPIC", "LEGENDARY"].includes(item.grade)).length >= 3),
+        "grade-3": groups.some((group) => new Set(group.map((item) => item.grade)).size >= 3),
+        "all-6": new Set(items.map((item) => item.category)).size >= 6
+      };
+      document.querySelectorAll("[data-set-rule]").forEach((rule) => rule.classList.toggle("is-active", activeRules[rule.dataset.setRule]));
+    };
+    document.querySelectorAll("[data-item-select]").forEach((input) => {
+      input.onchange = syncBulkActions;
+    });
+    document.querySelector("#sell-selected").textContent = "\uD310\uB9E4";
+    syncBulkActions();
+    document.querySelector("#exchange-message").textContent = message;
+  }
+  function renderTavern(message = "") {
+    clearActionTimer();
+    audio.playBgm("tavern");
+    state.phase = "tavern";
+    adapter.showScene("tavern");
+    syncHeader();
+    const bought = Object.keys(state.information?.[state.day] || {});
+    const names = { forecast: "\uC218\uC694 \uB3D9\uD5A5", catalog: "\uCD9C\uD488 \uBA85\uC138", competitors: "\uACBD\uC7C1\uC790 \uC608\uC0B0" };
+    const descriptions = { forecast: "\uD604\uC7AC \uC2DC\uC7A5\uC5D0\uC11C \uC218\uC694\uAC00 \uB192\uC740 \uACC4\uC5F4\uACFC \uBC29\uD5A5\uC744 \uBD84\uC11D\uD569\uB2C8\uB2E4.", catalog: "\uC8FC\uC694 LOT\uC758 \uC608\uC0C1 \uB4F1\uAE09\uACFC \uACC4\uC5F4 \uBD84\uD3EC\uB97C \uC54C\uB824\uB4DC\uB9BD\uB2C8\uB2E4.", competitors: "\uACBD\uB9E4 \uCC38\uAC00\uC790\uB4E4\uC758 \uBCF4\uC720 \uC608\uC0B0 \uBC94\uC704\uB97C \uCD94\uC815\uD569\uB2C8\uB2E4." };
+    const icons = { forecast: "./assets/ui/tavern/demand-trend.png", catalog: "./assets/ui/tavern/lot-specification.png", competitors: "./assets/ui/tavern/competitor-budget.png" };
+    const precision = { forecast: ["\u2605\u2605\u2605\u2605\u2606", "\uB192\uC74C"], catalog: ["\u2605\u2605\u2605\u2606\u2606", "\uBCF4\uD1B5"], competitors: ["\u2605\u2605\u2605\u2606\u2606", "\uBCF4\uD1B5"] };
+    const lots = state.schedule.days[state.day - 1].lots;
+    const totalBase = lots.reduce((sum, lot) => sum + lot.pricing.basePrice, 0);
+    document.querySelectorAll("[data-broker]").forEach((broker) => {
+      const kind = broker.dataset.broker;
+      const selectBroker = () => {
+        selectedInfoKind = kind;
+        renderTavern();
+      };
+      broker.classList.toggle("is-active", kind === selectedInfoKind);
+      broker.setAttribute("aria-pressed", String(kind === selectedInfoKind));
+      broker.querySelector("span").textContent = bought.includes(kind) ? "\uC624\uB298 \uAD6C\uB9E4 \uC644\uB8CC" : bought.length ? "\uC624\uB298 \uAD6C\uB9E4 \uC885\uB8CC" : "\uC624\uB298 \uAD6C\uB9E4 \uAC00\uB2A5";
+      broker.onclick = selectBroker;
+      broker.onkeydown = (event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          selectBroker();
+        }
+      };
+    });
+    document.querySelectorAll("[data-info]").forEach((button) => {
+      const kind = button.dataset.info;
+      const discount2 = 1 - (balance.shop.infoDiscount?.[state.shopStage] ?? 0);
+      const cost = Math.ceil(totalBase * balance.informationRate[kind] * discount2 / 100) * 100;
+      button.classList.toggle("is-selected", kind === selectedInfoKind);
+      button.innerHTML = `<img class="info-symbol" src="${icons[kind]}" alt=""><span class="info-copy"><strong>${names[kind]}</strong><small>${descriptions[kind]}</small></span><b>${money(cost)}</b><em>${precision[kind][0]}<small>${precision[kind][1]}</small></em><span class="info-state">${bought.includes(kind) ? "\uAD6C\uB9E4 \uC644\uB8CC" : "\uAD6C\uB9E4 \uAC00\uB2A5"}</span>`;
+      button.onclick = () => {
+        selectedInfoKind = kind;
+        renderTavern();
+      };
+    });
+    const selected = selectedInfoKind;
+    const discount = 1 - (balance.shop.infoDiscount?.[state.shopStage] ?? 0);
+    const selectedCost = Math.ceil(totalBase * balance.informationRate[selected] * discount / 100) * 100;
+    const categoryNames = { CER: "\uB3C4\uC790\uAE30", CLK: "\uC2DC\uACC4", PNT: "\uD68C\uD654", BOK: "\uACE0\uC11C", MET: "\uAE08\uC740\uC138\uACF5", JEW: "\uC7A5\uC2E0\uAD6C" };
+    const informationResult = (kind) => {
+      if (kind === "forecast") {
+        const ranked = Object.entries(state.marketPath).map(([key, path]) => [key, path[state.day - 1]]).sort((a, b) => b[1] - a[1]).slice(0, 2);
+        return `<ul>${ranked.map(([key, value]) => `<li>${categoryNames[key]} \uC218\uC694 <b>${Math.round(value * 100)}%</b> \xB7 ${value >= 1 ? "\uC0C1\uC2B9 \uC6B0\uC138" : "\uD558\uB77D \uC8FC\uC758"}</li>`).join("")}</ul>`;
+      }
+      if (kind === "catalog") {
+        const grades = Object.entries(Object.groupBy(lots, (lot) => lot.grade)).map(([grade, entries]) => `${gradeLabel(grade)} ${entries.length}\uC810`).join(" \xB7 ");
+        const families = Object.entries(Object.groupBy(lots, (lot) => lot.category)).map(([key, entries]) => `${categoryNames[key]} ${entries.length}`).join(" \xB7 ");
+        return `<p><b>\uC608\uC0C1 \uB4F1\uAE09</b><br>${grades}</p><p><b>\uACC4\uC5F4 \uBD84\uD3EC</b><br>${families}</p>`;
+      }
+      const estimates = lots.flatMap((lot) => botBidForLot({ lot, day: state.day, balance, marketIndex: state.marketPath[lot.category][state.day - 1], seed: state.seed }));
+      const grouped = Object.groupBy(estimates, (bot) => bot.name);
+      return `<ul>${Object.entries(grouped).map(([name, entries]) => {
+        const values = entries.map((entry) => entry.maxBid);
+        return `<li><b>${name}</b> ${money(Math.min(...values))} ~ ${money(Math.max(...values))}</li>`;
+      }).join("")}</ul>`;
+    };
+    const results = informationResult(selected);
+    const owned = bought.includes(selected);
+    document.querySelector("#tavern-detail").innerHTML = `<h3>\uC815\uBCF4 \uC0C1\uC138</h3><div class="detail-heading"><img class="detail-symbol" src="${icons[selected]}" alt=""><div><h2>${names[selected]}</h2><strong>${precision[selected][0]} <small>(${precision[selected][1]})</small></strong></div></div><p>${descriptions[selected]}</p><section class="info-result"><b>\uACF5\uAC1C \uBC94\uC704</b><p>${owned ? "\uAD6C\uB9E4\uD55C \uC815\uBCF4\uB294 \uC624\uB978\uCABD \uD655\uBCF4 \uC815\uBCF4\uC5D0\uC11C \uD655\uC778\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4." : "\uAD6C\uB9E4\uD558\uBA74 \uCD94\uC815 \uBC94\uC704\uC640 \uBD84\uC11D \uACB0\uACFC\uAC00 \uC624\uB978\uCABD\uC5D0 \uACF5\uAC1C\uB429\uB2C8\uB2E4."}</p></section><div class="detail-price"><span>\uAC00\uACA9</span><b>${money(selectedCost)}</b></div><button id="buy-tavern-info" ${bought.length || state.cash < selectedCost ? "disabled" : ""}>${owned ? "\uAD6C\uB9E4 \uC644\uB8CC" : bought.length ? "\uC624\uB298 \uAD6C\uB9E4 \uC885\uB8CC" : "\uAD6C\uB9E4\uD558\uAE30"}</button>`;
+    document.querySelector("#buy-tavern-info").onclick = () => {
+      const ok = buyInformation(state, balance, selected);
+      if (ok) {
+        audio.playSfx("information");
+        save();
+      }
+      renderTavern(ok ? "\uC815\uBCF4\uB97C \uAD6C\uB9E4\uD588\uC2B5\uB2C8\uB2E4." : "\uC774\uBBF8 \uAD6C\uB9E4\uD588\uAC70\uB098 \uD604\uAE08\uC774 \uBD80\uC871\uD569\uB2C8\uB2E4.");
+    };
+    const ownedKind = bought[0];
+    document.querySelector("#tavern-owned").innerHTML = ownedKind ? `<h3>\uC624\uB298 \uD655\uBCF4\uD55C \uC815\uBCF4</h3><div class="owned-heading"><img src="${icons[ownedKind]}" alt=""><div><h2>${names[ownedKind]}</h2><small>${precision[ownedKind][0]} (${precision[ownedKind][1]})</small></div></div><section class="info-result">${informationResult(ownedKind)}</section><p class="owned-note">\uB2F9\uC77C \uACBD\uB9E4 \uC885\uB8CC\uAE4C\uC9C0 \uC720\uC9C0\uB429\uB2C8\uB2E4.</p>` : '<h3>\uC624\uB298 \uD655\uBCF4\uD55C \uC815\uBCF4</h3><p class="empty-info">\uC815\uBCF4\uC0C1\uC744 \uC120\uD0DD\uD558\uACE0 \uC624\uB298 \uC0AC\uC6A9\uD560 \uC815\uBCF4 \uD558\uB098\uB97C \uAD6C\uB9E4\uD558\uC138\uC694.</p>';
+    document.querySelector("#tavern-message").textContent = message;
+  }
+  function renderShop(message = "") {
+    clearActionTimer();
+    audio.playBgm("workplace");
+    state.phase = "shop";
+    adapter.showScene("shop");
+    syncHeader();
+    const next = Math.min(4, state.shopStage + 1);
+    const maxed = state.shopStage >= 4;
+    const cost = maxed ? 0 : balance.shop.upgradeCost[next - 1];
+    const required = maxed ? 0 : balance.shop.questRequirement[next - 1];
+    const nextStorage = maxed ? state.storage : balance.shop.storage[next];
+    const nextDiscount = maxed ? balance.shop.infoDiscount[state.shopStage] : balance.shop.infoDiscount[next];
+    const maxStorage = Math.max(...balance.shop.storage);
+    const inventory = ownedItems();
+    const slots = Array.from({ length: maxStorage }, (_, index) => {
+      const item = inventory[index];
+      const unlocked = index < state.storage;
+      if (item) {
+        const lot = scheduledLot(item.lotId);
+        return `<article class="shop-storage-slot is-filled"><span class="slot-number">${index + 1}</span><img src="${lot ? spriteUrl(lot, item.grade) : ""}" alt=""><div><b>${escapeHtml(item.name)}</b><small>${gradeLabel(item.grade)} \xB7 \uAC10\uC815\uAC00 ${money(item.appraisedValue || item.trueValue)}</small></div></article>`;
+      }
+      return `<article class="shop-storage-slot ${unlocked ? "is-empty" : "is-locked"}"><span class="slot-number">${index + 1}</span><img class="storage-placeholder" src="./assets/ui/exchange/${unlocked ? "storage-empty.png" : "storage-locked.png"}" alt=""><div><b>${unlocked ? "\uBE48 \uBCF4\uAD00\uCE78" : "\uC7A0\uAE34 \uBCF4\uAD00\uCE78"}</b><small>${unlocked ? "\uB099\uCC30 \uBB3C\uD488 \uBCF4\uAD00" : "\uC0C1\uD68C \uC2B9\uAE09 \uC2DC \uD574\uAE08"}</small></div></article>`;
+    }).join("");
+    const questReady = state.completedQuestCount >= required;
+    const cashReady = state.cash >= cost;
+    document.querySelector("#shop-detail").innerHTML = `<section class="shop-upgrade-panel"><header><h3>${maxed ? "\uC0C1\uD68C \uCD5C\uACE0 \uB2E8\uACC4" : `\uC0C1\uD68C ${next}\uB2E8\uACC4 \uC2B9\uAE09 \uC870\uAC74`}</h3></header><ul class="shop-requirements"><li class="${questReady ? "is-ready" : ""}"><span>\u25A3 \uC758\uB8B0 \uB2EC\uC131 \uC870\uAC74</span><b>${state.completedQuestCount} / ${required}\uAC74</b></li><li class="${cashReady ? "is-ready" : ""}"><span>\u25CF \uC2B9\uAE09\uBE44</span><b>${money(cost)}</b></li><li class="${cashReady ? "is-ready" : ""}"><span>\u25CF \uD604\uC7AC \uC790\uC0B0</span><b>${money(state.cash)}</b></li></ul><h4>\uB2E4\uC74C \uB2E8\uACC4 \uD6A8\uACFC</h4><ul class="shop-benefits"><li>\uBCF4\uAD00\uD568 +${Math.max(0, nextStorage - state.storage)}</li><li>\uC815\uBCF4 \uAD6C\uB9E4 \uBE44\uC6A9 ${Math.round((nextDiscount || 0) * 100)}% \uD560\uC778</li>${next >= 3 ? "<li>\uC720\uBB3C \uC804\uC2DC\uAD00 \uD574\uAE08 \uD655\uB300</li>" : "<li>\uC758\uB8B0 \uB3D9\uC2DC \uC218\uC8FC \uAC15\uD654</li>"}</ul></section><section class="shop-inventory-panel"><header><div><small>STORAGE</small><h3>\uBCF4\uC720\uD488 \uAD00\uB9AC</h3></div><b>${inventory.length} / ${state.storage}</b></header><div class="shop-storage-grid">${slots}</div><p class="shop-storage-note">\u203B \uBCF4\uC720\uD488 \uC2AC\uB86F\uC740 \uC0C1\uD68C \uB2E8\uACC4\uC5D0 \uB530\uB77C \uC99D\uAC00\uD569\uB2C8\uB2E4.</p></section>`;
+    document.querySelector("#shop-upgrade").textContent = maxed ? "\uCD5C\uACE0 \uB2E8\uACC4 \uB2EC\uC131" : `${next}\uB2E8\uACC4\uB85C \uC2B9\uAE09\uD558\uAE30`;
+    document.querySelector("#shop-upgrade").disabled = maxed || state.cash < cost || state.completedQuestCount < required;
+    document.querySelector("#shop-message").textContent = message;
+  }
+  function renderGuild(message = "") {
+    clearActionTimer();
+    audio.playBgm("workplace");
+    state.phase = "guild";
+    adapter.showScene("guild");
+    syncHeader();
+    const locked = state.shopStage < balance.loan.minShopStage;
+    const collateralItems = ownedItems().filter((item) => !item.collateral);
+    const collateralCount = collateralItems.length;
+    const collateralOptions = collateralItems.map((item) => `<option value="${item.lotId}">${item.name}</option>`).join("");
+    const activeCollateral = state.loan ? state.inventory.find((item) => item.lotId === state.loan.lotId) : null;
+    const statusTitle = locked ? "\uB2F4\uBCF4 \uB300\uCD9C \uC7A0\uAE40" : state.loan ? "\uD65C\uC131 \uB300\uCD9C" : state.guildLocked ? "\uC870\uD569 \uC774\uC6A9 \uC81C\uD55C" : "\uD65C\uC131 \uB300\uCD9C \uC5C6\uC74C";
+    const detail = `<h3>\uB2F4\uBCF4 \uB300\uCD9C \uC0C1\uD0DC</h3><div class="guild-status-grid"><section><small>\uD604\uC7AC \uC0C1\uD0DC</small><strong>${statusTitle}</strong><span>${locked ? `\uC0C1\uD68C ${balance.loan.minShopStage}\uB2E8\uACC4\uC5D0\uC11C \uD574\uAE08\uB429\uB2C8\uB2E4.` : state.loan ? `\uB2F4\uBCF4 \xB7 ${activeCollateral?.name || state.loan.lotId}` : "\uD604\uC7AC \uD65C\uC131 \uB300\uCD9C\uC774 \uC5C6\uC2B5\uB2C8\uB2E4."}</span></section><dl><div><dt>\uC6D0\uAE08</dt><dd>${state.loan ? money(state.loan.principal) : "\u2014"}</dd></div><div><dt>\uB9CC\uAE30</dt><dd>${state.loan ? `${state.loan.dueDay}\uC77C\uCC28` : "\u2014"}</dd></div><div><dt>\uC0C1\uD658 \uCD1D\uC561</dt><dd>${state.loan ? money(state.loan.due) : "\u2014"}</dd></div></dl></div><label class="collateral-picker"><span>\uC120\uD0DD \uB2F4\uBCF4</span><select id="guild-collateral"><option value="">\uBB3C\uD488\uC744 \uC120\uD0DD\uD558\uC138\uC694</option>${collateralOptions}</select></label><p id="loan-preview">\uBCF4\uC720 \uBB3C\uD488\uC744 \uC120\uD0DD\uD558\uBA74 \uB300\uCD9C \uAC00\uB2A5 \uAE08\uC561\uC744 \uACC4\uC0B0\uD569\uB2C8\uB2E4.</p>`;
+    document.querySelector("#guild-detail").innerHTML = detail;
+    const collateralMarkup = collateralItems.length ? collateralItems.map((item) => {
+      const lot = scheduledLot(item.lotId);
+      const value = Math.round(item.trueValue * balance.loan.limitFromDisposalValue);
+      return `<label class="guild-collateral-card"><img src="${lot ? spriteUrl(lot, item.grade) : ""}" alt=""><span><b>${item.name}</b><small>${gradeLabel(item.grade)} \xB7 \uC815\uC0B0\uAC00\uCE58 ${money(item.trueValue)}</small></span><strong>${money(value)}</strong><input type="radio" name="guild-collateral-card" value="${item.lotId}"></label>`;
+    }).join("") : `<div class="guild-collateral-empty"><b>${locked ? "\uB2F4\uBCF4 \uAE30\uB2A5\uC774 \uC7A0\uACA8 \uC788\uC2B5\uB2C8\uB2E4." : "\uB2F4\uBCF4\uB85C \uC124\uC815\uD560 \uBCF4\uC720 \uBB3C\uD488\uC774 \uC5C6\uC2B5\uB2C8\uB2E4."}</b><span>${locked ? `\uC0C1\uD68C\uB97C ${balance.loan.minShopStage}\uB2E8\uACC4\uB85C \uC2B9\uAE09\uD558\uBA74 \uC774\uC6A9\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4.` : "\uACBD\uB9E4\uC5D0\uC11C \uBB3C\uD488\uC744 \uB099\uCC30\uD55C \uB4A4 \uB2E4\uC2DC \uBC29\uBB38\uD558\uC138\uC694."}</span></div>`;
+    document.querySelector("#guild-collateral-list").innerHTML = `<header><h3>\uB2F4\uBCF4 \uBCF4\uC720\uD488 <small>(\uBBF8\uD310\uB9E4 \uBB3C\uD488)</small></h3><b>${collateralCount} / ${state.storage}</b></header><div class="guild-collateral-scroll">${collateralMarkup}</div><footer><span>\uC120\uD0DD \uB2F4\uBCF4 \uB300\uCD9C \uD55C\uB3C4</span><strong id="guild-limit-total">0 G</strong></footer>`;
+    document.querySelector("#guild-loan").disabled = locked || Boolean(state.loan) || state.guildLocked || !collateralCount;
+    document.querySelector("#guild-repay").disabled = !state.loan || state.day >= state.loan?.dueDay;
+    document.querySelector("#guild-message").innerHTML = message ? `<b>${message}</b>` : `<b>\uB300\uCD9C \uC548\uB0B4</b><p>\uC120\uD0DD\uD55C \uBB3C\uD488\uC740 \uC0C1\uD658 \uC804\uAE4C\uC9C0 \uD310\uB9E4\xB7\uAC10\uC815\xB7\uC758\uB8B0 \uC81C\uCD9C\uC774 \uC81C\uD55C\uB429\uB2C8\uB2E4.</p><p>\uB9CC\uAE30 ${balance.loan.termDays}\uC77C \xB7 \uB9CC\uAE30 \uC0C1\uD658\uC561\uC740 \uC6D0\uAE08\uC758 ${Math.round(balance.loan.repayMultiplier * 100)}%</p>`;
+    const picker = document.querySelector("#guild-collateral");
+    if (picker) {
+      document.querySelector("#guild-loan").disabled = true;
+      picker.onchange = () => {
+        const item = collateralItems.find((entry) => entry.lotId === picker.value);
+        const principal = item ? Math.round(item.trueValue * balance.loan.limitFromDisposalValue) : 0;
+        document.querySelector("#guild-loan").disabled = !item;
+        document.querySelector("#loan-preview").textContent = item ? `\uB300\uCD9C ${money(principal)} \xB7 ${state.day + balance.loan.termDays}\uC77C\uCC28 \uB9CC\uAE30 ${money(Math.round(principal * balance.loan.repayMultiplier))}` : "\uBB3C\uD488\uC744 \uC120\uD0DD\uD558\uBA74 \uB300\uCD9C\uC561\uACFC \uB9CC\uAE30 \uC0C1\uD658\uC561\uC744 \uACC4\uC0B0\uD569\uB2C8\uB2E4.";
+      };
+      document.querySelectorAll('[name="guild-collateral-card"]').forEach((radio) => {
+        radio.onchange = () => {
+          picker.value = radio.value;
+          picker.dispatchEvent(new Event("change"));
+          const item = collateralItems.find((entry) => entry.lotId === radio.value);
+          document.querySelector("#guild-limit-total").textContent = money(Math.round(item.trueValue * balance.loan.limitFromDisposalValue));
+        };
+      });
+    }
+  }
+  function renderMuseum(returnTo = "city") {
+    clearActionTimer();
+    audio.playBgm("museum");
+    museumReturn = returnTo;
+    if (state) state.phase = "museum";
+    adapter.showScene("museum");
+    if (state) syncHeader();
+    const owned = new Set(state?.metaRelics || loadMeta());
+    const relics = balance.relics.list;
+    const tierNames = { low: "\uD558\uAE09", mid: "\uC911\uAE09", high: "\uC0C1\uAE09" };
+    document.querySelector("#relic-list").innerHTML = relics.map((relic, index) => {
+      const isOwned = owned.has(relic.id);
+      const art = relicArt[relic.id];
+      return `<article class="${isOwned ? "is-owned" : "is-locked"}" role="button" tabindex="0" aria-label="${isOwned ? relic.name : "\uBBF8\uD68D\uB4DD \uC720\uBB3C"}" data-slot="${index + 1}" data-relic="${relic.id}">${isOwned && art ? `<img src="./assets/relics/${encodeURIComponent(art)}" alt=""><b>${relic.name}</b><span>${relic.effect}</span>` : ""}</article>`;
+    }).join("");
+    const showRelicDetail = (relic) => {
+      const isOwned = owned.has(relic.id);
+      const art = relicArt[relic.id];
+      document.querySelector("#relic-detail").innerHTML = isOwned ? `${art ? `<img src="./assets/relics/${encodeURIComponent(art)}" alt="">` : ""}<small>${tierNames[relic.tier]} \uC720\uBB3C</small><h3>${relic.name}</h3><p>${relic.effect}</p>` : `<small>${tierNames[relic.tier]} \uC804\uC2DC \uC2AC\uB86F</small><h3>\uBBF8\uD68D\uB4DD \uC720\uBB3C</h3><p>\uC5EC\uC815\uC744 \uC644\uC8FC\uD558\uACE0 \uC720\uBB3C \uACBD\uB9E4\uC5D0\uC11C \uD68D\uB4DD\uD558\uBA74 \uC815\uBCF4\uAC00 \uACF5\uAC1C\uB429\uB2C8\uB2E4.</p>`;
+    };
+    document.querySelectorAll("[data-relic]").forEach((card) => {
+      const select = () => {
+        document.querySelectorAll("[data-relic]").forEach((entry) => entry.classList.toggle("is-selected", entry === card));
+        showRelicDetail(relics.find((relic) => relic.id === card.dataset.relic));
+        audio.playSfx("museum");
+      };
+      card.onclick = select;
+      card.onkeydown = (event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          select();
+        }
+      };
+    });
+    const ownedCount = relics.filter((relic) => owned.has(relic.id)).length;
+    document.querySelector("#museum-progress").innerHTML = `<b>\uC218\uC9D1 \uD604\uD669</b><strong>${ownedCount} / ${relics.length}</strong><span>\uD558\uAE09 ${relics.filter((relic) => relic.tier === "low" && owned.has(relic.id)).length}/3 \xB7 \uC911\uAE09 ${relics.filter((relic) => relic.tier === "mid" && owned.has(relic.id)).length}/3 \xB7 \uC0C1\uAE09 ${relics.filter((relic) => relic.tier === "high" && owned.has(relic.id)).length}/3</span>`;
+    const initial = relics.find((relic) => owned.has(relic.id)) || relics[0];
+    document.querySelector(`[data-relic="${initial.id}"]`)?.click();
+  }
+  function renderCatalog() {
+    clearActionTimer();
+    audio.playBgm("workplace");
+    state.phase = "catalog";
+    adapter.showScene("catalog");
+    syncHeader();
+    document.querySelector("#catalog-grid").innerHTML = state.schedule.days[state.day - 1].lots.map((lot, index) => `<article class="lot-card catalog-lot-${index + 1}" tabindex="0" aria-label="LOT ${index + 1} ${escapeHtml(lot.content.displayName)} \uC0C1\uC138 \uC815\uBCF4">
+    <b class="catalog-number">${String(index + 1).padStart(2, "0")}</b>
+    <div class="mini-sprite ${lot.visualEffects.map((effect) => `vfx-${effect}`).join(" ")}"><img src="${spriteUrl(lot, lot.grade)}" alt=""></div>
+    <span class="catalog-grade">${gradeLabel(lot.grade)}</span><h3>${escapeHtml(lot.content.displayName)}</h3>
+    <p class="catalog-meta"><span>${escapeHtml(categoryLabel(lot.category))}</span><strong>${money(lot.pricing.basePrice)}</strong></p>
+    <aside class="catalog-tooltip" role="tooltip"><b>${escapeHtml(lot.content.displayName)}</b><span>${gradeLabel(lot.grade)} \xB7 ${escapeHtml(categoryLabel(lot.category))}</span><p>${escapeHtml(lot.content.description)}</p>${lot.content.setHint ? `<em>${escapeHtml(lot.content.setHint)}</em>` : ""}<strong>\uAE30\uC900\uAC00 ${money(lot.pricing.basePrice)}</strong></aside>
+  </article>`).join("");
+  }
+  function renderAuction() {
+    const lot = state.schedule.days[state.day - 1].lots[state.lotIndex];
+    if (!lot) return renderSettlement();
+    const expired = expireQuestsBeforeAuction(state);
+    state.phase = "auction";
+    audio.playBgm("auction");
+    if (state.auctionSession?.lotId !== lot.lotId) {
+      const marketIndex = state.marketPath[lot.category][state.day - 1];
+      const generatedFeed = [lot.content.rumor, lot.content.setHint, lot.content.npcReaction].filter(Boolean);
+      state.auctionSession = { lotId: lot.lotId, currentPrice: Math.max(1, Math.round(lot.pricing.basePrice * balance.auction.startBidRatio)), leader: null, bots: botBidForLot({ lot, day: state.day, balance, marketIndex, seed: state.seed }), deadline: Date.now() + 15e3, feed: [...expired ? [`\uAE30\uD55C\uC774 \uC9C0\uB09C \uC758\uB8B0 ${expired}\uAC74\uC774 \uB9CC\uB8CC\uB410\uC2B5\uB2C8\uB2E4.`] : ["\uACBD\uB9E4\uAC00 \uC2DC\uC791\uB418\uC5C8\uC2B5\uB2C8\uB2E4."], ...generatedFeed] };
+    }
+    state.auctionSession.deadline ||= Date.now() + 15e3;
+    adapter.showScene("auction");
+    adapter.setText("lot-progress", `${state.day}\uC77C\uCC28 \xB7 LOT ${state.lotIndex + 1} / 8`);
+    adapter.setText("lot-name", lot.content.displayName);
+    adapter.setText("lot-grade", lot.grade);
+    adapter.setText("lot-description", lot.content.description);
+    adapter.setText("base-price", money(lot.pricing.basePrice));
+    adapter.setText("current-bid", money(state.auctionSession.currentPrice));
+    adapter.setText("cash", money(state.cash));
+    adapter.setSprite("current-lot", spriteUrl(lot, lot.grade));
+    adapter.setEffects("current-lot", lot.visualEffects);
+    document.querySelector("#auction-feed").innerHTML = state.auctionSession.feed.slice(-4).map((line) => `<p>${escapeHtml(line)}</p>`).join("");
+    const participants = [
+      { name: "\uB2F9\uC2E0", budget: state.cash, leader: state.auctionSession.leader === "player", player: true },
+      ...state.auctionSession.bots.map((bot) => ({ name: bot.name, budget: bot.maxBid, leader: state.auctionSession.leader === bot.id }))
+    ];
+    document.querySelector("#auction-participants").innerHTML = `<h3>\uCC38\uAC00\uC790 \uBA85\uB2E8 (${participants.length} / 4)</h3>${participants.map((participant, index) => `<div class="participant ${participant.leader ? "is-leading" : ""}"><span>${participant.player ? "\uB098" : index}</span><b>${participant.name}</b><strong>${money(participant.budget)}</strong></div>`).join("")}`;
+    document.querySelector("#auction-lot-status").innerHTML = `<b>\uACBD\uB9E4 ${state.lotIndex + 1} / 8</b><span>${gradeLabel(lot.grade)}</span><strong>${money(state.auctionSession.currentPrice)}</strong><em id="auction-timer" aria-label="\uB0A8\uC740 \uC2DC\uAC04"></em>`;
+    armActionTimer("#auction-timer", state.auctionSession.deadline, () => finishLot("pass"));
+  }
+  function finishLot(action, multiplier = 1) {
+    clearActionTimer();
+    const lot = state.schedule.days[state.day - 1].lots[state.lotIndex];
+    const session = state.auctionSession;
+    let result;
+    if (action === "bid") {
+      const raise = Math.max(1, Math.ceil(session.currentPrice * balance.auction.minRaiseRate));
+      const proposed = Math.max(session.currentPrice + raise, Math.ceil(session.currentPrice * multiplier));
+      if (proposed > state.cash) {
+        session.feed.push("\uBCF4\uC720 \uC790\uAE08\uC774 \uBD80\uC871\uD569\uB2C8\uB2E4.");
+        return renderAuction();
+      }
+      if (ownedItems().length >= state.storage) {
+        session.feed.push("\uBCF4\uAD00\uCE78\uC774 \uAC00\uB4DD \uCC3C\uC2B5\uB2C8\uB2E4.");
+        return renderAuction();
+      }
+      session.currentPrice = proposed;
+      session.leader = "player";
+      session.feed.push(`\uD50C\uB808\uC774\uC5B4 ${money(proposed)}`);
+      audio.playSfx("bid");
+      session.deadline = Date.now() + 15e3;
+      const challenger = [...session.bots].filter((bot) => bot.maxBid > proposed).sort((a, b) => b.maxBid - a.maxBid)[0];
+      if (challenger) {
+        session.currentPrice = Math.min(challenger.maxBid, proposed + raise);
+        session.leader = challenger.id;
+        session.feed.push(`${challenger.name} ${money(session.currentPrice)}`);
+        audio.playSfx("bot-bid");
+        return renderAuction();
+      }
+      result = { winner: "player", price: proposed, bots: session.bots };
+    } else {
+      const leader = [...session.bots].sort((a, b) => b.maxBid - a.maxBid)[0];
+      result = session.leader === "player" ? { winner: "player", price: session.currentPrice, bots: session.bots } : { winner: leader.id, price: Math.max(1, session.currentPrice), bots: session.bots };
+    }
+    resolveLot(state, { action, playerBid: session.currentPrice, auctionResult: result });
+    recordEvent(state, "auction", { lotId: lot.lotId, action, winner: result.winner, price: result.price });
+    audio.playSfx(action === "pass" ? "pass" : "gavel");
+    state.auctionSession = null;
+    state.phase === "settlement" ? renderSettlement() : renderAuction();
+  }
+  function renderSettlement() {
+    clearActionTimer();
+    audio.playBgm("settlement");
+    if (state.settledDay !== state.day) {
+      const quests = settleQuests(state);
+      const loan = settleLoan(state);
+      state.settledDay = state.day;
+      state.lastSettlement = { quests, loan };
+      if (missedDeadline(state)) state.failure = `${state.day}\uC77C\uCC28 \uC2B9\uAE09 \uAE30\uD55C \uC2E4\uD328 \xB7 \uC0C1\uD68C ${state.shopStage}\uB2E8\uACC4`;
+    }
+    adapter.showScene("settlement");
+    adapter.setText("day", state.day);
+    const loanLabels = { none: "\uBCC0\uB3D9 \uC5C6\uC74C", repaid: "\uC0C1\uD658 \uC644\uB8CC", seized: "\uB2F4\uBCF4 \uCC98\uBD84" };
+    const loanResult = loanLabels[state.lastSettlement.loan] || state.lastSettlement.loan;
+    const dayHistory = state.history.filter((entry) => entry.day === state.day);
+    const wins = dayHistory.filter((entry) => entry.won);
+    const spent = wins.reduce((sum, entry) => sum + entry.price, 0);
+    const dayLots = state.schedule.days[state.day - 1].lots;
+    const categories = [...new Set(dayLots.map((lot) => lot.category))].slice(0, 4);
+    document.querySelector("#settlement-summary").innerHTML = `
+    <section class="settlement-lots"><h3>\uB099\uCC30 / \uC720\uCC30 \uACB0\uACFC (8 LOT)</h3>${dayHistory.map((entry, index) => `<p><b>LOT ${index + 1}</b><span class="${entry.won ? "won" : "lost"}">${entry.won ? "\uB099\uCC30" : "\uC720\uCC30"}</span><em>${entry.won ? "\uB2F9\uC2E0" : "\uACBD\uC7C1\uC790"}</em><strong>${money(entry.price)}</strong></p>`).join("")}</section>
+    <section class="settlement-center"><h3>\uC624\uB298\uC758 \uC815\uC0B0</h3><div class="settlement-owned"><b>\uD68D\uB4DD \uBB3C\uD488</b><strong>${wins.length}\uAC1C</strong><span>\uD604\uC7AC \uBCF4\uAD00 ${ownedItems().length} / ${state.storage}</span></div><div class="settlement-money"><p><span>\uCD1D \uC9C0\uCD9C \uAE08\uC561</span><strong>${money(spent)}</strong></p><p><span>\uD604\uC7AC \uC790\uC0B0</span><strong>${money(state.cash)}</strong></p><p><span>\uC644\uB8CC \uC758\uB8B0</span><strong>${state.lastSettlement.quests}\uAC74</strong></p><p><span>\uB300\uCD9C \uC0C1\uD0DC</span><strong>${loanResult}</strong></p></div></section>
+    <section class="settlement-market"><h3>\uACC4\uC5F4\uBCC4 \uC2DC\uC138 \uC694\uC57D</h3>${categories.map((category) => {
+      const value = state.marketPath[category]?.[state.day - 1] ?? 100;
+      return `<p><b>${category}</b><span class="market-line" style="--market:${Math.max(15, Math.min(95, value - 40))}%"></span><strong>${value}</strong></p>`;
+    }).join("")}</section>`;
+    document.querySelector("#next-day").textContent = state.failure ? "\uC2E4\uD328 \uACB0\uACFC \uD655\uC778" : state.day === 12 ? "\uCD5C\uC885 \uC720\uBB3C \uACBD\uB9E4\uB85C" : `${state.day + 1}\uC77C\uCC28\uB85C`;
+    save();
+  }
+  async function nextDay() {
+    audio.playSfx("day");
+    if (state.failure) return renderResult();
+    if (state.day === 12) return startRelicAuction();
+    const nextDayButton = document.querySelector("#next-day");
+    nextDayButton.disabled = true;
+    advanceDay(state);
+    state.questOffers = createDailyQuestOffers(balance, state.day, state.seed, state.metaRelics);
+    state.settledDay = null;
+    save();
+    try {
+      await generation.ensure({ currentDay: state.day, schedule: state.schedule, sets: state.sets });
+      renderHub();
+    } catch (error) {
+      console.warn("Daily content buffer failed; continuing with prepared fallback.", error);
+      renderHub("\uCF58\uD150\uCE20 \uC900\uBE44\uC5D0 \uC2E4\uD328\uD574 \uAE30\uBCF8 \uB370\uC774\uD130\uB97C \uC0AC\uC6A9\uD569\uB2C8\uB2E4.");
+    } finally {
+      nextDayButton.disabled = false;
+    }
+  }
+  function startRelicAuction() {
+    clearActionTimer();
+    audio.playBgm("relic");
+    const permanent = new Set(state.metaRelics || []);
+    if (permanent.size >= 9) return renderResult();
+    state.phase = "relic";
+    state.relicRound ??= 0;
+    state.relicChoices ??= [];
+    state.relicSession = null;
+    renderRelic();
+  }
+  function renderRelic() {
+    if (state.relicRound >= 3) return renderResult();
+    adapter.showScene("relic");
+    audio.playBgm("relic");
+    const tier = balance.relicAuction.tiers[state.relicRound];
+    const opening = balance.relicAuction.startBid[state.relicRound];
+    const choices = balance.relics.list.filter((relic2) => relic2.tier === tier && !state.metaRelics.includes(relic2.id));
+    const relic = choices[(state.relicRound + state.seed.length) % Math.max(1, choices.length)] || balance.relics.list.find((entry) => entry.tier === tier);
+    state.currentRelic = relic;
+    if (!state.relicSession || state.relicSession.round !== state.relicRound) {
+      const rng = createRng(`${state.seed}:relic:${state.relicRound}`);
+      const bands = [[0.6, 0.85], [0.85, 1.1], [1.1, 1.4]];
+      const names = ["\uC655\uC2E4 \uB300\uB9AC\uC778", "\uBD81\uBD80 \uB300\uC0C1\uC778", "\uD574\uC678 \uC218\uC9D1\uAC00"];
+      const bots = bands.map(([low, high], index) => ({ id: `royal-${index + 1}`, name: names[index], maxBid: Math.max(opening, Math.min(opening * 2, Math.round(state.cash * (low + rng() * (high - low))))) }));
+      state.relicSession = { round: state.relicRound, currentPrice: opening, leader: null, bots, deadline: Date.now() + 15e3, feed: ["\uCD5C\uC885 \uC720\uBB3C \uACBD\uB9E4\uAC00 \uC2DC\uC791\uB418\uC5C8\uC2B5\uB2C8\uB2E4."] };
+    }
+    const session = state.relicSession;
+    const art = relicArt[relic.id];
+    document.querySelector("#relic-card").innerHTML = `<p>${RELIC_TIER_LABELS[tier] || tier} \xB7 ${state.relicRound + 1}/3\uD68C</p><h2>${relic.name}</h2>${art ? `<img src="./assets/relics/${encodeURIComponent(art)}" alt="">` : ""}<p>${relic.effect}</p><strong>\uD604\uC7AC \uD638\uAC00 ${money(session.currentPrice)}</strong><em id="relic-timer" aria-label="\uB0A8\uC740 \uC2DC\uAC04"></em>`;
+    const participants = [{ id: "player", name: "\uB2F9\uC2E0", budget: state.cash }, ...session.bots.map((bot) => ({ ...bot, budget: bot.maxBid }))];
+    document.querySelector("#relic-participants").innerHTML = `<h3>\uCD5C\uC885 \uACBD\uB9E4 \uCC38\uAC00\uC790</h3>${participants.map((participant) => `<div class="participant ${session.leader === participant.id ? "is-leading" : ""}"><b>${participant.name}</b><strong>${money(participant.budget)}</strong></div>`).join("")}`;
+    document.querySelector("#relic-feed").innerHTML = session.feed.slice(-4).map((line) => `<p>${line}</p>`).join("");
+    document.querySelector("#buy-relic").textContent = `10% \uC778\uC0C1 \uC785\uCC30`;
+    document.querySelector("#skip-relic").textContent = "\uBB3C\uB7EC\uB098\uAE30";
+    document.querySelector("#buy-relic").disabled = state.cash < Math.ceil(session.currentPrice * 1.1);
+    armActionTimer("#relic-timer", session.deadline, () => finishRelic(false));
+  }
+  function finishRelic(bid) {
+    clearActionTimer();
+    const session = state.relicSession;
+    if (bid) {
+      const price = Math.ceil(session.currentPrice * 1.1);
+      if (state.cash < price) return renderRelic();
+      session.currentPrice = price;
+      session.leader = "player";
+      session.feed.push(`\uB2F9\uC2E0 ${money(price)}`);
+      audio.playSfx("relic-bid");
+      session.deadline = Date.now() + 15e3;
+      const challenger = [...session.bots].filter((bot) => bot.maxBid > price).sort((a, b) => b.maxBid - a.maxBid)[0];
+      if (challenger) {
+        session.currentPrice = Math.min(challenger.maxBid, Math.ceil(price * 1.1));
+        session.leader = challenger.id;
+        session.feed.push(`${challenger.name} ${money(session.currentPrice)}`);
+        audio.playSfx("bot-bid");
+        return renderRelic();
+      }
+    }
+    if (session.leader === "player") {
+      state.cash -= session.currentPrice;
+      state.relicChoices.push(state.currentRelic.id);
+      audio.playSfx("relic-gavel");
+      recordEvent(state, "relic-auction", { relicId: state.currentRelic.id, winner: "player", price: session.currentPrice });
+    } else {
+      const winner = [...session.bots].sort((a, b) => b.maxBid - a.maxBid)[0];
+      audio.playSfx("relic-pass");
+      recordEvent(state, "relic-auction", { relicId: state.currentRelic.id, winner: session.leader || winner.id, price: session.currentPrice });
+    }
+    state.relicRound += 1;
+    state.relicSession = null;
+    renderRelic();
+  }
+  function renderResult() {
+    clearActionTimer();
+    audio.playBgm("settlement");
+    state.completed = true;
+    state.phase = "result";
+    adapter.showScene("result");
+    document.querySelector('[data-scene="result"]').classList.toggle("is-failure", Boolean(state.failure));
+    const unsold = ownedItems().reduce((sum, item) => sum + item.trueValue, 0);
+    const relics = [.../* @__PURE__ */ new Set([...state.metaRelics, ...state.relicChoices || []])];
+    localStorage.setItem("unknown-auction:relics", JSON.stringify(relics));
+    document.querySelector("#result-title").textContent = state.failure ? "\uC5EC\uC815 \uC2E4\uD328" : "12\uC77C \uC5EC\uC815 \uC644\uB8CC";
+    const wonCount = state.history.filter((entry) => entry.won).length;
+    const acquiredRelics = (state.relicChoices || []).map((id) => balance.relics.list.find((entry) => entry.id === id)?.name || id);
+    document.querySelector("#run-summary").innerHTML = `<section class="result-ending"><h3>${state.failure ? "\uC5EC\uC815 \uC2E4\uD328" : `\uC0C1\uD68C ${state.shopStage}\uB2E8\uACC4 \uB2EC\uC131`}</h3>${state.failure ? `<p class="failure">${state.failure}</p>` : "<p>\uC2E0\uC911\uD55C \uAC70\uB798\uC640 \uAFB8\uC900\uD55C \uC131\uC7A5\uC73C\uB85C \uC5EC\uC815\uC744 \uB9C8\uCCE4\uC2B5\uB2C8\uB2E4.</p>"}<strong>${state.failure ? "\uB9C8\uAC10 \uC870\uAC74\uC744 \uB2E4\uC2DC \uD655\uC778\uD558\uC138\uC694." : "\uC644\uC8FC \uC131\uACF5"}</strong></section><section class="result-stats"><h3>\uC5EC\uC815 \uC694\uC57D</h3><p><span>\uC644\uC8FC \uC77C\uC218</span><b>${state.day}\uC77C</b></p><p><span>\uCD5C\uC885 \uC0C1\uD68C \uB2E8\uACC4</span><b>${state.shopStage}\uB2E8\uACC4</b></p><p><span>\uCD5C\uC885 \uC790\uC0B0</span><b>${money(state.cash + unsold)}</b></p><p><span>\uB099\uCC30 / \uC644\uB8CC \uC758\uB8B0</span><b>${wonCount}\uAC74 / ${state.completedQuestCount}\uAC74</b></p><p><span>\uD68D\uB4DD \uC720\uBB3C</span><b>${acquiredRelics.join(", ") || "\uC5C6\uC74C"}</b></p></section>`;
+    save();
+  }
+  var placeRenderers = { city: renderHub, quests: renderQuestOffice, tavern: renderTavern, exchange: renderExchange, shop: renderShop, guild: renderGuild, museum: () => renderMuseum("city"), catalog: renderCatalog };
+  document.querySelector("#new-run").onclick = async () => {
+    const button = document.querySelector("#new-run");
+    if (button.disabled) return;
+    button.disabled = true;
+    try {
+      await newRun(document.querySelector("#seed").value.trim() || Date.now());
+    } catch (error) {
+      console.error("\uC0C8 \uB7F0 \uC0DD\uC131 \uC2E4\uD328", error);
+      openSlotScene("new");
+      document.querySelector("#save-guide").textContent = `\uC0C8 \uB7F0 \uC0DD\uC131\uC5D0 \uC2E4\uD328\uD588\uC2B5\uB2C8\uB2E4: ${error.message}`;
+    } finally {
+      button.disabled = false;
+    }
+  };
+  document.querySelector("#open-new-slots").onclick = () => {
+    audio.playBgm("title");
+    openSlotScene("new");
+  };
+  document.querySelector("#open-continue-slots").onclick = () => {
+    audio.playBgm("title");
+    openSlotScene("continue");
+  };
+  document.querySelector("#back-title").onclick = () => adapter.showScene("title");
+  document.querySelector("#save-settings").onclick = () => document.querySelector("#settings-dialog").showModal();
+  document.querySelector("#delete-save").onclick = () => {
+    const slot = store.list().find((entry) => entry.slot === selectedSlot);
+    if (!slot || slot.empty || !window.confirm(`SLOT ${selectedSlot} \uC800\uC7A5\uC744 \uC0AD\uC81C\uD560\uAE4C\uC694?`)) return;
+    store.clear(selectedSlot);
+    renderSaveSlots();
+  };
+  document.querySelector("#continue-run").onclick = () => {
+    state = store.load(selectedSlot);
+    if (!state) return status("\uC720\uD6A8\uD55C \uC800\uC7A5 \uB370\uC774\uD130\uAC00 \uC5C6\uC2B5\uB2C8\uB2E4.", "error");
+    generation.blueprint = state.generationBlueprint || null;
+    ({ auction: renderAuction, settlement: renderSettlement, relic: renderRelic, result: renderResult, quests: renderQuestOffice, tavern: renderTavern, exchange: renderExchange, shop: renderShop, guild: renderGuild, museum: () => renderMuseum("city"), catalog: renderCatalog }[state.phase] || renderHub)();
+  };
+  document.querySelector("#start-auction").onclick = renderAuction;
+  document.querySelectorAll("[data-raise]").forEach((button) => button.onclick = () => finishLot("bid", Number(button.dataset.raise)));
+  document.querySelector("#pass").onclick = () => finishLot("pass");
+  document.querySelector("#next-day").onclick = nextDay;
+  document.querySelector("#buy-relic").onclick = () => finishRelic(true);
+  document.querySelector("#skip-relic").onclick = () => finishRelic(false);
+  document.querySelector("#return-title").onclick = () => adapter.showScene("title");
+  document.querySelector("#title-museum").onclick = () => renderMuseum("title");
+  document.querySelector("#museum-back").onclick = () => museumReturn === "title" ? adapter.showScene("title") : renderHub();
+  document.querySelector("#title-exit").onclick = () => status("\uBE0C\uB77C\uC6B0\uC800 \uAC8C\uC784\uC740 \uC774 \uD0ED\uC744 \uB2EB\uC73C\uBA74 \uC885\uB8CC\uB429\uB2C8\uB2E4.");
+  document.querySelector("#title-settings").onclick = () => document.querySelector("#settings-dialog").showModal();
+  document.querySelector("#hub-settings").onclick = () => document.querySelector("#settings-dialog").showModal();
+  document.querySelector("#close-settings").onclick = () => document.querySelector("#settings-dialog").close();
+  var syncSoundToggle = () => {
+    const button = document.querySelector("#sound-toggle");
+    button.setAttribute("aria-pressed", String(audio.enabled));
+    button.setAttribute("aria-label", `\uC804\uCCB4 \uC18C\uB9AC ${audio.enabled ? "\uCF1C\uC9D0" : "\uAEBC\uC9D0"}`);
+    button.innerHTML = `<span>\uC804\uCCB4 \uC18C\uB9AC</span><strong>${audio.enabled ? "\uCF1C\uC9D0" : "\uAEBC\uC9D0"}</strong>`;
+  };
+  document.querySelector("#sound-toggle").onclick = () => {
+    audio.setEnabled(!audio.enabled);
+    localStorage.setItem("unknown-auction:sound", audio.enabled ? "on" : "off");
+    syncSoundToggle();
+  };
+  syncSoundToggle();
+  document.querySelectorAll("[data-place]").forEach((button) => button.onclick = () => {
+    audio.playSfx("navigate");
+    placeRenderers[button.dataset.place]?.();
+  });
+  document.querySelector("#sell-selected").onclick = () => {
+    const ids = [...document.querySelectorAll("[data-item-select]:checked")].map((input) => input.dataset.itemSelect);
+    const revenue = sellItems(state, balance, ids);
+    if (revenue) audio.playSfx("sell");
+    renderExchange(`${money(revenue)}\uC5D0 \uCC98\uBD84\uD588\uC2B5\uB2C8\uB2E4.`);
+  };
+  document.querySelector("#shop-upgrade").onclick = () => {
+    const ok = upgradeShop(state, balance);
+    if (ok) audio.playSfx("upgrade");
+    renderShop(ok ? "\uC0C1\uD68C\uB97C \uC2B9\uAE09\uD588\uC2B5\uB2C8\uB2E4." : "\uD604\uAE08 \uB610\uB294 \uC644\uB8CC \uC758\uB8B0\uAC00 \uBD80\uC871\uD569\uB2C8\uB2E4.");
+  };
+  document.querySelector("#guild-loan").onclick = () => {
+    const lotId = document.querySelector("#guild-collateral")?.value;
+    const ok = takeLoan(state, balance, lotId);
+    if (ok) audio.playSfx("loan");
+    renderGuild(ok ? "\uC120\uD0DD\uD55C \uBB3C\uD488\uC73C\uB85C \uB2F4\uBCF4 \uB300\uCD9C\uC744 \uC2E4\uD589\uD588\uC2B5\uB2C8\uB2E4." : "\uB2F4\uBCF4 \uBB3C\uD488\uC744 \uC120\uD0DD\uD558\uACE0 \uD574\uAE08 \uC870\uAC74\uC744 \uD655\uC778\uD558\uC138\uC694.");
+  };
+  document.querySelector("#guild-repay").onclick = () => {
+    const ok = repayLoanEarly(state, balance);
+    if (ok) audio.playSfx("repay");
+    renderGuild(ok ? "\uC6D0\uAE08\uC744 \uC911\uB3C4 \uC0C1\uD658\uD588\uC2B5\uB2C8\uB2E4." : "\uC0C1\uD658\uD560 \uC218 \uC5C6\uC2B5\uB2C8\uB2E4.");
+  };
+  document.querySelector("#download-log").onclick = () => downloadRunLog(state);
+  boot();
+})();
+</script></body></html>
