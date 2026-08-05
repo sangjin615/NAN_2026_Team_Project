@@ -596,9 +596,14 @@ function renderAuction() {
   document.querySelector('#auction-feed').innerHTML = state.auctionSession.feed.slice(-4).map((line) => `<p>${escapeHtml(line)}</p>`).join('');
   const participants = [
     { name: '당신', budget: state.cash, leader: state.auctionSession.leader === 'player', player: true },
-    ...state.auctionSession.bots.map((bot) => ({ name: bot.name, budget: bot.maxBid, leader: state.auctionSession.leader === bot.id })),
+    ...state.auctionSession.bots.map((bot) => ({ id: bot.id, name: bot.name, budget: bot.maxBid, leader: state.auctionSession.leader === bot.id })),
   ];
-  document.querySelector('#auction-participants').innerHTML = `<h3>참가자 명단 (${participants.length} / 4)</h3>${participants.map((participant, index) => `<div class="participant ${participant.leader ? 'is-leading' : ''}"><span>${participant.player ? '나' : index}</span><b>${participant.name}</b><strong>${money(participant.budget)}</strong></div>`).join('')}`;
+  const competitorPortraits = {
+    nemesis: './assets/ui/auction/competitors/galeo.png',
+    'drifter-a': './assets/ui/auction/competitors/moira.png',
+    'drifter-b': './assets/ui/auction/competitors/ines.png',
+  };
+  document.querySelector('#auction-participants').innerHTML = `<h3>참가자 명단 (${participants.length} / 4)</h3>${participants.map((participant) => `<div class="participant ${participant.leader ? 'is-leading' : ''}">${participant.player ? '<span class="player-mark">나</span>' : `<img class="competitor-portrait" src="${competitorPortraits[participant.id]}" alt="${participant.name} 초상">`}<b>${participant.name}</b><strong>${money(participant.budget)}</strong></div>`).join('')}`;
   document.querySelector('#auction-lot-status').innerHTML = `<b>경매 ${state.lotIndex + 1} / 8</b><span>${gradeLabel(lot.grade)}</span><strong>${money(state.auctionSession.currentPrice)}</strong><em id="auction-timer" aria-label="남은 시간"></em>`;
   armActionTimer('#auction-timer', state.auctionSession.deadline, () => finishLot('pass'));
 }
