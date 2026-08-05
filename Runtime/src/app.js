@@ -28,6 +28,7 @@ let selectedSlot = 1;
 let slotMode = 'new';
 let museumReturn = 'city';
 let actionTimer = null;
+let questMessageTimer = null;
 let selectedInfoKind = 'competitors';
 
 const GRADE_LABELS = { COMMON: '일반', RARE: '희귀', EPIC: '영웅', LEGENDARY: '전설' };
@@ -265,6 +266,18 @@ function questRewardLabel(quest) {
     : money(quest.reward);
 }
 
+function showQuestMessage(message) {
+  if (questMessageTimer) window.clearTimeout(questMessageTimer);
+  questMessageTimer = null;
+  const element = document.querySelector('#quest-message');
+  element.textContent = message;
+  if (!message) return;
+  questMessageTimer = window.setTimeout(() => {
+    if (element.textContent === message) element.textContent = '';
+    questMessageTimer = null;
+  }, 3500);
+}
+
 function renderQuestOffice(message = '') {
   clearActionTimer(); audio.playBgm('workplace'); state.phase = 'quests'; adapter.showScene('quests'); syncHeader();
   document.querySelector('#quest-offers').innerHTML = state.questOffers.map((quest) => `
@@ -315,7 +328,7 @@ function renderQuestOffice(message = '') {
       renderQuestOffice(ok ? '정밀 감정을 완료했습니다.' : '감정 비용 또는 물품 상태를 확인하세요.');
     };
   });
-  document.querySelector('#quest-message').textContent = message;
+  showQuestMessage(message);
 }
 
 function renderExchange(message = '') {

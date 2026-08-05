@@ -121,6 +121,18 @@ test('delivery quest reward refunds base price and fee, then adds a fixed 3000 c
   assert.equal(state.activeQuests[0].paidReward, 7400);
 });
 
+test('each day allows every offered quest even when earlier quests are still active', () => {
+  const schedule = createRunSchedule({ catalog, balance, seed: 'quest-carryover' });
+  const state = createInitialState({ schedule, sets: createSetGraph(schedule, 'quest-carryover'), balance, startCash: 100000 });
+  state.activeQuests = ['old-1', 'old-2', 'old-3'].map((id) => ({ id, acceptedDay: 1, deadlineDay: 3, completed: false }));
+  state.day = 2;
+  state.questOffers = ['restraint', 'multi', 'designated'].map((id) => ({ id, ...balance.quests[id], accepted: false }));
+  assert.equal(acceptQuest(state, 'restraint', balance), true);
+  assert.equal(acceptQuest(state, 'multi', balance), true);
+  assert.equal(acceptQuest(state, 'designated', balance), true);
+  assert.equal(state.activeQuests.length, 6);
+});
+
 test('V6.2 loan unlocks at stage two and early repayment costs principal only', () => {
   const schedule = createRunSchedule({ catalog, balance, seed: 'loan-v62' });
   const state = createInitialState({ schedule, sets: createSetGraph(schedule, 'loan-v62'), balance, startCash: 100000 });

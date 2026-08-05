@@ -3007,7 +3007,6 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
     return true;
   }
   function acceptQuest(state2, questId, balance2) {
-    if (state2.activeQuests.length >= (balance2.quests.offering.acceptMax || 3)) return false;
     const quest = state2.questOffers.find((entry) => entry.id === questId && !entry.accepted);
     if (!quest || state2.cash < quest.fee) return false;
     state2.cash -= quest.fee;
@@ -3306,6 +3305,7 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
   var slotMode = "new";
   var museumReturn = "city";
   var actionTimer = null;
+  var questMessageTimer = null;
   var selectedInfoKind = "competitors";
   var GRADE_LABELS = { COMMON: "\uC77C\uBC18", RARE: "\uD76C\uADC0", EPIC: "\uC601\uC6C5", LEGENDARY: "\uC804\uC124" };
   var RELIC_TIER_LABELS = { low: "\uD558\uAE09", mid: "\uC911\uAE09", high: "\uC0C1\uAE09" };
@@ -3541,6 +3541,17 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
   function questRewardLabel(quest) {
     return quest.rewardMode === "deliveredBasePlusFeePlusBonus" ? `\uBB3C\uD488 \uAE30\uC900\uAC00 + \uC218\uC8FC\uBE44 + ${money(quest.completionBonus || 0)}` : money(quest.reward);
   }
+  function showQuestMessage(message) {
+    if (questMessageTimer) window.clearTimeout(questMessageTimer);
+    questMessageTimer = null;
+    const element = document.querySelector("#quest-message");
+    element.textContent = message;
+    if (!message) return;
+    questMessageTimer = window.setTimeout(() => {
+      if (element.textContent === message) element.textContent = "";
+      questMessageTimer = null;
+    }, 3500);
+  }
   function renderQuestOffice(message = "") {
     clearActionTimer();
     audio.playBgm("workplace");
@@ -3599,7 +3610,7 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
         renderQuestOffice(ok ? "\uC815\uBC00 \uAC10\uC815\uC744 \uC644\uB8CC\uD588\uC2B5\uB2C8\uB2E4." : "\uAC10\uC815 \uBE44\uC6A9 \uB610\uB294 \uBB3C\uD488 \uC0C1\uD0DC\uB97C \uD655\uC778\uD558\uC138\uC694.");
       };
     });
-    document.querySelector("#quest-message").textContent = message;
+    showQuestMessage(message);
   }
   function renderExchange(message = "") {
     clearActionTimer();

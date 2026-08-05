@@ -153,7 +153,6 @@ export function buyInformation(state, balance, kind) {
 }
 
 export function acceptQuest(state, questId, balance) {
-  if (state.activeQuests.length >= (balance.quests.offering.acceptMax || 3)) return false;
   const quest = state.questOffers.find((entry) => entry.id === questId && !entry.accepted);
   if (!quest || state.cash < quest.fee) return false;
   state.cash -= quest.fee; quest.accepted = true;
