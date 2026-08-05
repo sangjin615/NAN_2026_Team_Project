@@ -7,7 +7,7 @@ import { SaveStore } from './save-store.js';
 import { advanceDay, createInitialState, resolveLot } from './game-state.js';
 import { VslRuntimeAdapter } from './vsl-adapter.js';
 import {
-  acceptQuest, appraiseItem, botBidForLot, buyInformation,
+  acceptQuest, appraiseItem, botBidForLot,
   deliverQuestItem, expireQuestsBeforeAuction, missedDeadline, questMatchesItem,
   quoteItemsSale, refreshDailyQuestOffers, repayLoanEarly, sellItems, settleLoan, settleQuests, takeLoan, upgradeShop,
 } from './systems.js';
@@ -423,27 +423,17 @@ function renderExchange(message = '') {
 
 function renderTavern(message = '') {
   clearActionTimer(); audio.playBgm('tavern'); state.phase = 'tavern'; adapter.showScene('tavern'); syncHeader();
-  const bought = Object.keys(state.information?.[state.day] || {});
   const names = { forecast: '다음 날 경매품 시세', catalog: '다음 날 경매품 정보', competitors: '경쟁자의 관심 경매품' };
   const descriptions = { forecast: '상회 단계에 따라 다음 날 경매품 2개, 4개, 6개의 예상 시세를 공개합니다.', catalog: '상회 단계에 따라 다음 날 경매품의 이름, 계열, 등급을 순차적으로 공개합니다.', competitors: '상회 단계에 따라 경쟁자 1명부터 최대 3명까지 관심 경매품을 공개합니다.' };
   const icons = { forecast: './assets/ui/tavern/demand-trend.png', catalog: './assets/ui/tavern/lot-specification.png', competitors: './assets/ui/tavern/competitor-budget.png' };
-  const precision = { forecast: ['★★★★☆', '높음'], catalog: ['★★★☆☆', '보통'], competitors: ['★★★☆☆', '보통'] };
-  const lots = state.schedule.days[state.day - 1].lots;
   document.querySelectorAll('[data-broker]').forEach((broker) => {
     const kind = broker.dataset.broker;
     const selectBroker = () => { selectedInfoKind = kind; renderTavern(); };
     broker.classList.toggle('is-active', kind === selectedInfoKind);
     broker.setAttribute('aria-pressed', String(kind === selectedInfoKind));
-    broker.querySelector('span').textContent = bought.includes(kind) ? '오늘 선택 완료' : bought.length ? '오늘 선택 종료' : '오늘 무료 선택';
+    broker.querySelector('span').textContent = kind === selectedInfoKind ? '정보 확인 중' : '확인하기';
     broker.onclick = selectBroker;
     broker.onkeydown = (event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); selectBroker(); } };
-  });
-  document.querySelectorAll('[data-info]').forEach((button) => {
-    const kind = button.dataset.info;
-    const cost = 0;
-    button.classList.toggle('is-selected', kind === selectedInfoKind);
-    button.innerHTML = `<img class="info-symbol" src="${icons[kind]}" alt=""><span class="info-copy"><strong>${names[kind]}</strong><small>${descriptions[kind]}</small></span><b>무료</b><em>${precision[kind][0]}<small>${precision[kind][1]}</small></em><span class="info-state">${bought.includes(kind) ? '선택 완료' : '선택 가능'}</span>`;
-    button.onclick = () => { selectedInfoKind = kind; renderTavern(); };
   });
   const selected = selectedInfoKind;
   const categoryNames = { CER: '도자기', CLK: '시계', PNT: '회화', BOK: '고서', MET: '금은세공', JEW: '장신구' };
@@ -463,12 +453,14 @@ function renderTavern(message = '') {
     const grouped = Object.groupBy(estimates, (bot) => bot.name);
     return `<p><b>${stage}명 공개</b></p><ul>${Object.entries(grouped).slice(0, stage).map(([name, entries]) => { const interest = [...entries].sort((a, b) => b.maxBid - a.maxBid)[0]; return `<li><b>${name}</b> · ${escapeHtml(interest.lot.content?.displayName || interest.lot.baseName)}</li>`; }).join('')}</ul>`;
   };
-  const results = informationResult(selected);
-  const owned = bought.includes(selected);
-  document.querySelector('#tavern-detail').innerHTML = `<h3>정보 상세</h3><div class="detail-heading"><img class="detail-symbol" src="${icons[selected]}" alt=""><div><h2>${names[selected]}</h2><strong>${precision[selected][0]} <small>(${precision[selected][1]})</small></strong></div></div><p>${descriptions[selected]}</p><section class="info-result"><b>공개 범위</b><p>${owned ? '선택한 정보는 오른쪽 확보 정보에서 확인할 수 있습니다.' : '무료로 선택하면 분석 결과가 오른쪽에 공개됩니다.'}</p></section><div class="detail-price"><span>가격</span><b>무료</b></div><button id="buy-tavern-info" ${bought.length ? 'disabled' : ''}>${owned ? '선택 완료' : bought.length ? '오늘 선택 종료' : '정보 선택'}</button>`;
-  document.querySelector('#buy-tavern-info').onclick = () => { const ok = buyInformation(state, balance, selected); if (ok) { audio.playSfx('information'); save(); } renderTavern(ok ? '정보를 선택했습니다.' : '오늘 선택할 정보가 이미 정해졌습니다.'); };
-  const ownedKind = bought[0];
-  document.querySelector('#tavern-owned').innerHTML = ownedKind ? `<h3>오늘 확보한 정보</h3><div class="owned-heading"><img src="${icons[ownedKind]}" alt=""><div><h2>${names[ownedKind]}</h2><small>${precision[ownedKind][0]} (${precision[ownedKind][1]})</small></div></div><section class="info-result">${informationResult(ownedKind)}</section><p class="owned-note">당일 경매 종료까지 유지됩니다.</p>` : '<h3>오늘 확보한 정보</h3><p class="empty-info">정보상을 선택하고 오늘 사용할 무료 정보 하나를 선택하세요.</p>';
+  document.querySelector('#tavern-detail').innerHTML = `<h3>정보 상세</h3><div class="detail-heading"><img class="detail-symbol" src="${icons[selected]}" alt=""><div><h2>${names[selected]}</h2><small>상회 ${state.shopStage}단계 공개 정보</small></div></div><p>${descriptions[selected]}</p><section class="info-result tavern-live-result">${informationResult(selected)}</section><p class="tavern-rule">정보 구매 없이 세 정보상을 자유롭게 확인할 수 있습니다.</p>`;
+  const effectiveStage = Math.max(1, Math.min(3, state.shopStage));
+  const stageRows = [
+    { stage: 1, competitors: '경쟁자 1명', catalog: '이름', forecast: '시세 2개' },
+    { stage: 2, competitors: '경쟁자 2명', catalog: '이름 · 계열', forecast: '시세 4개' },
+    { stage: 3, competitors: '경쟁자 3명', catalog: '이름 · 계열 · 등급', forecast: '시세 6개' },
+  ];
+  document.querySelector('#tavern-owned').innerHTML = `<h3>상회 단계별 정보 확장</h3><p class="stage-intro">상회를 성장시키면 세 정보의 공개 범위가 함께 넓어집니다.</p><div class="tavern-stage-list">${stageRows.map((row) => `<article class="${row.stage === effectiveStage ? 'is-current' : ''}"><header><b>${row.stage}단계</b>${row.stage === effectiveStage ? '<span>현재</span>' : ''}</header><p><img src="${icons.competitors}" alt="">${row.competitors}</p><p><img src="${icons.catalog}" alt="">${row.catalog}</p><p><img src="${icons.forecast}" alt="">${row.forecast}</p></article>`).join('')}</div>`;
   document.querySelector('#tavern-message').textContent = message;
 }
 

@@ -1441,6 +1441,48 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
 [data-scene="tavern"] .detail-price { color: #493824; border-top-color: #8c704c; }
 [data-scene="tavern"] .tavern-market .tavern-rule { bottom: 24px; }
 
+/* Tavern no longer sells information: the center shows live data and the right explains upgrades. */
+[data-scene="tavern"] .tavern-market,
+[data-scene="tavern"] #tavern-owned { overflow: auto; }
+[data-scene="tavern"] .tavern-live-result {
+  min-height: 230px; max-height: 48vh; overflow: auto;
+  font-size: clamp(12px,1vw,16px);
+}
+[data-scene="tavern"] .tavern-live-result li { margin: 5px 0; }
+[data-scene="tavern"] .tavern-market .tavern-rule {
+  position: static; margin: 12px 2px 0; padding-top: 10px;
+  border-top: 1px solid #9b7c56; font-weight: 700;
+}
+[data-scene="tavern"] #tavern-owned .stage-intro {
+  margin: 0 4px 12px; color: #6d5942; line-height: 1.45;
+}
+[data-scene="tavern"] .tavern-stage-list { display: grid; gap: 5px; }
+[data-scene="tavern"] .tavern-stage-list article {
+  padding: 6px 10px;
+  border: 8px solid transparent;
+  border-image: url("./assets/ui/skin-v1/item-card.png") 34 fill / 8px / 0 stretch;
+  background: #ead7b9c9; color: #3d2d1d;
+}
+[data-scene="tavern"] .tavern-stage-list article.is-current {
+  border-image-source: url("./assets/ui/skin-v1/tab-active.png");
+  color: #f5e6c8; filter: drop-shadow(0 0 5px #b77a2077);
+}
+[data-scene="tavern"] .tavern-stage-list header {
+  position: static; display: flex; align-items: center; justify-content: space-between;
+  width: auto; height: auto; margin: 0 0 3px; padding: 0;
+}
+[data-scene="tavern"] .tavern-stage-list header b { color: #6f4516; font-size: clamp(15px,1.25vw,20px); }
+[data-scene="tavern"] .tavern-stage-list article.is-current header b { color: #e6b94e; }
+[data-scene="tavern"] .tavern-stage-list header span {
+  padding: 2px 8px; border-radius: 12px; background: #426226; color: #fff4cf;
+  font-size: 11px; font-weight: 900;
+}
+[data-scene="tavern"] .tavern-stage-list p {
+  display: grid; grid-template-columns: 28px minmax(0,1fr); align-items: center; gap: 8px;
+  margin: 2px 0; font-size: clamp(11px,.9vw,15px); font-weight: 700;
+}
+[data-scene="tavern"] .tavern-stage-list img { width: 25px; height: 25px; object-fit: contain; }
+
 /* Keep the quest cards clear of the persistent return control. */
 [data-scene="quests"] .office-layout { bottom: 11%; }
 [data-scene="quests"] > [data-place="city"] { z-index: 7; }
@@ -2564,7 +2606,7 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
   </section>
   <section class="scene hub" data-scene="hub" hidden><header><div><p class="eyebrow"><span data-bind="day"></span>일차 / 12</p><h2>미지의 도시</h2></div><strong data-bind="cash"></strong></header><div class="hub-stats"><span class="storage-stat">보관칸 <b data-bind="storage"></b></span><span class="stage-stat"><b data-bind="stage"></b>단계 <small>상회 단계</small></span><span class="hub-quests">완료 의뢰 <b data-bind="quests"></b></span><span id="loan-status"></span></div><button id="hub-settings" aria-label="설정">설정</button><div id="market-indices" class="market"></div><div class="place-grid"><button data-place="quests"><span>의뢰소</span></button><button data-place="tavern"><span>술집</span></button><button data-place="catalog"><span>경매장</span></button><button data-place="exchange"><span>거래소</span></button><button data-place="shop"><span>상회</span></button><button data-place="guild"><span>조합</span></button><button data-place="museum"><span>유물 전시관</span></button></div><button id="download-log" class="secondary">플레이 기록 다운로드</button><p id="hub-message" class="status"></p></section>
   <section class="scene place" data-scene="quests" hidden><header><div><p class="eyebrow">QUEST & APPRAISAL OFFICE · <span data-bind="day"></span>일차</p><h2>의뢰소 · 감정소</h2></div><strong data-bind="cash"></strong></header><div class="office-layout"><section><h3>오늘의 의뢰</h3><div id="quest-offers" class="quest-grid"></div></section><section><h3>의뢰 진행 · 정밀 감정</h3><div id="active-quests" class="inventory-list"></div></section></div><p id="quest-message" class="status"></p><button data-place="city" class="secondary">도시로</button></section>
-  <section class="scene place" data-scene="tavern" hidden><header><div><p class="eyebrow">TAVERN · <span data-bind="day"></span>일차</p><h2>술집</h2></div><strong data-bind="cash"></strong></header><section class="tavern-brokers"><h3>정보상 목록</h3><article data-broker="competitors" role="button" tabindex="0"><img src="./assets/ui/tavern/bartender.png" alt=""><div><b>바텐더</b><small>항구의 소식통</small><span></span></div></article><article data-broker="catalog" role="button" tabindex="0"><img src="./assets/ui/tavern/informant.png" alt=""><div><b>정보상</b><small>도시의 뒷골목 정보망</small><span></span></div></article><article data-broker="forecast" role="button" tabindex="0"><img src="./assets/ui/tavern/traveling-merchant.png" alt=""><div><b>여행 상인</b><small>먼 지역을 오가는 상인</small><span></span></div></article></section><section class="tavern-market"><div id="tavern-detail" aria-live="polite"></div><p class="tavern-rule">오늘은 세 정보 중 하나만 구매할 수 있으며 당일 경매 종료까지 유지됩니다.</p></section><aside id="tavern-owned" aria-live="polite"></aside><p id="tavern-message" class="status"></p><button data-place="city" class="secondary return-city">도시로 돌아가기</button></section>
+  <section class="scene place" data-scene="tavern" hidden><header><div><p class="eyebrow">TAVERN · <span data-bind="day"></span>일차</p><h2>술집</h2></div><strong data-bind="cash"></strong></header><section class="tavern-brokers"><h3>정보상 목록</h3><article data-broker="competitors" role="button" tabindex="0"><img src="./assets/ui/tavern/bartender.png" alt=""><div><b>바텐더</b><small>항구의 소식통</small><span></span></div></article><article data-broker="catalog" role="button" tabindex="0"><img src="./assets/ui/tavern/informant.png" alt=""><div><b>정보상</b><small>도시의 뒷골목 정보망</small><span></span></div></article><article data-broker="forecast" role="button" tabindex="0"><img src="./assets/ui/tavern/traveling-merchant.png" alt=""><div><b>여행 상인</b><small>먼 지역을 오가는 상인</small><span></span></div></article></section><section class="tavern-market"><div id="tavern-detail" aria-live="polite"></div></section><aside id="tavern-owned" aria-live="polite"></aside><p id="tavern-message" class="status"></p><button data-place="city" class="secondary return-city">도시로 돌아가기</button></section>
   <section class="scene place" data-scene="exchange" hidden><header><div><p class="eyebrow">EXCHANGE · <span data-bind="day"></span>일차</p><h2>거래소</h2></div><strong data-bind="cash"></strong></header><div id="inventory-list" class="inventory-list"></div><aside id="exchange-market" class="market-board" aria-label="오늘의 시세"></aside><div class="actions"><button id="sell-selected">선택 판매</button></div><p id="exchange-message" class="status"></p><button data-place="city" class="secondary return-city">도시로</button></section>
   <section class="scene place" data-scene="shop" hidden><header><div><p class="eyebrow">상회의 성장과 보유품을 관리합니다.</p><h2>상회</h2></div><strong data-bind="cash"></strong></header><div id="shop-detail" class="place-panel"></div><button id="shop-upgrade">상점 확장</button><p id="shop-message" class="status"></p><button data-place="city" class="secondary return-city">도시로</button></section>
   <section class="scene place" data-scene="guild" hidden><div class="guild-heading"><p class="eyebrow">미판매 물품을 담보로 단기 자금을 조달합니다.</p><h2>조합</h2><strong data-bind="cash"></strong></div><div id="guild-detail" class="place-panel"></div><aside id="guild-collateral-list" aria-label="담보 보유품"></aside><div class="actions"><button id="guild-loan">대출 실행</button><button id="guild-repay" class="secondary">대출 상환</button></div><p id="guild-message" class="status"></p><button id="guild-return" data-place="city" class="secondary return-city">도시로 돌아가기</button></section>
@@ -3113,19 +3155,6 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
       Math.round(item.trueValue * state2.marketPath[item.category][state2.day - 1] * multiplier * (1 - fee))
     ]));
     return { count: items.length, multiplier, revenue: Object.values(sales).reduce((sum, sale) => sum + sale, 0), sales };
-  }
-  function buyInformation(state2, balance2, kind) {
-    const rate = balance2.informationRate?.[kind];
-    if (!Number.isFinite(rate) || Object.keys(state2.information?.[state2.day] || {}).length) return false;
-    const lots = state2.schedule.days[state2.day - 1].lots;
-    const discount = 1 - (balance2.shop.infoDiscount?.[state2.shopStage] ?? 0);
-    const cost = Math.ceil(lots.reduce((sum, lot) => sum + lot.pricing.basePrice, 0) * rate * discount / 100) * 100;
-    if (state2.cash < cost) return false;
-    state2.cash -= cost;
-    state2.information ??= {};
-    state2.information[state2.day] ??= {};
-    state2.information[state2.day][kind] = { cost, boughtAt: Date.now() };
-    return true;
   }
   function acceptQuest(state2, questId, balance2) {
     const quest = state2.questOffers.find((entry) => (entry.offerId === questId || entry.id === questId) && !entry.accepted);
@@ -3837,12 +3866,9 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
     state.phase = "tavern";
     adapter.showScene("tavern");
     syncHeader();
-    const bought = Object.keys(state.information?.[state.day] || {});
     const names = { forecast: "\uB2E4\uC74C \uB0A0 \uACBD\uB9E4\uD488 \uC2DC\uC138", catalog: "\uB2E4\uC74C \uB0A0 \uACBD\uB9E4\uD488 \uC815\uBCF4", competitors: "\uACBD\uC7C1\uC790\uC758 \uAD00\uC2EC \uACBD\uB9E4\uD488" };
     const descriptions = { forecast: "\uC0C1\uD68C \uB2E8\uACC4\uC5D0 \uB530\uB77C \uB2E4\uC74C \uB0A0 \uACBD\uB9E4\uD488 2\uAC1C, 4\uAC1C, 6\uAC1C\uC758 \uC608\uC0C1 \uC2DC\uC138\uB97C \uACF5\uAC1C\uD569\uB2C8\uB2E4.", catalog: "\uC0C1\uD68C \uB2E8\uACC4\uC5D0 \uB530\uB77C \uB2E4\uC74C \uB0A0 \uACBD\uB9E4\uD488\uC758 \uC774\uB984, \uACC4\uC5F4, \uB4F1\uAE09\uC744 \uC21C\uCC28\uC801\uC73C\uB85C \uACF5\uAC1C\uD569\uB2C8\uB2E4.", competitors: "\uC0C1\uD68C \uB2E8\uACC4\uC5D0 \uB530\uB77C \uACBD\uC7C1\uC790 1\uBA85\uBD80\uD130 \uCD5C\uB300 3\uBA85\uAE4C\uC9C0 \uAD00\uC2EC \uACBD\uB9E4\uD488\uC744 \uACF5\uAC1C\uD569\uB2C8\uB2E4." };
     const icons = { forecast: "./assets/ui/tavern/demand-trend.png", catalog: "./assets/ui/tavern/lot-specification.png", competitors: "./assets/ui/tavern/competitor-budget.png" };
-    const precision = { forecast: ["\u2605\u2605\u2605\u2605\u2606", "\uB192\uC74C"], catalog: ["\u2605\u2605\u2605\u2606\u2606", "\uBCF4\uD1B5"], competitors: ["\u2605\u2605\u2605\u2606\u2606", "\uBCF4\uD1B5"] };
-    const lots = state.schedule.days[state.day - 1].lots;
     document.querySelectorAll("[data-broker]").forEach((broker) => {
       const kind = broker.dataset.broker;
       const selectBroker = () => {
@@ -3851,23 +3877,13 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
       };
       broker.classList.toggle("is-active", kind === selectedInfoKind);
       broker.setAttribute("aria-pressed", String(kind === selectedInfoKind));
-      broker.querySelector("span").textContent = bought.includes(kind) ? "\uC624\uB298 \uC120\uD0DD \uC644\uB8CC" : bought.length ? "\uC624\uB298 \uC120\uD0DD \uC885\uB8CC" : "\uC624\uB298 \uBB34\uB8CC \uC120\uD0DD";
+      broker.querySelector("span").textContent = kind === selectedInfoKind ? "\uC815\uBCF4 \uD655\uC778 \uC911" : "\uD655\uC778\uD558\uAE30";
       broker.onclick = selectBroker;
       broker.onkeydown = (event) => {
         if (event.key === "Enter" || event.key === " ") {
           event.preventDefault();
           selectBroker();
         }
-      };
-    });
-    document.querySelectorAll("[data-info]").forEach((button) => {
-      const kind = button.dataset.info;
-      const cost = 0;
-      button.classList.toggle("is-selected", kind === selectedInfoKind);
-      button.innerHTML = `<img class="info-symbol" src="${icons[kind]}" alt=""><span class="info-copy"><strong>${names[kind]}</strong><small>${descriptions[kind]}</small></span><b>\uBB34\uB8CC</b><em>${precision[kind][0]}<small>${precision[kind][1]}</small></em><span class="info-state">${bought.includes(kind) ? "\uC120\uD0DD \uC644\uB8CC" : "\uC120\uD0DD \uAC00\uB2A5"}</span>`;
-      button.onclick = () => {
-        selectedInfoKind = kind;
-        renderTavern();
       };
     });
     const selected = selectedInfoKind;
@@ -3894,19 +3910,14 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
         return `<li><b>${name}</b> \xB7 ${escapeHtml(interest.lot.content?.displayName || interest.lot.baseName)}</li>`;
       }).join("")}</ul>`;
     };
-    const results = informationResult(selected);
-    const owned = bought.includes(selected);
-    document.querySelector("#tavern-detail").innerHTML = `<h3>\uC815\uBCF4 \uC0C1\uC138</h3><div class="detail-heading"><img class="detail-symbol" src="${icons[selected]}" alt=""><div><h2>${names[selected]}</h2><strong>${precision[selected][0]} <small>(${precision[selected][1]})</small></strong></div></div><p>${descriptions[selected]}</p><section class="info-result"><b>\uACF5\uAC1C \uBC94\uC704</b><p>${owned ? "\uC120\uD0DD\uD55C \uC815\uBCF4\uB294 \uC624\uB978\uCABD \uD655\uBCF4 \uC815\uBCF4\uC5D0\uC11C \uD655\uC778\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4." : "\uBB34\uB8CC\uB85C \uC120\uD0DD\uD558\uBA74 \uBD84\uC11D \uACB0\uACFC\uAC00 \uC624\uB978\uCABD\uC5D0 \uACF5\uAC1C\uB429\uB2C8\uB2E4."}</p></section><div class="detail-price"><span>\uAC00\uACA9</span><b>\uBB34\uB8CC</b></div><button id="buy-tavern-info" ${bought.length ? "disabled" : ""}>${owned ? "\uC120\uD0DD \uC644\uB8CC" : bought.length ? "\uC624\uB298 \uC120\uD0DD \uC885\uB8CC" : "\uC815\uBCF4 \uC120\uD0DD"}</button>`;
-    document.querySelector("#buy-tavern-info").onclick = () => {
-      const ok = buyInformation(state, balance, selected);
-      if (ok) {
-        audio.playSfx("information");
-        save();
-      }
-      renderTavern(ok ? "\uC815\uBCF4\uB97C \uC120\uD0DD\uD588\uC2B5\uB2C8\uB2E4." : "\uC624\uB298 \uC120\uD0DD\uD560 \uC815\uBCF4\uAC00 \uC774\uBBF8 \uC815\uD574\uC84C\uC2B5\uB2C8\uB2E4.");
-    };
-    const ownedKind = bought[0];
-    document.querySelector("#tavern-owned").innerHTML = ownedKind ? `<h3>\uC624\uB298 \uD655\uBCF4\uD55C \uC815\uBCF4</h3><div class="owned-heading"><img src="${icons[ownedKind]}" alt=""><div><h2>${names[ownedKind]}</h2><small>${precision[ownedKind][0]} (${precision[ownedKind][1]})</small></div></div><section class="info-result">${informationResult(ownedKind)}</section><p class="owned-note">\uB2F9\uC77C \uACBD\uB9E4 \uC885\uB8CC\uAE4C\uC9C0 \uC720\uC9C0\uB429\uB2C8\uB2E4.</p>` : '<h3>\uC624\uB298 \uD655\uBCF4\uD55C \uC815\uBCF4</h3><p class="empty-info">\uC815\uBCF4\uC0C1\uC744 \uC120\uD0DD\uD558\uACE0 \uC624\uB298 \uC0AC\uC6A9\uD560 \uBB34\uB8CC \uC815\uBCF4 \uD558\uB098\uB97C \uC120\uD0DD\uD558\uC138\uC694.</p>';
+    document.querySelector("#tavern-detail").innerHTML = `<h3>\uC815\uBCF4 \uC0C1\uC138</h3><div class="detail-heading"><img class="detail-symbol" src="${icons[selected]}" alt=""><div><h2>${names[selected]}</h2><small>\uC0C1\uD68C ${state.shopStage}\uB2E8\uACC4 \uACF5\uAC1C \uC815\uBCF4</small></div></div><p>${descriptions[selected]}</p><section class="info-result tavern-live-result">${informationResult(selected)}</section><p class="tavern-rule">\uC815\uBCF4 \uAD6C\uB9E4 \uC5C6\uC774 \uC138 \uC815\uBCF4\uC0C1\uC744 \uC790\uC720\uB86D\uAC8C \uD655\uC778\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4.</p>`;
+    const effectiveStage = Math.max(1, Math.min(3, state.shopStage));
+    const stageRows = [
+      { stage: 1, competitors: "\uACBD\uC7C1\uC790 1\uBA85", catalog: "\uC774\uB984", forecast: "\uC2DC\uC138 2\uAC1C" },
+      { stage: 2, competitors: "\uACBD\uC7C1\uC790 2\uBA85", catalog: "\uC774\uB984 \xB7 \uACC4\uC5F4", forecast: "\uC2DC\uC138 4\uAC1C" },
+      { stage: 3, competitors: "\uACBD\uC7C1\uC790 3\uBA85", catalog: "\uC774\uB984 \xB7 \uACC4\uC5F4 \xB7 \uB4F1\uAE09", forecast: "\uC2DC\uC138 6\uAC1C" }
+    ];
+    document.querySelector("#tavern-owned").innerHTML = `<h3>\uC0C1\uD68C \uB2E8\uACC4\uBCC4 \uC815\uBCF4 \uD655\uC7A5</h3><p class="stage-intro">\uC0C1\uD68C\uB97C \uC131\uC7A5\uC2DC\uD0A4\uBA74 \uC138 \uC815\uBCF4\uC758 \uACF5\uAC1C \uBC94\uC704\uAC00 \uD568\uAED8 \uB113\uC5B4\uC9D1\uB2C8\uB2E4.</p><div class="tavern-stage-list">${stageRows.map((row) => `<article class="${row.stage === effectiveStage ? "is-current" : ""}"><header><b>${row.stage}\uB2E8\uACC4</b>${row.stage === effectiveStage ? "<span>\uD604\uC7AC</span>" : ""}</header><p><img src="${icons.competitors}" alt="">${row.competitors}</p><p><img src="${icons.catalog}" alt="">${row.catalog}</p><p><img src="${icons.forecast}" alt="">${row.forecast}</p></article>`).join("")}</div>`;
     document.querySelector("#tavern-message").textContent = message;
   }
   function renderShop(message = "") {

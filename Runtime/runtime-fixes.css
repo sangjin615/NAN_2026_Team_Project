@@ -1433,6 +1433,48 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
 [data-scene="tavern"] .detail-price { color: #493824; border-top-color: #8c704c; }
 [data-scene="tavern"] .tavern-market .tavern-rule { bottom: 24px; }
 
+/* Tavern no longer sells information: the center shows live data and the right explains upgrades. */
+[data-scene="tavern"] .tavern-market,
+[data-scene="tavern"] #tavern-owned { overflow: auto; }
+[data-scene="tavern"] .tavern-live-result {
+  min-height: 230px; max-height: 48vh; overflow: auto;
+  font-size: clamp(12px,1vw,16px);
+}
+[data-scene="tavern"] .tavern-live-result li { margin: 5px 0; }
+[data-scene="tavern"] .tavern-market .tavern-rule {
+  position: static; margin: 12px 2px 0; padding-top: 10px;
+  border-top: 1px solid #9b7c56; font-weight: 700;
+}
+[data-scene="tavern"] #tavern-owned .stage-intro {
+  margin: 0 4px 12px; color: #6d5942; line-height: 1.45;
+}
+[data-scene="tavern"] .tavern-stage-list { display: grid; gap: 5px; }
+[data-scene="tavern"] .tavern-stage-list article {
+  padding: 6px 10px;
+  border: 8px solid transparent;
+  border-image: url("./assets/ui/skin-v1/item-card.png") 34 fill / 8px / 0 stretch;
+  background: #ead7b9c9; color: #3d2d1d;
+}
+[data-scene="tavern"] .tavern-stage-list article.is-current {
+  border-image-source: url("./assets/ui/skin-v1/tab-active.png");
+  color: #f5e6c8; filter: drop-shadow(0 0 5px #b77a2077);
+}
+[data-scene="tavern"] .tavern-stage-list header {
+  position: static; display: flex; align-items: center; justify-content: space-between;
+  width: auto; height: auto; margin: 0 0 3px; padding: 0;
+}
+[data-scene="tavern"] .tavern-stage-list header b { color: #6f4516; font-size: clamp(15px,1.25vw,20px); }
+[data-scene="tavern"] .tavern-stage-list article.is-current header b { color: #e6b94e; }
+[data-scene="tavern"] .tavern-stage-list header span {
+  padding: 2px 8px; border-radius: 12px; background: #426226; color: #fff4cf;
+  font-size: 11px; font-weight: 900;
+}
+[data-scene="tavern"] .tavern-stage-list p {
+  display: grid; grid-template-columns: 28px minmax(0,1fr); align-items: center; gap: 8px;
+  margin: 2px 0; font-size: clamp(11px,.9vw,15px); font-weight: 700;
+}
+[data-scene="tavern"] .tavern-stage-list img { width: 25px; height: 25px; object-fit: contain; }
+
 /* Keep the quest cards clear of the persistent return control. */
 [data-scene="quests"] .office-layout { bottom: 11%; }
 [data-scene="quests"] > [data-place="city"] { z-index: 7; }
