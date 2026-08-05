@@ -57,11 +57,11 @@
     "offersPerDay": 4
   },
   "informationRate": {
-    "competitors": 0.008,
-    "catalog": 0.007,
-    "forecast": 0.004,
+    "competitors": 0,
+    "catalog": 0,
+    "forecast": 0,
     "order": null,
-    "note": "측정으로 매겼다(6.20). 값어치 = 쓰는 정책 - 안 쓰는 정책, 가격 = 값어치/2.5. 총 기저가 64,000 대비 비율",
+    "note": "2026-08-05 회의 결정: 정보 효용을 먼저 체감할 수 있도록 주점 정보 선택 비용을 무료로 전환",
     "orderNote": "출품 순서는 값이 안 나온다. 정책 셋을 다 태웠고 전부 음수 - 보관칸 3~6, 하루 8점이라 아껴둘 여지가 작다. 보류",
     "previous": {
       "order": 0.005,

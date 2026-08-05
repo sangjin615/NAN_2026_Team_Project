@@ -423,54 +423,51 @@ function renderExchange(message = '') {
 function renderTavern(message = '') {
   clearActionTimer(); audio.playBgm('tavern'); state.phase = 'tavern'; adapter.showScene('tavern'); syncHeader();
   const bought = Object.keys(state.information?.[state.day] || {});
-  const names = { forecast: '내일 동향', catalog: '출품 명세', competitors: '경쟁자 예산' };
-  const descriptions = { forecast: '내일 시장에서 수요가 높을 계열과 등락 방향을 예측합니다.', catalog: '주요 경매품의 예상 등급과 계열 분포를 알려드립니다.', competitors: '경매 참가자들의 보유 예산 범위를 추정합니다.' };
+  const names = { forecast: '다음 날 경매품 시세', catalog: '다음 날 경매품 정보', competitors: '경쟁자의 관심 경매품' };
+  const descriptions = { forecast: '상회 단계에 따라 다음 날 경매품 2개, 4개, 6개의 예상 시세를 공개합니다.', catalog: '상회 단계에 따라 다음 날 경매품의 이름, 계열, 등급을 순차적으로 공개합니다.', competitors: '상회 단계에 따라 경쟁자 1명부터 최대 3명까지 관심 경매품을 공개합니다.' };
   const icons = { forecast: './assets/ui/tavern/demand-trend.png', catalog: './assets/ui/tavern/lot-specification.png', competitors: './assets/ui/tavern/competitor-budget.png' };
   const precision = { forecast: ['★★★★☆', '높음'], catalog: ['★★★☆☆', '보통'], competitors: ['★★★☆☆', '보통'] };
   const lots = state.schedule.days[state.day - 1].lots;
-  const totalBase = lots.reduce((sum, lot) => sum + lot.pricing.basePrice, 0);
   document.querySelectorAll('[data-broker]').forEach((broker) => {
     const kind = broker.dataset.broker;
     const selectBroker = () => { selectedInfoKind = kind; renderTavern(); };
     broker.classList.toggle('is-active', kind === selectedInfoKind);
     broker.setAttribute('aria-pressed', String(kind === selectedInfoKind));
-    broker.querySelector('span').textContent = bought.includes(kind) ? '오늘 구매 완료' : bought.length ? '오늘 구매 종료' : '오늘 구매 가능';
+    broker.querySelector('span').textContent = bought.includes(kind) ? '오늘 선택 완료' : bought.length ? '오늘 선택 종료' : '오늘 무료 선택';
     broker.onclick = selectBroker;
     broker.onkeydown = (event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); selectBroker(); } };
   });
   document.querySelectorAll('[data-info]').forEach((button) => {
     const kind = button.dataset.info;
-    const discount = 1 - (balance.shop.infoDiscount?.[state.shopStage] ?? 0);
-    const cost = Math.ceil(totalBase * balance.informationRate[kind] * discount / 100) * 100;
+    const cost = 0;
     button.classList.toggle('is-selected', kind === selectedInfoKind);
-    button.innerHTML = `<img class="info-symbol" src="${icons[kind]}" alt=""><span class="info-copy"><strong>${names[kind]}</strong><small>${descriptions[kind]}</small></span><b>${money(cost)}</b><em>${precision[kind][0]}<small>${precision[kind][1]}</small></em><span class="info-state">${bought.includes(kind) ? '구매 완료' : '구매 가능'}</span>`;
+    button.innerHTML = `<img class="info-symbol" src="${icons[kind]}" alt=""><span class="info-copy"><strong>${names[kind]}</strong><small>${descriptions[kind]}</small></span><b>무료</b><em>${precision[kind][0]}<small>${precision[kind][1]}</small></em><span class="info-state">${bought.includes(kind) ? '선택 완료' : '선택 가능'}</span>`;
     button.onclick = () => { selectedInfoKind = kind; renderTavern(); };
   });
   const selected = selectedInfoKind;
-  const discount = 1 - (balance.shop.infoDiscount?.[state.shopStage] ?? 0);
-  const selectedCost = Math.ceil(totalBase * balance.informationRate[selected] * discount / 100) * 100;
   const categoryNames = { CER: '도자기', CLK: '시계', PNT: '회화', BOK: '고서', MET: '금은세공', JEW: '장신구' };
   const informationResult = (kind) => {
+    const stage = Math.max(1, Math.min(3, state.shopStage));
+    const nextDayIndex = state.day;
+    const nextLots = state.schedule.days[nextDayIndex]?.lots || [];
+    if (!nextLots.length) return '<p>마지막 날에는 다음 날 경매 정보가 없습니다.</p>';
     if (kind === 'forecast') {
-      const forecastDayIndex = Math.min(state.day, state.schedule.days.length - 1);
-      const ranked = Object.entries(state.marketPath).map(([key, path]) => [key, path[forecastDayIndex]]).sort((a, b) => b[1] - a[1]).slice(0, 2);
-      return `<p><b>${forecastDayIndex + 1}일차 예상</b></p><ul>${ranked.map(([key, value]) => `<li>${categoryNames[key]} 수요 <b>${Math.round(value * 100)}%</b> · ${value >= 1 ? '상승 우세' : '하락 주의'}</li>`).join('')}</ul>`;
+      const visible = nextLots.slice(0, stage * 2);
+      return `<p><b>${nextDayIndex + 1}일차 예상 시세 · ${visible.length}개 공개</b></p><ul>${visible.map((lot) => { const market = state.marketPath[lot.category]?.[nextDayIndex] ?? 1; return `<li>${escapeHtml(lot.content?.displayName || lot.baseName)} <b>${money(lot.pricing.basePrice * market)}</b></li>`; }).join('')}</ul>`;
     }
     if (kind === 'catalog') {
-      const grades = Object.entries(Object.groupBy(lots, (lot) => lot.grade)).map(([grade, entries]) => `${gradeLabel(grade)} ${entries.length}점`).join(' · ');
-      const families = Object.entries(Object.groupBy(lots, (lot) => lot.category)).map(([key, entries]) => `${categoryNames[key]} ${entries.length}`).join(' · ');
-      return `<p><b>예상 등급</b><br>${grades}</p><p><b>계열 분포</b><br>${families}</p>`;
+      return `<p><b>${nextDayIndex + 1}일차 경매품</b></p><ul>${nextLots.map((lot) => `<li><b>${escapeHtml(lot.content?.displayName || lot.baseName)}</b>${stage >= 2 ? ` · ${categoryNames[lot.category]}` : ''}${stage >= 3 ? ` · ${gradeLabel(lot.grade)}` : ''}</li>`).join('')}</ul>`;
     }
-    const estimates = lots.flatMap((lot) => botBidForLot({ lot, day: state.day, balance, marketIndex: state.marketPath[lot.category][state.day - 1], seed: state.seed }));
+    const estimates = nextLots.flatMap((lot) => botBidForLot({ lot, day: state.day + 1, balance, marketIndex: state.marketPath[lot.category][nextDayIndex], seed: state.seed }).map((bot) => ({ ...bot, lot })));
     const grouped = Object.groupBy(estimates, (bot) => bot.name);
-    return `<ul>${Object.entries(grouped).map(([name, entries]) => { const values = entries.map((entry) => entry.maxBid); return `<li><b>${name}</b> ${money(Math.min(...values))} ~ ${money(Math.max(...values))}</li>`; }).join('')}</ul>`;
+    return `<p><b>${stage}명 공개</b></p><ul>${Object.entries(grouped).slice(0, stage).map(([name, entries]) => { const interest = [...entries].sort((a, b) => b.maxBid - a.maxBid)[0]; return `<li><b>${name}</b> · ${escapeHtml(interest.lot.content?.displayName || interest.lot.baseName)}</li>`; }).join('')}</ul>`;
   };
   const results = informationResult(selected);
   const owned = bought.includes(selected);
-  document.querySelector('#tavern-detail').innerHTML = `<h3>정보 상세</h3><div class="detail-heading"><img class="detail-symbol" src="${icons[selected]}" alt=""><div><h2>${names[selected]}</h2><strong>${precision[selected][0]} <small>(${precision[selected][1]})</small></strong></div></div><p>${descriptions[selected]}</p><section class="info-result"><b>공개 범위</b><p>${owned ? '구매한 정보는 오른쪽 확보 정보에서 확인할 수 있습니다.' : '구매하면 추정 범위와 분석 결과가 오른쪽에 공개됩니다.'}</p></section><div class="detail-price"><span>가격</span><b>${money(selectedCost)}</b></div><button id="buy-tavern-info" ${bought.length || state.cash < selectedCost ? 'disabled' : ''}>${owned ? '구매 완료' : bought.length ? '오늘 구매 종료' : '구매하기'}</button>`;
-  document.querySelector('#buy-tavern-info').onclick = () => { const ok = buyInformation(state, balance, selected); if (ok) { audio.playSfx('information'); save(); } renderTavern(ok ? '정보를 구매했습니다.' : '이미 구매했거나 현금이 부족합니다.'); };
+  document.querySelector('#tavern-detail').innerHTML = `<h3>정보 상세</h3><div class="detail-heading"><img class="detail-symbol" src="${icons[selected]}" alt=""><div><h2>${names[selected]}</h2><strong>${precision[selected][0]} <small>(${precision[selected][1]})</small></strong></div></div><p>${descriptions[selected]}</p><section class="info-result"><b>공개 범위</b><p>${owned ? '선택한 정보는 오른쪽 확보 정보에서 확인할 수 있습니다.' : '무료로 선택하면 분석 결과가 오른쪽에 공개됩니다.'}</p></section><div class="detail-price"><span>가격</span><b>무료</b></div><button id="buy-tavern-info" ${bought.length ? 'disabled' : ''}>${owned ? '선택 완료' : bought.length ? '오늘 선택 종료' : '정보 선택'}</button>`;
+  document.querySelector('#buy-tavern-info').onclick = () => { const ok = buyInformation(state, balance, selected); if (ok) { audio.playSfx('information'); save(); } renderTavern(ok ? '정보를 선택했습니다.' : '오늘 선택할 정보가 이미 정해졌습니다.'); };
   const ownedKind = bought[0];
-  document.querySelector('#tavern-owned').innerHTML = ownedKind ? `<h3>오늘 확보한 정보</h3><div class="owned-heading"><img src="${icons[ownedKind]}" alt=""><div><h2>${names[ownedKind]}</h2><small>${precision[ownedKind][0]} (${precision[ownedKind][1]})</small></div></div><section class="info-result">${informationResult(ownedKind)}</section><p class="owned-note">당일 경매 종료까지 유지됩니다.</p>` : '<h3>오늘 확보한 정보</h3><p class="empty-info">정보상을 선택하고 오늘 사용할 정보 하나를 구매하세요.</p>';
+  document.querySelector('#tavern-owned').innerHTML = ownedKind ? `<h3>오늘 확보한 정보</h3><div class="owned-heading"><img src="${icons[ownedKind]}" alt=""><div><h2>${names[ownedKind]}</h2><small>${precision[ownedKind][0]} (${precision[ownedKind][1]})</small></div></div><section class="info-result">${informationResult(ownedKind)}</section><p class="owned-note">당일 경매 종료까지 유지됩니다.</p>` : '<h3>오늘 확보한 정보</h3><p class="empty-info">정보상을 선택하고 오늘 사용할 무료 정보 하나를 선택하세요.</p>';
   document.querySelector('#tavern-message').textContent = message;
 }
 
