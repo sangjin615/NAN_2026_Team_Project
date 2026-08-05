@@ -1791,16 +1791,16 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
   padding: 0; border: 0; border-image: none; background: transparent; box-shadow: none;
 }
 [data-scene="quests"] .office-layout .quest-grid {
-  gap: 2%; grid-template-rows: repeat(3,minmax(0,27%));
-  align-content: start;
+  gap: 1%; grid-template-rows: repeat(5,minmax(0,1fr));
+  align-content: stretch; overflow: hidden;
 }
 [data-scene="quests"] .quest-grid article {
-  padding: 8px 23% 8px 17%;
-  border: 10px solid transparent;
-  border-image: url("./assets/ui/skin-v1/panel-parchment.png") 48 fill / 10px / 0 stretch;
+  min-height: 0; padding: 4px 22% 4px 15%;
+  border: 7px solid transparent;
+  border-image: url("./assets/ui/skin-v1/panel-parchment.png") 48 fill / 7px / 0 stretch;
   background: #f0dfc6e8; background-clip: padding-box;
   color: #281d12; box-shadow: 0 4px 7px #0003;
-  font-size: clamp(10px,.88vw,14px); line-height: 1.35;
+  font-size: clamp(8px,.72vw,12px); line-height: 1.12;
 }
 [data-scene="quests"] .quest-grid article::before {
   content: "◆"; position: absolute; left: 4%; top: 50%; transform: translateY(-50%);
@@ -1808,11 +1808,11 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
   border: 2px solid #6b4a25; background: #30251b; color: #d8a63f;
   font-size: clamp(14px,1.8vw,28px);
 }
-[data-scene="quests"] .quest-grid article > b { font-size: clamp(12px,1.08vw,17px); }
+[data-scene="quests"] .quest-grid article > b { font-size: clamp(10px,.92vw,15px); }
 [data-scene="quests"] .quest-grid article > small { color: #574735; }
 [data-scene="quests"] .quest-grid article > span { color: #6b431d; font-weight: 800; }
 [data-scene="quests"] .quest-grid article button {
-  right: 3%; width: 18%; height: 34%; min-width: 0; min-height: 0;
+  right: 3%; width: 18%; height: 42%; min-width: 0; min-height: 0;
   border-width: 6px; border-image-width: 6px; padding: 0 4px;
   font-size: clamp(9px,.82vw,13px);
 }

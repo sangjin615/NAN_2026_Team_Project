@@ -21,11 +21,13 @@ export function createMarketPath(balance, seed) {
 }
 
 export function createDailyQuestOffers(balance, day, seed, relics = []) {
-  const count = relics.includes('royal-charter') ? 5 : balance.quests?.offering?.perDay || 3;
+  const count = Math.min(5, relics.includes('royal-charter') ? 5 : balance.quests?.offering?.perDay || 5);
   const enabledQuestIds = QUEST_IDS.filter((id) => balance.quests[id]?.enabled !== false);
   const rewardPolicy = balance.quests?.rewardPolicy || {};
   const families = shuffle(['CER', 'CLK', 'PNT', 'BOK', 'MET', 'JEW'], createRng(`${seed}:quest-targets:${day}`));
-  return shuffle(enabledQuestIds, createRng(`${seed}:quests:${day}`)).slice(0, count).map((id, index) => ({
+  const shuffledIds = shuffle(enabledQuestIds, createRng(`${seed}:quests:${day}`));
+  const dailyIds = Array.from({ length: count }, (_, index) => shuffledIds[index % shuffledIds.length]);
+  return dailyIds.map((id, index) => ({
     offerId: `day-${day}-${id}-${index + 1}`, offeredDay: day, acceptDeadlineDay: Math.min(12, day + 1),
     id, fee: balance.quests[id].fee, reward: balance.quests[id].reward,
     rewardMode: rewardPolicy.mode, completionBonus: rewardPolicy.completionBonus,
@@ -35,13 +37,7 @@ export function createDailyQuestOffers(balance, day, seed, relics = []) {
 }
 
 export function refreshDailyQuestOffers(state, balance, relics = []) {
-  const previous = (state.questOffers || []).filter((quest) => balance.quests[quest.id]?.enabled !== false).map((quest) => {
-    const offeredDay = quest.offeredDay ?? Math.max(1, state.day - 1);
-    return { ...quest, offerId: quest.offerId || `legacy-day-${offeredDay}-${quest.id}`, offeredDay, acceptDeadlineDay: quest.acceptDeadlineDay ?? Math.min(12, offeredDay + 1) };
-  });
-  const carried = previous.filter((quest) => !quest.accepted && state.day <= quest.acceptDeadlineDay);
-  const fresh = createDailyQuestOffers(balance, state.day, state.seed, relics);
-  state.questOffers = [...carried, ...fresh];
+  state.questOffers = createDailyQuestOffers(balance, state.day, state.seed, relics);
   return state.questOffers;
 }
 
