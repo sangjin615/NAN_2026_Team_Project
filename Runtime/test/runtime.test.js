@@ -106,6 +106,21 @@ test('V6.2 quests complete only after a matching inventory item is delivered', (
   assert.equal(state.completedQuestCount, 1);
 });
 
+test('delivery quest reward refunds base price and fee, then adds a fixed 3000 completion bonus', () => {
+  const schedule = createRunSchedule({ catalog, balance, seed: 'delivery-reward' });
+  const sets = createSetGraph(schedule, 'delivery-reward');
+  const state = createInitialState({ schedule, sets, balance, startCash: 1000000 });
+  const lot = schedule.days[0].lots[0];
+  state.shopStage = 3;
+  state.inventory.push({ lotId: lot.lotId, name: lot.baseName, paid: 1, basePrice: 4000, trueValue: lot.pricing.trueValue, category: lot.category, grade: lot.grade, sold: false, collateral: false });
+  state.questOffers = [{ id: 'designated', fee: 400, reward: 1, rewardMode: 'deliveredBasePlusFeePlusBonus', completionBonus: 3000, accepted: false, targetCategory: lot.category }];
+  assert.equal(acceptQuest(state, 'designated', balance), true);
+  const beforeDelivery = state.cash;
+  assert.equal(deliverQuestItem(state, 'designated', lot.lotId), true);
+  assert.equal(state.cash - beforeDelivery, 7400);
+  assert.equal(state.activeQuests[0].paidReward, 7400);
+});
+
 test('V6.2 loan unlocks at stage two and early repayment costs principal only', () => {
   const schedule = createRunSchedule({ catalog, balance, seed: 'loan-v62' });
   const state = createInitialState({ schedule, sets: createSetGraph(schedule, 'loan-v62'), balance, startCash: 100000 });

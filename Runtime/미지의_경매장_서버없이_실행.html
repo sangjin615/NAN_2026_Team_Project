@@ -2878,11 +2878,14 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
   }
   function createDailyQuestOffers(balance2, day, seed, relics = []) {
     const count = relics.includes("royal-charter") ? 5 : balance2.quests?.offering?.perDay || 3;
+    const rewardPolicy = balance2.quests?.rewardPolicy || { mode: "deliveredBasePlusFeePlusBonus", completionBonus: 3e3 };
     const families = shuffle(["CER", "CLK", "PNT", "BOK", "MET", "JEW"], createRng(`${seed}:quest-targets:${day}`));
     return shuffle(QUEST_IDS, createRng(`${seed}:quests:${day}`)).slice(0, count).map((id, index) => ({
       id,
       fee: balance2.quests[id].fee,
       reward: balance2.quests[id].reward,
+      rewardMode: rewardPolicy.mode,
+      completionBonus: rewardPolicy.completionBonus,
       rule: balance2.quests[id].rule,
       accepted: false,
       completed: false,
@@ -2997,7 +3000,9 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
     quest.completed = true;
     quest.deliveredLotId = lotId;
     quest.completedDay = state2.day;
-    const reward = Math.round(quest.reward * (1 + (state2.balanceQuestBonus?.[state2.shopStage] ?? 0)));
+    const shopBonus = state2.balanceQuestBonus?.[state2.shopStage] ?? 0;
+    const reward = quest.rewardMode === "deliveredBasePlusFeePlusBonus" ? item.basePrice + quest.fee + (quest.completionBonus || 0) : Math.round(quest.reward * (1 + shopBonus));
+    quest.paidReward = reward;
     state2.cash += reward;
     state2.completedQuestCount += 1;
     return true;
@@ -3500,6 +3505,9 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
     }[questId] || "quest-board";
     return `./assets/ui/quest-icons/${icon}.png`;
   }
+  function questRewardLabel(quest) {
+    return quest.rewardMode === "deliveredBasePlusFeePlusBonus" ? `물품 기준가 + 수주비 + ${money(quest.completionBonus || 0)}` : money(quest.reward);
+  }
   function renderQuestOffice(message = "") {
     clearActionTimer();
     audio.playBgm("workplace");
@@ -3507,7 +3515,7 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
     adapter.showScene("quests");
     syncHeader();
     document.querySelector("#quest-offers").innerHTML = state.questOffers.map((quest) => `
-    <article><img class="quest-icon" src="${questIconUrl(quest.id)}" alt=""><b>${questTitle(quest)}</b><small>${questRequirement(quest)}</small><span>\uC218\uC8FC\uBE44 ${money(quest.fee)} \xB7 \uBCF4\uC0C1 ${money(quest.reward)}</span>
+    <article><img class="quest-icon" src="${questIconUrl(quest.id)}" alt=""><b>${questTitle(quest)}</b><small>${questRequirement(quest)}</small><span>\uC218\uC8FC\uBE44 ${money(quest.fee)} \xB7 \uBCF4\uC0C1 ${questRewardLabel(quest)}</span>
     <button data-quest="${quest.id}" ${quest.accepted ? "disabled" : ""}>${quest.accepted ? "\uC218\uC8FC \uC644\uB8CC" : "\uC218\uC8FC"}</button></article>`).join("");
     const active = state.activeQuests.filter((quest) => !quest.completed);
     const activeMarkup = active.length ? active.map((quest) => {

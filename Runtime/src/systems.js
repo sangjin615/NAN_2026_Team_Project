@@ -22,9 +22,12 @@ export function createMarketPath(balance, seed) {
 
 export function createDailyQuestOffers(balance, day, seed, relics = []) {
   const count = relics.includes('royal-charter') ? 5 : balance.quests?.offering?.perDay || 3;
+  const rewardPolicy = balance.quests?.rewardPolicy || {};
   const families = shuffle(['CER', 'CLK', 'PNT', 'BOK', 'MET', 'JEW'], createRng(`${seed}:quest-targets:${day}`));
   return shuffle(QUEST_IDS, createRng(`${seed}:quests:${day}`)).slice(0, count).map((id, index) => ({
     id, fee: balance.quests[id].fee, reward: balance.quests[id].reward,
+    rewardMode: rewardPolicy.mode,
+    completionBonus: rewardPolicy.completionBonus,
     rule: balance.quests[id].rule, accepted: false, completed: false,
     targetCategory: families[index % families.length], acceptedDay: null, deadlineDay: null
   }));
@@ -174,7 +177,11 @@ export function deliverQuestItem(state, questId, lotId) {
   if (!quest || state.day > quest.deadlineDay || !questMatchesItem(quest, item)) return false;
   item.delivered = true; item.sold = true; item.salePrice = 0;
   quest.completed = true; quest.deliveredLotId = lotId; quest.completedDay = state.day;
-  const reward = Math.round(quest.reward * (1 + (state.balanceQuestBonus?.[state.shopStage] ?? 0)));
+  const shopBonus = state.balanceQuestBonus?.[state.shopStage] ?? 0;
+  const reward = quest.rewardMode === 'deliveredBasePlusFeePlusBonus'
+    ? item.basePrice + quest.fee + (quest.completionBonus || 0)
+    : Math.round(quest.reward * (1 + shopBonus));
+  quest.paidReward = reward;
   state.cash += reward; state.completedQuestCount += 1;
   return true;
 }
