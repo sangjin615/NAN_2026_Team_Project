@@ -75,7 +75,8 @@ body {
 [data-scene="shop"] { --mockup: url("./assets/scene-backgrounds/shop.png"); }
 [data-scene="guild"] { --mockup: url("./assets/scene-backgrounds/guild.png"); }
 [data-scene="museum"] { --mockup: url("./assets/scene-backgrounds/museum.png"); }
-[data-scene="catalog"], [data-scene="auction"] { --mockup: url("./assets/scene-backgrounds/auction.png"); }
+[data-scene="catalog"] { --mockup: url("./assets/scene-backgrounds/auction-entrance.png"); }
+[data-scene="auction"] { --mockup: url("./assets/scene-backgrounds/auction.png"); }
 [data-scene="settlement"] { --mockup: url("./assets/scene-backgrounds/settlement.png"); }
 [data-scene="relic"] { --mockup: url("./assets/scene-backgrounds/relic.png"); }
 [data-scene="result"] { --mockup: url("./assets/scene-backgrounds/result-success.png"); }
@@ -2009,7 +2010,8 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
    The catalog is intentionally excluded because its final composition is user-owned. */
 
 /* Auction catalog: eight daily LOTs are presented as a two-page auction folio. */
-[data-scene="catalog"]::after { background: #06040238; }
+[data-scene="catalog"]::before { background-size: cover; background-position: center; }
+[data-scene="catalog"]::after { background: #06040242; }
 [data-scene="catalog"] .catalog-grid {
   position: absolute; left: 15%; right: 15%; top: 9%; bottom: 8%;
   display: block; margin: 0; padding: 0; overflow: visible;
