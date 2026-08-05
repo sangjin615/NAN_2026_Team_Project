@@ -2300,6 +2300,20 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
 #market-indices .market-quote i { display: inline-flex; align-items: center; justify-content: center; }
 #exchange-market .market-rates span { display: inline-flex; align-items: center; justify-content: flex-end; gap: 3px; }
 
+/* One clean ribbon overlay replaces the inconsistent baked slot-number badges. */
+[data-scene="save"][data-mode="continue"] .save-slot .slot-number,
+[data-scene="save"][data-mode="continue"] .save-slot.slot-3:not(.is-empty) .slot-number {
+  position: absolute; left: 3.15%; top: 5%; z-index: 4;
+  display: grid; place-items: start center;
+  width: 7.2%; height: auto; aspect-ratio: 434 / 557; box-sizing: border-box;
+  overflow: visible; clip: auto; white-space: normal;
+  padding-top: clamp(9px,1.05vw,17px); border: 0; border-radius: 0;
+  background: url("./assets/ui/save-slots/slot-number-ribbon.png") center top / 100% 100% no-repeat;
+  color: #f8edda; font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(14px,1.75vw,29px); line-height: 1; text-shadow: 0 2px 2px #140c08;
+  filter: drop-shadow(0 3px 2px #0007);
+}
+
 /* Keep the four upper facility nameplates crisp at every viewport size.
    The old rule stretched the complete bitmap; border-image only stretches its center. */
 [data-scene="hub"] .place-grid button:is(
