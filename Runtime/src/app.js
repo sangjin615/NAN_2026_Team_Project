@@ -477,7 +477,11 @@ function renderShop(message = '') {
   const cost = maxed ? 0 : balance.shop.upgradeCost[next - 1];
   const required = maxed ? 0 : balance.shop.questRequirement[next - 1];
   const nextStorage = maxed ? state.storage : balance.shop.storage[next];
-  const nextDiscount = maxed ? balance.shop.infoDiscount[state.shopStage] : balance.shop.infoDiscount[next];
+  const benefitStage = maxed ? state.shopStage : next;
+  const visibleCompetitors = Math.min(3, benefitStage);
+  const visiblePrices = Math.min(6, benefitStage * 2);
+  const catalogScope = benefitStage === 1 ? '이름' : benefitStage === 2 ? '이름 · 계열' : '이름 · 계열 · 등급';
+  const auctionFee = Math.round((balance.shop.auctionFee?.[benefitStage] || 0) * 100);
   const maxStorage = Math.max(...balance.shop.storage);
   const inventory = ownedItems();
   const slots = Array.from({ length: maxStorage }, (_, index) => {
@@ -491,7 +495,7 @@ function renderShop(message = '') {
   }).join('');
   const questReady = state.completedQuestCount >= required;
   const cashReady = state.cash >= cost;
-  document.querySelector('#shop-detail').innerHTML = `<section class="shop-upgrade-panel"><header><h3>${maxed ? '상회 최고 단계' : `상회 ${next}단계 승급 조건`}</h3></header><ul class="shop-requirements"><li class="${questReady ? 'is-ready' : ''}"><span>▣ 의뢰 달성 조건</span><b>${state.completedQuestCount} / ${required}건</b></li><li class="${cashReady ? 'is-ready' : ''}"><span>● 승급비</span><b>${money(cost)}</b></li><li class="${cashReady ? 'is-ready' : ''}"><span>● 현재 자산</span><b>${money(state.cash)}</b></li></ul><h4>다음 단계 효과</h4><ul class="shop-benefits"><li>보관함 +${Math.max(0, nextStorage - state.storage)}</li><li>정보 구매 비용 ${Math.round((nextDiscount || 0) * 100)}% 할인</li>${next >= 3 ? '<li>유물 전시관 해금 확대</li>' : '<li>의뢰 동시 수주 강화</li>'}</ul></section><section class="shop-inventory-panel"><header><div><small>STORAGE</small><h3>보유품 관리</h3></div><b>${inventory.length} / ${state.storage}</b></header><div class="shop-storage-grid">${slots}</div><p class="shop-storage-note">※ 보유품 슬롯은 상회 단계에 따라 증가합니다.</p></section>`;
+  document.querySelector('#shop-detail').innerHTML = `<section class="shop-upgrade-panel"><header><h3>${maxed ? '상회 최고 단계 달성' : `상회 ${next}단계 승급 조건`}</h3></header><ul class="shop-requirements"><li class="${questReady ? 'is-ready' : ''}"><span>▣ 완료 의뢰</span><b>${state.completedQuestCount} / ${required}건</b></li><li class="${cashReady ? 'is-ready' : ''}"><span>● 승급 비용</span><b>${money(cost)}</b></li><li class="${cashReady ? 'is-ready' : ''}"><span>● 보유 자산</span><b>${money(state.cash)}</b></li></ul><h4>${maxed ? '현재 적용 효과' : `${next}단계 적용 효과`}</h4><ul class="shop-benefits"><li>보관칸 ${nextStorage}칸</li><li>경매 수수료 ${auctionFee}%</li><li>경쟁자 관심 정보 ${visibleCompetitors}명 공개</li><li>다음 날 경매품: ${catalogScope}</li><li>다음 날 시세 ${visiblePrices}개 공개</li></ul></section><section class="shop-inventory-panel"><header><div><small>STORAGE</small><h3>보유품 관리</h3></div><b>${inventory.length} / ${state.storage}</b></header><div class="shop-storage-grid">${slots}</div><p class="shop-storage-note">※ 보관칸은 상회 단계에 따라 3칸에서 최대 6칸까지 확장됩니다.</p></section>`;
   document.querySelector('#shop-upgrade').textContent = maxed ? '최고 단계 달성' : `${next}단계로 승급하기`;
   document.querySelector('#shop-upgrade').disabled = maxed || state.cash < cost || state.completedQuestCount < required;
   showShopMessage(message);
