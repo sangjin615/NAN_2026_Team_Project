@@ -22,9 +22,10 @@ export function createMarketPath(balance, seed) {
 
 export function createDailyQuestOffers(balance, day, seed, relics = []) {
   const count = relics.includes('royal-charter') ? 5 : balance.quests?.offering?.perDay || 3;
+  const enabledQuestIds = QUEST_IDS.filter((id) => balance.quests[id]?.enabled !== false);
   const rewardPolicy = balance.quests?.rewardPolicy || {};
   const families = shuffle(['CER', 'CLK', 'PNT', 'BOK', 'MET', 'JEW'], createRng(`${seed}:quest-targets:${day}`));
-  return shuffle(QUEST_IDS, createRng(`${seed}:quests:${day}`)).slice(0, count).map((id, index) => ({
+  return shuffle(enabledQuestIds, createRng(`${seed}:quests:${day}`)).slice(0, count).map((id, index) => ({
     offerId: `day-${day}-${id}-${index + 1}`, offeredDay: day, acceptDeadlineDay: Math.min(12, day + 1),
     id, fee: balance.quests[id].fee, reward: balance.quests[id].reward,
     rewardMode: rewardPolicy.mode, completionBonus: rewardPolicy.completionBonus,
@@ -34,7 +35,7 @@ export function createDailyQuestOffers(balance, day, seed, relics = []) {
 }
 
 export function refreshDailyQuestOffers(state, balance, relics = []) {
-  const previous = (state.questOffers || []).map((quest) => {
+  const previous = (state.questOffers || []).filter((quest) => balance.quests[quest.id]?.enabled !== false).map((quest) => {
     const offeredDay = quest.offeredDay ?? Math.max(1, state.day - 1);
     return { ...quest, offerId: quest.offerId || `legacy-day-${offeredDay}-${quest.id}`, offeredDay, acceptDeadlineDay: quest.acceptDeadlineDay ?? Math.min(12, offeredDay + 1) };
   });
@@ -167,7 +168,7 @@ export function buyInformation(state, balance, kind) {
 
 export function acceptQuest(state, questId, balance) {
   const quest = state.questOffers.find((entry) => (entry.offerId === questId || entry.id === questId) && !entry.accepted);
-  if (!quest || state.cash < quest.fee) return false;
+  if (!quest || balance.quests[quest.id]?.enabled === false || state.cash < quest.fee) return false;
   state.cash -= quest.fee; quest.accepted = true;
   state.activeQuests.push({ ...quest, acceptedDay: state.day, deadlineDay: Math.min(12, state.day + 2) });
   return true;

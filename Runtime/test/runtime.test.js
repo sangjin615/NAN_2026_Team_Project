@@ -160,6 +160,17 @@ test('daily quest refresh keeps yesterday offers and gives new offers distinct i
   assert.equal(new Set(state.questOffers.map((quest) => quest.offerId)).size, state.questOffers.length);
 });
 
+test('disabled bargain quests are not generated or carried into a new day', () => {
+  const schedule = createRunSchedule({ catalog, balance, seed: 'no-bargain' });
+  const state = createInitialState({ schedule, sets: createSetGraph(schedule, 'no-bargain'), balance, startCash: 100000 });
+  assert.equal(state.questOffers.some((quest) => quest.id === 'bargain'), false);
+  state.questOffers.push({ id: 'bargain', offerId: 'legacy-bargain', offeredDay: 1, acceptDeadlineDay: 2, accepted: false, fee: 400 });
+  assert.equal(acceptQuest(state, 'legacy-bargain', balance), false);
+  state.day = 2;
+  refreshDailyQuestOffers(state, balance, []);
+  assert.equal(state.questOffers.some((quest) => quest.id === 'bargain'), false);
+});
+
 test('V6.2 loan unlocks at stage two and early repayment costs principal only', () => {
   const schedule = createRunSchedule({ catalog, balance, seed: 'loan-v62' });
   const state = createInitialState({ schedule, sets: createSetGraph(schedule, 'loan-v62'), balance, startCash: 100000 });

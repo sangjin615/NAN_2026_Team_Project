@@ -226,6 +226,7 @@
       "previousReward2": 2000
     },
     "bargain": {
+      "enabled": false,
       "fee": 400,
       "reward": 2350,
       "previous": 3000,

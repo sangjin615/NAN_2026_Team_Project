@@ -264,11 +264,11 @@ function renderHub(message = '') {
 
 function questTitle(quest) {
   const names = { designated: '지정 계열', multi: '희귀품 인도', bargain: '저가 매입품', restraint: '실속품 인도', block: '고등급 인도' };
-  return `${names[quest.id] || quest.id}${quest.id === 'designated' ? ` · ${quest.targetCategory}` : ''}`;
+  return `${names[quest.id] || quest.id}${quest.id === 'designated' ? ` · ${categoryLabel(quest.targetCategory)}` : ''}`;
 }
 
 function questRequirement(quest) {
-  if (quest.id === 'designated') return `${quest.targetCategory} 계열 물품 1개를 인도한다.`;
+  if (quest.id === 'designated') return `${categoryLabel(quest.targetCategory)} 계열 물품 1개를 인도한다.`;
   if (quest.id === 'multi') return '희귀 등급 이상 물품 1개를 인도한다.';
   if (quest.id === 'bargain') return '기준가의 85% 이하에 낙찰한 물품을 인도한다.';
   if (quest.id === 'restraint') return '일반 또는 희귀 등급 물품 1개를 인도한다.';
@@ -315,7 +315,8 @@ function showShopMessage(message) {
 
 function renderQuestOffice(message = '') {
   clearActionTimer(); audio.playBgm('workplace'); state.phase = 'quests'; adapter.showScene('quests'); syncHeader();
-  document.querySelector('#quest-offers').innerHTML = state.questOffers.map((quest) => `
+  const visibleQuestOffers = state.questOffers.filter((quest) => balance.quests[quest.id]?.enabled !== false);
+  document.querySelector('#quest-offers').innerHTML = visibleQuestOffers.map((quest) => `
     <article><img class="quest-icon" src="${questIconUrl(quest.id)}" alt=""><b>${questTitle(quest)}</b><small>${questRequirement(quest)}</small><span>수주비 ${money(quest.fee)} · 보상 ${questRewardLabel(quest)}</span>
     <button data-quest="${quest.offerId || quest.id}" ${quest.accepted ? 'disabled' : ''}>${quest.accepted ? '수주 완료' : '수주'}</button></article>`).join('');
   const active = state.activeQuests.filter((quest) => !quest.completed);
