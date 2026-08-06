@@ -3113,6 +3113,25 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
   transform: none;
 }
 
+/* Five quest offers must remain inside the painted paper without scrolling. */
+[data-scene="quests"] .office-layout .quest-grid:has(article:nth-child(5)) {
+  top: 7%; bottom: 3%; gap: .65%;
+  grid-template-rows: repeat(5, minmax(0, 1fr));
+}
+[data-scene="quests"] .quest-grid:has(article:nth-child(5)) article {
+  padding-top: 2px; padding-bottom: 2px; line-height: 1.12;
+}
+[data-scene="quests"] .quest-grid:has(article:nth-child(5)) article > b {
+  font-size: clamp(15px, 1.08vw, 18px);
+}
+[data-scene="quests"] .quest-grid:has(article:nth-child(5)) article > small,
+[data-scene="quests"] .quest-grid:has(article:nth-child(5)) article > span {
+  margin-bottom: 1px; font-size: clamp(11px, .86vw, 14px);
+}
+[data-scene="quests"] .quest-grid:has(article:nth-child(5)) article button {
+  height: 31px; min-height: 31px; font-size: clamp(11px, .86vw, 14px);
+}
+
 /* Replace the temporary City HUD glyphs with the normalized production icons. */
 [data-scene="hub"] > header > div,
 [data-scene="hub"] > header > strong,
