@@ -1503,6 +1503,10 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
   display: flex; flex-direction: column; overflow: hidden;
 }
 [data-scene="tavern"] .tavern-market { left: 31.5%; width: 37.8%; }
+[data-scene="tavern"] .tavern-market {
+  bottom: 8.5%;
+  overflow: hidden;
+}
 [data-scene="tavern"] #tavern-owned { left: 71.3%; right: auto; width: 27.3%; top: 27.4%; }
 [data-scene="tavern"] .tavern-brokers h3,
 [data-scene="tavern"] #tavern-detail > h3,
@@ -1533,7 +1537,6 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
 [data-scene="tavern"] .tavern-market .tavern-rule { bottom: 24px; }
 
 /* Tavern no longer sells information: the center shows live data and the right explains upgrades. */
-[data-scene="tavern"] .tavern-market,
 [data-scene="tavern"] #tavern-owned { overflow: auto; }
 [data-scene="tavern"] #tavern-detail {
   display: flex; flex-direction: column; height: 100%; min-height: 0; overflow: hidden;
