@@ -1142,6 +1142,35 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
 [data-scene="hub"] .market-spark.fall i { color: #ef9884; }
 [data-scene="hub"] .market-spark.fall polyline { stroke: #dc7466; }
 [data-scene="hub"] .market-spark.fall circle { fill: #ef9884; }
+
+[data-scene="hub"] .market-incident {
+  margin: 8px 34px 0;
+  padding: 9px 10px 7px;
+  border-top: 1px solid rgba(92, 61, 30, .45);
+  color: #49321f;
+  text-align: left;
+}
+
+[data-scene="hub"] .market-incident small {
+  display: block;
+  color: #8a642f;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .08em;
+}
+
+[data-scene="hub"] .market-incident h4 {
+  margin: 3px 0 2px;
+  font-family: Georgia, "Noto Serif KR", serif;
+  font-size: 18px;
+  line-height: 1.2;
+}
+
+[data-scene="hub"] .market-incident p {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.45;
+}
 }
 
 /* Museum collection slots leave unowned display cases visually empty. */
@@ -2099,8 +2128,10 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
 }
 [data-scene="catalog"] .catalog-grade { color: #8a5a22; font-size: clamp(8px,.68vw,11px); font-weight: 900; }
 [data-scene="catalog"] .lot-card h3 {
-  width: 100%; margin: 0; overflow: hidden; color: #332216;
-  font-size: clamp(10px,.92vw,15px); line-height: 1.15; text-overflow: ellipsis; white-space: nowrap;
+  width: 100%; min-height: 2.3em; margin: 0; overflow: visible; color: #332216;
+  display: flex; align-items: center; justify-content: center;
+  font-size: clamp(9px,.86vw,14px); line-height: 1.15;
+  text-overflow: clip; white-space: normal; overflow-wrap: anywhere; word-break: keep-all;
 }
 [data-scene="catalog"] .lot-card > .catalog-meta {
   width: 100%; display: flex; justify-content: space-between; gap: 4px; margin: 0; color: #65482d;
