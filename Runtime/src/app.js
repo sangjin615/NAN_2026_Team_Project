@@ -7,7 +7,7 @@ import { SaveStore } from './save-store.js';
 import { advanceDay, createInitialState, prepareAuctionEntry, resolveLot } from './game-state.js';
 import { VslRuntimeAdapter } from './vsl-adapter.js';
 import {
-  acceptQuest, appraiseItem, botBidForLot, estimateBotDailyAssets, openingBotBid, selectDistinctBotInterests,
+  acceptQuest, botBidForLot, estimateBotDailyAssets, openingBotBid, selectDistinctBotInterests,
   deliverQuestItem, effectiveQuestDeadline, expireQuestsBeforeAuction, missedDeadline, questMatchesItem,
   marketIndexForDay, quoteItemsSale, refreshDailyQuestOffers, repayLoanEarly, sellItems, settleLoan, settleQuests, takeLoan, upgradeShop,
 } from './systems.js';
@@ -338,22 +338,8 @@ function renderQuestOffice(message = '') {
       <select data-delivery-select="${quest.offerId || quest.id}"><option value="">제출할 물품 선택</option>${candidates.map((item) => `<option value="${item.lotId}">${item.name} · ${gradeLabel(item.grade)}</option>`).join('')}</select>
       <button data-deliver-quest="${quest.offerId || quest.id}" ${candidates.length ? '' : 'disabled'}>물품 제출</button></article>`;
   }).join('') : '<p class="empty-note">수주한 의뢰가 없습니다.</p>';
-  const appraisalMarkup = ownedItems().length ? ownedItems().map((item) => {
-    const lot = scheduledLot(item.lotId);
-    const discount = 1 - (balance.shop.infoDiscount?.[state.shopStage] ?? 0);
-    const cost = Math.ceil(item.basePrice * balance.appraisal.rate * discount / 100) * 100;
-    const result = item.appraised
-      ? `<strong>${money(item.trueValue)} <small>± ${money(item.appraisalRange)}</small></strong>`
-      : `<span>감정 비용 ${money(cost)}</span>`;
-    return `<article class="appraisal-card">
-      <img ${spriteAnchorAttrs(lot)} src="${lot ? spriteUrl(lot, item.grade) : ''}" alt="${item.name}">
-      <div><b>${item.name}</b><small>${gradeLabel(item.grade)} · ${categoryLabel(item.category)}</small>${result}</div>
-      <button data-office-appraise="${item.lotId}" ${item.appraised || item.collateral || state.cash < cost ? 'disabled' : ''}>${item.appraised ? '감정 완료' : item.collateral ? '담보 설정됨' : '정밀 감정'}</button>
-    </article>`;
-  }).join('') : '<p class="empty-note">감정할 보유 물품이 없습니다.</p>';
   document.querySelector('#active-quests').innerHTML = `
-    <section class="accepted-quests"><h4>수주 의뢰 · 물품 제출</h4>${activeMarkup}</section>
-    <section class="appraisal-office"><h4>보유 물품 · 정밀 감정</h4><div class="appraisal-grid">${appraisalMarkup}</div></section>`;
+    <section class="accepted-quests"><h4>수주 의뢰 · 물품 제출</h4>${activeMarkup}</section>`;
   const openQuestDetail = (quest) => {
     document.querySelector('#quest-detail-title').textContent = questTitle(quest);
     document.querySelector('#quest-detail-icon').src = questIconUrl(quest.id);
@@ -381,13 +367,6 @@ function renderQuestOffice(message = '') {
       const ok = deliverQuestItem(state, button.dataset.deliverQuest, select.value);
       if (ok) recordEvent(state, 'quest-deliver', { questId: button.dataset.deliverQuest, lotId: select.value });
       renderQuestOffice(ok ? '물품을 제출하고 보상을 받았습니다.' : '제출 조건과 물품을 확인하세요.');
-    };
-  });
-  document.querySelectorAll('[data-office-appraise]').forEach((button) => {
-    button.onclick = () => {
-      const ok = appraiseItem(state, balance, button.dataset.officeAppraise);
-      if (ok) { recordEvent(state, 'appraisal', { lotId: button.dataset.officeAppraise, location: 'quest-office' }); audio.playSfx('appraise'); }
-      renderQuestOffice(ok ? '정밀 감정을 완료했습니다.' : '감정 비용 또는 물품 상태를 확인하세요.');
     };
   });
   showQuestMessage(message);

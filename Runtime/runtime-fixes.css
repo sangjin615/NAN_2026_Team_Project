@@ -2062,6 +2062,36 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
   max-width: 30%; max-height: 4.4%; overflow: hidden;
 }
 
+/* The quest office now dedicates its entire right-hand paper field to
+   accepted quests and item delivery. Appraisal remains available elsewhere. */
+[data-scene="quests"] #active-quests.inventory-list {
+  grid-template-columns: minmax(0, 1fr);
+}
+[data-scene="quests"] .office-layout > section:nth-child(2) > h3 {
+  width: 54%;
+}
+[data-scene="quests"] .office-layout > section:nth-child(2) > h3::before {
+  background-image: url("./assets/ui/quest-icons/quest-board.png");
+}
+[data-scene="quests"] #active-quests > .accepted-quests {
+  padding: 8% 3% 3%;
+}
+[data-scene="quests"] #active-quests .accepted-quests > article {
+  grid-template-columns: minmax(0, 1.2fr) minmax(78px, .62fr) minmax(150px, 1fr) minmax(82px, .48fr);
+  gap: 1.5%; min-height: 58px; margin-top: 8px; padding: 8px 2% 8px 11%;
+  font-size: clamp(10px, .82vw, 14px);
+}
+[data-scene="quests"] #active-quests .accepted-quests > article > b {
+  font-size: clamp(12px, 1vw, 16px);
+}
+[data-scene="quests"] #active-quests .accepted-quests select,
+[data-scene="quests"] #active-quests .accepted-quests button {
+  height: 38px; font-size: clamp(10px, .78vw, 13px);
+}
+[data-scene="quests"] #active-quests .accepted-quests .quest-icon {
+  left: 2%; width: 8%; height: 72%;
+}
+
 /* City HUD follows the five-panel mockup hierarchy. */
 [data-scene="hub"] > header {
   left: 3.3%; top: 2.2%; width: 27.5%; height: 9%;

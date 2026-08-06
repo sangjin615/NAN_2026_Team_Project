@@ -2070,6 +2070,36 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
   max-width: 30%; max-height: 4.4%; overflow: hidden;
 }
 
+/* The quest office now dedicates its entire right-hand paper field to
+   accepted quests and item delivery. Appraisal remains available elsewhere. */
+[data-scene="quests"] #active-quests.inventory-list {
+  grid-template-columns: minmax(0, 1fr);
+}
+[data-scene="quests"] .office-layout > section:nth-child(2) > h3 {
+  width: 54%;
+}
+[data-scene="quests"] .office-layout > section:nth-child(2) > h3::before {
+  background-image: url("./assets/ui/quest-icons/quest-board.png");
+}
+[data-scene="quests"] #active-quests > .accepted-quests {
+  padding: 8% 3% 3%;
+}
+[data-scene="quests"] #active-quests .accepted-quests > article {
+  grid-template-columns: minmax(0, 1.2fr) minmax(78px, .62fr) minmax(150px, 1fr) minmax(82px, .48fr);
+  gap: 1.5%; min-height: 58px; margin-top: 8px; padding: 8px 2% 8px 11%;
+  font-size: clamp(10px, .82vw, 14px);
+}
+[data-scene="quests"] #active-quests .accepted-quests > article > b {
+  font-size: clamp(12px, 1vw, 16px);
+}
+[data-scene="quests"] #active-quests .accepted-quests select,
+[data-scene="quests"] #active-quests .accepted-quests button {
+  height: 38px; font-size: clamp(10px, .78vw, 13px);
+}
+[data-scene="quests"] #active-quests .accepted-quests .quest-icon {
+  left: 2%; width: 8%; height: 72%;
+}
+
 /* City HUD follows the five-panel mockup hierarchy. */
 [data-scene="hub"] > header {
   left: 3.3%; top: 2.2%; width: 27.5%; height: 9%;
@@ -3058,7 +3088,7 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
     <button id="back-title" class="secondary">타이틀로 돌아가기</button>
   </section>
   <section class="scene hub" data-scene="hub" hidden><header><div><p class="eyebrow"><span data-bind="day"></span>일차 / 13</p><h2>미지의 도시</h2></div><strong data-bind="cash"></strong></header><div class="hub-stats"><span class="storage-stat">보관칸 <b data-bind="storage"></b></span><span class="stage-stat"><b data-bind="stage"></b>단계 <small>상회 단계</small></span><span class="hub-quests">완료 의뢰 <b data-bind="quests"></b></span><span id="loan-status"></span></div><button id="hub-settings" aria-label="설정">설정</button><div id="market-indices" class="market"></div><div class="place-grid"><button data-place="quests"><span>의뢰소</span></button><button data-place="tavern"><span>술집</span></button><button data-place="catalog"><span>경매장</span></button><button data-place="exchange"><span>거래소</span></button><button data-place="shop"><span>상회</span></button><button data-place="guild"><span>조합</span></button><button data-place="museum"><span>유물 전시관</span></button></div><button id="download-log" class="secondary">플레이 기록 다운로드</button><p id="hub-message" class="status"></p></section>
-  <section class="scene place" data-scene="quests" hidden><header><div><p class="eyebrow">QUEST & APPRAISAL OFFICE · <span data-bind="day"></span>일차</p><h2>의뢰소 · 감정소</h2></div><strong data-bind="cash"></strong></header><div class="office-layout"><section><h3>오늘의 의뢰</h3><div id="quest-offers" class="quest-grid"></div></section><section><h3>의뢰 진행 · 정밀 감정</h3><div id="active-quests" class="inventory-list"></div></section></div><p id="quest-message" class="status"></p><button data-place="city" class="secondary">도시로</button></section>
+  <section class="scene place" data-scene="quests" hidden><header><div><p class="eyebrow">QUEST OFFICE · <span data-bind="day"></span>일차</p><h2>의뢰소</h2></div><strong data-bind="cash"></strong></header><div class="office-layout"><section><h3>오늘의 의뢰</h3><div id="quest-offers" class="quest-grid"></div></section><section><h3>의뢰 진행 · 물품 제출</h3><div id="active-quests" class="inventory-list"></div></section></div><p id="quest-message" class="status"></p><button data-place="city" class="secondary">도시로</button></section>
   <section class="scene place" data-scene="tavern" hidden><header><div><p class="eyebrow">TAVERN · <span data-bind="day"></span>일차</p><h2>술집</h2></div><strong data-bind="cash"></strong></header><section class="tavern-brokers"><h3>정보상 목록</h3><article data-broker="competitors" role="button" tabindex="0"><img src="./assets/ui/tavern/bartender.png" alt=""><div><b>바텐더</b><small>항구의 소식통</small><span></span></div></article><article data-broker="catalog" role="button" tabindex="0"><img src="./assets/ui/tavern/informant.png" alt=""><div><b>정보상</b><small>도시의 뒷골목 정보망</small><span></span></div></article><article data-broker="forecast" role="button" tabindex="0"><img src="./assets/ui/tavern/traveling-merchant.png" alt=""><div><b>여행 상인</b><small>내일의 시세를 전하는 상인</small><span></span></div></article></section><section class="tavern-market"><div id="tavern-detail" aria-live="polite"></div></section><aside id="tavern-owned" aria-live="polite"></aside><p id="tavern-message" class="status"></p><button data-place="city" class="secondary return-city">도시로 돌아가기</button></section>
   <section class="scene place" data-scene="exchange" hidden><header><div><p class="eyebrow">EXCHANGE · <span data-bind="day"></span>일차</p><h2>거래소</h2></div><strong data-bind="cash"></strong></header><div id="inventory-list" class="inventory-list"></div><aside id="exchange-market" class="market-board" aria-label="오늘의 시세"></aside><div class="actions"><button id="select-all-items" class="secondary">모두 선택</button><button id="sell-selected">판매</button></div><p id="exchange-message" class="status"></p><button data-place="city" class="secondary return-city">도시로</button></section>
   <section class="scene place" data-scene="shop" hidden><header><div><p class="eyebrow">상회의 성장과 보유품을 관리합니다.</p><h2>상회</h2></div><strong data-bind="cash"></strong></header><div id="shop-detail" class="place-panel"></div><button id="shop-upgrade">상점 확장</button><p id="shop-message" class="status"></p><button data-place="city" class="secondary return-city">도시로</button></section>
@@ -3612,21 +3642,6 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
       initial,
       remaining: Math.max(0, initial - (spent[id] || 0))
     }]));
-  }
-  function appraisalError(balance2, day) {
-    const key = day <= 3 ? "1-3" : day <= 6 ? "4-6" : "7-12";
-    return balance2.appraisal.errorByDay[key];
-  }
-  function appraiseItem(state2, balance2, lotId) {
-    const item = state2.inventory.find((entry) => entry.lotId === lotId && !entry.sold && !entry.appraised && !entry.collateral);
-    if (!item) return false;
-    const discount = 1 - (balance2.shop.infoDiscount?.[state2.shopStage] ?? 0);
-    const cost = Math.ceil(item.basePrice * balance2.appraisal.rate * discount / 100) * 100;
-    if (state2.cash < cost) return false;
-    state2.cash -= cost;
-    item.appraised = true;
-    item.appraisalRange = Math.round(item.trueValue * appraisalError(balance2, state2.day));
-    return true;
   }
   function bestSetMultiplier(inventory, balance2, relics = [], shopStage = 1) {
     const active = inventory.filter((item) => !item.sold && !item.collateral);
@@ -4299,20 +4314,8 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
       <select data-delivery-select="${quest.offerId || quest.id}"><option value="">\uC81C\uCD9C\uD560 \uBB3C\uD488 \uC120\uD0DD</option>${candidates.map((item) => `<option value="${item.lotId}">${item.name} \xB7 ${gradeLabel(item.grade)}</option>`).join("")}</select>
       <button data-deliver-quest="${quest.offerId || quest.id}" ${candidates.length ? "" : "disabled"}>\uBB3C\uD488 \uC81C\uCD9C</button></article>`;
     }).join("") : '<p class="empty-note">\uC218\uC8FC\uD55C \uC758\uB8B0\uAC00 \uC5C6\uC2B5\uB2C8\uB2E4.</p>';
-    const appraisalMarkup = ownedItems().length ? ownedItems().map((item) => {
-      const lot = scheduledLot(item.lotId);
-      const discount = 1 - (balance.shop.infoDiscount?.[state.shopStage] ?? 0);
-      const cost = Math.ceil(item.basePrice * balance.appraisal.rate * discount / 100) * 100;
-      const result = item.appraised ? `<strong>${money(item.trueValue)} <small>\xB1 ${money(item.appraisalRange)}</small></strong>` : `<span>\uAC10\uC815 \uBE44\uC6A9 ${money(cost)}</span>`;
-      return `<article class="appraisal-card">
-      <img ${spriteAnchorAttrs(lot)} src="${lot ? spriteUrl(lot, item.grade) : ""}" alt="${item.name}">
-      <div><b>${item.name}</b><small>${gradeLabel(item.grade)} \xB7 ${categoryLabel(item.category)}</small>${result}</div>
-      <button data-office-appraise="${item.lotId}" ${item.appraised || item.collateral || state.cash < cost ? "disabled" : ""}>${item.appraised ? "\uAC10\uC815 \uC644\uB8CC" : item.collateral ? "\uB2F4\uBCF4 \uC124\uC815\uB428" : "\uC815\uBC00 \uAC10\uC815"}</button>
-    </article>`;
-    }).join("") : '<p class="empty-note">\uAC10\uC815\uD560 \uBCF4\uC720 \uBB3C\uD488\uC774 \uC5C6\uC2B5\uB2C8\uB2E4.</p>';
     document.querySelector("#active-quests").innerHTML = `
-    <section class="accepted-quests"><h4>\uC218\uC8FC \uC758\uB8B0 \xB7 \uBB3C\uD488 \uC81C\uCD9C</h4>${activeMarkup}</section>
-    <section class="appraisal-office"><h4>\uBCF4\uC720 \uBB3C\uD488 \xB7 \uC815\uBC00 \uAC10\uC815</h4><div class="appraisal-grid">${appraisalMarkup}</div></section>`;
+    <section class="accepted-quests"><h4>\uC218\uC8FC \uC758\uB8B0 \xB7 \uBB3C\uD488 \uC81C\uCD9C</h4>${activeMarkup}</section>`;
     const openQuestDetail = (quest) => {
       document.querySelector("#quest-detail-title").textContent = questTitle(quest);
       document.querySelector("#quest-detail-icon").src = questIconUrl(quest.id);
@@ -4350,16 +4353,6 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
         const ok = deliverQuestItem(state, button.dataset.deliverQuest, select.value);
         if (ok) recordEvent(state, "quest-deliver", { questId: button.dataset.deliverQuest, lotId: select.value });
         renderQuestOffice(ok ? "\uBB3C\uD488\uC744 \uC81C\uCD9C\uD558\uACE0 \uBCF4\uC0C1\uC744 \uBC1B\uC558\uC2B5\uB2C8\uB2E4." : "\uC81C\uCD9C \uC870\uAC74\uACFC \uBB3C\uD488\uC744 \uD655\uC778\uD558\uC138\uC694.");
-      };
-    });
-    document.querySelectorAll("[data-office-appraise]").forEach((button) => {
-      button.onclick = () => {
-        const ok = appraiseItem(state, balance, button.dataset.officeAppraise);
-        if (ok) {
-          recordEvent(state, "appraisal", { lotId: button.dataset.officeAppraise, location: "quest-office" });
-          audio.playSfx("appraise");
-        }
-        renderQuestOffice(ok ? "\uC815\uBC00 \uAC10\uC815\uC744 \uC644\uB8CC\uD588\uC2B5\uB2C8\uB2E4." : "\uAC10\uC815 \uBE44\uC6A9 \uB610\uB294 \uBB3C\uD488 \uC0C1\uD0DC\uB97C \uD655\uC778\uD558\uC138\uC694.");
       };
     });
     showQuestMessage(message);
