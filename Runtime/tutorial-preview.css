@@ -1,9 +1,7 @@
 .tutorial-focus {
-  position: relative !important;
-  z-index: 10001 !important;
   outline: 4px solid #f2bf43 !important;
   outline-offset: 5px !important;
-  box-shadow: 0 0 18px 8px #f2bf4388, 0 0 0 9999px #080603b8 !important;
+  box-shadow: 0 0 18px 8px #f2bf4388 !important;
   animation: tutorial-pulse 1.15s ease-in-out infinite alternate;
 }
 
@@ -17,6 +15,10 @@
   color: #fff1ce; box-shadow: 0 12px 28px #000d, inset 0 0 0 3px #493616;
   text-align: left;
 }
+#tutorial-card[data-placement="top-center"] { top: 15%; bottom: auto; }
+#tutorial-card[data-placement="top-right"] { left: auto; right: 3%; top: 18%; bottom: auto; transform: none; }
+#tutorial-card[data-placement="bottom-right"] { left: auto; right: 3%; transform: none; }
+#tutorial-card[data-placement="bottom-left"] { left: 2.5%; bottom: 8%; width: min(390px, calc(100vw - 36px)); transform: none; }
 #tutorial-card[hidden] { display: none; }
 #tutorial-card small { color: #d6a837; font-weight: 900; letter-spacing: .08em; }
 #tutorial-card h2 { margin: 6px 0 7px; font-size: clamp(20px, 2vw, 28px); }
