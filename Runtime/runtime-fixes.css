@@ -3063,18 +3063,6 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
 }
 [data-scene="hub"] #market-dialog #market-indices:has(.market-incident) .market-sparklines { bottom: 34%; }
 [data-scene="hub"] #market-dialog .market-spark { height: auto; }
-[data-scene="hub"] #market-dialog .market-incident-visuals span {
-  position: absolute; z-index: 1; top: 0; width: 12%; height: 15%;
-  display: grid; place-items: center;
-}
-[data-scene="hub"] #market-dialog .market-incident-visuals span:first-child { left: 4%; }
-[data-scene="hub"] #market-dialog .market-incident-visuals span:nth-child(2) { right: 4%; }
-[data-scene="hub"] #market-dialog .market-incident-visuals span:only-child { left: auto; right: 4%; }
-[data-scene="hub"] #market-dialog .market-incident-visuals img {
-  width: 74%; height: 74%; object-fit: contain;
-  transform: translate(var(--sprite-anchor-x), var(--sprite-anchor-y));
-  filter: sepia(.18) drop-shadow(0 3px 2px #51361d66);
-}
 [data-scene="hub"] #market-dialog .market-incident {
   position: absolute; left: 6%; right: 6%; bottom: 5%;
   margin: 0; padding: 1.4% 3% 1.6%;
@@ -3161,19 +3149,6 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
   font-family: "Batang", "바탕", "Noto Serif KR", serif;
   font-size: clamp(24px, 2.25vw, 36px); font-weight: 700; line-height: 1;
   letter-spacing: .02em; text-shadow: none;
-}
-[data-scene="hub"] #market-dialog .market-incident-visuals span {
-  top: 4.5%; width: 11%; height: 13%;
-  isolation: isolate;
-}
-[data-scene="hub"] #market-dialog .market-incident-visuals span:first-child { left: 3.5%; }
-[data-scene="hub"] #market-dialog .market-incident-visuals span:nth-child(2) { right: 3.5%; }
-[data-scene="hub"] #market-dialog .market-incident-visuals span:only-child { left: 3.5%; right: auto; }
-[data-scene="hub"] #market-dialog .market-incident-visuals img {
-  width: 56%; height: 56%;
-  opacity: .66;
-  mix-blend-mode: multiply;
-  filter: grayscale(1) sepia(1) saturate(.72) contrast(.82) brightness(.92);
 }
 [data-scene="hub"] #market-dialog .market-sparklines {
   left: 6%; right: 6%; top: 25.5%; gap: 4.5% 7%;
