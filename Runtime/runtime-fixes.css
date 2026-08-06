@@ -1,4 +1,5 @@
 [hidden] { display: none !important; }
+.item-sprite-anchor { transform: translate(var(--sprite-anchor-x, 0%), var(--sprite-anchor-y, 0%)); }
 .status:empty { display: none !important; }
 
 #action-toast {
