@@ -1102,7 +1102,7 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
 [data-scene="hub"] .stage-stat::before { background-image: url("./assets/ui/quest-icons/block.png"); }
 [data-scene="hub"] #loan-status::before { background-image: url("./assets/ui/quest-icons/designated.png"); }
 [data-scene="hub"] #market-indices {
-  left: auto; right: 10px; top: auto; bottom: 10px; z-index: 5; width: 32%; height: 40%;
+  left: auto; right: 5px; top: auto; bottom: 10px; z-index: 5; width: 32%; height: 40%;
   display: block; box-sizing: border-box; padding: 8px 14px;
   border: 34px solid transparent;
   border-image: url("./assets/ui/market/newspaper-board.png") 72 52 62 52 fill / 34px / 0 stretch;
