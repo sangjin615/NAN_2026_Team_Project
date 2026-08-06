@@ -486,6 +486,16 @@ test('generation copy quality rejects supernatural, awkward and repeated catalog
     { lots: [lot('재봉사의 바늘 끝에 금속 손상이 남아 있다.', 0)] },
   );
   assert.ok(categoryMismatch.some((error) => error.includes('does not match category PNT')));
+  const pearlJewelry = qualityErrors(
+    { mode: 'daily-content', lots: [{ baseName: '흑진주 리본 목걸이', category: 'JEW' }] },
+    { lots: [{ displayName: '흑진주 리본 목걸이', description: '진주 표면에 미세한 긁힘 자국이 드러난다.', rumor: '오래된 연회 기록에 등장했다는 소문이 있다.', setHint: '리본 각인', npcReaction: '보존 흔적을 자세히 살핀다.' }] },
+  );
+  assert.deepEqual(pearlJewelry, []);
+  const liddedCeramic = qualityErrors(
+    { mode: 'daily-content', lots: [{ baseName: '황동뚜껑 육각 항아리', category: 'CER' }] },
+    { lots: [{ displayName: '황동뚜껑 육각 항아리', description: '육각 항아리에 황동 뚜껑이 밀착된 흔적이 확인된다.', rumor: '창고 기록에 등장했다는 소문이 있다.', setHint: '육각 보관품', npcReaction: '뚜껑의 마모를 자세히 살핀다.' }] },
+  );
+  assert.deepEqual(liddedCeramic, []);
   const goodDescriptions = [
     '은제 뚜껑 가장자리에 항로를 닮은 가는 선각이 남아 있다.',
     '검게 바랜 가죽 표지 안쪽에 여러 필체의 메모가 겹쳐 보인다.',

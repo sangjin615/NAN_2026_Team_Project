@@ -11,6 +11,7 @@ const contract = await readFile(path.join(runtimeRoot, 'contracts', 'compact-gen
 const reportRoot = path.join(runtimeRoot, 'reports', 'live-generation');
 
 const text = { type: 'string', minLength: 1 };
+const boundedText = (maxLength) => ({ type: 'string', minLength: 1, maxLength });
 const fixedObject = (properties) => ({ type: 'object', properties, required: Object.keys(properties), additionalProperties: false });
 
 function outputSchema(request) {
@@ -24,7 +25,7 @@ function outputSchema(request) {
   });
   return fixedObject({
     schemaVersion: { const: '1.0' }, day: { const: request.day }, marketHeadline: text,
-    lots: { type: 'array', prefixItems: request.lots.map(({ lotId }) => fixedObject({ lotId: { const: lotId }, displayName: text, description: text, rumor: text, setHint: text, npcReaction: text })), minItems: request.lots.length, maxItems: request.lots.length },
+    lots: { type: 'array', prefixItems: request.lots.map(({ lotId }) => fixedObject({ lotId: { const: lotId }, displayName: boundedText(20), description: boundedText(70), rumor: boundedText(45), setHint: boundedText(25), npcReaction: boundedText(45) })), minItems: request.lots.length, maxItems: request.lots.length },
   });
 }
 
@@ -52,15 +53,15 @@ function validateInput(request) {
 }
 
 const bannedDescription = [
-  /할 수 있/, /해 ?준다/, /번역/, /새로운 세계/, /힘[을이]?\s/, /효과/, /가치가/, /가격/, /시세/,
+  /할 수 있/, /해 ?준다/, /번역/, /새로운 세계/, /(?:^|\s)힘[을이]?\s/, /효과/, /가치가/, /가격/, /시세/,
   /매우 특별/, /품질이 뛰어/, /고유한 디자인/, /유용할 것/, /느껴진다/, /뛰어난다/,
   /세련된/, /돋보인다/, /는다\.$/,
 ];
 const safeDescriptionEnding = /(남아 있다|보인다|확인된다|이어진다|드러난다)\.$/;
 const categoryTerms = {
-  CER: /유약|굽|몸체|손잡이|도자/, CLK: /문자판|바늘|태엽|케이스|시계|크로노미터/,
+  CER: /유약|굽|몸체|손잡이|뚜껑|항아리|도자/, CLK: /문자판|바늘|태엽|케이스|시계|크로노미터|유리돔|골격/,
   PNT: /화폭|안료|액자|그림|캔버스/, BOK: /종이|표지|제본|책등|잉크|지도|문서/,
-  MET: /금속|표면|이음새|녹|은제|황동/, JEW: /보석|세팅|체인|받침|장식|펜던트|티아라|팔찌/,
+  MET: /금속|표면|이음새|녹|은제|황동/, JEW: /보석|진주|세팅|체인|받침|장식|펜던트|티아라|팔찌|목걸이/,
 };
 
 const normalizedClauses = (value) => String(value).split(/[.!?]/).map((part) => part.trim().replace(/\s+/g, ' ')).filter((part) => part.length >= 10);

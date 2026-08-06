@@ -1,0 +1,734 @@
+{
+  "runId": "qwen-size-screen-20260807",
+  "measuredAt": "2026-08-06T16:42:34.158Z",
+  "mode": "daily-content",
+  "trials": 1,
+  "rules": {
+    "attempts": 2,
+    "temperatures": [
+      0.3,
+      0.1
+    ],
+    "fallbackAfterFailure": true,
+    "validator": "Runtime generation-server validateOutput"
+  },
+  "models": [
+    "qwen3:4b",
+    "qwen3:8b",
+    "qwen3:14b"
+  ],
+  "profiles": {
+    "skill-incompatible-schema": {
+      "contract": "C:\\Users\\1\\.codex\\skills\\generate-auction-content\\assets\\compact-contract.txt",
+      "structuredOutput": true,
+      "preflightCompatible": false,
+      "preflightIssue": "skill template requires fields omitted by the Runtime response schema",
+      "description": "unaltered skill template + Runtime JSON Schema (negative control)"
+    },
+    "skill-compatible-schema": {
+      "contract": "C:\\NHN Project\\NAN_2026_Team_Project-api\\Runtime\\contracts\\compact-generation-skill-compatible.txt",
+      "structuredOutput": true,
+      "preflightCompatible": true,
+      "description": "skill template adapted only to the Runtime response shape + exact JSON Schema"
+    },
+    "runtime-schema": {
+      "contract": "C:\\NHN Project\\NAN_2026_Team_Project-api\\Runtime\\contracts\\compact-generation-contract.txt",
+      "structuredOutput": true,
+      "preflightCompatible": true,
+      "description": "Runtime quality template + exact JSON Schema"
+    },
+    "runtime-json": {
+      "contract": "C:\\NHN Project\\NAN_2026_Team_Project-api\\Runtime\\contracts\\compact-generation-contract.txt",
+      "structuredOutput": false,
+      "preflightCompatible": true,
+      "description": "Runtime quality template + JSON-only mode"
+    }
+  },
+  "capabilityProbes": [
+    {
+      "model": "qwen3:4b",
+      "passed": true,
+      "error": null,
+      "latencyMs": 4480,
+      "promptEvalCount": 37,
+      "evalCount": 50
+    },
+    {
+      "model": "qwen3:8b",
+      "passed": true,
+      "error": null,
+      "latencyMs": 3337,
+      "promptEvalCount": 43,
+      "evalCount": 32
+    },
+    {
+      "model": "qwen3:14b",
+      "passed": true,
+      "error": null,
+      "latencyMs": 7316,
+      "promptEvalCount": 43,
+      "evalCount": 37
+    }
+  ],
+  "combinations": [
+    {
+      "model": "qwen3:4b",
+      "modelBytes": 2497293931,
+      "profile": "skill-incompatible-schema",
+      "trials": 0,
+      "passes": 0,
+      "passRate": null,
+      "diagnosis": "template-harness-incompatible",
+      "preflightIssue": "skill template requires fields omitted by the Runtime response schema"
+    },
+    {
+      "model": "qwen3:4b",
+      "modelBytes": 2497293931,
+      "profile": "skill-compatible-schema",
+      "trials": 1,
+      "passes": 0,
+      "passRate": 0,
+      "firstPasses": 0,
+      "fallbackCount": 1,
+      "averageLatencyMs": 16910,
+      "averageEvalCount": 2551,
+      "diagnoses": [
+        "narrative-quality"
+      ]
+    },
+    {
+      "model": "qwen3:4b",
+      "modelBytes": 2497293931,
+      "profile": "runtime-schema",
+      "trials": 1,
+      "passes": 0,
+      "passRate": 0,
+      "firstPasses": 0,
+      "fallbackCount": 1,
+      "averageLatencyMs": 14937,
+      "averageEvalCount": 2552,
+      "diagnoses": [
+        "narrative-quality"
+      ]
+    },
+    {
+      "model": "qwen3:4b",
+      "modelBytes": 2497293931,
+      "profile": "runtime-json",
+      "trials": 1,
+      "passes": 0,
+      "passRate": 0,
+      "firstPasses": 0,
+      "fallbackCount": 1,
+      "averageLatencyMs": 19135,
+      "averageEvalCount": 3611,
+      "diagnoses": [
+        "contract-compliance"
+      ]
+    },
+    {
+      "model": "qwen3:8b",
+      "modelBytes": 5225388164,
+      "profile": "skill-incompatible-schema",
+      "trials": 0,
+      "passes": 0,
+      "passRate": null,
+      "diagnosis": "template-harness-incompatible",
+      "preflightIssue": "skill template requires fields omitted by the Runtime response schema"
+    },
+    {
+      "model": "qwen3:8b",
+      "modelBytes": 5225388164,
+      "profile": "skill-compatible-schema",
+      "trials": 1,
+      "passes": 0,
+      "passRate": 0,
+      "firstPasses": 0,
+      "fallbackCount": 1,
+      "averageLatencyMs": 25635,
+      "averageEvalCount": 2453,
+      "diagnoses": [
+        "narrative-quality"
+      ]
+    },
+    {
+      "model": "qwen3:8b",
+      "modelBytes": 5225388164,
+      "profile": "runtime-schema",
+      "trials": 1,
+      "passes": 0,
+      "passRate": 0,
+      "firstPasses": 0,
+      "fallbackCount": 1,
+      "averageLatencyMs": 19184,
+      "averageEvalCount": 2099,
+      "diagnoses": [
+        "narrative-quality"
+      ]
+    },
+    {
+      "model": "qwen3:8b",
+      "modelBytes": 5225388164,
+      "profile": "runtime-json",
+      "trials": 1,
+      "passes": 0,
+      "passRate": 0,
+      "firstPasses": 0,
+      "fallbackCount": 1,
+      "averageLatencyMs": 41937,
+      "averageEvalCount": 3343,
+      "diagnoses": [
+        "harness-json"
+      ]
+    },
+    {
+      "model": "qwen3:14b",
+      "modelBytes": 9276198565,
+      "profile": "skill-incompatible-schema",
+      "trials": 0,
+      "passes": 0,
+      "passRate": null,
+      "diagnosis": "template-harness-incompatible",
+      "preflightIssue": "skill template requires fields omitted by the Runtime response schema"
+    },
+    {
+      "model": "qwen3:14b",
+      "modelBytes": 9276198565,
+      "profile": "skill-compatible-schema",
+      "trials": 1,
+      "passes": 0,
+      "passRate": 0,
+      "firstPasses": 0,
+      "fallbackCount": 1,
+      "averageLatencyMs": 43517,
+      "averageEvalCount": 2513,
+      "diagnoses": [
+        "narrative-quality"
+      ]
+    },
+    {
+      "model": "qwen3:14b",
+      "modelBytes": 9276198565,
+      "profile": "runtime-schema",
+      "trials": 1,
+      "passes": 0,
+      "passRate": 0,
+      "firstPasses": 0,
+      "fallbackCount": 1,
+      "averageLatencyMs": 38652,
+      "averageEvalCount": 2567,
+      "diagnoses": [
+        "narrative-quality"
+      ]
+    },
+    {
+      "model": "qwen3:14b",
+      "modelBytes": 9276198565,
+      "profile": "runtime-json",
+      "trials": 1,
+      "passes": 0,
+      "passRate": 0,
+      "firstPasses": 0,
+      "fallbackCount": 1,
+      "averageLatencyMs": 83235,
+      "averageEvalCount": 5706,
+      "diagnoses": [
+        "narrative-quality"
+      ]
+    }
+  ],
+  "observations": [
+    {
+      "model": "qwen3:4b",
+      "modelBytes": 2497293931,
+      "profile": "skill-incompatible-schema",
+      "profileDescription": "unaltered skill template + Runtime JSON Schema (negative control)",
+      "trial": 0,
+      "passed": false,
+      "fallbackRequired": false,
+      "attempts": [],
+      "totalLatencyMs": 0,
+      "totalEvalCount": 0,
+      "diagnosis": "template-harness-incompatible",
+      "preflightIssue": "skill template requires fields omitted by the Runtime response schema"
+    },
+    {
+      "model": "qwen3:4b",
+      "modelBytes": 2497293931,
+      "profile": "skill-compatible-schema",
+      "profileDescription": "skill template adapted only to the Runtime response shape + exact JSON Schema",
+      "trial": 1,
+      "passed": false,
+      "fallbackRequired": true,
+      "attempts": [
+        {
+          "runId": "qwen-size-screen-20260807",
+          "mode": "daily-content",
+          "model": "qwen3:4b",
+          "profile": "skill-compatible-schema",
+          "trial": 1,
+          "attempt": 1,
+          "temperature": 0.3,
+          "latencyMs": 9620,
+          "promptChars": 3602,
+          "promptEvalCount": 1271,
+          "evalCount": 1300,
+          "errors": [
+            "copy quality: lot 1 description has unsafe ending; lot 1 rumor exceeds 45 chars; lot 2 description has unsafe ending; lot 3 description has unsafe ending; lot 4 description has unsafe ending; lot 5 description has unsafe ending; lot 6 description has unsafe ending; lot 6 rumor exceeds 45 chars; lot 7 description has unsafe ending; lot 8 description has unsafe ending; lot 8 description does not match category BOK"
+          ],
+          "artifact": "qwen-size-screen-20260807-daily-content-qwen3-4b-skill-compatible-schema-t1-a1.json",
+          "diagnosis": "narrative-quality"
+        },
+        {
+          "runId": "qwen-size-screen-20260807",
+          "mode": "daily-content",
+          "model": "qwen3:4b",
+          "profile": "skill-compatible-schema",
+          "trial": 1,
+          "attempt": 2,
+          "temperature": 0.1,
+          "latencyMs": 7290,
+          "promptChars": 4032,
+          "promptEvalCount": 1373,
+          "evalCount": 1251,
+          "errors": [
+            "copy quality: lot 1 description has unsafe ending; lot 1 setHint exceeds 25 chars; lot 2 description has unsafe ending; lot 2 setHint exceeds 25 chars; lot 3 description has unsafe ending; lot 3 setHint exceeds 25 chars; lot 4 description has unsafe ending; lot 4 setHint exceeds 25 chars; lot 5 description has unsafe ending; lot 5 setHint exceeds 25 chars; lot 6 description has unsafe ending; lot 6 setHint exceeds 25 chars; lot 7 description has unsafe ending; lot 7 setHint exceeds 25 chars; lot 8 description has unsafe ending; lot 8 description does not match category BOK; lot 8 setHint exceeds 25 chars"
+          ],
+          "artifact": "qwen-size-screen-20260807-daily-content-qwen3-4b-skill-compatible-schema-t1-a2.json",
+          "diagnosis": "narrative-quality"
+        }
+      ],
+      "totalLatencyMs": 16910,
+      "totalEvalCount": 2551,
+      "diagnosis": "narrative-quality"
+    },
+    {
+      "model": "qwen3:4b",
+      "modelBytes": 2497293931,
+      "profile": "runtime-schema",
+      "profileDescription": "Runtime quality template + exact JSON Schema",
+      "trial": 1,
+      "passed": false,
+      "fallbackRequired": true,
+      "attempts": [
+        {
+          "runId": "qwen-size-screen-20260807",
+          "mode": "daily-content",
+          "model": "qwen3:4b",
+          "profile": "runtime-schema",
+          "trial": 1,
+          "attempt": 1,
+          "temperature": 0.3,
+          "latencyMs": 7618,
+          "promptChars": 4406,
+          "promptEvalCount": 1540,
+          "evalCount": 1317,
+          "errors": [
+            "duplicate descriptions"
+          ],
+          "artifact": "qwen-size-screen-20260807-daily-content-qwen3-4b-runtime-schema-t1-a1.json",
+          "diagnosis": "narrative-quality"
+        },
+        {
+          "runId": "qwen-size-screen-20260807",
+          "mode": "daily-content",
+          "model": "qwen3:4b",
+          "profile": "runtime-schema",
+          "trial": 1,
+          "attempt": 2,
+          "temperature": 0.1,
+          "latencyMs": 7319,
+          "promptChars": 4443,
+          "promptEvalCount": 1547,
+          "evalCount": 1235,
+          "errors": [
+            "duplicate descriptions"
+          ],
+          "artifact": "qwen-size-screen-20260807-daily-content-qwen3-4b-runtime-schema-t1-a2.json",
+          "diagnosis": "narrative-quality"
+        }
+      ],
+      "totalLatencyMs": 14937,
+      "totalEvalCount": 2552,
+      "diagnosis": "narrative-quality"
+    },
+    {
+      "model": "qwen3:4b",
+      "modelBytes": 2497293931,
+      "profile": "runtime-json",
+      "profileDescription": "Runtime quality template + JSON-only mode",
+      "trial": 1,
+      "passed": false,
+      "fallbackRequired": true,
+      "attempts": [
+        {
+          "runId": "qwen-size-screen-20260807",
+          "mode": "daily-content",
+          "model": "qwen3:4b",
+          "profile": "runtime-json",
+          "trial": 1,
+          "attempt": 1,
+          "temperature": 0.3,
+          "latencyMs": 9208,
+          "promptChars": 4406,
+          "promptEvalCount": 1540,
+          "evalCount": 1729,
+          "errors": [
+            "daily output shape mismatch"
+          ],
+          "artifact": "qwen-size-screen-20260807-daily-content-qwen3-4b-runtime-json-t1-a1.json",
+          "diagnosis": "contract-compliance"
+        },
+        {
+          "runId": "qwen-size-screen-20260807",
+          "mode": "daily-content",
+          "model": "qwen3:4b",
+          "profile": "runtime-json",
+          "trial": 1,
+          "attempt": 2,
+          "temperature": 0.1,
+          "latencyMs": 9927,
+          "promptChars": 4448,
+          "promptEvalCount": 1549,
+          "evalCount": 1882,
+          "errors": [
+            "daily output shape mismatch"
+          ],
+          "artifact": "qwen-size-screen-20260807-daily-content-qwen3-4b-runtime-json-t1-a2.json",
+          "diagnosis": "contract-compliance"
+        }
+      ],
+      "totalLatencyMs": 19135,
+      "totalEvalCount": 3611,
+      "diagnosis": "contract-compliance"
+    },
+    {
+      "model": "qwen3:8b",
+      "modelBytes": 5225388164,
+      "profile": "skill-incompatible-schema",
+      "profileDescription": "unaltered skill template + Runtime JSON Schema (negative control)",
+      "trial": 0,
+      "passed": false,
+      "fallbackRequired": false,
+      "attempts": [],
+      "totalLatencyMs": 0,
+      "totalEvalCount": 0,
+      "diagnosis": "template-harness-incompatible",
+      "preflightIssue": "skill template requires fields omitted by the Runtime response schema"
+    },
+    {
+      "model": "qwen3:8b",
+      "modelBytes": 5225388164,
+      "profile": "skill-compatible-schema",
+      "profileDescription": "skill template adapted only to the Runtime response shape + exact JSON Schema",
+      "trial": 1,
+      "passed": false,
+      "fallbackRequired": true,
+      "attempts": [
+        {
+          "runId": "qwen-size-screen-20260807",
+          "mode": "daily-content",
+          "model": "qwen3:8b",
+          "profile": "skill-compatible-schema",
+          "trial": 1,
+          "attempt": 1,
+          "temperature": 0.3,
+          "latencyMs": 16284,
+          "promptChars": 3602,
+          "promptEvalCount": 1277,
+          "evalCount": 1388,
+          "errors": [
+            "copy quality: lot 1 description has unsafe ending; lot 1 description does not match category JEW; lot 1 rumor exceeds 45 chars; lot 1 setHint exceeds 25 chars; lot 2 description has unsafe ending; lot 2 rumor exceeds 45 chars; lot 2 setHint exceeds 25 chars; lot 3 description has unsafe ending; lot 3 setHint exceeds 25 chars; lot 4 description has unsafe ending; lot 4 setHint exceeds 25 chars; lot 5 description has unsafe ending; lot 5 rumor exceeds 45 chars; lot 5 setHint exceeds 25 chars; lot 6 description has unsafe ending; lot 6 rumor exceeds 45 chars; lot 6 setHint exceeds 25 chars; lot 7 description has unsafe ending; lot 7 setHint exceeds 25 chars; lot 8 description has unsafe ending; lot 8 description does not match category BOK; lot 8 rumor exceeds 45 chars; lot 8 setHint exceeds 25 chars"
+          ],
+          "artifact": "qwen-size-screen-20260807-daily-content-qwen3-8b-skill-compatible-schema-t1-a1.json",
+          "diagnosis": "narrative-quality"
+        },
+        {
+          "runId": "qwen-size-screen-20260807",
+          "mode": "daily-content",
+          "model": "qwen3:8b",
+          "profile": "skill-compatible-schema",
+          "trial": 1,
+          "attempt": 2,
+          "temperature": 0.1,
+          "latencyMs": 9351,
+          "promptChars": 4425,
+          "promptEvalCount": 1508,
+          "evalCount": 1065,
+          "errors": [
+            "copy quality: lot 1 description has unsafe ending; lot 1 description does not match category JEW; lot 2 description has unsafe ending; lot 3 description has unsafe ending; lot 4 description has unsafe ending; lot 5 description has unsafe ending; lot 6 description has unsafe ending; lot 7 description has unsafe ending; lot 8 description has unsafe ending; lot 8 description does not match category BOK"
+          ],
+          "artifact": "qwen-size-screen-20260807-daily-content-qwen3-8b-skill-compatible-schema-t1-a2.json",
+          "diagnosis": "narrative-quality"
+        }
+      ],
+      "totalLatencyMs": 25635,
+      "totalEvalCount": 2453,
+      "diagnosis": "narrative-quality"
+    },
+    {
+      "model": "qwen3:8b",
+      "modelBytes": 5225388164,
+      "profile": "runtime-schema",
+      "profileDescription": "Runtime quality template + exact JSON Schema",
+      "trial": 1,
+      "passed": false,
+      "fallbackRequired": true,
+      "attempts": [
+        {
+          "runId": "qwen-size-screen-20260807",
+          "mode": "daily-content",
+          "model": "qwen3:8b",
+          "profile": "runtime-schema",
+          "trial": 1,
+          "attempt": 1,
+          "temperature": 0.3,
+          "latencyMs": 10288,
+          "promptChars": 4406,
+          "promptEvalCount": 1546,
+          "evalCount": 1141,
+          "errors": [
+            "copy quality: lot 1 description has unsafe ending; lot 2 description has unsafe ending; lot 3 description has unsafe ending; lot 5 setHint exceeds 25 chars; lot 6 description has unsafe ending; lot 6 setHint exceeds 25 chars"
+          ],
+          "artifact": "qwen-size-screen-20260807-daily-content-qwen3-8b-runtime-schema-t1-a1.json",
+          "diagnosis": "narrative-quality"
+        },
+        {
+          "runId": "qwen-size-screen-20260807",
+          "mode": "daily-content",
+          "model": "qwen3:8b",
+          "profile": "runtime-schema",
+          "trial": 1,
+          "attempt": 2,
+          "temperature": 0.1,
+          "latencyMs": 8896,
+          "promptChars": 4645,
+          "promptEvalCount": 1607,
+          "evalCount": 958,
+          "errors": [
+            "duplicate descriptions"
+          ],
+          "artifact": "qwen-size-screen-20260807-daily-content-qwen3-8b-runtime-schema-t1-a2.json",
+          "diagnosis": "narrative-quality"
+        }
+      ],
+      "totalLatencyMs": 19184,
+      "totalEvalCount": 2099,
+      "diagnosis": "narrative-quality"
+    },
+    {
+      "model": "qwen3:8b",
+      "modelBytes": 5225388164,
+      "profile": "runtime-json",
+      "profileDescription": "Runtime quality template + JSON-only mode",
+      "trial": 1,
+      "passed": false,
+      "fallbackRequired": true,
+      "attempts": [
+        {
+          "runId": "qwen-size-screen-20260807",
+          "mode": "daily-content",
+          "model": "qwen3:8b",
+          "profile": "runtime-json",
+          "trial": 1,
+          "attempt": 1,
+          "temperature": 0.3,
+          "latencyMs": 30625,
+          "promptChars": 4406,
+          "promptEvalCount": 1546,
+          "evalCount": 3343,
+          "errors": [
+            "daily output shape mismatch"
+          ],
+          "artifact": "qwen-size-screen-20260807-daily-content-qwen3-8b-runtime-json-t1-a1.json",
+          "diagnosis": "contract-compliance"
+        },
+        {
+          "runId": "qwen-size-screen-20260807",
+          "mode": "daily-content",
+          "model": "qwen3:8b",
+          "profile": "runtime-json",
+          "trial": 1,
+          "attempt": 2,
+          "temperature": 0.1,
+          "latencyMs": 11312,
+          "promptChars": 4448,
+          "promptEvalCount": null,
+          "evalCount": null,
+          "errors": [
+            "Unterminated string in JSON at position 2735 (line 102 column 42)"
+          ],
+          "artifact": "qwen-size-screen-20260807-daily-content-qwen3-8b-runtime-json-t1-a2.json",
+          "diagnosis": "harness-json"
+        }
+      ],
+      "totalLatencyMs": 41937,
+      "totalEvalCount": 3343,
+      "diagnosis": "harness-json"
+    },
+    {
+      "model": "qwen3:14b",
+      "modelBytes": 9276198565,
+      "profile": "skill-incompatible-schema",
+      "profileDescription": "unaltered skill template + Runtime JSON Schema (negative control)",
+      "trial": 0,
+      "passed": false,
+      "fallbackRequired": false,
+      "attempts": [],
+      "totalLatencyMs": 0,
+      "totalEvalCount": 0,
+      "diagnosis": "template-harness-incompatible",
+      "preflightIssue": "skill template requires fields omitted by the Runtime response schema"
+    },
+    {
+      "model": "qwen3:14b",
+      "modelBytes": 9276198565,
+      "profile": "skill-compatible-schema",
+      "profileDescription": "skill template adapted only to the Runtime response shape + exact JSON Schema",
+      "trial": 1,
+      "passed": false,
+      "fallbackRequired": true,
+      "attempts": [
+        {
+          "runId": "qwen-size-screen-20260807",
+          "mode": "daily-content",
+          "model": "qwen3:14b",
+          "profile": "skill-compatible-schema",
+          "trial": 1,
+          "attempt": 1,
+          "temperature": 0.3,
+          "latencyMs": 26083,
+          "promptChars": 3602,
+          "promptEvalCount": 1277,
+          "evalCount": 1351,
+          "errors": [
+            "copy quality: lot 1 description has unsafe ending; lot 1 description does not match category JEW; lot 2 description has unsafe ending; lot 3 description has unsafe ending; lot 4 description has unsafe ending; lot 5 description has unsafe ending; lot 6 description has unsafe ending; lot 7 description has unsafe ending; lot 8 description has unsafe ending; lot 8 description does not match category BOK"
+          ],
+          "artifact": "qwen-size-screen-20260807-daily-content-qwen3-14b-skill-compatible-schema-t1-a1.json",
+          "diagnosis": "narrative-quality"
+        },
+        {
+          "runId": "qwen-size-screen-20260807",
+          "mode": "daily-content",
+          "model": "qwen3:14b",
+          "profile": "skill-compatible-schema",
+          "trial": 1,
+          "attempt": 2,
+          "temperature": 0.1,
+          "latencyMs": 17434,
+          "promptChars": 4019,
+          "promptEvalCount": 1370,
+          "evalCount": 1162,
+          "errors": [
+            "copy quality: lot 1 description has unsafe ending; lot 1 description does not match category JEW; lot 2 description has unsafe ending; lot 3 description has unsafe ending; lot 4 description has unsafe ending; lot 4 banned phrase 할 수 있; lot 5 description has unsafe ending; lot 6 description has unsafe ending; lot 7 description has unsafe ending; lot 8 description has unsafe ending; lot 8 description does not match category BOK"
+          ],
+          "artifact": "qwen-size-screen-20260807-daily-content-qwen3-14b-skill-compatible-schema-t1-a2.json",
+          "diagnosis": "narrative-quality"
+        }
+      ],
+      "totalLatencyMs": 43517,
+      "totalEvalCount": 2513,
+      "diagnosis": "narrative-quality"
+    },
+    {
+      "model": "qwen3:14b",
+      "modelBytes": 9276198565,
+      "profile": "runtime-schema",
+      "profileDescription": "Runtime quality template + exact JSON Schema",
+      "trial": 1,
+      "passed": false,
+      "fallbackRequired": true,
+      "attempts": [
+        {
+          "runId": "qwen-size-screen-20260807",
+          "mode": "daily-content",
+          "model": "qwen3:14b",
+          "profile": "runtime-schema",
+          "trial": 1,
+          "attempt": 1,
+          "temperature": 0.3,
+          "latencyMs": 17896,
+          "promptChars": 4406,
+          "promptEvalCount": 1546,
+          "evalCount": 1195,
+          "errors": [
+            "copy quality: lot 1 description does not match category JEW; lot 1 banned phrase 힘[을이]?\\s; lot 2 description does not match category CLK; lot 3 description does not match category CLK; lot 4 description does not match category CLK; lot 5 description has unsafe ending; lot 5 description does not match category MET; lot 7 banned phrase 힘[을이]?\\s"
+          ],
+          "artifact": "qwen-size-screen-20260807-daily-content-qwen3-14b-runtime-schema-t1-a1.json",
+          "diagnosis": "narrative-quality"
+        },
+        {
+          "runId": "qwen-size-screen-20260807",
+          "mode": "daily-content",
+          "model": "qwen3:14b",
+          "profile": "runtime-schema",
+          "trial": 1,
+          "attempt": 2,
+          "temperature": 0.1,
+          "latencyMs": 20756,
+          "promptChars": 4765,
+          "promptEvalCount": 1642,
+          "evalCount": 1372,
+          "errors": [
+            "copy quality: lot 2 description does not match category CLK; lot 5 description does not match category MET"
+          ],
+          "artifact": "qwen-size-screen-20260807-daily-content-qwen3-14b-runtime-schema-t1-a2.json",
+          "diagnosis": "narrative-quality"
+        }
+      ],
+      "totalLatencyMs": 38652,
+      "totalEvalCount": 2567,
+      "diagnosis": "narrative-quality"
+    },
+    {
+      "model": "qwen3:14b",
+      "modelBytes": 9276198565,
+      "profile": "runtime-json",
+      "profileDescription": "Runtime quality template + JSON-only mode",
+      "trial": 1,
+      "passed": false,
+      "fallbackRequired": true,
+      "attempts": [
+        {
+          "runId": "qwen-size-screen-20260807",
+          "mode": "daily-content",
+          "model": "qwen3:14b",
+          "profile": "runtime-json",
+          "trial": 1,
+          "attempt": 1,
+          "temperature": 0.3,
+          "latencyMs": 40277,
+          "promptChars": 4406,
+          "promptEvalCount": 1546,
+          "evalCount": 2782,
+          "errors": [
+            "copy quality: lot 1 description does not match category JEW; lot 1 setHint exceeds 25 chars; lot 2 setHint exceeds 25 chars; lot 3 setHint exceeds 25 chars; lot 4 setHint exceeds 25 chars; lot 5 setHint exceeds 25 chars; lot 6 setHint exceeds 25 chars; lot 7 setHint exceeds 25 chars; lot 8 setHint exceeds 25 chars"
+          ],
+          "artifact": "qwen-size-screen-20260807-daily-content-qwen3-14b-runtime-json-t1-a1.json",
+          "diagnosis": "narrative-quality"
+        },
+        {
+          "runId": "qwen-size-screen-20260807",
+          "mode": "daily-content",
+          "model": "qwen3:14b",
+          "profile": "runtime-json",
+          "trial": 1,
+          "attempt": 2,
+          "temperature": 0.1,
+          "latencyMs": 42958,
+          "promptChars": 4736,
+          "promptEvalCount": 1652,
+          "evalCount": 2924,
+          "errors": [
+            "copy quality: lot 7 displayName must exactly copy baseName; lot 7 description does not match category CLK; lot 8 displayName must exactly copy baseName; lot 8 description does not match category BOK"
+          ],
+          "artifact": "qwen-size-screen-20260807-daily-content-qwen3-14b-runtime-json-t1-a2.json",
+          "diagnosis": "narrative-quality"
+        }
+      ],
+      "totalLatencyMs": 83235,
+      "totalEvalCount": 5706,
+      "diagnosis": "narrative-quality"
+    }
+  ]
+}
