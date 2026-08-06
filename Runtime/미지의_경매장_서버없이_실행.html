@@ -2225,6 +2225,14 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
 [data-scene="auction"] > .actions button { flex: 1; font-size: clamp(11px,1.05vw,17px); }
 
 [data-scene="settlement"]::after { background: #05040312; }
+[data-scene="settlement"] > h2 {
+  display: flex; position: absolute; left: 30%; top: 2.5%; width: 40%; height: 9%;
+  align-items: center; justify-content: center; box-sizing: border-box; margin: 0; padding: 0 4%;
+  background: url("./assets/ui/skin-v1/panel-parchment.png") center / 100% 100% no-repeat;
+  color: #20160e; font-size: 0; line-height: 1; text-shadow: 0 1px 0 #fff8;
+}
+[data-scene="settlement"] > h2 span { display: none; }
+[data-scene="settlement"] > h2::before { content: "하루 결산"; font-size: clamp(28px,3.1vw,50px); }
 [data-scene="settlement"] > p { left: 32%; top: 18.3%; width: 36%; color: #e9dcc5; font-size: clamp(9px,.9vw,14px); }
 [data-scene="settlement"] #settlement-summary {
   left: 11.3%; top: 21.5%; width: 77.9%; height: 62.5%; display: grid;
@@ -2236,13 +2244,20 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
   position: absolute; left: 5%; right: 5%; top: 4%; height: 7%; margin: 0;
   color: #eadfc9; font-size: clamp(12px,1.25vw,20px); line-height: 1; text-shadow: 0 1px 2px #000;
 }
-[data-scene="settlement"] .settlement-lots p {
-  display: grid; grid-template-columns: 1fr .8fr 1fr 1.3fr; align-items: center;
-  gap: 4px; margin: 0 5%; padding: 2% 0; border-bottom: 1px solid #b9a386; font-size: clamp(8px,.76vw,12px);
+[data-scene="settlement"] .settlement-lots article {
+  margin: 0 5%; padding: 1.5% 0 1.8%; border-bottom: 1px solid #b9a386;
+  font-size: clamp(8px,.76vw,12px);
 }
-[data-scene="settlement"] .settlement-lots p:first-of-type { margin-top: 14%; }
-[data-scene="settlement"] .settlement-lots p > * { font-style: normal; }
-[data-scene="settlement"] .settlement-lots p strong { text-align: right; }
+[data-scene="settlement"] .settlement-lots article:first-of-type { margin-top: 14%; }
+[data-scene="settlement"] .settlement-lots article div,
+[data-scene="settlement"] .settlement-lots article p {
+  display: grid; grid-template-columns: minmax(0,1fr) auto; align-items: center; gap: 8px; margin: 0;
+}
+[data-scene="settlement"] .settlement-lots article div { margin-bottom: 2px; }
+[data-scene="settlement"] .settlement-lots article b { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+[data-scene="settlement"] .settlement-lots article p { padding-left: 2%; color: #594632; font-size: .94em; }
+[data-scene="settlement"] .settlement-lots article em { font-style: normal; }
+[data-scene="settlement"] .settlement-lots article strong { color: #2c2014; text-align: right; }
 [data-scene="settlement"] .settlement-lots .won { color: #356927; font-weight: 900; }
 [data-scene="settlement"] .settlement-lots .lost { color: #a02d22; font-weight: 900; }
 [data-scene="settlement"] .settlement-owned {
@@ -2256,7 +2271,7 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
 [data-scene="settlement"] .settlement-finance { top: 35%; height: 27%; }
 [data-scene="settlement"] .settlement-progress { top: 68%; height: 27%; }
 [data-scene="settlement"] .settlement-money h4 {
-  height: 29%; margin: 0; color: #eadfc9; font-size: clamp(10px,1vw,16px); line-height: 1; text-shadow: 0 1px 2px #000;
+  height: 29%; margin: 0; padding-top: 8px; box-sizing: border-box; color: #eadfc9; font-size: clamp(10px,1vw,16px); line-height: 1; text-shadow: 0 1px 2px #000;
 }
 [data-scene="settlement"] .settlement-money p,
 [data-scene="settlement"] .settlement-market p { display: flex; align-items: center; gap: 8px; margin: 0; padding: 2.5% 2%; border-bottom: 1px solid #b9a386; font-size: clamp(9px,.84vw,13px); }
@@ -2413,7 +2428,7 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
 }
 [data-scene="settlement"] .settlement-money p img,
 [data-scene="settlement"] .settlement-market p img {
-  flex: 0 0 auto; width: clamp(16px,1.4vw,23px); height: clamp(16px,1.4vw,23px); object-fit: contain;
+  flex: 0 0 auto; width: clamp(23px,2vw,32px); height: clamp(23px,2vw,32px); object-fit: contain;
 }
 [data-scene="settlement"] .settlement-market p {
   grid-template-columns: auto 25% minmax(40px,1fr) minmax(42px,auto);
@@ -4549,8 +4564,14 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
     const spent = wins.reduce((sum, entry) => sum + entry.price, 0);
     const dayLots = state.schedule.days[state.day - 1].lots;
     const categories = [...new Set(dayLots.map((lot) => lot.category))].slice(0, 4);
+    const buyerNames = { player: "\uB2F9\uC2E0", nemesis: "\uAC08\uB808\uC624", "drifter-a": "\uBAA8\uC774\uB77C", "drifter-b": "\uC774\uB124\uC2A4" };
     document.querySelector("#settlement-summary").innerHTML = `
-    <section class="settlement-lots"><h3>\uB099\uCC30 / \uC720\uCC30 \uACB0\uACFC (\uACBD\uB9E4\uD488 8\uAC1C)</h3>${dayHistory.map((entry, index) => `<p><b>\uACBD\uB9E4\uD488 ${index + 1}</b><span class="${entry.won ? "won" : "lost"}">${entry.won ? "\uB099\uCC30" : "\uC720\uCC30"}</span><em>${entry.won ? "\uB2F9\uC2E0" : "\uACBD\uC7C1\uC790"}</em><strong>${money(entry.price)}</strong></p>`).join("")}</section>
+    <section class="settlement-lots"><h3>\uB099\uCC30 / \uC720\uCC30 \uACB0\uACFC (\uACBD\uB9E4\uD488 8\uAC1C)</h3>${dayHistory.map((entry, index) => {
+      const lot = dayLots.find((candidate) => candidate.lotId === entry.lotId);
+      const lotName = lot?.content?.displayName || lot?.baseName || `\uACBD\uB9E4\uD488 ${index + 1}`;
+      const buyerName = buyerNames[entry.winner] || "\uACBD\uC7C1\uC790";
+      return `<article><div><b title="${escapeHtml(lotName)}">${escapeHtml(lotName)}</b><span class="${entry.won ? "won" : "lost"}">${entry.won ? "\uB099\uCC30" : "\uC720\uCC30"}</span></div><p><em>\uAD6C\uB9E4\uC790 \xB7 ${buyerName}</em><strong>${money(entry.price)}</strong></p></article>`;
+    }).join("")}</section>
     <section class="settlement-center"><h3>\uC624\uB298\uC758 \uC815\uC0B0</h3><div class="settlement-owned"><b>\uD68D\uB4DD \uBB3C\uD488</b><strong>${wins.length}\uAC1C</strong><span>\uD604\uC7AC \uBCF4\uAD00 ${ownedItems().length} / ${state.storage}</span></div><div class="settlement-money settlement-finance"><h4>\uC790\uAE08 \uD604\uD669</h4><p><img src="./assets/ui/action-icons/total-spent.png" alt=""><span>\uCD1D \uC9C0\uCD9C \uAE08\uC561</span><strong>${money(spent)}</strong></p><p><img src="./assets/ui/action-icons/current-assets.png" alt=""><span>\uD604\uC7AC \uC790\uC0B0</span><strong>${money(state.cash)}</strong></p></div><div class="settlement-money settlement-progress"><h4>\uC6B4\uC601 \uD604\uD669</h4><p><span>\uC644\uB8CC \uC758\uB8B0</span><strong>${state.lastSettlement.quests}\uAC74</strong></p><p><span>\uB300\uCD9C \uC0C1\uD0DC</span><strong>${loanResult}</strong></p></div></section>
     <section class="settlement-market"><h3>\uACC4\uC5F4\uBCC4 \uC2DC\uC138 \uC694\uC57D</h3>${categories.map((category) => {
       const value = state.marketPath[category]?.[state.day - 1] ?? 100;
