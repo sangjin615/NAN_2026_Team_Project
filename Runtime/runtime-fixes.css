@@ -1547,7 +1547,9 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
 }
 [data-scene="tavern"] .tavern-stage-list header {
   position: static; display: flex; align-items: center; justify-content: space-between;
-  width: auto; height: auto; margin: 0 0 3px; padding: 0;
+  width: auto; max-width: none; height: auto; margin: 0 0 5px; padding: 0 0 4px;
+  border: 0; border-bottom: 1px solid #8f704c55; border-image: none;
+  background: transparent; box-shadow: none; filter: none;
 }
 [data-scene="tavern"] .tavern-stage-list header b { color: #6f4516; font-size: clamp(15px,1.25vw,20px); }
 [data-scene="tavern"] .tavern-stage-list article.is-current header b { color: #e6b94e; }
