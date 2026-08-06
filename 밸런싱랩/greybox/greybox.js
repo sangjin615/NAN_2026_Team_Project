@@ -25,8 +25,15 @@ const say = (t, cls) => { S.log.unshift({ t, cls }); if (S.log.length > 60) S.lo
 
 // 하루를 연다. 출품 8건은 96종 풀에서 순서대로 잘라 쓴다.
 function openDay() {
-  S.lots = S.pool.slice((S.day - 1) * 8, S.day * 8);
-  S.bots = R.makeBots(S.day, S.rng);
+  // 출품 시점의 상회 단계로 기준가를 확정한다. 이미 낙찰한 물품은 승급 후에도 재평가하지 않는다.
+  const priceMul = C.priceMultiplier[S.stage] || 1;
+  S.lots = S.pool.slice((S.day - 1) * 8, S.day * 8).map((x) => ({
+    ...x,
+    catalogBasePrice: x.basePrice,
+    basePrice: R.round100(x.basePrice * priceMul),
+    startBid: R.round100(x.basePrice * priceMul * C.auction.startBidRatio),
+  }));
+  S.bots = R.makeBots(S.day, S.rng, S.stage);
   S.appraised = {}; S.info = {}; S.taken = []; S.wins = [];
   S.botSpend = {}; S.pushed = {}; S.lotIndex = 0; S.startDayCash = S.cash;
   // 무작위 비교자로 섞으면 정렬 구현마다 난수 뽑는 수가 달라져 같은 씨앗이 다른 판이 된다.
@@ -67,6 +74,8 @@ function finalize() {
     S.wins.push({ lot: l, price: S.bid });
     say(`낙찰 ${l.qualityName ? '' : ''}${M(S.bid)} + 수수료 ${M(fee)}`, 'ok');
   } else if (S.leader) {
+    const winnerBot = S.bots.find((b) => b.id === S.leader);
+    if (winnerBot) winnerBot.cash = Math.max(0, winnerBot.cash - S.bid);
     S.botSpend[S.leader] = (S.botSpend[S.leader] || 0) + S.bid;
     if (S.playerBid) S.pushed[S.leader] = (S.pushed[S.leader] || 0) + (S.bid - l.startBid);
     say(`${S.bots.find((b) => b.id === S.leader).name} 낙찰 ${M(S.bid)}`, 'no');
