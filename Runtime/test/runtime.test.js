@@ -5,7 +5,7 @@ import { createRunSchedule, normalizeVisualEffects, validateSchedule, VISUAL_EFF
 import { createSetGraph } from '../src/set-graph.js';
 import { FallbackContentProvider, GenerationBuffer } from '../src/generation-buffer.js';
 import { createInitialState, resolveLot, advanceDay, prepareAuctionEntry } from '../src/game-state.js';
-import { resolveAuction, appraiseAll, appraiseItem, sellAll, sellItems, quoteItemsSale, bestSetMultiplier, acceptQuest, takeLoan, botBidForLot, estimateBotDailyAssets, openingBotBid, buyInformation, missedDeadline, isBankrupt, deliverQuestItem, questCompletionBonus, refreshDailyQuestOffers, repayLoanEarly, selectDistinctBotInterests } from '../src/systems.js';
+import { resolveAuction, sellAll, sellItems, quoteItemsSale, bestSetMultiplier, acceptQuest, takeLoan, botBidForLot, estimateBotDailyAssets, openingBotBid, buyInformation, missedDeadline, isBankrupt, deliverQuestItem, questCompletionBonus, refreshDailyQuestOffers, repayLoanEarly, selectDistinctBotInterests } from '../src/systems.js';
 import { recordEvent, runMetrics } from '../src/telemetry.js';
 import { GenerationApiProvider } from '../src/generation-api-provider.js';
 import { SaveStore } from '../src/save-store.js';
@@ -155,7 +155,7 @@ test('core state can finish all 12 days without a VSL implementation', () => {
   assert.equal(state.history.length, 96);
 });
 
-test('auction inventory connects to appraisal, sale, quest and loan systems', () => {
+test('auction inventory connects to sale, quest and loan systems', () => {
   const schedule = createRunSchedule({ catalog, balance, seed: 'systems' });
   const sets = createSetGraph(schedule, 'systems');
   const state = createInitialState({ schedule, sets, balance, startCash: 1000000 });
@@ -163,7 +163,6 @@ test('auction inventory connects to appraisal, sale, quest and loan systems', ()
   const auctionResult = resolveAuction({ state, lot, playerBid: 99999, balance });
   resolveLot(state, { action: 'bid', playerBid: 99999, auctionResult });
   assert.equal(state.inventory.length, 1);
-  assert.equal(appraiseAll(state, balance), 1);
   assert.ok(sellAll(state, balance) > 0);
   assert.equal(state.inventory[0].sold, true);
   assert.equal(acceptQuest(state, state.questOffers[0].id, balance), true);
@@ -385,7 +384,6 @@ test('individual inventory actions, information and telemetry are ready for plac
   const auctionResult = resolveAuction({ state, lot, playerBid: 99999, balance });
   resolveLot(state, { action: 'bid', playerBid: 99999, auctionResult });
   const id = state.inventory[0].lotId;
-  assert.equal(appraiseItem(state, balance, id), true);
   const cashBeforeInformation = state.cash;
   assert.equal(buyInformation(state, balance, 'forecast'), true);
   assert.equal(state.cash, cashBeforeInformation);

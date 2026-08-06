@@ -406,7 +406,7 @@ function renderExchange(message = '') {
   const maxStorage = Math.max(...balance.shop.storage);
   const occupiedCards = exchangeItems.map((item) => `
     <article><label><input type="checkbox" data-item-select="${item.lotId}" ${item.collateral ? 'disabled' : ''}> <b>${item.name}</b></label>
-    <span>${gradeLabel(item.grade)} · ${categoryLabel(item.category)}</span><span>매입 ${money(item.paid)} · ${item.appraised ? `감정 ${money(item.trueValue)} ±${money(item.appraisalRange)}` : '미감정'}</span></article>`).join('');
+    <span>${gradeLabel(item.grade)} · ${categoryLabel(item.category)}</span><span>매입 ${money(item.paid)}</span></article>`).join('');
   const emptyCards = Array.from({ length: Math.max(0, state.storage - exchangeItems.length) }, (_, index) => `
     <article class="empty-inventory-slot" aria-label="빈 보관칸 ${exchangeItems.length + index + 1}">
       <span class="empty-slot-number">${String(exchangeItems.length + index + 1).padStart(2, '0')}</span>
@@ -570,7 +570,7 @@ function renderGuild(message = '') {
   document.querySelector('#guild-loan').disabled = locked || lateForLoan || Boolean(state.loan) || state.guildLocked || !collateralCount;
   document.querySelector('#guild-repay').disabled = !state.loan || state.day >= state.loan?.dueDay;
   document.querySelector('#guild-return').disabled = false;
-  document.querySelector('#guild-message').innerHTML = message ? `<b>${message}</b>` : lateForLoan ? `<b>신규 대출 기간 종료</b><p>만기가 12일차를 넘는 대출은 받을 수 없습니다.</p>` : `<b>대출 안내</b><p>공개 기준가의 150%를 대출하며, 담보는 상환 전까지 판매·감정·의뢰 제출이 제한됩니다.</p><p>조기 상환 105% · 만기 ${balance.loan.termDays}일 · 만기 상환 110%</p>`;
+  document.querySelector('#guild-message').innerHTML = message ? `<b>${message}</b>` : lateForLoan ? `<b>신규 대출 기간 종료</b><p>만기가 12일차를 넘는 대출은 받을 수 없습니다.</p>` : `<b>대출 안내</b><p>공개 기준가의 150%를 대출하며, 담보는 상환 전까지 판매·의뢰 제출이 제한됩니다.</p><p>조기 상환 105% · 만기 ${balance.loan.termDays}일 · 만기 상환 110%</p>`;
   const picker = document.querySelector('#guild-collateral');
   if (picker) {
     document.querySelector('#guild-loan').disabled = true;

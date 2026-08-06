@@ -110,35 +110,6 @@ export function resolveAuction({ state, lot, playerBid, balance }) {
   return { winner: topBot.id, price: topBot.maxBid, bots };
 }
 
-export function appraisalError(balance, day) {
-  const key = day <= 3 ? '1-3' : day <= 6 ? '4-6' : '7-12';
-  return balance.appraisal.errorByDay[key];
-}
-
-export function appraiseAll(state, balance) {
-  let count = 0;
-  for (const item of state.inventory.filter((entry) => !entry.appraised && !entry.collateral)) {
-    const discount = 1 - (balance.shop.infoDiscount?.[state.shopStage] ?? 0);
-    const cost = Math.ceil(item.basePrice * balance.appraisal.rate * discount / 100) * 100;
-    if (state.cash < cost) break;
-    state.cash -= cost;
-    item.appraised = true;
-    item.appraisalRange = Math.round(item.trueValue * appraisalError(balance, state.day));
-    count += 1;
-  }
-  return count;
-}
-
-export function appraiseItem(state, balance, lotId) {
-  const item = state.inventory.find((entry) => entry.lotId === lotId && !entry.sold && !entry.appraised && !entry.collateral);
-  if (!item) return false;
-  const discount = 1 - (balance.shop.infoDiscount?.[state.shopStage] ?? 0);
-  const cost = Math.ceil(item.basePrice * balance.appraisal.rate * discount / 100) * 100;
-  if (state.cash < cost) return false;
-  state.cash -= cost; item.appraised = true; item.appraisalRange = Math.round(item.trueValue * appraisalError(balance, state.day));
-  return true;
-}
-
 export function bestSetMultiplier(inventory, balance, relics = [], shopStage = 1) {
   const active = inventory.filter((item) => !item.sold && !item.collateral);
   const byCategory = Object.groupBy(active, (item) => item.category);

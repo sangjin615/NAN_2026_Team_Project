@@ -19,7 +19,6 @@
     "bot-bid": { "file": "./assets/audio/sfx/sfx-bid-bot.wav", "volume": 0.68 },
     "pass": { "file": "./assets/audio/sfx/sfx-pass.wav", "volume": 0.7 },
     "gavel": { "file": "./assets/audio/sfx/sfx-gavel.wav", "volume": 0.82 },
-    "appraise": { "file": "./assets/audio/sfx/sfx-appraise-start.wav", "volume": 0.72 },
     "sell": { "file": "./assets/audio/sfx/sfx-sale-confirm.wav", "volume": 0.76 },
     "quest": { "file": "./assets/audio/sfx/sfx-quest-accept.wav", "volume": 0.72 },
     "information": { "file": "./assets/audio/sfx/sfx-info-buy.wav", "volume": 0.7 },
