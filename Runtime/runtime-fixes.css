@@ -3137,6 +3137,40 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
   height: 31px; min-height: 31px; font-size: clamp(11px, .86vw, 14px);
 }
 
+/* Settlement uses the title already painted into the background. */
+[data-scene="settlement"] > h2 { display: none; }
+[data-scene="settlement"] > p {
+  top: 13.5%; font-size: clamp(12px, 1vw, 16px); font-weight: 700;
+}
+[data-scene="settlement"] #settlement-summary h3 {
+  top: 3.8%; font-size: clamp(16px, 1.4vw, 23px);
+}
+[data-scene="settlement"] .settlement-lots article {
+  padding-top: 1.25%; padding-bottom: 1.35%;
+  font-size: clamp(11px, .9vw, 15px); line-height: 1.2;
+}
+[data-scene="settlement"] .settlement-lots article:first-of-type { margin-top: 15%; }
+[data-scene="settlement"] .settlement-owned {
+  font-size: clamp(12px, 1vw, 16px);
+}
+[data-scene="settlement"] .settlement-owned strong {
+  font-size: clamp(22px, 2.2vw, 36px);
+}
+[data-scene="settlement"] .settlement-money h4 {
+  display: flex; align-items: center;
+  height: 29%; margin: 0; padding: 0 5%;
+  font-size: clamp(14px, 1.2vw, 20px); line-height: 1.1;
+}
+[data-scene="settlement"] .settlement-money p {
+  padding: 3% 3%; font-size: clamp(12px, 1vw, 16px);
+}
+[data-scene="settlement"] .settlement-market p {
+  padding-top: 5%; padding-bottom: 5%;
+  font-size: clamp(12px, 1vw, 16px);
+}
+[data-scene="settlement"] .settlement-market p:first-of-type { margin-top: 15%; }
+[data-scene="settlement"] .market-line { height: 7px; }
+
 /* Replace the temporary City HUD glyphs with the normalized production icons. */
 [data-scene="hub"] > header > div,
 [data-scene="hub"] > header > strong,
