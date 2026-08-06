@@ -16,6 +16,7 @@ import { AudioBus } from './audio-bus.js';
 import { createRng } from './rng.js';
 import { JOURNEY_DAYS, RELIC_AUCTION_DAY, RUN_DAYS } from './constants.js';
 import { mergeOwnedRelicIds } from './relic-ownership.js';
+import { AUCTION_INITIAL_TIME_MS, extendAuctionDeadline, formatAuctionTime } from './auction-clock.js';
 
 const root = document.querySelector('#app');
 const adapter = new VslRuntimeAdapter(root);
@@ -64,24 +65,24 @@ function queueAuctionBotResponse(lotId, playerPrice) {
     session.currentPrice = Math.min(challenger.maxBid, session.currentPrice + raise);
     session.leader = challenger.id;
     session.feed.push(`${challenger.name} ${money(session.currentPrice)}`);
-    session.deadline = Date.now() + 15000;
+    session.deadline = extendAuctionDeadline(session.deadline);
     audio.playSfx('bot-bid');
     renderAuction();
   }, delay);
 }
 
-function armActionTimer(selector, deadline, onExpire) {
+function armActionTimer(selector, deadline, onExpire, formatter = (remaining) => `${Math.ceil(remaining / 1000)}초`) {
   clearActionTimer();
   let expired = false;
   const update = () => {
     const remaining = Math.max(0, deadline - Date.now());
     const element = document.querySelector(selector);
-    if (element) element.textContent = `${Math.ceil(remaining / 1000)}초`;
+    if (element) element.textContent = formatter(remaining);
     if (!remaining && !expired) {
       expired = true; clearActionTimer(); onExpire();
     }
   };
-  update(); actionTimer = window.setInterval(update, 200);
+  update(); actionTimer = window.setInterval(update, 100);
 }
 
 const relicArt = {
@@ -620,9 +621,9 @@ function renderAuction() {
     const bots = botBidForLot({ lot, day: state.day, balance, marketIndex, seed: state.seed }).map((bot) => ({ ...bot, maxBid: Math.min(bot.maxBid, dailyAssets[bot.id]?.remaining || 0) }));
     const opening = openingBotBid(bots, Math.max(1, Math.round(lot.pricing.basePrice * balance.auction.startBidRatio)));
     const openingFeed = opening ? [`${opening.bidder.name} ${money(opening.price)}`] : ['입찰 가능한 상대가 없습니다.'];
-    state.auctionSession = { lotId: lot.lotId, currentPrice: opening?.price || 1, leader: opening?.bidder.id || null, bots, deadline: Date.now() + 15000, feed: [...(expired ? [`기한이 지난 의뢰 ${expired}건이 만료됐습니다.`] : ['경매가 시작되었습니다.']), ...generatedFeed, ...openingFeed] };
+    state.auctionSession = { lotId: lot.lotId, currentPrice: opening?.price || 1, leader: opening?.bidder.id || null, bots, deadline: Date.now() + AUCTION_INITIAL_TIME_MS, feed: [...(expired ? [`기한이 지난 의뢰 ${expired}건이 만료됐습니다.`] : ['경매가 시작되었습니다.']), ...generatedFeed, ...openingFeed] };
   }
-  state.auctionSession.deadline ||= Date.now() + 15000;
+  state.auctionSession.deadline ||= Date.now() + AUCTION_INITIAL_TIME_MS;
   adapter.showScene('auction');
   adapter.setText('lot-progress', `${state.day}일차 · 경매품 ${state.lotIndex + 1} / 8`); adapter.setText('lot-name', lot.content.displayName);
   adapter.setText('lot-grade', lot.grade); adapter.setText('lot-description', lot.content.description); adapter.setText('base-price', money(lot.pricing.basePrice));
@@ -642,8 +643,8 @@ function renderAuction() {
     'drifter-b': './assets/ui/auction/competitors/ines.png',
   };
   document.querySelector('#auction-participants').innerHTML = `<h3>참가자 명단 (${participants.length} / 4)</h3>${participants.map((participant) => `<div class="participant ${participant.leader ? 'is-leading' : ''}">${participant.player ? '<span class="player-mark">나</span>' : `<img class="competitor-portrait" src="${competitorPortraits[participant.id]}" alt="${participant.name} 초상">`}<b>${participant.name}</b><small>${participant.player ? '보유 자산' : '추정 자산'}</small><strong>${money(participant.budget)}</strong></div>`).join('')}`;
-  document.querySelector('#auction-lot-status').innerHTML = `<b>경매 ${state.lotIndex + 1} / 8</b><span>${gradeLabel(lot.grade)}</span><strong>${money(state.auctionSession.currentPrice)}</strong><em id="auction-timer" aria-label="남은 시간"></em>`;
-  armActionTimer('#auction-timer', state.auctionSession.deadline, () => finishLot('pass'));
+  document.querySelector('#auction-lot-status').innerHTML = `<b>경매 ${state.lotIndex + 1} / 8</b><span>${gradeLabel(lot.grade)}</span><strong>${money(state.auctionSession.currentPrice)}</strong>`;
+  armActionTimer('#auction-timer', state.auctionSession.deadline, () => finishLot('pass'), formatAuctionTime);
 }
 
 function finishLot(action, multiplier = 1, directPrice = null) {
@@ -657,7 +658,7 @@ function finishLot(action, multiplier = 1, directPrice = null) {
     if (proposed > state.cash) { session.feed.push('보유 자금이 부족합니다.'); return renderAuction(); }
     if (ownedItems().length >= state.storage) { session.feed.push('보관칸이 가득 찼습니다.'); return renderAuction(); }
     session.currentPrice = proposed; session.leader = 'player'; session.feed.push(`플레이어 ${money(proposed)}`); audio.playSfx('bid');
-    session.deadline = Date.now() + 15000;
+    session.deadline = extendAuctionDeadline(session.deadline);
     renderAuction();
     queueAuctionBotResponse(lot.lotId, proposed);
     return;

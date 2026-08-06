@@ -12,6 +12,7 @@ import { SaveStore } from '../src/save-store.js';
 import { qualityErrors, setIncidentErrors } from '../generation-server.js';
 import { RELIC_AUCTION_DAY, RUN_DAYS } from '../src/constants.js';
 import { mergeOwnedRelicIds } from '../src/relic-ownership.js';
+import { extendAuctionDeadline, formatAuctionTime } from '../src/auction-clock.js';
 
 const catalog = JSON.parse(await readFile(new URL('../assets/items/catalog.json', import.meta.url), 'utf8'));
 const balance = JSON.parse(await readFile(new URL('../data/balance.json', import.meta.url), 'utf8'));
@@ -21,6 +22,13 @@ test('relic ownership includes saved and newly acquired relics without duplicate
     mergeOwnedRelicIds(['compass'], ['royal-charter'], ['compass', 'merchant-safe'], undefined),
     ['compass', 'royal-charter', 'merchant-safe'],
   );
+});
+
+test('auction bids add three seconds and the clock shows tenths', () => {
+  assert.equal(extendAuctionDeadline(15000), 18000);
+  assert.equal(extendAuctionDeadline(18000), 21000);
+  assert.equal(formatAuctionTime(14949), '14.9초');
+  assert.equal(formatAuctionTime(0), '0.0초');
 });
 
 test('creates a reproducible 12 day, 96 lot schedule from the 60 base items', () => {

@@ -1704,11 +1704,13 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
 [data-scene="museum"] #museum-progress strong { font: 700 clamp(27px,3vw,48px) Georgia,serif; }
 [data-scene="museum"] #museum-progress span { font-size: clamp(9px,.8vw,13px); line-height: 1.5; }
 
-/* Fifteen-second public auction clocks. */
-#auction-lot-status #auction-timer {
-  display: grid; place-items: center; min-width: 58px; height: 32px;
+/* Keep the public auction clock near the lot at the center of the room. */
+[data-scene="auction"] > #auction-timer {
+  position: absolute; z-index: 6; left: 44.5%; top: 39.5%;
+  display: grid; place-items: center; width: 11%; height: 4.6%;
   border: 1px solid #a7772d; background: #1c130b; color: #f4cf78;
-  font-style: normal; font-weight: 900;
+  font-size: clamp(15px, 1.35vw, 22px); font-style: normal; font-weight: 900;
+  box-shadow: 0 3px 8px #0008;
 }
 
 /* Final relic auction uses the same four-participant, open-bid structure. */
@@ -3097,6 +3099,7 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
   <section class="scene" data-scene="catalog" hidden><header><div><p class="eyebrow">오늘의 카탈로그</p><h2><span data-bind="day"></span>일차 · 경매품 8개</h2></div><strong data-bind="cash"></strong></header><div id="catalog-grid" class="catalog-grid"></div><button data-place="city" class="secondary return-city catalog-return">도시로</button><button id="start-auction">경매 시작</button></section>
   <section class="scene" data-scene="auction" hidden>
     <aside id="auction-lot-status"></aside>
+    <em id="auction-timer" aria-label="남은 시간"></em>
     <header><div><p class="eyebrow" data-bind="lot-progress"></p><h2 data-bind="lot-name"></h2></div><strong data-bind="cash"></strong></header>
     <div class="auction-layout"><div class="sprite-stage" data-effects="current-lot"><img data-sprite="current-lot" alt="경매 물품"></div><article><span class="grade" data-bind="lot-grade"></span><p data-bind="lot-description"></p><dl><div><dt>기준가</dt><dd data-bind="base-price"></dd></div><div><dt>현재 호가</dt><dd data-bind="current-bid"></dd></div></dl></article></div>
     <aside id="auction-participants"></aside>
@@ -3993,6 +3996,16 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
     return [...new Set(sources.flatMap((source) => Array.isArray(source) ? source : []))];
   }
 
+  // src/auction-clock.js
+  var AUCTION_INITIAL_TIME_MS = 15e3;
+  var AUCTION_BID_EXTENSION_MS = 3e3;
+  function extendAuctionDeadline(deadline) {
+    return Number(deadline) + AUCTION_BID_EXTENSION_MS;
+  }
+  function formatAuctionTime(remainingMs) {
+    return `${(Math.max(0, remainingMs) / 1e3).toFixed(1)}\uCD08`;
+  }
+
   // src/app.js
   var root = document.querySelector("#app");
   var adapter = new VslRuntimeAdapter(root);
@@ -4045,18 +4058,18 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
       session.currentPrice = Math.min(challenger.maxBid, session.currentPrice + raise);
       session.leader = challenger.id;
       session.feed.push(`${challenger.name} ${money(session.currentPrice)}`);
-      session.deadline = Date.now() + 15e3;
+      session.deadline = extendAuctionDeadline(session.deadline);
       audio.playSfx("bot-bid");
       renderAuction();
     }, delay);
   }
-  function armActionTimer(selector, deadline, onExpire) {
+  function armActionTimer(selector, deadline, onExpire, formatter = (remaining) => `${Math.ceil(remaining / 1e3)}\uCD08`) {
     clearActionTimer();
     let expired = false;
     const update = () => {
       const remaining = Math.max(0, deadline - Date.now());
       const element = document.querySelector(selector);
-      if (element) element.textContent = `${Math.ceil(remaining / 1e3)}\uCD08`;
+      if (element) element.textContent = formatter(remaining);
       if (!remaining && !expired) {
         expired = true;
         clearActionTimer();
@@ -4064,7 +4077,7 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
       }
     };
     update();
-    actionTimer = window.setInterval(update, 200);
+    actionTimer = window.setInterval(update, 100);
   }
   var relicArt = {
     "old-scale": "\uD669\uAE08 \uC800\uC6B8\uC758 \uC2EC\uC7A5.png",
@@ -4648,9 +4661,9 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
       const bots = botBidForLot({ lot, day: state.day, balance, marketIndex, seed: state.seed }).map((bot) => ({ ...bot, maxBid: Math.min(bot.maxBid, dailyAssets[bot.id]?.remaining || 0) }));
       const opening = openingBotBid(bots, Math.max(1, Math.round(lot.pricing.basePrice * balance.auction.startBidRatio)));
       const openingFeed = opening ? [`${opening.bidder.name} ${money(opening.price)}`] : ["\uC785\uCC30 \uAC00\uB2A5\uD55C \uC0C1\uB300\uAC00 \uC5C6\uC2B5\uB2C8\uB2E4."];
-      state.auctionSession = { lotId: lot.lotId, currentPrice: opening?.price || 1, leader: opening?.bidder.id || null, bots, deadline: Date.now() + 15e3, feed: [...expired ? [`\uAE30\uD55C\uC774 \uC9C0\uB09C \uC758\uB8B0 ${expired}\uAC74\uC774 \uB9CC\uB8CC\uB410\uC2B5\uB2C8\uB2E4.`] : ["\uACBD\uB9E4\uAC00 \uC2DC\uC791\uB418\uC5C8\uC2B5\uB2C8\uB2E4."], ...generatedFeed, ...openingFeed] };
+      state.auctionSession = { lotId: lot.lotId, currentPrice: opening?.price || 1, leader: opening?.bidder.id || null, bots, deadline: Date.now() + AUCTION_INITIAL_TIME_MS, feed: [...expired ? [`\uAE30\uD55C\uC774 \uC9C0\uB09C \uC758\uB8B0 ${expired}\uAC74\uC774 \uB9CC\uB8CC\uB410\uC2B5\uB2C8\uB2E4.`] : ["\uACBD\uB9E4\uAC00 \uC2DC\uC791\uB418\uC5C8\uC2B5\uB2C8\uB2E4."], ...generatedFeed, ...openingFeed] };
     }
-    state.auctionSession.deadline ||= Date.now() + 15e3;
+    state.auctionSession.deadline ||= Date.now() + AUCTION_INITIAL_TIME_MS;
     adapter.showScene("auction");
     adapter.setText("lot-progress", `${state.day}\uC77C\uCC28 \xB7 \uACBD\uB9E4\uD488 ${state.lotIndex + 1} / 8`);
     adapter.setText("lot-name", lot.content.displayName);
@@ -4680,8 +4693,8 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
       "drifter-b": "./assets/ui/auction/competitors/ines.png"
     };
     document.querySelector("#auction-participants").innerHTML = `<h3>\uCC38\uAC00\uC790 \uBA85\uB2E8 (${participants.length} / 4)</h3>${participants.map((participant) => `<div class="participant ${participant.leader ? "is-leading" : ""}">${participant.player ? '<span class="player-mark">\uB098</span>' : `<img class="competitor-portrait" src="${competitorPortraits[participant.id]}" alt="${participant.name} \uCD08\uC0C1">`}<b>${participant.name}</b><small>${participant.player ? "\uBCF4\uC720 \uC790\uC0B0" : "\uCD94\uC815 \uC790\uC0B0"}</small><strong>${money(participant.budget)}</strong></div>`).join("")}`;
-    document.querySelector("#auction-lot-status").innerHTML = `<b>\uACBD\uB9E4 ${state.lotIndex + 1} / 8</b><span>${gradeLabel(lot.grade)}</span><strong>${money(state.auctionSession.currentPrice)}</strong><em id="auction-timer" aria-label="\uB0A8\uC740 \uC2DC\uAC04"></em>`;
-    armActionTimer("#auction-timer", state.auctionSession.deadline, () => finishLot("pass"));
+    document.querySelector("#auction-lot-status").innerHTML = `<b>\uACBD\uB9E4 ${state.lotIndex + 1} / 8</b><span>${gradeLabel(lot.grade)}</span><strong>${money(state.auctionSession.currentPrice)}</strong>`;
+    armActionTimer("#auction-timer", state.auctionSession.deadline, () => finishLot("pass"), formatAuctionTime);
   }
   function finishLot(action, multiplier = 1, directPrice = null) {
     clearActionTimer();
@@ -4708,7 +4721,7 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
       session.leader = "player";
       session.feed.push(`\uD50C\uB808\uC774\uC5B4 ${money(proposed)}`);
       audio.playSfx("bid");
-      session.deadline = Date.now() + 15e3;
+      session.deadline = extendAuctionDeadline(session.deadline);
       renderAuction();
       queueAuctionBotResponse(lot.lotId, proposed);
       return;
