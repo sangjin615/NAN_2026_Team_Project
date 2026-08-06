@@ -3167,8 +3167,8 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
   isolation: isolate;
 }
 [data-scene="hub"] #market-dialog .market-incident-visuals span:first-child { left: 3.5%; }
-[data-scene="hub"] #market-dialog .market-incident-visuals span:nth-child(2),
-[data-scene="hub"] #market-dialog .market-incident-visuals span:only-child { right: 3.5%; }
+[data-scene="hub"] #market-dialog .market-incident-visuals span:nth-child(2) { right: 3.5%; }
+[data-scene="hub"] #market-dialog .market-incident-visuals span:only-child { left: 3.5%; right: auto; }
 [data-scene="hub"] #market-dialog .market-incident-visuals img {
   width: 56%; height: 56%;
   opacity: .66;
