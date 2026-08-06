@@ -646,7 +646,7 @@ function renderAuction() {
   }
   state.auctionSession.deadline ||= Date.now() + AUCTION_INITIAL_TIME_MS;
   adapter.showScene('auction');
-  adapter.setText('lot-progress', `${state.day}일차 · 경매품 ${state.lotIndex + 1} / 8`); adapter.setText('lot-name', lot.content.displayName);
+  adapter.setText('lot-progress', `${state.day}일차 · 경매품 ${state.lotIndex + 1} / 8`); adapter.setText('lot-name', lot.content.displayName); adapter.setText('lot-category', categoryLabel(lot.category));
   adapter.setText('lot-grade', lot.grade); adapter.setText('lot-description', lot.content.description); adapter.setText('base-price', money(lot.pricing.basePrice));
   adapter.setText('current-bid', money(state.auctionSession.currentPrice)); adapter.setText('cash', money(state.cash)); adapter.setSprite('current-lot', spriteUrl(lot, lot.grade)); adapter.setEffects('current-lot', normalizeVisualEffects(lot.category, lot.grade, lot.visualEffects));
   const currentLotSprite = document.querySelector('[data-sprite="current-lot"], [data-bind="current-lot"]');

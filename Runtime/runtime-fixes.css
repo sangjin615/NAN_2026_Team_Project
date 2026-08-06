@@ -1044,6 +1044,10 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
   margin: 0; padding: 8px 18px;
 }
 [data-scene="auction"] > header h2 { margin: 2px 0; font-size: clamp(22px, 2vw, 32px); }
+[data-scene="auction"] > header .auction-category {
+  margin: 3px 0 0; color: #76512c;
+  font-size: clamp(12px, 1vw, 16px); font-weight: 800; letter-spacing: .08em;
+}
 [data-scene="auction"] .auction-layout {
   position: absolute; left: 21%; top: 22%; width: 58%; height: 57%;
   margin: 0; padding: 12px; overflow: hidden;
