@@ -15,6 +15,17 @@ function parse(raw) {
   }
 }
 
+function migrateState(state) {
+  for (const lot of state.schedule?.days?.flatMap((day) => day.lots || []) || []) {
+    lot.pricing ??= {};
+    lot.pricing.catalogBasePrice ??= lot.pricing.basePrice;
+    lot.pricing.priceMultiplier ??= 1;
+  }
+  for (const item of state.inventory || []) item.catalogBasePrice ??= item.basePrice;
+  if (state.loan && state.loan.earlyRepayment == null) state.loan.earlyRepayment = Math.round(state.loan.principal * 1.05 / 10) * 10;
+  return state;
+}
+
 export class SaveStore {
   constructor(storage = globalThis.localStorage) { this.storage = storage; }
 
@@ -43,7 +54,7 @@ export class SaveStore {
       if (packet) {
         packet.state.saveSlot = slot;
         if (kind === 'backup') this.storage.setItem(this.key(slot, 'current'), JSON.stringify(packet));
-        return packet.state;
+        return migrateState(packet.state);
       }
     }
     if (slot === 1) return this.migrateLegacy();
@@ -57,7 +68,7 @@ export class SaveStore {
       legacy.state.saveSlot = 1;
       this.save(legacy.state, 1);
       this.storage.removeItem(LEGACY_SAVE_KEY);
-      return legacy.state;
+      return migrateState(legacy.state);
     } catch {
       return null;
     }

@@ -31,6 +31,7 @@ export function createDailyQuestOffers(balance, day, seed, relics = []) {
     offerId: `day-${day}-${id}-${index + 1}`, offeredDay: day, acceptDeadlineDay: Math.min(12, day + 1),
     id, fee: balance.quests[id].fee, reward: balance.quests[id].reward,
     rewardMode: rewardPolicy.mode, completionBonus: rewardPolicy.completionBonus,
+    completionBonusByStage: rewardPolicy.completionBonusByStage,
     rule: balance.quests[id].rule, accepted: false, completed: false,
     targetCategory: families[index % families.length], acceptedDay: null, deadlineDay: null
   }));
@@ -43,15 +44,16 @@ export function refreshDailyQuestOffers(state, balance, relics = []) {
 
 export function botBidForLot({ lot, day, balance, marketIndex, seed }) {
   const rng = createRng(`${seed}:bots:${lot.lotId}`);
-  const nemesisCapital = balance.bots.nemesisInitial * (balance.bots.growthPerDay ** day);
+  const dayStage = Math.min(4, Math.floor((day - 1) / 3) + 1);
+  const dailyCapital = balance.bots.capitalByStage?.[dayStage] ?? balance.bots.nemesisInitial * (balance.bots.growthPerDay ** day);
   const demand = (balance.market.expectedDemand ?? 1.05) + (GRADE_BETA[lot.grade] ?? 1) * (marketIndex - 1);
   const publicEstimate = lot.pricing.basePrice * demand;
   const families = ['CER', 'CLK', 'PNT', 'BOK', 'MET', 'JEW'];
   const target = () => families[Math.floor(rng() * families.length)];
   const bids = [
-    { id: 'nemesis', name: '갈레오', target: target(), cap: nemesisCapital, factor: 0.78 + rng() * 0.30 },
-    { id: 'drifter-a', name: '모이라', target: target(), cap: nemesisCapital * balance.bots.drifterRatio * (0.85 + rng() * 0.3), factor: 0.78 + rng() * 0.30 },
-    { id: 'drifter-b', name: '이네스', target: target(), cap: nemesisCapital * balance.bots.drifterRatio * (0.85 + rng() * 0.3), factor: 0.78 + rng() * 0.30 }
+    { id: 'nemesis', name: '갈레오', target: target(), cap: dailyCapital, factor: 0.78 + rng() * 0.30 },
+    { id: 'drifter-a', name: '모이라', target: target(), cap: dailyCapital, factor: 0.78 + rng() * 0.30 },
+    { id: 'drifter-b', name: '이네스', target: target(), cap: dailyCapital, factor: 0.78 + rng() * 0.30 }
   ];
   return bids.map((bot) => ({ ...bot, maxBid: Math.max(0, Math.round(Math.min(bot.cap, publicEstimate * (bot.target === lot.category ? 1.18 : 1) * ({ COMMON: 0.9, RARE: 1, EPIC: 1.05, LEGENDARY: 1.1 }[lot.grade] ?? 1) * bot.factor))) }));
 }
@@ -63,22 +65,17 @@ export function openingBotBid(bots, openingPrice) {
 }
 
 export function estimateBotDailyAssets({ state, balance, day = state.day }) {
-  const lots = state.schedule?.days?.[day - 1]?.lots || [];
-  const totals = {};
-  for (const lot of lots) {
-    const marketIndex = state.marketPath[lot.category][day - 1];
-    for (const bot of botBidForLot({ lot, day, balance, marketIndex, seed: state.seed })) {
-      totals[bot.id] = (totals[bot.id] || 0) + bot.maxBid;
-    }
-  }
+  const dayStage = Math.min(4, Math.floor((day - 1) / 3) + 1);
+  const initial = balance.bots.capitalByStage?.[dayStage] ?? 0;
+  const ids = ['nemesis', 'drifter-a', 'drifter-b'];
   const spent = {};
   for (const entry of state.history || []) {
     if (entry.day !== day || entry.winner === 'player') continue;
     spent[entry.winner] = (spent[entry.winner] || 0) + Number(entry.price || 0);
   }
-  return Object.fromEntries(Object.entries(totals).map(([id, total]) => [id, {
-    initial: Math.round(total * 0.6),
-    remaining: Math.max(0, Math.round(total * 0.6) - (spent[id] || 0)),
+  return Object.fromEntries(ids.map((id) => [id, {
+    initial,
+    remaining: Math.max(0, initial - (spent[id] || 0)),
   }]));
 }
 
@@ -216,8 +213,9 @@ export function deliverQuestItem(state, questId, lotId) {
   item.delivered = true; item.sold = true; item.salePrice = 0;
   quest.completed = true; quest.deliveredLotId = lotId; quest.completedDay = state.day;
   const shopBonus = state.balanceQuestBonus?.[state.shopStage] ?? 0;
+  const completionBonus = quest.completionBonusByStage?.[state.shopStage] ?? quest.completionBonus ?? 0;
   const reward = quest.rewardMode === 'deliveredBasePlusFeePlusBonus'
-    ? item.basePrice + quest.fee + (quest.completionBonus || 0)
+    ? item.basePrice + quest.fee + completionBonus
     : Math.round(quest.reward * (1 + shopBonus));
   quest.paidReward = reward;
   state.cash += reward; state.completedQuestCount += 1;
@@ -247,12 +245,13 @@ export function upgradeShop(state, balance) {
 }
 
 export function takeLoan(state, balance, lotId = null) {
-  if (state.loan || state.shopStage < balance.loan.minShopStage || state.guildLocked) return false;
+  if (state.loan || state.shopStage < balance.loan.minShopStage || state.guildLocked || state.day + balance.loan.termDays > 12) return false;
   const collateral = state.inventory.find((item) => !item.sold && !item.collateral && !item.delivered && (!lotId || item.lotId === lotId));
   if (!collateral) return false;
-  const principal = Math.round(collateral.trueValue * balance.loan.limitFromDisposalValue);
+  const round10 = (value) => Math.round(value / 10) * 10;
+  const principal = round10(collateral.basePrice * balance.loan.limitFromDisposalValue);
   collateral.collateral = true; state.cash += principal;
-  state.loan = { principal, due: Math.round(principal * balance.loan.repayMultiplier), dueDay: state.day + balance.loan.termDays, lotId: collateral.lotId };
+  state.loan = { principal, due: round10(principal * balance.loan.repayMultiplier), earlyRepayment: round10(principal * balance.loan.earlyRepayMultiplier), dueDay: state.day + balance.loan.termDays, lotId: collateral.lotId };
   return true;
 }
 
@@ -260,12 +259,14 @@ export function settleLoan(state) {
   if (!state.loan || state.day < state.loan.dueDay) return 'none';
   const collateral = state.inventory.find((item) => item.lotId === state.loan.lotId);
   if (state.cash >= state.loan.due) { state.cash -= state.loan.due; collateral.collateral = false; state.loan = null; return 'repaid'; }
-  collateral.sold = true; collateral.collateral = false; state.guildLocked = true; state.loan = null; return 'seized';
+  if (collateral) { collateral.sold = true; collateral.collateral = false; }
+  state.cash -= Math.max(0, state.loan.due - Number(collateral?.basePrice || 0));
+  state.guildLocked = true; state.loan = null; return 'seized';
 }
 
 export function repayLoanEarly(state, balance) {
   if (!state.loan || state.day >= state.loan.dueDay) return false;
-  const amount = Math.round(state.loan.principal * (balance.loan.earlyRepayMultiplier ?? 1));
+  const amount = state.loan.earlyRepayment ?? Math.round(state.loan.principal * (balance.loan.earlyRepayMultiplier ?? 1) / 10) * 10;
   if (state.cash < amount) return false;
   const collateral = state.inventory.find((item) => item.lotId === state.loan.lotId);
   state.cash -= amount;

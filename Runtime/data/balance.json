@@ -73,10 +73,10 @@
     }
   },
   "loan": {
-    "limitFromDisposalValue": 0.35,
-    "repayMultiplier": 1.9,
-    "earlyRepayMultiplier": 1.0,
-    "termDays": 2,
+    "limitFromDisposalValue": 1.5,
+    "repayMultiplier": 1.1,
+    "earlyRepayMultiplier": 1.05,
+    "termDays": 3,
     "concurrent": 1,
     "minShopStage": 2,
     "collateral": "재고. 담보로 잡히면 잠겨서 못 판다. 현금은 담보가 아니다",
@@ -178,6 +178,13 @@
       0.3,
       0.4
     ],
+    "priceMultiplierByDayStage": [
+      0,
+      0.5,
+      0.75,
+      1.0,
+      1.25
+    ],
     "infoDiscount": [
       0,
       0.1,
@@ -195,7 +202,14 @@
   "quests": {
     "rewardPolicy": {
       "mode": "deliveredBasePlusFeePlusBonus",
-      "completionBonus": 3000,
+      "completionBonus": 6000,
+      "completionBonusByStage": [
+        0,
+        3000,
+        4500,
+        6000,
+        7500
+      ],
       "refundAcceptanceFee": true,
       "shopBonusScope": "none",
       "formula": "제출 물품 기준가 + 수주비 + 3,000",
@@ -320,6 +334,14 @@
   "alignedAt": "2026-07-30 (96종 고정 풀)",
   "decidedBy": "사용자 — \"니가 시뮬레이션 할때 쓴거에 맞춰\"",
   "bots": {
+    "capitalByStage": [
+      0,
+      8000,
+      12000,
+      16000,
+      20000
+    ],
+    "capitalMode": "fixedByDayStage",
     "nemesisInitial": 25000,
     "growthPerDay": 1.155,
     "capitalFormula": "25000 * 1.155^day  (day 는 1..12. 1일차 28,875 · 12일차 140,904)",

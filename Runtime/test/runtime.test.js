@@ -44,16 +44,37 @@ test('generation buffer prepares current day plus two and falls back without blo
   assert.ok(schedule.days.slice(0, 3).every((day) => day.lots.every((lot) => lot.content?.rumor && lot.content?.setHint && lot.content?.npcReaction)));
 });
 
+test('daily price stages are fixed once from catalog prices', () => {
+  const schedule = createRunSchedule({ catalog, balance, seed: 'daily-price-stages' });
+  for (const [dayIndex, multiplier] of [0.5, 0.5, 0.5, 0.75, 0.75, 0.75, 1, 1, 1, 1.25, 1.25, 1.25].entries()) {
+    for (const lot of schedule.days[dayIndex].lots) {
+      assert.equal(lot.pricing.basePrice, Math.round(lot.pricing.catalogBasePrice * multiplier / 100) * 100);
+      assert.equal(lot.pricing.priceMultiplier, multiplier);
+    }
+  }
+});
+
 test('competitor estimated assets stay fixed for the day and decrease after a win', () => {
   const schedule = createRunSchedule({ catalog, balance, seed: 'daily-assets' });
   const state = createInitialState({ schedule, sets: [], balance });
   const before = estimateBotDailyAssets({ state, balance });
+  assert.equal(before.nemesis.initial, 8000);
+  assert.equal(before['drifter-a'].initial, 8000);
   const winner = 'nemesis';
   state.history.push({ day: 1, winner, price: 3000 });
   const after = estimateBotDailyAssets({ state, balance });
   assert.equal(after[winner].initial, before[winner].initial);
   assert.equal(after[winner].remaining, before[winner].remaining - 3000);
   assert.equal(after['drifter-a'].remaining, before['drifter-a'].remaining);
+});
+
+test('competitor daily capital follows the day stage', () => {
+  const schedule = createRunSchedule({ catalog, balance, seed: 'capital-stages' });
+  const state = createInitialState({ schedule, sets: [], balance });
+  for (const [day, expected] of [[1, 8000], [4, 12000], [7, 16000], [10, 20000]]) {
+    state.day = day;
+    assert.equal(estimateBotDailyAssets({ state, balance }).nemesis.initial, expected);
+  }
 });
 
 test('repairs the first-day auction cursor after generated lot content changes', () => {
@@ -229,17 +250,17 @@ test('disabled bargain quests are not generated or carried into a new day', () =
   assert.equal(state.questOffers.some((quest) => quest.id === 'bargain'), false);
 });
 
-test('V6.2 loan unlocks at stage two and early repayment costs principal only', () => {
+test('loan uses public base price and charges 105% for early repayment', () => {
   const schedule = createRunSchedule({ catalog, balance, seed: 'loan-v62' });
   const state = createInitialState({ schedule, sets: createSetGraph(schedule, 'loan-v62'), balance, startCash: 100000 });
   const lot = schedule.days[0].lots[0];
-  state.inventory.push({ lotId: lot.lotId, trueValue: 10000, sold: false, collateral: false });
+  state.inventory.push({ lotId: lot.lotId, basePrice: 10000, trueValue: 20000, sold: false, collateral: false });
   state.shopStage = 2;
   assert.equal(takeLoan(state, balance), true);
-  assert.equal(state.loan.principal, 3500);
+  assert.equal(state.loan.principal, 15000);
   const cashBeforeRepay = state.cash;
   assert.equal(repayLoanEarly(state, balance), true);
-  assert.equal(state.cash, cashBeforeRepay - 3500);
+  assert.equal(state.cash, cashBeforeRepay - 15750);
   assert.equal(state.loan, null);
 });
 
@@ -248,14 +269,23 @@ test('guild loan uses the collateral item selected by the player', () => {
   const state = createInitialState({ schedule, sets: createSetGraph(schedule, 'selected-collateral'), balance, startCash: 100000 });
   state.shopStage = 2;
   state.inventory.push(
-    { lotId: 'first', trueValue: 10000, sold: false, collateral: false },
-    { lotId: 'chosen', trueValue: 20000, sold: false, collateral: false },
+    { lotId: 'first', basePrice: 10000, trueValue: 50000, sold: false, collateral: false },
+    { lotId: 'chosen', basePrice: 20000, trueValue: 1000, sold: false, collateral: false },
   );
   assert.equal(takeLoan(state, balance, 'chosen'), true);
   assert.equal(state.loan.lotId, 'chosen');
-  assert.equal(state.loan.principal, 7000);
+  assert.equal(state.loan.principal, 30000);
   assert.equal(state.inventory[0].collateral, false);
   assert.equal(state.inventory[1].collateral, true);
+});
+
+test('new loans cannot mature beyond day twelve', () => {
+  const schedule = createRunSchedule({ catalog, balance, seed: 'late-loan' });
+  const state = createInitialState({ schedule, sets: [], balance, startCash: 100000 });
+  state.shopStage = 2;
+  state.day = 10;
+  state.inventory.push({ lotId: 'late', basePrice: 10000, trueValue: 20000, sold: false, collateral: false });
+  assert.equal(takeLoan(state, balance, 'late'), false);
 });
 
 test('three save slots keep current and backup packets independently', () => {

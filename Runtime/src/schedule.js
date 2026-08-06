@@ -47,7 +47,10 @@ export function createRunSchedule({ catalog, balance, seed }) {
       const item = itemPool[dayIndex * LOTS_PER_DAY + lotIndex];
       const grade = weightedChoice(gradeEntries, rng);
       const quality = weightedChoice(qualityTable.map((entry) => [entry, entry.weight]), rng);
-      const basePrice = Number(gradeBase[grade.toLowerCase()] || 8000);
+      const catalogBasePrice = Number(gradeBase[grade.toLowerCase()] || 8000);
+      const dayStage = Math.min(4, Math.floor(dayIndex / 3) + 1);
+      const priceMultiplier = balance.shop?.priceMultiplierByDayStage?.[dayStage] ?? 1;
+      const basePrice = Math.round(catalogBasePrice * priceMultiplier / 100) * 100;
       const trueValue = Math.round(basePrice * Number(quality.value || 1));
       return {
         lotId: `${seed}-d${dayIndex + 1}-l${lotIndex + 1}`,
@@ -60,7 +63,7 @@ export function createRunSchedule({ catalog, balance, seed }) {
         grade,
         spritePath: item.grades[grade],
         quality: { label: quality.label, multiplier: quality.value },
-        pricing: { basePrice, trueValue },
+        pricing: { catalogBasePrice, priceMultiplier, basePrice, trueValue },
         visualEffects: selectVisualEffects(item.category, grade, rng),
         content: null
       };

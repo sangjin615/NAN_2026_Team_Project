@@ -521,6 +521,8 @@ function renderShop(message = '') {
 function renderGuild(message = '') {
   clearActionTimer(); audio.playBgm('workplace'); state.phase = 'guild'; adapter.showScene('guild'); syncHeader();
   const locked = state.shopStage < balance.loan.minShopStage;
+  const lateForLoan = state.day + balance.loan.termDays > RUN_DAYS;
+  const loanValue = (item) => Math.round(item.basePrice * balance.loan.limitFromDisposalValue / 10) * 10;
   const collateralItems = ownedItems().filter((item) => !item.collateral);
   const collateralCount = collateralItems.length;
   const collateralOptions = collateralItems.map((item) => `<option value="${item.lotId}">${item.name}</option>`).join('');
@@ -530,29 +532,29 @@ function renderGuild(message = '') {
   document.querySelector('#guild-detail').innerHTML = detail;
   const collateralMarkup = collateralItems.length ? collateralItems.map((item) => {
     const lot = scheduledLot(item.lotId);
-    const value = Math.round(item.trueValue * balance.loan.limitFromDisposalValue);
-    return `<label class="guild-collateral-card"><img src="${lot ? spriteUrl(lot, item.grade) : ''}" alt=""><span><b>${item.name}</b><small>${gradeLabel(item.grade)} · 정산가치 ${money(item.trueValue)}</small></span><strong>${money(value)}</strong><input type="radio" name="guild-collateral-card" value="${item.lotId}"></label>`;
+    const value = loanValue(item);
+    return `<label class="guild-collateral-card"><img src="${lot ? spriteUrl(lot, item.grade) : ''}" alt=""><span><b>${item.name}</b><small>${gradeLabel(item.grade)} · 공개 기준가 ${money(item.basePrice)}</small></span><strong>${money(value)}</strong><input type="radio" name="guild-collateral-card" value="${item.lotId}"></label>`;
   }).join('') : `<div class="guild-collateral-empty"><b>${locked ? '담보 기능이 잠겨 있습니다.' : '담보로 설정할 보유 물품이 없습니다.'}</b><span>${locked ? `상회를 ${balance.loan.minShopStage}단계로 승급하면 이용할 수 있습니다.` : '경매에서 물품을 낙찰한 뒤 다시 방문하세요.'}</span></div>`;
   document.querySelector('#guild-collateral-list').innerHTML = `<header><h3>담보 보유품 <small>(미판매 물품)</small></h3><b>${collateralCount} / ${state.storage}</b></header><div class="guild-collateral-scroll">${collateralMarkup}</div><footer><span>선택 담보 대출 한도</span><strong id="guild-limit-total">0 G</strong></footer>`;
-  document.querySelector('#guild-loan').disabled = locked || Boolean(state.loan) || state.guildLocked || !collateralCount;
+  document.querySelector('#guild-loan').disabled = locked || lateForLoan || Boolean(state.loan) || state.guildLocked || !collateralCount;
   document.querySelector('#guild-repay').disabled = !state.loan || state.day >= state.loan?.dueDay;
   document.querySelector('#guild-return').disabled = false;
-  document.querySelector('#guild-message').innerHTML = message ? `<b>${message}</b>` : `<b>대출 안내</b><p>선택한 물품은 상환 전까지 판매·감정·의뢰 제출이 제한됩니다.</p><p>만기 ${balance.loan.termDays}일 · 만기 상환액은 원금의 ${Math.round(balance.loan.repayMultiplier * 100)}%</p>`;
+  document.querySelector('#guild-message').innerHTML = message ? `<b>${message}</b>` : lateForLoan ? `<b>신규 대출 기간 종료</b><p>만기가 12일차를 넘는 대출은 받을 수 없습니다.</p>` : `<b>대출 안내</b><p>공개 기준가의 150%를 대출하며, 담보는 상환 전까지 판매·감정·의뢰 제출이 제한됩니다.</p><p>조기 상환 105% · 만기 ${balance.loan.termDays}일 · 만기 상환 110%</p>`;
   const picker = document.querySelector('#guild-collateral');
   if (picker) {
     document.querySelector('#guild-loan').disabled = true;
     picker.onchange = () => {
     const item = collateralItems.find((entry) => entry.lotId === picker.value);
-    const principal = item ? Math.round(item.trueValue * balance.loan.limitFromDisposalValue) : 0;
-    document.querySelector('#guild-loan').disabled = !item;
-    document.querySelector('#loan-preview').textContent = item ? `대출 ${money(principal)} · ${state.day + balance.loan.termDays}일차 만기 ${money(Math.round(principal * balance.loan.repayMultiplier))}` : '물품을 선택하면 대출액과 만기 상환액을 계산합니다.';
+    const principal = item ? loanValue(item) : 0;
+    document.querySelector('#guild-loan').disabled = !item || lateForLoan;
+    document.querySelector('#loan-preview').textContent = item ? `대출 ${money(principal)} · 조기 ${money(Math.round(principal * balance.loan.earlyRepayMultiplier / 10) * 10)} · ${state.day + balance.loan.termDays}일차 만기 ${money(Math.round(principal * balance.loan.repayMultiplier / 10) * 10)}` : '물품을 선택하면 대출액과 상환액을 계산합니다.';
     };
     document.querySelectorAll('[name="guild-collateral-card"]').forEach((radio) => {
       radio.onchange = () => {
         picker.value = radio.value;
         picker.dispatchEvent(new Event('change'));
         const item = collateralItems.find((entry) => entry.lotId === radio.value);
-        document.querySelector('#guild-limit-total').textContent = money(Math.round(item.trueValue * balance.loan.limitFromDisposalValue));
+        document.querySelector('#guild-limit-total').textContent = money(loanValue(item));
       };
     });
   }
