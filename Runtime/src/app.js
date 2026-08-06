@@ -230,9 +230,30 @@ function syncHeader() {
 function currentNewspaperIncident() {
   const blueprintSets = state.generationBlueprint?.sets;
   const todayLots = state.schedule?.days?.[Math.min(state.day, 12) - 1]?.lots || [];
-  if (!Array.isArray(blueprintSets) || !todayLots.length) return null;
+  if (!todayLots.length) return null;
   const todaySetIds = new Set(todayLots.map((lot) => lot.setId));
-  return blueprintSets.find((set) => todaySetIds.has(set.setId) && set.incidentTitle && set.newspaperLead) || null;
+  const generated = Array.isArray(blueprintSets)
+    ? blueprintSets.find((set) => todaySetIds.has(set.setId) && set.incidentTitle && set.newspaperLead)
+    : null;
+  const featuredSetId = generated?.setId || todayLots[0].setId;
+  const relatedLots = todayLots.filter((lot) => lot.setId === featuredSetId).slice(0, 2);
+  if (generated) return { ...generated, relatedLots };
+
+  const set = state.sets?.find((candidate) => candidate.setId === featuredSetId);
+  const subject = relatedLots[0]?.content?.displayName || relatedLots[0]?.baseName || '오늘의 경매품';
+  const fallbackByTheme = {
+    voyage: ['항구에서 발견된 오래된 항로의 흔적', `${subject}을 둘러싼 항해 기록이 발견돼 항구 상인들의 관심이 모이고 있습니다.`],
+    dynasty: ['몰락한 가문의 유품이 다시 모습을 드러내다', `${subject}에 얽힌 옛 가문의 기록이 공개되며 도시 수집가들 사이에서 화제가 되고 있습니다.`],
+    guild: ['상인 조합의 오래된 거래 기록 공개', `${subject}의 출처를 가리키는 조합 문서가 발견돼 오늘 경매의 관심품으로 떠올랐습니다.`],
+    astronomy: ['별의 움직임을 기록한 물품 발견', `${subject}에 남은 천문 관측의 흔적을 두고 학자와 수집가들의 의견이 분분합니다.`],
+    theatre: ['잊힌 무대의 소품이 경매장으로', `${subject}이 오래된 공연의 기억을 품은 채 오늘 경매 명부에 이름을 올렸습니다.`],
+    botany: ['도시 정원에서 되살아난 오래된 이야기', `${subject}과 관련된 식물 기록이 발견돼 감정가들의 이목을 끌고 있습니다.`],
+  };
+  const [incidentTitle, newspaperLead] = fallbackByTheme[set?.themeKey] || [
+    '오늘 경매품에 얽힌 새로운 기록 발견',
+    `${subject}의 출처를 짐작하게 하는 기록이 발견돼 도시의 관심이 모이고 있습니다.`,
+  ];
+  return { setId: featuredSetId, incidentTitle, newspaperLead, relatedLots };
 }
 
 function renderHub(message = '') {
@@ -250,7 +271,7 @@ function renderHub(message = '') {
   for (const [key, value] of Object.entries(values)) adapter.setText(key, value);
   const incident = currentNewspaperIncident();
   const incidentArticle = incident
-    ? `<article class="market-incident"><small>도시 사건 기록</small><h4>${escapeHtml(incident.incidentTitle)}</h4><p>${escapeHtml(incident.newspaperLead)}</p></article>`
+    ? `<div class="market-incident-visuals" aria-hidden="true">${incident.relatedLots.map((lot) => `<span><img ${spriteAnchorAttrs(lot)} src="${spriteUrl(lot, lot.grade)}" alt=""></span>`).join('')}</div><article class="market-incident"><small>오늘의 사건</small><h4>${escapeHtml(incident.incidentTitle)}</h4><p>${escapeHtml(incident.newspaperLead)}</p></article>`
     : '';
   document.querySelector('#market-indices').innerHTML = `<strong>오늘의 시세</strong><div class="market-sparklines">${Object.entries(state.marketPath)
     .map(([family, valuesByDay]) => {

@@ -3062,16 +3062,31 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
   left: 20%; right: 20%; top: 0; height: 15%; font-size: clamp(25px, 2.5vw, 40px);
 }
 [data-scene="hub"] #market-dialog .market-sparklines {
-  left: 5%; right: 5%; top: 21%; bottom: 8%; gap: 4% 6%;
+  left: 5%; right: 5%; top: 22%; bottom: 8%; gap: 4% 6%;
 }
-[data-scene="hub"] #market-dialog #market-indices:has(.market-incident) .market-sparklines { bottom: 31%; }
+[data-scene="hub"] #market-dialog #market-indices:has(.market-incident) .market-sparklines { bottom: 34%; }
 [data-scene="hub"] #market-dialog .market-spark { height: auto; }
+[data-scene="hub"] #market-dialog .market-incident-visuals span {
+  position: absolute; z-index: 1; top: 0; width: 12%; height: 15%;
+  display: grid; place-items: center;
+}
+[data-scene="hub"] #market-dialog .market-incident-visuals span:first-child { left: 4%; }
+[data-scene="hub"] #market-dialog .market-incident-visuals span:nth-child(2) { right: 4%; }
+[data-scene="hub"] #market-dialog .market-incident-visuals span:only-child { left: auto; right: 4%; }
+[data-scene="hub"] #market-dialog .market-incident-visuals img {
+  width: 74%; height: 74%; object-fit: contain;
+  transform: translate(var(--sprite-anchor-x), var(--sprite-anchor-y));
+  filter: sepia(.18) drop-shadow(0 3px 2px #51361d66);
+}
 [data-scene="hub"] #market-dialog .market-incident {
   position: absolute; left: 6%; right: 6%; bottom: 5%;
-  margin: 0; padding: 2% 3%;
+  margin: 0; padding: 1.4% 3% 1.6%;
+  border-top: 2px solid rgba(92, 61, 30, .48);
+  text-align: center;
 }
-[data-scene="hub"] #market-dialog .market-incident h4 { font-size: clamp(14px, 1.4vw, 21px); }
-[data-scene="hub"] #market-dialog .market-incident p { font-size: clamp(10px, .9vw, 14px); }
+[data-scene="hub"] #market-dialog .market-incident small { font-size: clamp(10px, .8vw, 13px); }
+[data-scene="hub"] #market-dialog .market-incident h4 { margin-top: .3%; font-size: clamp(15px, 1.45vw, 22px); }
+[data-scene="hub"] #market-dialog .market-incident p { font-size: clamp(11px, .95vw, 15px); }
 [data-scene="hub"] #close-market-dialog {
   position: absolute; z-index: 3; right: 5.5%; top: 5.5%;
   width: 7%; height: 9%; min-width: 42px; min-height: 38px; padding: 0;
@@ -4408,9 +4423,27 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
   function currentNewspaperIncident() {
     const blueprintSets = state.generationBlueprint?.sets;
     const todayLots = state.schedule?.days?.[Math.min(state.day, 12) - 1]?.lots || [];
-    if (!Array.isArray(blueprintSets) || !todayLots.length) return null;
+    if (!todayLots.length) return null;
     const todaySetIds = new Set(todayLots.map((lot) => lot.setId));
-    return blueprintSets.find((set) => todaySetIds.has(set.setId) && set.incidentTitle && set.newspaperLead) || null;
+    const generated = Array.isArray(blueprintSets) ? blueprintSets.find((set2) => todaySetIds.has(set2.setId) && set2.incidentTitle && set2.newspaperLead) : null;
+    const featuredSetId = generated?.setId || todayLots[0].setId;
+    const relatedLots = todayLots.filter((lot) => lot.setId === featuredSetId).slice(0, 2);
+    if (generated) return { ...generated, relatedLots };
+    const set = state.sets?.find((candidate) => candidate.setId === featuredSetId);
+    const subject = relatedLots[0]?.content?.displayName || relatedLots[0]?.baseName || "\uC624\uB298\uC758 \uACBD\uB9E4\uD488";
+    const fallbackByTheme = {
+      voyage: ["\uD56D\uAD6C\uC5D0\uC11C \uBC1C\uACAC\uB41C \uC624\uB798\uB41C \uD56D\uB85C\uC758 \uD754\uC801", `${subject}\uC744 \uB458\uB7EC\uC2FC \uD56D\uD574 \uAE30\uB85D\uC774 \uBC1C\uACAC\uB3FC \uD56D\uAD6C \uC0C1\uC778\uB4E4\uC758 \uAD00\uC2EC\uC774 \uBAA8\uC774\uACE0 \uC788\uC2B5\uB2C8\uB2E4.`],
+      dynasty: ["\uBAB0\uB77D\uD55C \uAC00\uBB38\uC758 \uC720\uD488\uC774 \uB2E4\uC2DC \uBAA8\uC2B5\uC744 \uB4DC\uB7EC\uB0B4\uB2E4", `${subject}\uC5D0 \uC5BD\uD78C \uC61B \uAC00\uBB38\uC758 \uAE30\uB85D\uC774 \uACF5\uAC1C\uB418\uBA70 \uB3C4\uC2DC \uC218\uC9D1\uAC00\uB4E4 \uC0AC\uC774\uC5D0\uC11C \uD654\uC81C\uAC00 \uB418\uACE0 \uC788\uC2B5\uB2C8\uB2E4.`],
+      guild: ["\uC0C1\uC778 \uC870\uD569\uC758 \uC624\uB798\uB41C \uAC70\uB798 \uAE30\uB85D \uACF5\uAC1C", `${subject}\uC758 \uCD9C\uCC98\uB97C \uAC00\uB9AC\uD0A4\uB294 \uC870\uD569 \uBB38\uC11C\uAC00 \uBC1C\uACAC\uB3FC \uC624\uB298 \uACBD\uB9E4\uC758 \uAD00\uC2EC\uD488\uC73C\uB85C \uB5A0\uC62C\uB790\uC2B5\uB2C8\uB2E4.`],
+      astronomy: ["\uBCC4\uC758 \uC6C0\uC9C1\uC784\uC744 \uAE30\uB85D\uD55C \uBB3C\uD488 \uBC1C\uACAC", `${subject}\uC5D0 \uB0A8\uC740 \uCC9C\uBB38 \uAD00\uCE21\uC758 \uD754\uC801\uC744 \uB450\uACE0 \uD559\uC790\uC640 \uC218\uC9D1\uAC00\uB4E4\uC758 \uC758\uACAC\uC774 \uBD84\uBD84\uD569\uB2C8\uB2E4.`],
+      theatre: ["\uC78A\uD78C \uBB34\uB300\uC758 \uC18C\uD488\uC774 \uACBD\uB9E4\uC7A5\uC73C\uB85C", `${subject}\uC774 \uC624\uB798\uB41C \uACF5\uC5F0\uC758 \uAE30\uC5B5\uC744 \uD488\uC740 \uCC44 \uC624\uB298 \uACBD\uB9E4 \uBA85\uBD80\uC5D0 \uC774\uB984\uC744 \uC62C\uB838\uC2B5\uB2C8\uB2E4.`],
+      botany: ["\uB3C4\uC2DC \uC815\uC6D0\uC5D0\uC11C \uB418\uC0B4\uC544\uB09C \uC624\uB798\uB41C \uC774\uC57C\uAE30", `${subject}\uACFC \uAD00\uB828\uB41C \uC2DD\uBB3C \uAE30\uB85D\uC774 \uBC1C\uACAC\uB3FC \uAC10\uC815\uAC00\uB4E4\uC758 \uC774\uBAA9\uC744 \uB04C\uACE0 \uC788\uC2B5\uB2C8\uB2E4.`]
+    };
+    const [incidentTitle, newspaperLead] = fallbackByTheme[set?.themeKey] || [
+      "\uC624\uB298 \uACBD\uB9E4\uD488\uC5D0 \uC5BD\uD78C \uC0C8\uB85C\uC6B4 \uAE30\uB85D \uBC1C\uACAC",
+      `${subject}\uC758 \uCD9C\uCC98\uB97C \uC9D0\uC791\uD558\uAC8C \uD558\uB294 \uAE30\uB85D\uC774 \uBC1C\uACAC\uB3FC \uB3C4\uC2DC\uC758 \uAD00\uC2EC\uC774 \uBAA8\uC774\uACE0 \uC788\uC2B5\uB2C8\uB2E4.`
+    ];
+    return { setId: featuredSetId, incidentTitle, newspaperLead, relatedLots };
   }
   function renderHub(message = "") {
     clearActionTimer();
@@ -4427,7 +4460,7 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
     };
     for (const [key, value] of Object.entries(values)) adapter.setText(key, value);
     const incident = currentNewspaperIncident();
-    const incidentArticle = incident ? `<article class="market-incident"><small>\uB3C4\uC2DC \uC0AC\uAC74 \uAE30\uB85D</small><h4>${escapeHtml(incident.incidentTitle)}</h4><p>${escapeHtml(incident.newspaperLead)}</p></article>` : "";
+    const incidentArticle = incident ? `<div class="market-incident-visuals" aria-hidden="true">${incident.relatedLots.map((lot) => `<span><img ${spriteAnchorAttrs(lot)} src="${spriteUrl(lot, lot.grade)}" alt=""></span>`).join("")}</div><article class="market-incident"><small>\uC624\uB298\uC758 \uC0AC\uAC74</small><h4>${escapeHtml(incident.incidentTitle)}</h4><p>${escapeHtml(incident.newspaperLead)}</p></article>` : "";
     document.querySelector("#market-indices").innerHTML = `<strong>\uC624\uB298\uC758 \uC2DC\uC138</strong><div class="market-sparklines">${Object.entries(state.marketPath).map(([family, valuesByDay]) => {
       const visible = valuesByDay.slice(0, state.day);
       const current = visible.at(-1);
