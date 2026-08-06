@@ -3278,6 +3278,17 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
   width: clamp(38px, 3.5vw, 58px); height: clamp(38px, 3.5vw, 58px);
 }
 
+/* Settlement content alignment inside the painted panel headers. */
+[data-scene="settlement"] .settlement-lots article:first-of-type {
+  margin-top: 18%;
+}
+[data-scene="settlement"] .settlement-finance p:first-of-type {
+  margin-top: clamp(8px, .75vw, 12px);
+}
+[data-scene="settlement"] .settlement-progress h4 {
+  transform: translateY(clamp(20px, 1.7vw, 27px));
+}
+
 /* Replace the temporary City HUD glyphs with the normalized production icons. */
 [data-scene="hub"] > header > div,
 [data-scene="hub"] > header > strong,
