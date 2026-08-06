@@ -3158,21 +3158,22 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
 [data-scene="hub"] #market-dialog #market-indices > strong {
   left: 21%; right: 21%; top: 2%; height: 13%;
   color: #4d3521;
-  font-family: Georgia, "Noto Serif KR", "Nanum Myeongjo", serif;
-  font-size: clamp(25px, 2.35vw, 38px); font-weight: 800; line-height: 1;
-  letter-spacing: .04em; text-shadow: 0 1px #f1dbb177;
+  font-family: "Batang", "바탕", "Noto Serif KR", serif;
+  font-size: clamp(24px, 2.25vw, 36px); font-weight: 700; line-height: 1;
+  letter-spacing: .02em; text-shadow: none;
 }
 [data-scene="hub"] #market-dialog .market-incident-visuals span {
   top: .5%; width: 11%; height: 14%;
+  isolation: isolate;
 }
 [data-scene="hub"] #market-dialog .market-incident-visuals span:first-child { left: 3.5%; }
 [data-scene="hub"] #market-dialog .market-incident-visuals span:nth-child(2),
 [data-scene="hub"] #market-dialog .market-incident-visuals span:only-child { right: 3.5%; }
 [data-scene="hub"] #market-dialog .market-incident-visuals img {
-  width: 62%; height: 62%;
-  opacity: .88;
+  width: 56%; height: 56%;
+  opacity: .66;
   mix-blend-mode: multiply;
-  filter: sepia(.38) saturate(.68) contrast(.92) brightness(1.04) drop-shadow(0 2px 1px #5b3a1d66);
+  filter: grayscale(1) sepia(1) saturate(.72) contrast(.82) brightness(.92);
 }
 [data-scene="hub"] #market-dialog .market-sparklines {
   left: 6%; right: 6%; top: 25.5%; gap: 4.5% 7%;
