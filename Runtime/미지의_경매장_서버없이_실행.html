@@ -1502,13 +1502,19 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
 /* Tavern no longer sells information: the center shows live data and the right explains upgrades. */
 [data-scene="tavern"] .tavern-market,
 [data-scene="tavern"] #tavern-owned { overflow: auto; }
+[data-scene="tavern"] #tavern-detail {
+  display: flex; flex-direction: column; height: 100%; min-height: 0; overflow: hidden;
+}
+[data-scene="tavern"] #tavern-detail .detail-heading { flex: 0 0 auto; margin: 5px 0 8px; }
+[data-scene="tavern"] #tavern-detail .detail-symbol { width: 58px; height: 58px; }
+[data-scene="tavern"] #tavern-detail > p { flex: 0 0 auto; margin: 4px 0 7px; line-height: 1.35; }
 [data-scene="tavern"] .tavern-live-result {
-  min-height: 230px; max-height: 48vh; overflow: auto;
+  flex: 1 1 auto; min-height: 0; max-height: none; overflow: auto;
   font-size: clamp(12px,1vw,16px);
 }
 [data-scene="tavern"] .tavern-live-result li {
-  display: grid; grid-template-columns: 34px minmax(0,1fr) auto;
-  align-items: center; gap: 9px; margin: 5px 0; padding: 7px 9px;
+  display: grid; grid-template-columns: 32px minmax(0,1fr) auto;
+  align-items: center; gap: 8px; margin: 2px 0; padding: 5px 8px;
   border-bottom: 1px solid #b99b73;
 }
 [data-scene="tavern"] .tavern-live-result li > img { width: 28px; height: 28px; object-fit: contain; }
