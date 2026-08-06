@@ -15,6 +15,7 @@ import { downloadRunLog, recordEvent } from './telemetry.js';
 import { AudioBus } from './audio-bus.js';
 import { createRng } from './rng.js';
 import { JOURNEY_DAYS, RELIC_AUCTION_DAY, RUN_DAYS } from './constants.js';
+import { mergeOwnedRelicIds } from './relic-ownership.js';
 
 const root = document.querySelector('#app');
 const adapter = new VslRuntimeAdapter(root);
@@ -106,6 +107,8 @@ function loadMeta() {
   try { return JSON.parse(localStorage.getItem('unknown-auction:relics') || '[]'); }
   catch { return []; }
 }
+
+const ownedRelicIds = () => mergeOwnedRelicIds(loadMeta(), state?.metaRelics, state?.relicChoices);
 
 function renderSaveSlots() {
   const slots = store.list();
@@ -585,7 +588,7 @@ function renderMuseum(returnTo = 'city') {
   if (state) state.phase = 'museum';
   adapter.showScene('museum');
   if (state) syncHeader();
-  const owned = new Set(state?.metaRelics || loadMeta());
+  const owned = new Set(ownedRelicIds());
   const relics = balance.relics.list;
   const tierNames = { low: '하급', mid: '중급', high: '상급' };
   const detail = document.querySelector('#relic-detail');
@@ -740,7 +743,7 @@ async function nextDay() {
 
 function startRelicAuction() {
   clearActionTimer(); audio.playBgm('relic');
-  const permanent = new Set(state.metaRelics || []);
+  const permanent = new Set(ownedRelicIds());
   if (permanent.size >= 9) return renderResult();
   state.phase = 'relic'; state.relicRound ??= 0; state.relicChoices ??= []; state.relicSession = null; renderRelic();
 }
@@ -748,7 +751,8 @@ function startRelicAuction() {
 function renderRelic() {
   if (state.relicRound >= 3) return renderResult();
   adapter.showScene('relic'); audio.playBgm('relic'); const tier = balance.relicAuction.tiers[state.relicRound]; const opening = balance.relicAuction.startBid[state.relicRound];
-  const choices = balance.relics.list.filter((relic) => relic.tier === tier && !state.metaRelics.includes(relic.id));
+  const owned = new Set(ownedRelicIds());
+  const choices = balance.relics.list.filter((relic) => relic.tier === tier && !owned.has(relic.id));
   const relic = choices[(state.relicRound + state.seed.length) % Math.max(1, choices.length)] || balance.relics.list.find((entry) => entry.tier === tier);
   state.currentRelic = relic;
   if (!state.relicSession || state.relicSession.round !== state.relicRound) {
@@ -806,7 +810,7 @@ function renderResult() {
   clearActionTimer(); audio.playBgm('settlement'); state.completed = true; state.phase = 'result'; adapter.showScene('result');
   document.querySelector('[data-scene="result"]').classList.toggle('is-failure', Boolean(state.failure));
   const unsold = ownedItems().reduce((sum, item) => sum + item.trueValue, 0);
-  const relics = [...new Set([...state.metaRelics, ...(state.relicChoices || [])])]; localStorage.setItem('unknown-auction:relics', JSON.stringify(relics));
+  const relics = ownedRelicIds(); localStorage.setItem('unknown-auction:relics', JSON.stringify(relics));
   document.querySelector('#result-title').textContent = state.failure ? '여정 실패' : `${JOURNEY_DAYS}일 여정 완료`;
   const wonCount = state.history.filter((entry) => entry.won).length;
   const acquiredRelics = (state.relicChoices || []).map((id) => balance.relics.list.find((entry) => entry.id === id)?.name || id);

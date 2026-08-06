@@ -3973,6 +3973,11 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
     }
   };
 
+  // src/relic-ownership.js
+  function mergeOwnedRelicIds(...sources) {
+    return [...new Set(sources.flatMap((source) => Array.isArray(source) ? source : []))];
+  }
+
   // src/app.js
   var root = document.querySelector("#app");
   var adapter = new VslRuntimeAdapter(root);
@@ -4074,6 +4079,7 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
       return [];
     }
   }
+  var ownedRelicIds = () => mergeOwnedRelicIds(loadMeta(), state?.metaRelics, state?.relicChoices);
   function renderSaveSlots() {
     const slots = store.list();
     const savedTime = (value) => value ? new Intl.DateTimeFormat("ko-KR", { month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", hour12: false }).format(new Date(value)) : "";
@@ -4579,7 +4585,7 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
     if (state) state.phase = "museum";
     adapter.showScene("museum");
     if (state) syncHeader();
-    const owned = new Set(state?.metaRelics || loadMeta());
+    const owned = new Set(ownedRelicIds());
     const relics = balance.relics.list;
     const tierNames = { low: "\uD558\uAE09", mid: "\uC911\uAE09", high: "\uC0C1\uAE09" };
     const detail = document.querySelector("#relic-detail");
@@ -4787,7 +4793,7 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
   function startRelicAuction() {
     clearActionTimer();
     audio.playBgm("relic");
-    const permanent = new Set(state.metaRelics || []);
+    const permanent = new Set(ownedRelicIds());
     if (permanent.size >= 9) return renderResult();
     state.phase = "relic";
     state.relicRound ??= 0;
@@ -4801,7 +4807,8 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
     audio.playBgm("relic");
     const tier = balance.relicAuction.tiers[state.relicRound];
     const opening = balance.relicAuction.startBid[state.relicRound];
-    const choices = balance.relics.list.filter((relic2) => relic2.tier === tier && !state.metaRelics.includes(relic2.id));
+    const owned = new Set(ownedRelicIds());
+    const choices = balance.relics.list.filter((relic2) => relic2.tier === tier && !owned.has(relic2.id));
     const relic = choices[(state.relicRound + state.seed.length) % Math.max(1, choices.length)] || balance.relics.list.find((entry) => entry.tier === tier);
     state.currentRelic = relic;
     if (!state.relicSession || state.relicSession.round !== state.relicRound) {
@@ -4872,7 +4879,7 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
     adapter.showScene("result");
     document.querySelector('[data-scene="result"]').classList.toggle("is-failure", Boolean(state.failure));
     const unsold = ownedItems().reduce((sum, item) => sum + item.trueValue, 0);
-    const relics = [.../* @__PURE__ */ new Set([...state.metaRelics, ...state.relicChoices || []])];
+    const relics = ownedRelicIds();
     localStorage.setItem("unknown-auction:relics", JSON.stringify(relics));
     document.querySelector("#result-title").textContent = state.failure ? "\uC5EC\uC815 \uC2E4\uD328" : `${JOURNEY_DAYS}\uC77C \uC5EC\uC815 \uC644\uB8CC`;
     const wonCount = state.history.filter((entry) => entry.won).length;

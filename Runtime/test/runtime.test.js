@@ -11,9 +11,17 @@ import { GenerationApiProvider } from '../src/generation-api-provider.js';
 import { SaveStore } from '../src/save-store.js';
 import { qualityErrors, setIncidentErrors } from '../generation-server.js';
 import { RELIC_AUCTION_DAY, RUN_DAYS } from '../src/constants.js';
+import { mergeOwnedRelicIds } from '../src/relic-ownership.js';
 
 const catalog = JSON.parse(await readFile(new URL('../assets/items/catalog.json', import.meta.url), 'utf8'));
 const balance = JSON.parse(await readFile(new URL('../data/balance.json', import.meta.url), 'utf8'));
+
+test('relic ownership includes saved and newly acquired relics without duplicates', () => {
+  assert.deepEqual(
+    mergeOwnedRelicIds(['compass'], ['royal-charter'], ['compass', 'merchant-safe'], undefined),
+    ['compass', 'royal-charter', 'merchant-safe'],
+  );
+});
 
 test('creates a reproducible 12 day, 96 lot schedule from the 60 base items', () => {
   const first = createRunSchedule({ catalog, balance, seed: 'demo' });
