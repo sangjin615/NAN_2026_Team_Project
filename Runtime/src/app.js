@@ -435,10 +435,11 @@ function renderExchange(message = '') {
       'grade-3': groups.some((group) => new Set(group.map((item) => item.grade)).size >= 3),
       'all-6': new Set(items.map((item) => item.category)).size >= 6,
     };
-    document.querySelectorAll('[data-set-rule]').forEach((rule) => rule.classList.toggle('is-active', activeRules[rule.dataset.setRule]));
-    const activeCount = Object.values(activeRules).filter(Boolean).length;
-    document.querySelector('#set-bonus-summary').textContent = activeCount
-      ? `적용 조건 ${activeCount}개 · 최종 ×${quote.multiplier.toFixed(2)} · 예상 판매액 ${money(quote.revenue)}`
+    const ruleMultipliers = { 'same-2': 1.2, 'same-3': 1.3, 'grade-3': 1.35, 'high-3': 1.4, 'all-6': 1.5 };
+    const appliedRule = Object.keys(activeRules).filter((key) => activeRules[key]).sort((a, b) => ruleMultipliers[b] - ruleMultipliers[a])[0];
+    document.querySelectorAll('[data-set-rule]').forEach((rule) => rule.classList.toggle('is-active', rule.dataset.setRule === appliedRule));
+    document.querySelector('#set-bonus-summary').textContent = appliedRule
+      ? `적용 세트 ×${ruleMultipliers[appliedRule].toFixed(2)} · 최종 ×${quote.multiplier.toFixed(2)} · 예상 판매액 ${money(quote.revenue)}`
       : `적용 보너스 없음 · 최종 ×${quote.multiplier.toFixed(2)} · 예상 판매액 ${money(quote.revenue)}`;
   };
   document.querySelectorAll('[data-item-select]').forEach((input) => { input.onchange = syncBulkActions; });
