@@ -1306,7 +1306,7 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
 [data-scene="auction"] #auction-feed p { margin: 4px 0; }
 [data-scene="auction"] > .actions {
   left: 24%; bottom: 7.3%; width: 52%; height: 13%;
-  display: grid; grid-template-columns: repeat(3, 1fr); gap: 2%;
+  display: grid; grid-template-columns: repeat(5, 1fr); gap: 1%;
   align-items: center; margin: 0; padding: 2%;
   border: 0; background: transparent; transform: none;
 }
@@ -2253,7 +2253,7 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
   left: 6.1%; top: 61.5%; width: 13.6%; height: 30.5%;
   padding: 18px 14px 14px;
 }
-[data-scene="auction"] > .actions { bottom: 3%; width: 52%; height: 12%; gap: 2%; }
+[data-scene="auction"] > .actions { bottom: 3%; width: 52%; height: 12%; gap: 1%; transform: translateY(-8px); }
 [data-scene="auction"] > .actions button { flex: 1; font-size: clamp(11px,1.05vw,17px); }
 
 [data-scene="settlement"]::after { background: #05040312; }

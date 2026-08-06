@@ -646,12 +646,14 @@ function renderAuction() {
   armActionTimer('#auction-timer', state.auctionSession.deadline, () => finishLot('pass'));
 }
 
-function finishLot(action, multiplier = 1) {
+function finishLot(action, multiplier = 1, directPrice = null) {
   clearActionTimer();
   const lot = state.schedule.days[state.day - 1].lots[state.lotIndex]; const session = state.auctionSession; let result;
   if (action === 'bid') {
     const raise = Math.max(1, Math.ceil(session.currentPrice * balance.auction.minRaiseRate));
-    const proposed = Math.max(session.currentPrice + raise, Math.ceil(session.currentPrice * multiplier));
+    const minimumBid = session.currentPrice + raise;
+    const proposed = directPrice === null ? Math.max(minimumBid, Math.ceil(session.currentPrice * multiplier)) : directPrice;
+    if (!Number.isInteger(proposed) || proposed < minimumBid) { session.feed.push(`최소 입찰 금액은 ${money(minimumBid)}입니다.`); return renderAuction(); }
     if (proposed > state.cash) { session.feed.push('보유 자금이 부족합니다.'); return renderAuction(); }
     if (ownedItems().length >= state.storage) { session.feed.push('보관칸이 가득 찼습니다.'); return renderAuction(); }
     session.currentPrice = proposed; session.leader = 'player'; session.feed.push(`플레이어 ${money(proposed)}`); audio.playSfx('bid');
@@ -836,6 +838,15 @@ document.querySelector('#start-auction').onclick = () => {
   renderAuction();
 };
 document.querySelectorAll('[data-raise]').forEach((button) => button.onclick = () => finishLot('bid', Number(button.dataset.raise)));
+document.querySelector('#direct-bid').onclick = () => {
+  const session = state.auctionSession;
+  if (!session) return;
+  const minimumBid = session.currentPrice + Math.max(1, Math.ceil(session.currentPrice * balance.auction.minRaiseRate));
+  const input = window.prompt('입찰 금액을 입력하세요.', String(minimumBid));
+  if (input === null) return;
+  const proposed = Number(input.replace(/[^0-9]/g, ''));
+  finishLot('bid', 1, proposed);
+};
 document.querySelector('#pass').onclick = () => finishLot('pass'); document.querySelector('#next-day').onclick = nextDay;
 document.querySelector('#buy-relic').onclick = () => finishRelic(true); document.querySelector('#skip-relic').onclick = () => finishRelic(false);
 document.querySelector('#return-title').onclick = () => adapter.showScene('title');

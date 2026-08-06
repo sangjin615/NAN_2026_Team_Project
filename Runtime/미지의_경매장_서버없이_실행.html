@@ -1314,7 +1314,7 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
 [data-scene="auction"] #auction-feed p { margin: 4px 0; }
 [data-scene="auction"] > .actions {
   left: 24%; bottom: 7.3%; width: 52%; height: 13%;
-  display: grid; grid-template-columns: repeat(3, 1fr); gap: 2%;
+  display: grid; grid-template-columns: repeat(5, 1fr); gap: 1%;
   align-items: center; margin: 0; padding: 2%;
   border: 0; background: transparent; transform: none;
 }
@@ -2261,7 +2261,7 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
   left: 6.1%; top: 61.5%; width: 13.6%; height: 30.5%;
   padding: 18px 14px 14px;
 }
-[data-scene="auction"] > .actions { bottom: 3%; width: 52%; height: 12%; gap: 2%; }
+[data-scene="auction"] > .actions { bottom: 3%; width: 52%; height: 12%; gap: 1%; transform: translateY(-8px); }
 [data-scene="auction"] > .actions button { flex: 1; font-size: clamp(11px,1.05vw,17px); }
 
 [data-scene="settlement"]::after { background: #05040312; }
@@ -3019,7 +3019,7 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
     <div class="auction-layout"><div class="sprite-stage" data-effects="current-lot"><img data-sprite="current-lot" alt="경매 물품"></div><article><span class="grade" data-bind="lot-grade"></span><p data-bind="lot-description"></p><dl><div><dt>기준가</dt><dd data-bind="base-price"></dd></div><div><dt>현재 호가</dt><dd data-bind="current-bid"></dd></div></dl></article></div>
     <aside id="auction-participants"></aside>
     <div id="auction-feed" class="auction-feed"></div>
-    <div class="actions"><button data-raise="1"><img src="./assets/ui/action-icons/bid.png" alt="">최소 호가</button><button data-raise="1.15"><img src="./assets/ui/action-icons/bid.png" alt="">+15%</button><button id="pass" class="secondary"><img src="./assets/ui/action-icons/pass.png" alt="">포기/낙찰 확정</button></div>
+    <div class="actions"><button data-raise="1.05"><img src="./assets/ui/action-icons/bid.png" alt="">+5%</button><button data-raise="1.1"><img src="./assets/ui/action-icons/bid.png" alt="">+10%</button><button data-raise="1.2"><img src="./assets/ui/action-icons/bid.png" alt="">+20%</button><button id="direct-bid"><img src="./assets/ui/action-icons/bid.png" alt="">직접입력</button><button id="pass" class="secondary"><img src="./assets/ui/action-icons/pass.png" alt="">패스</button></div>
   </section>
   <section class="scene" data-scene="settlement" hidden><p class="eyebrow">DAILY SETTLEMENT</p><h2><span data-bind="day"></span>일차 결산</h2><p>오늘의 경매품 8개가 모두 종료되었습니다. 다음 이틀의 경매품을 준비합니다.</p><div id="settlement-summary"></div><button id="next-day"><img src="./assets/ui/action-icons/next-day.png" alt="">다음 날</button></section>
   <section class="scene relic" data-scene="relic" hidden><p class="eyebrow">RELIC AUCTION</p><aside id="relic-participants"></aside><div id="relic-card"></div><div id="relic-feed" class="auction-feed"></div><div class="actions"><button id="buy-relic"><img src="./assets/ui/action-icons/bid.png" alt="">유물 입찰</button><button id="skip-relic" class="secondary"><img src="./assets/ui/action-icons/pass.png" alt="">포기</button></div></section>
@@ -4595,14 +4595,19 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
     document.querySelector("#auction-lot-status").innerHTML = `<b>\uACBD\uB9E4 ${state.lotIndex + 1} / 8</b><span>${gradeLabel(lot.grade)}</span><strong>${money(state.auctionSession.currentPrice)}</strong><em id="auction-timer" aria-label="\uB0A8\uC740 \uC2DC\uAC04"></em>`;
     armActionTimer("#auction-timer", state.auctionSession.deadline, () => finishLot("pass"));
   }
-  function finishLot(action, multiplier = 1) {
+  function finishLot(action, multiplier = 1, directPrice = null) {
     clearActionTimer();
     const lot = state.schedule.days[state.day - 1].lots[state.lotIndex];
     const session = state.auctionSession;
     let result;
     if (action === "bid") {
       const raise = Math.max(1, Math.ceil(session.currentPrice * balance.auction.minRaiseRate));
-      const proposed = Math.max(session.currentPrice + raise, Math.ceil(session.currentPrice * multiplier));
+      const minimumBid = session.currentPrice + raise;
+      const proposed = directPrice === null ? Math.max(minimumBid, Math.ceil(session.currentPrice * multiplier)) : directPrice;
+      if (!Number.isInteger(proposed) || proposed < minimumBid) {
+        session.feed.push(`\uCD5C\uC18C \uC785\uCC30 \uAE08\uC561\uC740 ${money(minimumBid)}\uC785\uB2C8\uB2E4.`);
+        return renderAuction();
+      }
       if (proposed > state.cash) {
         session.feed.push("\uBCF4\uC720 \uC790\uAE08\uC774 \uBD80\uC871\uD569\uB2C8\uB2E4.");
         return renderAuction();
@@ -4834,6 +4839,15 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
     renderAuction();
   };
   document.querySelectorAll("[data-raise]").forEach((button) => button.onclick = () => finishLot("bid", Number(button.dataset.raise)));
+  document.querySelector("#direct-bid").onclick = () => {
+    const session = state.auctionSession;
+    if (!session) return;
+    const minimumBid = session.currentPrice + Math.max(1, Math.ceil(session.currentPrice * balance.auction.minRaiseRate));
+    const input = window.prompt("\uC785\uCC30 \uAE08\uC561\uC744 \uC785\uB825\uD558\uC138\uC694.", String(minimumBid));
+    if (input === null) return;
+    const proposed = Number(input.replace(/[^0-9]/g, ""));
+    finishLot("bid", 1, proposed);
+  };
   document.querySelector("#pass").onclick = () => finishLot("pass");
   document.querySelector("#next-day").onclick = nextDay;
   document.querySelector("#buy-relic").onclick = () => finishRelic(true);
