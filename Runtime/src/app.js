@@ -273,7 +273,7 @@ function renderHub(message = '') {
   const incidentArticle = incident
     ? `<div class="market-incident-visuals" aria-hidden="true">${incident.relatedLots.map((lot) => `<span><img ${spriteAnchorAttrs(lot)} src="${spriteUrl(lot, lot.grade)}" alt=""></span>`).join('')}</div><article class="market-incident"><small>오늘의 사건</small><h4>${escapeHtml(incident.incidentTitle)}</h4><p>${escapeHtml(incident.newspaperLead)}</p></article>`
     : '';
-  document.querySelector('#market-indices').innerHTML = `<strong>오늘의 시세</strong><div class="market-sparklines">${Object.entries(state.marketPath)
+  document.querySelector('#market-indices').innerHTML = `<strong>오늘의 뉴스</strong><div class="market-sparklines">${Object.entries(state.marketPath)
     .map(([family, valuesByDay]) => {
       const visible = valuesByDay.slice(0, state.day);
       const current = visible.at(-1);
