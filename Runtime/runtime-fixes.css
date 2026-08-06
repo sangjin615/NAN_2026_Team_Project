@@ -1545,15 +1545,15 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
   border-image-source: url("./assets/ui/skin-v1/tab-active.png");
   color: #f5e6c8; filter: drop-shadow(0 0 5px #b77a2077);
 }
-[data-scene="tavern"] .tavern-stage-list header {
+[data-scene="tavern"] .tavern-stage-list .stage-heading {
   position: static; display: flex; align-items: center; justify-content: space-between;
   width: auto; max-width: none; height: auto; margin: 0 0 5px; padding: 0 0 4px;
   border: 0; border-bottom: 1px solid #8f704c55; border-image: none;
   background: transparent; box-shadow: none; filter: none;
 }
-[data-scene="tavern"] .tavern-stage-list header b { color: #6f4516; font-size: clamp(15px,1.25vw,20px); }
-[data-scene="tavern"] .tavern-stage-list article.is-current header b { color: #e6b94e; }
-[data-scene="tavern"] .tavern-stage-list header span {
+[data-scene="tavern"] .tavern-stage-list .stage-heading b { color: #6f4516; font-size: clamp(15px,1.25vw,20px); }
+[data-scene="tavern"] .tavern-stage-list article.is-current .stage-heading b { color: #e6b94e; }
+[data-scene="tavern"] .tavern-stage-list .stage-heading span {
   padding: 2px 8px; border-radius: 12px; background: #426226; color: #fff4cf;
   font-size: 11px; font-weight: 900;
 }

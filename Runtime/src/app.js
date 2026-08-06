@@ -484,7 +484,7 @@ function renderTavern(message = '') {
     { stage: 2, competitors: '경쟁자 2명', catalog: '이름 · 계열', forecast: '시세 4개' },
     { stage: 3, competitors: '경쟁자 3명', catalog: '이름 · 계열 · 등급', forecast: '시세 6개' },
   ];
-  document.querySelector('#tavern-owned').innerHTML = `<h3>상회 단계별 정보 확장</h3><p class="stage-intro">상회를 성장시키면 세 정보의 공개 범위가 함께 넓어집니다.</p><div class="tavern-stage-list">${stageRows.map((row) => `<article class="${row.stage === effectiveStage ? 'is-current' : ''}"><header><b>${row.stage}단계</b>${row.stage === effectiveStage ? '<span>현재</span>' : ''}</header><p><img src="${icons.competitors}" alt="">${row.competitors}</p><p><img src="${icons.catalog}" alt="">${row.catalog}</p><p><img src="${icons.forecast}" alt="">${row.forecast}</p></article>`).join('')}</div>`;
+  document.querySelector('#tavern-owned').innerHTML = `<h3>상회 단계별 정보 확장</h3><p class="stage-intro">상회를 성장시키면 세 정보의 공개 범위가 함께 넓어집니다.</p><div class="tavern-stage-list">${stageRows.map((row) => `<article class="${row.stage === effectiveStage ? 'is-current' : ''}"><div class="stage-heading"><b>${row.stage}단계</b>${row.stage === effectiveStage ? '<span>현재</span>' : ''}</div><p><img src="${icons.competitors}" alt="">${row.competitors}</p><p><img src="${icons.catalog}" alt="">${row.catalog}</p><p><img src="${icons.forecast}" alt="">${row.forecast}</p></article>`).join('')}</div>`;
   document.querySelector('#tavern-message').textContent = '';
   showActionToast(message);
 }

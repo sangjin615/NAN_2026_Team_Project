@@ -1553,15 +1553,15 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
   border-image-source: url("./assets/ui/skin-v1/tab-active.png");
   color: #f5e6c8; filter: drop-shadow(0 0 5px #b77a2077);
 }
-[data-scene="tavern"] .tavern-stage-list header {
+[data-scene="tavern"] .tavern-stage-list .stage-heading {
   position: static; display: flex; align-items: center; justify-content: space-between;
   width: auto; max-width: none; height: auto; margin: 0 0 5px; padding: 0 0 4px;
   border: 0; border-bottom: 1px solid #8f704c55; border-image: none;
   background: transparent; box-shadow: none; filter: none;
 }
-[data-scene="tavern"] .tavern-stage-list header b { color: #6f4516; font-size: clamp(15px,1.25vw,20px); }
-[data-scene="tavern"] .tavern-stage-list article.is-current header b { color: #e6b94e; }
-[data-scene="tavern"] .tavern-stage-list header span {
+[data-scene="tavern"] .tavern-stage-list .stage-heading b { color: #6f4516; font-size: clamp(15px,1.25vw,20px); }
+[data-scene="tavern"] .tavern-stage-list article.is-current .stage-heading b { color: #e6b94e; }
+[data-scene="tavern"] .tavern-stage-list .stage-heading span {
   padding: 2px 8px; border-radius: 12px; background: #426226; color: #fff4cf;
   font-size: 11px; font-weight: 900;
 }
@@ -4357,7 +4357,7 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
       { stage: 2, competitors: "\uACBD\uC7C1\uC790 2\uBA85", catalog: "\uC774\uB984 \xB7 \uACC4\uC5F4", forecast: "\uC2DC\uC138 4\uAC1C" },
       { stage: 3, competitors: "\uACBD\uC7C1\uC790 3\uBA85", catalog: "\uC774\uB984 \xB7 \uACC4\uC5F4 \xB7 \uB4F1\uAE09", forecast: "\uC2DC\uC138 6\uAC1C" }
     ];
-    document.querySelector("#tavern-owned").innerHTML = `<h3>\uC0C1\uD68C \uB2E8\uACC4\uBCC4 \uC815\uBCF4 \uD655\uC7A5</h3><p class="stage-intro">\uC0C1\uD68C\uB97C \uC131\uC7A5\uC2DC\uD0A4\uBA74 \uC138 \uC815\uBCF4\uC758 \uACF5\uAC1C \uBC94\uC704\uAC00 \uD568\uAED8 \uB113\uC5B4\uC9D1\uB2C8\uB2E4.</p><div class="tavern-stage-list">${stageRows.map((row) => `<article class="${row.stage === effectiveStage ? "is-current" : ""}"><header><b>${row.stage}\uB2E8\uACC4</b>${row.stage === effectiveStage ? "<span>\uD604\uC7AC</span>" : ""}</header><p><img src="${icons.competitors}" alt="">${row.competitors}</p><p><img src="${icons.catalog}" alt="">${row.catalog}</p><p><img src="${icons.forecast}" alt="">${row.forecast}</p></article>`).join("")}</div>`;
+    document.querySelector("#tavern-owned").innerHTML = `<h3>\uC0C1\uD68C \uB2E8\uACC4\uBCC4 \uC815\uBCF4 \uD655\uC7A5</h3><p class="stage-intro">\uC0C1\uD68C\uB97C \uC131\uC7A5\uC2DC\uD0A4\uBA74 \uC138 \uC815\uBCF4\uC758 \uACF5\uAC1C \uBC94\uC704\uAC00 \uD568\uAED8 \uB113\uC5B4\uC9D1\uB2C8\uB2E4.</p><div class="tavern-stage-list">${stageRows.map((row) => `<article class="${row.stage === effectiveStage ? "is-current" : ""}"><div class="stage-heading"><b>${row.stage}\uB2E8\uACC4</b>${row.stage === effectiveStage ? "<span>\uD604\uC7AC</span>" : ""}</div><p><img src="${icons.competitors}" alt="">${row.competitors}</p><p><img src="${icons.catalog}" alt="">${row.catalog}</p><p><img src="${icons.forecast}" alt="">${row.forecast}</p></article>`).join("")}</div>`;
     document.querySelector("#tavern-message").textContent = "";
     showActionToast(message);
   }
