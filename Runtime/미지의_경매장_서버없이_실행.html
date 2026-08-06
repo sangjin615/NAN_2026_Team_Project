@@ -2135,7 +2135,7 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
 }
 [data-scene="catalog"] .lot-card {
   position: absolute; width: 17.7%; height: 27%; box-sizing: border-box;
-  display: grid; grid-template-rows: 44% auto auto auto; align-content: center; justify-items: center;
+  display: grid; grid-template-rows: 46% 9% 25% 10%; align-content: center; justify-items: center;
   gap: 1.5%; min-height: 0; margin: 0; padding: 3.5% 4% 2.5%; overflow: visible;
   border: 0; background: transparent; color: #392719; text-align: center; cursor: help;
   filter: none; outline: none;
@@ -2160,17 +2160,18 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
   font: 900 clamp(9px,.8vw,13px)/1 serif;
 }
 [data-scene="catalog"] .catalog-grid .mini-sprite {
-  width: 100%; height: 100%; display: grid; place-items: center;
-  transform: translateY(-10%);
-  background: transparent !important;
+  position: relative; width: 92%; height: 100%; box-sizing: border-box; display: grid; place-items: center;
+  overflow: hidden; border: 1px solid #a9875b66; border-radius: 3px;
+  background: linear-gradient(180deg,#3b2a1d1f,#8d6b3c12) !important;
+  box-shadow: inset 0 0 12px #5b3d2240;
 }
 [data-scene="catalog"] .catalog-grid .mini-sprite img {
-  width: min(6.5vw,100px); height: min(6.5vw,100px); max-width: 78%; max-height: 100%; object-fit: contain;
+  width: min(6.5vw,100px); height: min(6.5vw,100px); max-width: 76%; max-height: 82%; object-fit: contain;
   filter: drop-shadow(0 5px 4px #3d271c55);
 }
 [data-scene="catalog"] .catalog-grade { color: #8a5a22; font-size: clamp(8px,.68vw,11px); font-weight: 900; }
 [data-scene="catalog"] .lot-card h3 {
-  width: 100%; min-height: 2.3em; margin: 0; overflow: visible; color: #332216;
+  width: 100%; min-height: 2.3em; margin: 0; overflow: hidden; color: #332216;
   display: flex; align-items: center; justify-content: center;
   font-size: clamp(9px,.86vw,14px); line-height: 1.15;
   text-overflow: clip; white-space: normal; overflow-wrap: anywhere; word-break: keep-all;
