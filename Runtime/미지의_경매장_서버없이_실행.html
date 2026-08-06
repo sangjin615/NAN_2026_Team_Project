@@ -4842,7 +4842,8 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
     const acquiredRelics = (state.relicChoices || []).map((id) => balance.relics.list.find((entry) => entry.id === id)?.name || id);
     const resultIcon = state.failure ? "restart.png" : "clear.png";
     document.querySelector("#run-summary").innerHTML = `<section class="result-ending"><img class="result-status-icon" src="./assets/ui/action-icons/${resultIcon}" alt=""><h3>${state.failure ? "\uC5EC\uC815 \uC2E4\uD328" : `\uC0C1\uD68C ${state.shopStage}\uB2E8\uACC4 \uB2EC\uC131`}</h3>${state.failure ? `<p class="failure">${state.failure}</p>` : "<p>\uC2E0\uC911\uD55C \uAC70\uB798\uC640 \uAFB8\uC900\uD55C \uC131\uC7A5\uC73C\uB85C \uC5EC\uC815\uC744 \uB9C8\uCCE4\uC2B5\uB2C8\uB2E4.</p>"}<strong>${state.failure ? "\uB9C8\uAC10 \uC870\uAC74\uC744 \uB2E4\uC2DC \uD655\uC778\uD558\uC138\uC694." : "\uC644\uC8FC \uC131\uACF5"}</strong></section><section class="result-stats"><h3>\uC5EC\uC815 \uC694\uC57D</h3><p><span>\uC644\uC8FC \uC77C\uC218</span><b>${state.day}\uC77C</b></p><p><span>\uCD5C\uC885 \uC0C1\uD68C \uB2E8\uACC4</span><b>${state.shopStage}\uB2E8\uACC4</b></p><p><span>\uCD5C\uC885 \uC790\uC0B0</span><b>${money(state.cash + unsold)}</b></p><p><span>\uB099\uCC30 / \uC644\uB8CC \uC758\uB8B0</span><b>${wonCount}\uAC74 / ${state.completedQuestCount}\uAC74</b></p><p><span>\uD68D\uB4DD \uC720\uBB3C</span><b>${acquiredRelics.join(", ") || "\uC5C6\uC74C"}</b></p></section>`;
-    save();
+    if (state.failure) save();
+    else store.clear(state.saveSlot);
   }
   var placeRenderers = { city: renderHub, quests: renderQuestOffice, tavern: renderTavern, exchange: renderExchange, shop: renderShop, guild: renderGuild, museum: () => renderMuseum("city"), catalog: renderCatalog };
   document.querySelector("#new-run").onclick = async () => {
