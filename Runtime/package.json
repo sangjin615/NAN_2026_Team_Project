@@ -7,6 +7,10 @@
     "start:generation": "node generation-server.js",
     "build:standalone": "node tools/build-standalone.mjs",
     "test": "node --test test/*.test.js",
+    "audit": "node tools/audit-runtime.mjs && node tools/audit-generation.mjs",
+    "audit:runtime": "node tools/audit-runtime.mjs",
+    "audit:generation": "node tools/audit-generation.mjs",
+    "audit:generation:live": "node tools/audit-generation.mjs --live",
     "measure": "node tools/measure-generation.js && node tools/measure-project.js",
     "measure:project": "node tools/measure-project.js",
     "experiment:prepare": "node tools/prepare-local-generation-experiment.js"
