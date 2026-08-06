@@ -1,6 +1,26 @@
 [hidden] { display: none !important; }
 .status:empty { display: none !important; }
 
+#action-toast {
+  position: fixed; left: 50%; top: 50%; z-index: 1000;
+  width: max-content; min-width: min(360px,72vw); max-width: min(720px,82vw);
+  margin: 0; padding: 20px 34px; box-sizing: border-box;
+  transform: translate(-50%,-44%) scale(.96);
+  visibility: hidden; opacity: 0; pointer-events: none;
+  border: 18px solid transparent;
+  border-image: url("./assets/ui/skin-v1/panel-dark.png") 46 fill / 18px / 0 stretch;
+  background: #15110ded; color: #f7e5bc;
+  font-size: clamp(15px,1.35vw,22px); font-weight: 800; line-height: 1.45;
+  text-align: center; text-wrap: balance;
+  text-shadow: 0 2px 3px #000;
+  filter: drop-shadow(0 14px 22px #000b);
+  transition: opacity .16s ease, transform .16s ease, visibility 0s linear .16s;
+}
+#action-toast.is-visible {
+  visibility: visible; opacity: 1; transform: translate(-50%,-50%) scale(1);
+  transition-delay: 0s;
+}
+
 :root {
   --design-width: 1600;
   --design-height: 900;

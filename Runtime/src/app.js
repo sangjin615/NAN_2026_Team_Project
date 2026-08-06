@@ -30,8 +30,7 @@ let slotMode = 'new';
 let museumReturn = 'city';
 let actionTimer = null;
 let auctionBotTimer = null;
-let questMessageTimer = null;
-let shopMessageTimer = null;
+let actionToastTimer = null;
 let selectedInfoKind = 'competitors';
 
 const GRADE_LABELS = { COMMON: '일반', RARE: '희귀', EPIC: '영웅', LEGENDARY: '전설' };
@@ -303,29 +302,24 @@ function questRewardLabel(quest) {
     : money(quest.reward);
 }
 
-function showQuestMessage(message) {
-  if (questMessageTimer) window.clearTimeout(questMessageTimer);
-  questMessageTimer = null;
-  const element = document.querySelector('#quest-message');
+function showActionToast(message) {
+  if (actionToastTimer) window.clearTimeout(actionToastTimer);
+  actionToastTimer = null;
+  const element = document.querySelector('#action-toast');
   element.textContent = message;
+  element.classList.toggle('is-visible', Boolean(message));
   if (!message) return;
-  questMessageTimer = window.setTimeout(() => {
-    if (element.textContent === message) element.textContent = '';
-    questMessageTimer = null;
+  actionToastTimer = window.setTimeout(() => {
+    if (element.textContent === message) {
+      element.textContent = '';
+      element.classList.remove('is-visible');
+    }
+    actionToastTimer = null;
   }, 3500);
 }
 
-function showShopMessage(message) {
-  if (shopMessageTimer) window.clearTimeout(shopMessageTimer);
-  shopMessageTimer = null;
-  const element = document.querySelector('#shop-message');
-  element.textContent = message;
-  if (!message) return;
-  shopMessageTimer = window.setTimeout(() => {
-    if (element.textContent === message) element.textContent = '';
-    shopMessageTimer = null;
-  }, 3500);
-}
+const showQuestMessage = showActionToast;
+const showShopMessage = showActionToast;
 
 function renderQuestOffice(message = '') {
   clearActionTimer(); audio.playBgm('workplace'); state.phase = 'quests'; adapter.showScene('quests'); syncHeader();
@@ -437,7 +431,8 @@ function renderExchange(message = '') {
   document.querySelectorAll('[data-item-select]').forEach((input) => { input.onchange = syncBulkActions; });
   document.querySelector('#sell-selected').textContent = '판매';
   syncBulkActions();
-  document.querySelector('#exchange-message').textContent = message;
+  document.querySelector('#exchange-message').textContent = '';
+  showActionToast(message);
 }
 
 function renderTavern(message = '') {
@@ -489,7 +484,8 @@ function renderTavern(message = '') {
     { stage: 3, competitors: '경쟁자 3명', catalog: '이름 · 계열 · 등급', forecast: '시세 6개' },
   ];
   document.querySelector('#tavern-owned').innerHTML = `<h3>상회 단계별 정보 확장</h3><p class="stage-intro">상회를 성장시키면 세 정보의 공개 범위가 함께 넓어집니다.</p><div class="tavern-stage-list">${stageRows.map((row) => `<article class="${row.stage === effectiveStage ? 'is-current' : ''}"><header><b>${row.stage}단계</b>${row.stage === effectiveStage ? '<span>현재</span>' : ''}</header><p><img src="${icons.competitors}" alt="">${row.competitors}</p><p><img src="${icons.catalog}" alt="">${row.catalog}</p><p><img src="${icons.forecast}" alt="">${row.forecast}</p></article>`).join('')}</div>`;
-  document.querySelector('#tavern-message').textContent = message;
+  document.querySelector('#tavern-message').textContent = '';
+  showActionToast(message);
 }
 
 function renderShop(message = '') {
