@@ -316,7 +316,7 @@ function showActionToast(message) {
       element.classList.remove('is-visible');
     }
     actionToastTimer = null;
-  }, 3500);
+  }, 1500);
 }
 
 const showQuestMessage = showActionToast;
