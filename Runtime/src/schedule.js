@@ -62,6 +62,7 @@ export function createRunSchedule({ catalog, balance, seed }) {
         categoryName: item.category_name_ko,
         grade,
         spritePath: item.grades[grade],
+        spriteAnchor: item.sprite_anchors?.[grade] || { x: 0, y: 0 },
         quality: { label: quality.label, multiplier: quality.value },
         pricing: { catalogBasePrice, priceMultiplier, basePrice, trueValue },
         visualEffects: selectVisualEffects(item.category, grade, rng),

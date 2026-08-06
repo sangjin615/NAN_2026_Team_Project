@@ -99,6 +99,7 @@ const money = (value) => `${Math.round(Number(value || 0)).toLocaleString('ko-KR
 const status = (text, tone = 'ready') => { const element = document.querySelector('#boot-status'); element.textContent = text; element.dataset.tone = tone; };
 const ownedItems = () => state.inventory.filter((item) => !item.sold && !item.delivered);
 const scheduledLot = (lotId) => state.schedule.days.flatMap((day) => day.lots).find((lot) => lot.lotId === lotId);
+const spriteAnchorAttrs = (lot) => `class="item-sprite-anchor" style="--sprite-anchor-x:${Number(lot?.spriteAnchor?.x || 0)}%;--sprite-anchor-y:${Number(lot?.spriteAnchor?.y || 0)}%"`;
 const save = () => store.save(state, state.saveSlot);
 
 function loadMeta() {
@@ -342,7 +343,7 @@ function renderQuestOffice(message = '') {
       ? `<strong>${money(item.trueValue)} <small>± ${money(item.appraisalRange)}</small></strong>`
       : `<span>감정 비용 ${money(cost)}</span>`;
     return `<article class="appraisal-card">
-      <img src="${lot ? spriteUrl(lot, item.grade) : ''}" alt="${item.name}">
+      <img ${spriteAnchorAttrs(lot)} src="${lot ? spriteUrl(lot, item.grade) : ''}" alt="${item.name}">
       <div><b>${item.name}</b><small>${gradeLabel(item.grade)} · ${categoryLabel(item.category)}</small>${result}</div>
       <button data-office-appraise="${item.lotId}" ${item.appraised || item.collateral || state.cash < cost ? 'disabled' : ''}>${item.appraised ? '감정 완료' : item.collateral ? '담보 설정됨' : '정밀 감정'}</button>
     </article>`;
@@ -506,7 +507,7 @@ function renderShop(message = '') {
     const unlocked = index < state.storage;
     if (item) {
       const lot = scheduledLot(item.lotId);
-      return `<article class="shop-storage-slot is-filled"><span class="slot-number">${index + 1}</span><img src="${lot ? spriteUrl(lot, item.grade) : ''}" alt=""><div><b>${escapeHtml(item.name)}</b><small>${gradeLabel(item.grade)} · 감정가 ${money(item.appraisedValue || item.trueValue)}</small></div></article>`;
+      return `<article class="shop-storage-slot is-filled"><span class="slot-number">${index + 1}</span><img ${spriteAnchorAttrs(lot)} src="${lot ? spriteUrl(lot, item.grade) : ''}" alt=""><div><b>${escapeHtml(item.name)}</b><small>${gradeLabel(item.grade)} · 감정가 ${money(item.appraisedValue || item.trueValue)}</small></div></article>`;
     }
     return `<article class="shop-storage-slot ${unlocked ? 'is-empty' : 'is-locked'}"><span class="slot-number">${index + 1}</span><img class="storage-placeholder" src="./assets/ui/exchange/${unlocked ? 'storage-empty.png' : 'storage-locked.png'}" alt=""><div><b>${unlocked ? '빈 보관칸' : '잠긴 보관칸'}</b><small>${unlocked ? '낙찰 물품 보관' : '상회 승급 시 해금'}</small></div></article>`;
   }).join('');
@@ -533,7 +534,7 @@ function renderGuild(message = '') {
   const collateralMarkup = collateralItems.length ? collateralItems.map((item) => {
     const lot = scheduledLot(item.lotId);
     const value = loanValue(item);
-    return `<label class="guild-collateral-card"><img src="${lot ? spriteUrl(lot, item.grade) : ''}" alt=""><span><b>${item.name}</b><small>${gradeLabel(item.grade)} · 공개 기준가 ${money(item.basePrice)}</small></span><strong>${money(value)}</strong><input type="radio" name="guild-collateral-card" value="${item.lotId}"></label>`;
+    return `<label class="guild-collateral-card"><img ${spriteAnchorAttrs(lot)} src="${lot ? spriteUrl(lot, item.grade) : ''}" alt=""><span><b>${item.name}</b><small>${gradeLabel(item.grade)} · 공개 기준가 ${money(item.basePrice)}</small></span><strong>${money(value)}</strong><input type="radio" name="guild-collateral-card" value="${item.lotId}"></label>`;
   }).join('') : `<div class="guild-collateral-empty"><b>${locked ? '담보 기능이 잠겨 있습니다.' : '담보로 설정할 보유 물품이 없습니다.'}</b><span>${locked ? `상회를 ${balance.loan.minShopStage}단계로 승급하면 이용할 수 있습니다.` : '경매에서 물품을 낙찰한 뒤 다시 방문하세요.'}</span></div>`;
   document.querySelector('#guild-collateral-list').innerHTML = `<header><h3>담보 보유품 <small>(미판매 물품)</small></h3><b>${collateralCount} / ${state.storage}</b></header><div class="guild-collateral-scroll">${collateralMarkup}</div><footer><span>선택 담보 대출 한도</span><strong id="guild-limit-total">0 G</strong></footer>`;
   document.querySelector('#guild-loan').disabled = locked || lateForLoan || Boolean(state.loan) || state.guildLocked || !collateralCount;
@@ -600,7 +601,7 @@ function renderCatalog() {
   clearActionTimer(); audio.playBgm('workplace'); state.phase = 'catalog'; adapter.showScene('catalog'); syncHeader();
   document.querySelector('#catalog-grid').innerHTML = state.schedule.days[state.day - 1].lots.map((lot, index) => { const visualEffects = normalizeVisualEffects(lot.category, lot.grade, lot.visualEffects); return `<article class="lot-card catalog-lot-${index + 1}" tabindex="0" aria-label="경매품 ${index + 1} ${escapeHtml(lot.content.displayName)} 상세 정보">
     <b class="catalog-number">${String(index + 1).padStart(2, '0')}</b>
-    <div class="mini-sprite ${visualEffects.map((effect) => `vfx-${effect}`).join(' ')}"><img src="${spriteUrl(lot, lot.grade)}" alt=""></div>
+    <div class="mini-sprite ${visualEffects.map((effect) => `vfx-${effect}`).join(' ')}"><img ${spriteAnchorAttrs(lot)} src="${spriteUrl(lot, lot.grade)}" alt=""></div>
     <span class="catalog-grade">${gradeLabel(lot.grade)}</span><h3>${escapeHtml(lot.content.displayName)}</h3>
     <p class="catalog-meta"><span>${escapeHtml(categoryLabel(lot.category))}</span><strong>${money(lot.pricing.basePrice)}</strong></p>
     <aside class="catalog-tooltip" role="tooltip"><b>${escapeHtml(lot.content.displayName)}</b><span>${gradeLabel(lot.grade)} · ${escapeHtml(categoryLabel(lot.category))}</span><p>${escapeHtml(lot.content.description)}</p>${lot.content.setHint ? `<em>${escapeHtml(lot.content.setHint)}</em>` : ''}<strong>기준가 ${money(lot.pricing.basePrice)}</strong></aside>
@@ -626,6 +627,8 @@ function renderAuction() {
   adapter.setText('lot-progress', `${state.day}일차 · 경매품 ${state.lotIndex + 1} / 8`); adapter.setText('lot-name', lot.content.displayName);
   adapter.setText('lot-grade', lot.grade); adapter.setText('lot-description', lot.content.description); adapter.setText('base-price', money(lot.pricing.basePrice));
   adapter.setText('current-bid', money(state.auctionSession.currentPrice)); adapter.setText('cash', money(state.cash)); adapter.setSprite('current-lot', spriteUrl(lot, lot.grade)); adapter.setEffects('current-lot', normalizeVisualEffects(lot.category, lot.grade, lot.visualEffects));
+  const currentLotSprite = document.querySelector('[data-sprite="current-lot"], [data-bind="current-lot"]');
+  if (currentLotSprite) { currentLotSprite.classList.add('item-sprite-anchor'); currentLotSprite.style.setProperty('--sprite-anchor-x', `${Number(lot.spriteAnchor?.x || 0)}%`); currentLotSprite.style.setProperty('--sprite-anchor-y', `${Number(lot.spriteAnchor?.y || 0)}%`); }
   const auctionFeed = document.querySelector('#auction-feed');
   auctionFeed.innerHTML = state.auctionSession.feed.map((line) => `<p>${escapeHtml(line)}</p>`).join('');
   auctionFeed.scrollTop = auctionFeed.scrollHeight;
@@ -820,6 +823,10 @@ document.querySelector('#delete-save').onclick = () => {
 document.querySelector('#continue-run').onclick = () => {
   state = store.load(selectedSlot);
   if (!state) return status('유효한 저장 데이터가 없습니다.', 'error');
+  for (const lot of state.schedule.days.flatMap((day) => day.lots)) {
+    const catalogItem = catalog.items.find((item) => item.base_id === lot.baseItemId);
+    lot.spriteAnchor ??= catalogItem?.sprite_anchors?.[lot.grade] || { x: 0, y: 0 };
+  }
   generation.blueprint = state.generationBlueprint || null;
   ({ auction: renderAuction, settlement: renderSettlement, relic: renderRelic, result: renderResult, quests: renderQuestOffice, tavern: renderTavern, exchange: renderExchange, shop: renderShop, guild: renderGuild, museum: () => renderMuseum('city'), catalog: renderCatalog }[state.phase] || renderHub)();
 };
