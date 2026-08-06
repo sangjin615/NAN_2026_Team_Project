@@ -4967,10 +4967,14 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
     renderShop(ok ? "\uC0C1\uD68C\uB97C \uC2B9\uAE09\uD588\uC2B5\uB2C8\uB2E4." : "\uD604\uAE08 \uB610\uB294 \uC644\uB8CC \uC758\uB8B0\uAC00 \uBD80\uC871\uD569\uB2C8\uB2E4.");
   };
   document.querySelector("#guild-loan").onclick = () => {
+    if (state.shopStage < balance.loan.minShopStage) {
+      renderGuild(`\uB2F4\uBCF4 \uB300\uCD9C\uC740 \uC0C1\uD68C ${balance.loan.minShopStage}\uB2E8\uACC4\uBD80\uD130 \uC774\uC6A9\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4.`);
+      return;
+    }
     const lotId = document.querySelector("#guild-collateral")?.value;
     const ok = takeLoan(state, balance, lotId);
     if (ok) audio.playSfx("loan");
-    renderGuild(ok ? "\uC120\uD0DD\uD55C \uBB3C\uD488\uC73C\uB85C \uB2F4\uBCF4 \uB300\uCD9C\uC744 \uC2E4\uD589\uD588\uC2B5\uB2C8\uB2E4." : "\uB2F4\uBCF4 \uBB3C\uD488\uC744 \uC120\uD0DD\uD558\uACE0 \uD574\uAE08 \uC870\uAC74\uC744 \uD655\uC778\uD558\uC138\uC694.");
+    renderGuild(ok ? "\uC120\uD0DD\uD55C \uBB3C\uD488\uC73C\uB85C \uB2F4\uBCF4 \uB300\uCD9C\uC744 \uC2E4\uD589\uD588\uC2B5\uB2C8\uB2E4." : "\uB2F4\uBCF4 \uBB3C\uD488\uC744 \uC120\uD0DD\uD558\uACE0 \uB300\uCD9C \uC870\uAC74\uC744 \uD655\uC778\uD558\uC138\uC694.");
   };
   document.querySelector("#guild-repay").onclick = () => {
     const ok = repayLoanEarly(state, balance);

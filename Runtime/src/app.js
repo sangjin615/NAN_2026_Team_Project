@@ -890,7 +890,16 @@ syncSoundToggle();
 document.querySelectorAll('[data-place]').forEach((button) => button.onclick = () => { audio.playSfx('navigate'); placeRenderers[button.dataset.place]?.(); });
 document.querySelector('#sell-selected').onclick = () => { const ids = [...document.querySelectorAll('[data-item-select]:checked')].map((input) => input.dataset.itemSelect); const revenue = sellItems(state, balance, ids); if (revenue) audio.playSfx('sell'); renderExchange(`${money(revenue)}에 처분했습니다.`); };
 document.querySelector('#shop-upgrade').onclick = () => { const ok = upgradeShop(state, balance); if (ok) audio.playSfx('upgrade'); renderShop(ok ? '상회를 승급했습니다.' : '현금 또는 완료 의뢰가 부족합니다.'); };
-document.querySelector('#guild-loan').onclick = () => { const lotId = document.querySelector('#guild-collateral')?.value; const ok = takeLoan(state, balance, lotId); if (ok) audio.playSfx('loan'); renderGuild(ok ? '선택한 물품으로 담보 대출을 실행했습니다.' : '담보 물품을 선택하고 해금 조건을 확인하세요.'); };
+document.querySelector('#guild-loan').onclick = () => {
+  if (state.shopStage < balance.loan.minShopStage) {
+    renderGuild(`담보 대출은 상회 ${balance.loan.minShopStage}단계부터 이용할 수 있습니다.`);
+    return;
+  }
+  const lotId = document.querySelector('#guild-collateral')?.value;
+  const ok = takeLoan(state, balance, lotId);
+  if (ok) audio.playSfx('loan');
+  renderGuild(ok ? '선택한 물품으로 담보 대출을 실행했습니다.' : '담보 물품을 선택하고 대출 조건을 확인하세요.');
+};
 document.querySelector('#guild-repay').onclick = () => { const ok = repayLoanEarly(state, balance); if (ok) audio.playSfx('repay'); renderGuild(ok ? '원금을 중도 상환했습니다.' : '상환할 수 없습니다.'); };
 document.querySelector('#download-log').onclick = () => downloadRunLog(state);
 
