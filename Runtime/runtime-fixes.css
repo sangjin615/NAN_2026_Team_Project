@@ -3006,6 +3006,54 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
 #quest-detail-dialog dd { margin: 0; color: #302216; font-weight: 700; }
 #close-quest-detail { min-width: 150px; }
 
+/* City market news is a compact newspaper button until the player opens it. */
+[data-scene="hub"] #hub-market-news {
+  position: absolute; z-index: 7; right: 2.2%; bottom: 5.2%;
+  width: 10%; height: 15%; min-width: 0; min-height: 0; padding: 0;
+  border: 0 !important; border-image: none !important;
+  background: transparent url("./assets/ui/market/newspaper-board.png") center / 100% 100% no-repeat !important;
+  color: #3d2918; filter: drop-shadow(0 5px 7px #0008);
+}
+[data-scene="hub"] #hub-market-news span {
+  position: absolute; left: 16%; right: 16%; top: 42%;
+  font-size: clamp(9px, .82vw, 13px); font-weight: 900; line-height: 1.1;
+}
+[data-scene="hub"] #hub-market-news:hover,
+[data-scene="hub"] #hub-market-news:focus-visible {
+  outline: 3px solid #e1b54d; outline-offset: 2px; filter: brightness(1.08) drop-shadow(0 5px 7px #0008);
+}
+[data-scene="hub"] #market-dialog {
+  width: min(76vw, 940px); max-width: calc(100vw - 28px); aspect-ratio: 1.55;
+  box-sizing: border-box; padding: 0; border: 0; outline: 0; overflow: visible;
+  background: transparent url("./assets/ui/market/newspaper-board.png") center / 100% 100% no-repeat;
+  color: #352416; filter: drop-shadow(0 18px 26px #000c);
+}
+[data-scene="hub"] #market-dialog::backdrop { background: #090705c7; backdrop-filter: blur(2px); }
+[data-scene="hub"] #market-dialog #market-indices {
+  position: absolute; inset: 7% 7% 6%; width: auto; height: auto;
+  padding: 0; border: 0; border-image: none; background: transparent; box-shadow: none;
+}
+[data-scene="hub"] #market-dialog #market-indices > strong {
+  left: 20%; right: 20%; top: 0; height: 15%; font-size: clamp(25px, 2.5vw, 40px);
+}
+[data-scene="hub"] #market-dialog .market-sparklines {
+  left: 5%; right: 5%; top: 21%; bottom: 8%; gap: 4% 6%;
+}
+[data-scene="hub"] #market-dialog #market-indices:has(.market-incident) .market-sparklines { bottom: 31%; }
+[data-scene="hub"] #market-dialog .market-spark { height: auto; }
+[data-scene="hub"] #market-dialog .market-incident {
+  position: absolute; left: 6%; right: 6%; bottom: 5%;
+  margin: 0; padding: 2% 3%;
+}
+[data-scene="hub"] #market-dialog .market-incident h4 { font-size: clamp(14px, 1.4vw, 21px); }
+[data-scene="hub"] #market-dialog .market-incident p { font-size: clamp(10px, .9vw, 14px); }
+[data-scene="hub"] #close-market-dialog {
+  position: absolute; z-index: 3; right: 5.5%; top: 5.5%;
+  width: 7%; height: 9%; min-width: 42px; min-height: 38px; padding: 0;
+  border: 0 !important; border-image: none !important; background: transparent !important;
+  color: #5a3518; font-size: clamp(25px, 2.8vw, 42px); text-shadow: none;
+}
+
 /* Replace the temporary City HUD glyphs with the normalized production icons. */
 [data-scene="hub"] > header > div,
 [data-scene="hub"] > header > strong,

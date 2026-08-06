@@ -857,6 +857,11 @@ document.querySelector('#title-museum').onclick = () => renderMuseum('title');
 document.querySelector('#museum-back').onclick = () => museumReturn === 'title' ? adapter.showScene('title') : renderHub();
 document.querySelector('#title-settings').onclick = () => document.querySelector('#settings-dialog').showModal();
 document.querySelector('#hub-settings').onclick = () => document.querySelector('#settings-dialog').showModal();
+document.querySelector('#hub-market-news').onclick = () => document.querySelector('#market-dialog').showModal();
+document.querySelector('#close-market-dialog').onclick = () => document.querySelector('#market-dialog').close();
+document.querySelector('#market-dialog').onclick = (event) => {
+  if (event.target === event.currentTarget) event.currentTarget.close();
+};
 document.querySelector('#close-settings').onclick = () => document.querySelector('#settings-dialog').close();
 document.querySelector('#close-quest-detail').onclick = () => document.querySelector('#quest-detail-dialog').close();
 const syncSoundToggle = () => {
