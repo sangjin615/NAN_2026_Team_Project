@@ -1,217 +1,253 @@
 {
-  "model": "qwen2.5-coder:14b",
-  "seed": "api-template-schema-20260804",
+  "model": "qwen3:8b",
+  "seed": "newspaper-incident-ko-20260806",
   "attempt": 1,
   "temperature": 0.3,
-  "latencyMs": 35502,
+  "latencyMs": 30825,
   "output": {
     "schemaVersion": "1.0",
-    "runSeed": "api-template-schema-20260804",
-    "premise": "세월이 흐르며, 오랜만에 열리는 비밀의 경매장에서 유물들과 보석들이 모여 있습니다.",
+    "runSeed": "newspaper-incident-ko-20260806",
+    "premise": "19세기 후반, 신비로운 경매 도시에서 유령 상인들과 숙적의 그림자 속에서 거래가 이루어진다. 상품의 가격은 매일 변하며, 상인들의 목소리와 상품의 가치를 읽는 능력이 필요하다.",
     "marketArc": [
       {
         "day": 1,
-        "headline": "비밀의 경매장 오픈",
-        "mood": "신비로움"
+        "headline": "신비로운 상인의 등장",
+        "mood": "curious"
       },
       {
         "day": 2,
-        "headline": "유랑 상인들의 대결",
-        "mood": "열정적"
+        "headline": "유령의 경매",
+        "mood": "mysterious"
       },
       {
         "day": 3,
-        "headline": "세계의 유물들",
-        "mood": "경기심"
+        "headline": "상인들의 경쟁",
+        "mood": "competitive"
       },
       {
         "day": 4,
-        "headline": "왕실의 자산",
-        "mood": "상품성"
+        "headline": "상품의 비밀",
+        "mood": "suspicious"
       },
       {
         "day": 5,
-        "headline": "비밀을 풀어내자",
-        "mood": "추리적"
+        "headline": "숙적의 등장",
+        "mood": "dangerous"
       },
       {
         "day": 6,
-        "headline": "마법의 보석들",
-        "mood": "신비로움"
+        "headline": "상인의 계략",
+        "mood": "strategic"
       },
       {
         "day": 7,
-        "headline": "영웅들의 이야기",
-        "mood": "영감적"
+        "headline": "가격의 변동",
+        "mood": "unstable"
       },
       {
         "day": 8,
-        "headline": "왕실의 권력",
-        "mood": "위협적"
+        "headline": "상품의 가치",
+        "mood": "analytical"
       },
       {
         "day": 9,
-        "headline": "비밀을 풀어내자",
-        "mood": "추리적"
+        "headline": "상인의 속셈",
+        "mood": "deceptive"
       },
       {
         "day": 10,
-        "headline": "마법의 보석들",
-        "mood": "신비로움"
+        "headline": "숙적의 공격",
+        "mood": "hostile"
       },
       {
         "day": 11,
-        "headline": "영웅들의 이야기",
-        "mood": "영감적"
+        "headline": "상인의 연합",
+        "mood": "cooperative"
       },
       {
         "day": 12,
-        "headline": "결승전",
-        "mood": "격렬함"
+        "headline": "경매의 종말",
+        "mood": "conclusive"
       }
     ],
     "sets": [
       {
         "setId": "set-01",
-        "title": "여행의 기록",
-        "sharedSecret": "세계를 여행한 자들의 이야기가 담긴 유물들입니다.",
-        "revealHint": "이 세트는 세계를 여행한 자들이 남긴 기록을 담고 있습니다."
+        "title": "신비로운 상인",
+        "sharedSecret": "상인의 목소리가 가격을 예측할 수 있다.",
+        "revealHint": "상인의 목소리가 가격을 예측할 수 있다.",
+        "incidentTitle": "상인의 목소리",
+        "incidentSummary": "상인의 목소리가 가격을 예측할 수 있다. 이 목소리가 상품의 가치를 드러낸다.",
+        "newspaperLead": "상인의 목소리가 가격을 예측할 수 있다."
       },
       {
         "setId": "set-02",
-        "title": "왕실의 보물",
-        "sharedSecret": "왕실에 소중히 보관되어온 보석들과 유물들입니다.",
-        "revealHint": "이 세트는 왕실에서 사용되었던 보석과 유물들을 담고 있습니다."
+        "title": "유령의 경매",
+        "sharedSecret": "경매는 유령의 손길로 이루어진다.",
+        "revealHint": "경매는 유령의 손길로 이루어진다.",
+        "incidentTitle": "유령의 손길",
+        "incidentSummary": "경매는 유령의 손길로 이루어진다. 이 손길이 상품의 가치를 드러낸다.",
+        "newspaperLead": "경매는 유령의 손길로 이루어진다."
       },
       {
         "setId": "set-03",
-        "title": "상인의 지혜",
-        "sharedSecret": "유명한 상인들이 사용하던 도구와 장비들입니다.",
-        "revealHint": "이 세트는 유명한 상인들이 사용하던 도구와 장비들을 담고 있습니다."
+        "title": "상인들의 경쟁",
+        "sharedSecret": "상인들의 경쟁이 가격을 결정한다.",
+        "revealHint": "상인들의 경쟁이 가격을 결정한다.",
+        "incidentTitle": "상인들의 경쟁",
+        "incidentSummary": "상인들의 경쟁이 가격을 결정한다. 이 경쟁이 상품의 가치를 드러낸다.",
+        "newspaperLead": "상인들의 경쟁이 가격을 결정한다."
       },
       {
         "setId": "set-04",
-        "title": "신비의 보석",
-        "sharedSecret": "마법과 함께 빛나는 신비로운 보석들입니다.",
-        "revealHint": "이 세트는 마법과 함께 빛나는 신비로운 보석들을 담고 있습니다."
+        "title": "상품의 비밀",
+        "sharedSecret": "상품의 비밀이 가격을 결정한다.",
+        "revealHint": "상품의 비밀이 가격을 결정한다.",
+        "incidentTitle": "상품의 비밀",
+        "incidentSummary": "상품의 비밀이 가격을 결정한다. 이 비밀이 상품의 가치를 드러낸다.",
+        "newspaperLead": "상품의 비밀이 가격을 결정한다."
       },
       {
         "setId": "set-05",
-        "title": "영웅의 이야기",
-        "sharedSecret": "영웅들의 모험이 담긴 유물들입니다.",
-        "revealHint": "이 세트는 영웅들의 모험이 담긴 유물들을 담고 있습니다."
+        "title": "숙적의 등장",
+        "sharedSecret": "숙적의 등장이 가격을 변화시킨다.",
+        "revealHint": "숙적의 등장이 가격을 변화시킨다.",
+        "incidentTitle": "숙적의 등장",
+        "incidentSummary": "숙적의 등장이 가격을 변화시킨다. 이 등장이 상품의 가치를 드러낸다.",
+        "newspaperLead": "숙적의 등장이 가격을 변화시킨다."
       },
       {
         "setId": "set-06",
-        "title": "왕실의 권력",
-        "sharedSecret": "왕실의 권력을 나타내는 유물들입니다.",
-        "revealHint": "이 세트는 왕실의 권력을 나타내는 유물들을 담고 있습니다."
+        "title": "상인의 계략",
+        "sharedSecret": "상인의 계략이 가격을 결정한다.",
+        "revealHint": "상인의 계략이 가격을 결정한다.",
+        "incidentTitle": "상인의 계략",
+        "incidentSummary": "상인의 계략이 가격을 결정한다. 이 계략이 상품의 가치를 드러낸다.",
+        "newspaperLead": "상인의 계략이 가격을 결정한다."
       },
       {
         "setId": "set-07",
-        "title": "비밀을 풀어내자",
-        "sharedSecret": "비밀을 풀기 위해 필요한 도구와 장비들입니다.",
-        "revealHint": "이 세트는 비밀을 풀기 위해 필요한 도구와 장비들을 담고 있습니다."
+        "title": "가격의 변동",
+        "sharedSecret": "가격의 변동이 상품의 가치를 드러낸다.",
+        "revealHint": "가격의 변동이 상품의 가치를 드러낸다.",
+        "incidentTitle": "가격의 변동",
+        "incidentSummary": "가격의 변동이 상품의 가치를 드러낸다. 이 변동이 상품의 가치를 드러낸다.",
+        "newspaperLead": "가격의 변동이 상품의 가치를 드러낸다."
       },
       {
         "setId": "set-08",
-        "title": "마법의 보석들",
-        "sharedSecret": "마법과 함께 빛나는 신비로운 보석들입니다.",
-        "revealHint": "이 세트는 마법과 함께 빛나는 신비로운 보석들을 담고 있습니다."
+        "title": "상품의 가치",
+        "sharedSecret": "상품의 가치가 가격을 결정한다.",
+        "revealHint": "상품의 가치가 가격을 결정한다.",
+        "incidentTitle": "상품의 가치",
+        "incidentSummary": "상품의 가치가 가격을 결정한다. 이 가치가 상품의 가치를 드러낸다.",
+        "newspaperLead": "상품의 가치가 가격을 결정한다."
       },
       {
         "setId": "set-09",
-        "title": "영웅들의 이야기",
-        "sharedSecret": "영웅들의 모험이 담긴 유물들입니다.",
-        "revealHint": "이 세트는 영웅들의 모험이 담긴 유물들을 담고 있습니다."
+        "title": "상인의 속셈",
+        "sharedSecret": "상인의 속셈이 가격을 결정한다.",
+        "revealHint": "상인의 속셈이 가격을 결정한다.",
+        "incidentTitle": "상인의 속셈",
+        "incidentSummary": "상인의 속셈이 가격을 결정한다. 이 속셈이 상품의 가치를 드러낸다.",
+        "newspaperLead": "상인의 속셈이 가격을 결정한다."
       },
       {
         "setId": "set-10",
-        "title": "왕실의 권력",
-        "sharedSecret": "왕실의 권력을 나타내는 유물들입니다.",
-        "revealHint": "이 세트는 왕실의 권력을 나타내는 유물들을 담고 있습니다."
+        "title": "숙적의 공격",
+        "sharedSecret": "숙적의 공격이 가격을 변화시킨다.",
+        "revealHint": "숙적의 공격이 가격을 변화시킨다.",
+        "incidentTitle": "숙적의 공격",
+        "incidentSummary": "숙적의 공격이 가격을 변화시킨다. 이 공격이 상품의 가치를 드러낸다.",
+        "newspaperLead": "숙적의 공격이 가격을 변화시킨다."
       },
       {
         "setId": "set-11",
-        "title": "비밀을 풀어내자",
-        "sharedSecret": "비밀을 풀기 위해 필요한 도구와 장비들입니다.",
-        "revealHint": "이 세트는 비밀을 풀기 위해 필요한 도구와 장비들을 담고 있습니다."
+        "title": "상인의 연합",
+        "sharedSecret": "상인의 연합이 가격을 결정한다.",
+        "revealHint": "상인의 연합이 가격을 결정한다.",
+        "incidentTitle": "상인의 연합",
+        "incidentSummary": "상인의 연합이 가격을 결정한다. 이 연합이 상품의 가치를 드러낸다.",
+        "newspaperLead": "상인의 연합이 가격을 결정한다."
       },
       {
         "setId": "set-12",
-        "title": "마법의 보석들",
-        "sharedSecret": "마법과 함께 빛나는 신비로운 보석들입니다.",
-        "revealHint": "이 세트는 마법과 함께 빛나는 신비로운 보석들을 담고 있습니다."
+        "title": "경매의 종말",
+        "sharedSecret": "경매의 종말이 가격을 결정한다.",
+        "revealHint": "경매의 종말이 가격을 결정한다.",
+        "incidentTitle": "경매의 종말",
+        "incidentSummary": "경매의 종말이 가격을 결정한다. 이 종말이 상품의 가치를 드러낸다.",
+        "newspaperLead": "경매의 종말이 가격을 결정한다."
       }
     ],
     "castVoices": [
       {
         "botId": "nemesis",
-        "speechStyle": "숙적의 조심스러운 목소리로 대화합니다.",
-        "intro": "안녕하세요, 여러분. 저는 숙적입니다. 오늘 경매장에서 당신을 도울 것입니다."
+        "speechStyle": "threatening",
+        "intro": "나는 숙적이다. 네가 가격을 예측할 수 없다면, 네가 죽을 것이다."
       },
       {
         "botId": "drifter-a",
-        "speechStyle": "유랑 상인의 활기차고 열정적인 목소리로 대화합니다.",
-        "intro": "안녕하세요, 여러분. 저는 유랑 상인입니다. 경매장에서 좋은 거래를 하시길 바랍니다."
+        "speechStyle": "mysterious",
+        "intro": "나는 유령의 손길로 경매를 이끈다. 가격을 예측하려면 내 목소리를 듣는 것이 필요하다."
       },
       {
         "botId": "drifter-b",
-        "speechStyle": "유랑 상인의 활기차고 열정적인 목소리로 대화합니다.",
-        "intro": "안녕하세요, 여러분. 저는 유랑 상인입니다. 경매장에서 좋은 거래를 하시길 바랍니다."
+        "speechStyle": "analytical",
+        "intro": "나는 상품의 가치를 결정한다. 가격을 예측하려면 내 목소리를 듣는 것이 필요하다."
       }
     ],
     "relicLore": [
       {
         "relicId": "old-scale",
-        "displayName": "오래된 저울",
-        "lore": "이 저울은 오랜 세월 동안 사용되어 왔으며, 무게를 정확하게 측정할 수 있습니다."
+        "displayName": "고대의 날개",
+        "lore": "고대의 날개는 상인의 속셈을 드러낸다. 이 날개를 가진 자는 가격을 예측할 수 있다."
       },
       {
         "relicId": "leather-ledger",
-        "displayName": "가죽장부",
-        "lore": "이 장부는 가죽으로 만들어져 있어 시간이 지나도 잘 보존되었습니다. 거래 기록을 담고 있습니다."
+        "displayName": "가죽의 책",
+        "lore": "가죽의 책은 상인의 계략을 드러낸다. 이 책을 가진 자는 가격을 예측할 수 있다."
       },
       {
         "relicId": "worn-seal",
-        "displayName": "오래된 인장",
-        "lore": "이 인장은 오래되어 흔들리지만, 여전히 왕실의 권력을 나타내고 있습니다."
+        "displayName": "부서진 도장",
+        "lore": "부서진 도장은 상인의 연합을 드러낸다. 이 도장을 가진 자는 가격을 예격할 수 있다."
       },
       {
         "relicId": "magnifier",
         "displayName": "확대경",
-        "lore": "이 확대경은 작은 것을 크게 볼 수 있게 해줍니다. 유물의 세부 사항을 확인하는 데 도움이 됩니다."
+        "lore": "확대경은 상품의 가치를 드러낸다. 이 확대경을 가진 자는 가격을 예측할 수 있다."
       },
       {
         "relicId": "compass",
         "displayName": "나침반",
-        "lore": "이 나침반은 방향을 가리키는 데 사용됩니다. 여행 중인 자들에게 중요한 도구입니다."
+        "lore": "나침반은 상인의 속셈을 드러낸다. 이 나침반을 가진 자는 가격을 예측할 수 있다."
       },
       {
         "relicId": "broker-card",
-        "displayName": "중개사 카드",
-        "lore": "이 카드는 경매장에서 거래를 할 수 있는 권한을 나타냅니다. 유명한 중개사가 사용하던 것 같습니다."
+        "displayName": "중개인 카드",
+        "lore": "중개인 카드는 상인의 계략을 드러낸다. 이 카드를 가진 자는 가격을 예측할 수 있다."
       },
       {
         "relicId": "royal-charter",
-        "displayName": "왕실의 특권증",
-        "lore": "이 증은 왕실에서 발행된 것으로, 특별한 권리를 부여합니다. 유물에 대한 소유권을 증명하는 데 사용됩니다."
+        "displayName": "왕의 특권",
+        "lore": "왕의 특권은 상인의 연합을 드러낸다. 이 특권을 가진 자는 가격을 예측할 수 있다."
       },
       {
         "relicId": "house-crest",
-        "displayName": "가문의 상징",
-        "lore": "이 상징은 특정 가문의 자산을 나타냅니다. 왕실이나 유명한 가문에서 사용되었던 것 같습니다."
+        "displayName": "가문의 문장",
+        "lore": "가문의 문장은 상인의 계략을 드러낸다. 이 문장을 가진 자는 가격을 예측할 수 있다."
       },
       {
         "relicId": "merchant-safe",
-        "displayName": "상인의 안전함",
-        "lore": "이 안전함은 중요한 물건들을 보관하는 데 사용되었습니다. 상인들이 소중한 물건을 보호하기 위해 사용하던 것 같습니다."
+        "displayName": "상인의 안전장치",
+        "lore": "상인의 안전장치는 상인의 속셈을 드러낸다. 이 장치를 가진 자는 가격을 예측할 수 있다."
       }
     ],
     "endingFrames": {
-      "success": "경매가 성공적으로 마무리되었습니다. 모든 유물과 보석들이 잘 판매되었고, 경매장은 다시 평화롭게 돌아갔습니다.",
-      "failure": "경매가 실패로 끝났습니다. 많은 물건이 팔리지 않았고, 경매장은 비어있는 상태로 닫혔습니다.",
-      "bankruptcy": "경매장을 운영하던 상인들이 파산했습니다. 경매장은 이제 아무도 이용하지 않는 곳이 되었습니다."
+      "success": "가격을 예측한 자는 상품을 얻었다. 상인의 속셈을 드러낸 자는 상품을 얻었다.",
+      "failure": "가격을 예측하지 못한 자는 상품을 잃었다. 상인의 속셈을 드러내지 못한 자는 상품을 잃었다.",
+      "bankruptcy": "상인의 속셈을 드러낸 자는 상품을 얻었다. 상인의 속셈을 드러내지 못한 자는 상품을 잃었다."
     }
   }
 }

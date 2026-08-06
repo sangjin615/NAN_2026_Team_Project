@@ -124,13 +124,13 @@ export function bestSetMultiplier(inventory, balance, relics = [], shopStage = 1
   const groups = Object.values(byCategory);
   const rules = [
     [groups.some((items) => items.length >= 2), 1.2],
-    [groups.some((items) => items.length >= 3), 1.8],
-    [groups.some((items) => items.filter((x) => ['EPIC', 'LEGENDARY'].includes(x.grade)).length >= 3), 2.4],
-    [groups.some((items) => new Set(items.map((x) => x.grade)).size >= 3), 2.6],
-    [new Set(active.map((item) => item.category)).size >= 6, 1.4],
+    [groups.some((items) => items.length >= 3), 1.3],
+    [groups.some((items) => new Set(items.map((x) => x.grade)).size >= 3), 1.35],
+    [groups.some((items) => items.filter((x) => ['EPIC', 'LEGENDARY'].includes(x.grade)).length >= 3), 1.4],
+    [new Set(active.map((item) => item.category)).size >= 6, 1.5],
   ];
   for (const [matches, bonus] of rules) {
-    if (matches) multiplier *= bonus;
+    if (matches) multiplier = Math.max(multiplier, bonus);
   }
   if (multiplier > 1) multiplier *= 1 + (balance.shop.setBonus?.[shopStage] ?? 0);
   return multiplier + (relics.includes('house-crest') && multiplier > 1 ? 0.2 : 0);

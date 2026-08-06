@@ -190,7 +190,7 @@ async function newRun(seed) {
   recordEvent(state, 'run-start', { saveSlot: selectedSlot });
   updateRunLoading(58, '첫날 경매와 도시 정보를 생성하고 있습니다.', ['schedule', 'sets'], 'content');
   state.generationBlueprint = await generation.prepareRun({
-    runSeed: seed, sets, market: state.marketPath,
+    runSeed: seed, sets, schedule, market: state.marketPath,
   });
   await generation.ensure({ currentDay: 1, schedule, sets, aheadDays: 0 });
   updateRunLoading(88, `SLOT ${selectedSlot}에 새 여정을 저장하고 있습니다.`, ['schedule', 'sets', 'content'], 'save');
@@ -223,6 +223,14 @@ function syncHeader() {
   }
 }
 
+function currentNewspaperIncident() {
+  const blueprintSets = state.generationBlueprint?.sets;
+  const todayLots = state.schedule?.days?.[Math.min(state.day, 12) - 1]?.lots || [];
+  if (!Array.isArray(blueprintSets) || !todayLots.length) return null;
+  const todaySetIds = new Set(todayLots.map((lot) => lot.setId));
+  return blueprintSets.find((set) => todaySetIds.has(set.setId) && set.incidentTitle && set.newspaperLead) || null;
+}
+
 function renderHub(message = '') {
   clearActionTimer(); audio.playBgm('city');
   state.phase = 'hub';
@@ -236,6 +244,10 @@ function renderHub(message = '') {
     quests: state.completedQuestCount,
   };
   for (const [key, value] of Object.entries(values)) adapter.setText(key, value);
+  const incident = currentNewspaperIncident();
+  const incidentArticle = incident
+    ? `<article class="market-incident"><small>도시 사건 기록</small><h4>${escapeHtml(incident.incidentTitle)}</h4><p>${escapeHtml(incident.newspaperLead)}</p></article>`
+    : '';
   document.querySelector('#market-indices').innerHTML = `<strong>오늘의 시세</strong><div class="market-sparklines">${Object.entries(state.marketPath)
     .map(([family, valuesByDay]) => {
       const visible = valuesByDay.slice(0, state.day);
@@ -256,7 +268,7 @@ function renderHub(message = '') {
       const [lastX, lastY] = points.split(' ').at(-1).split(',');
       const trendImage = trend === 'flat' ? '' : `<img class="trend-icon" src="./assets/ui/action-icons/market-${trend}.png" alt="">`;
       return `<span class="market-spark ${trend}" data-category="${family}"><span class="market-quote"><img src="${categoryIconUrl(family)}" alt=""><b>${CATEGORY_LABELS[family]}</b><em>${(current * 100).toFixed(0)}</em><i aria-label="${trend === 'rise' ? '상승' : trend === 'fall' ? '하락' : '변동 없음'}">${trendImage || arrow}</i></span><svg viewBox="0 0 100 46" preserveAspectRatio="none" aria-hidden="true"><line x1="0" y1="25" x2="100" y2="25"></line><polyline points="${points}"></polyline><circle cx="${lastX}" cy="${lastY}" r="3.4"></circle></svg></span>`;
-    }).join('')}</div>`;
+    }).join('')}</div>${incidentArticle}`;
   document.querySelector('#loan-status').textContent = state.loan
     ? `만기 ${state.loan.dueDay}일 · ${money(state.loan.due)}`
     : state.guildLocked ? '조합 이용 제한' : '대출 없음';
@@ -402,7 +414,7 @@ function renderExchange(message = '') {
     const now = path[state.day - 1]; const previous = state.day > 1 ? path[state.day - 2] : 1; const delta = now - previous;
     const trend = delta >= 0 ? 'rise' : 'fall';
     return `<div><img src="${categoryIconUrl(key)}" alt=""><b>${CATEGORY_LABELS[key]}</b><strong>${Math.round(now * 100)}%</strong><span class="${trend}"><img class="trend-icon" src="./assets/ui/action-icons/market-${trend}.png" alt="">${Math.abs(delta * 100).toFixed(0)}%</span></div>`;
-  }).join('')}</div><section class="set-bonus-guide"><h4>세트 보너스</h4><div><span data-set-rule="same-2">한 계열을 2점 이상 선택 <b>×1.20</b></span><span data-set-rule="same-3">한 계열을 3점 이상 선택 <b>×1.80</b></span><span data-set-rule="high-3">같은 계열의 영웅 이상 3점 <b>×2.40</b></span><span data-set-rule="grade-3">같은 계열에서 서로 다른 희귀도 3종 <b>×2.60</b></span><span data-set-rule="all-6">모든 6개 계열을 1점 이상 선택 <b>×1.40</b></span></div><small>동시에 만족한 조건은 각각 한 번씩 곱하여 중첩됩니다. 예: 동일 계열 3점은 ×1.20과 ×1.80이 함께 적용됩니다.</small><strong id="set-bonus-summary">적용 보너스 없음 · 최종 ×1.00</strong></section>`;
+  }).join('')}</div><section class="set-bonus-guide"><h4>세트 보너스</h4><div><span data-set-rule="same-2">한 계열을 2점 이상 선택 <b>×1.20</b></span><span data-set-rule="same-3">한 계열을 3점 이상 선택 <b>×1.30</b></span><span data-set-rule="grade-3">같은 계열에서 서로 다른 희귀도 3종 <b>×1.35</b></span><span data-set-rule="high-3">같은 계열의 영웅 이상 3점 <b>×1.40</b></span><span data-set-rule="all-6">모든 6개 계열을 1점씩 선택 <b>×1.50</b></span></div><small>여러 조건을 동시에 만족하면 가장 높은 세트 배수 하나만 적용됩니다.</small><strong id="set-bonus-summary">적용 보너스 없음 · 최종 ×1.00</strong></section>`;
   const syncBulkActions = () => {
     const ids = [...document.querySelectorAll('[data-item-select]:checked')].map((input) => input.dataset.itemSelect);
     const items = ownedItems().filter((item) => ids.includes(item.lotId) && !item.collateral);

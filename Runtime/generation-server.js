@@ -17,13 +17,26 @@ function outputSchema(request) {
   if (request.mode === 'run-blueprint') return fixedObject({
     schemaVersion: { const: '1.0' }, runSeed: { const: request.runSeed }, premise: text,
     marketArc: { type: 'array', minItems: 12, maxItems: 12, items: fixedObject({ day: { type: 'integer' }, headline: text, mood: text }) },
-    sets: { type: 'array', prefixItems: request.sets.map(({ setId }) => fixedObject({ setId: { const: setId }, title: text, sharedSecret: text, revealHint: text })), minItems: request.sets.length, maxItems: request.sets.length },
+    sets: { type: 'array', prefixItems: request.sets.map(({ setId }) => fixedObject({
+      setId: { const: setId }, title: text, sharedSecret: text, revealHint: text,
+      incidentTitle: text, incidentSummary: text, newspaperLead: text,
+    })), minItems: request.sets.length, maxItems: request.sets.length },
   });
   return fixedObject({
     schemaVersion: { const: '1.0' }, day: { const: request.day }, marketHeadline: text,
     lots: { type: 'array', prefixItems: request.lots.map(({ lotId }) => fixedObject({ lotId: { const: lotId }, displayName: text, description: text, rumor: text, setHint: text, npcReaction: text })), minItems: request.lots.length, maxItems: request.lots.length },
   });
 }
+
+const blueprintFrameSchema = (request) => fixedObject({
+  schemaVersion: { const: '1.0' }, runSeed: { const: request.runSeed }, premise: text,
+  marketArc: { type: 'array', minItems: 12, maxItems: 12, items: fixedObject({ day: { type: 'integer' }, headline: text, mood: text }) },
+});
+
+const setIncidentSchema = ({ setId }) => fixedObject({
+  setId: { const: setId }, title: text, sharedSecret: text, revealHint: text,
+  incidentTitle: text, incidentSummary: text, newspaperLead: text,
+});
 
 function validateInput(request) {
   if (request?.schemaVersion !== '1.0') throw new Error('unsupported schemaVersion');
@@ -51,6 +64,27 @@ const categoryTerms = {
 };
 
 const normalizedClauses = (value) => String(value).split(/[.!?]/).map((part) => part.trim().replace(/\s+/g, ' ')).filter((part) => part.length >= 10);
+const incidentBanned = /마법|마력|주술|유령|귀신|예언|예지|초자연|가격|시세|가치|낙찰|보상|확률/;
+const hasKorean = (value) => /[가-힣]/.test(String(value));
+
+export function setIncidentErrors(inputSet, output, accepted = []) {
+  const errors = [];
+  const fields = ['title', 'sharedSecret', 'revealHint', 'incidentTitle', 'incidentSummary', 'newspaperLead'];
+  if (output?.setId !== inputSet.setId) errors.push('setId mismatch');
+  for (const field of fields) {
+    if (!String(output?.[field] || '').trim()) errors.push(`missing ${field}`);
+    else if (!hasKorean(output[field])) errors.push(`${field} must be Korean`);
+  }
+  const incidentCopy = `${output?.incidentSummary || ''} ${output?.newspaperLead || ''}`;
+  const linkedNames = (inputSet.members || []).filter(({ baseName }) => baseName && incidentCopy.includes(baseName));
+  if (new Set(linkedNames.map(({ baseName }) => baseName)).size < Math.min(2, inputSet.members?.length || 0)) errors.push('incident must name at least two set members');
+  if (incidentBanned.test(`${output?.incidentTitle || ''} ${incidentCopy}`)) errors.push('incident contains magic, prediction, or price language');
+  if (output?.incidentTitle === output?.incidentSummary || output?.incidentSummary === output?.newspaperLead) errors.push('incident fields must be distinct');
+  const signature = normalizedClauses(incidentCopy).join('|');
+  if (accepted.some((item) => item.incidentTitle === output?.incidentTitle)) errors.push('incident title repeats another set');
+  if (signature && accepted.some((item) => normalizedClauses(`${item.incidentSummary} ${item.newspaperLead}`).join('|') === signature)) errors.push('incident copy repeats another set');
+  return [...new Set(errors)];
+}
 
 export function qualityErrors(request, output) {
   if (request.mode !== 'daily-content' || !Array.isArray(output.lots)) return [];
@@ -83,6 +117,12 @@ export function validateOutput(request, output) {
   if (request.mode === 'run-blueprint') {
     if (output.runSeed !== request.runSeed || output.marketArc?.length !== 12) throw new Error('run blueprint shape mismatch');
     if (JSON.stringify(output.sets?.map(({ setId }) => setId)) !== JSON.stringify(request.sets.map(({ setId }) => setId))) throw new Error('set IDs mismatch');
+    const accepted = [];
+    output.sets.forEach((set, index) => {
+      const errors = setIncidentErrors(request.sets[index], set, accepted);
+      if (errors.length) throw new Error(`set ${request.sets[index].setId}: ${errors.join('; ')}`);
+      accepted.push(set);
+    });
     return;
   }
   if (output.day !== request.day || output.lots?.length !== 8) throw new Error('daily output shape mismatch');
@@ -96,10 +136,81 @@ async function preserve(request, attempt, result) {
   if (process.env.GENERATION_LOG === 'off') return;
   await mkdir(reportRoot, { recursive: true });
   const safeSeed = String(request.runSeed || 'unknown').replace(/[^a-zA-Z0-9_-]/g, '_').slice(0, 60);
-  await writeFile(path.join(reportRoot, `${safeSeed}-${request.mode}-d${request.day || 0}-attempt-${attempt}.json`), JSON.stringify(result, null, 2));
+  const setSuffix = result.setId ? `-${String(result.setId).replace(/[^a-zA-Z0-9_-]/g, '_')}` : '';
+  await writeFile(path.join(reportRoot, `${safeSeed}-${request.mode}${setSuffix}-d${request.day || 0}-attempt-${attempt}.json`), JSON.stringify(result, null, 2));
+}
+
+async function callModel({ request, schema, prompt, attempt }) {
+  const response = await fetch(ollamaEndpoint, {
+    method: 'POST', headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ model, prompt, stream: false, think: false, format: schema, options: { temperature: attempt === 1 ? 0.3 : 0.1 } }),
+  });
+  if (!response.ok) throw new Error(`Ollama HTTP ${response.status}`);
+  const raw = await response.json();
+  return JSON.parse(raw.response);
+}
+
+function fallbackSetIncident(inputSet, index) {
+  const [first, second = first] = (inputSet.members || []).map(({ baseName }) => baseName);
+  const places = ['항구 보관소', '북문 세관 창고', '옛 조합 기록실', '강변 운송소'];
+  const actors = ['창고 관리인', '세관 서기', '운송 조합원', '도시 기록관'];
+  const place = places[index % places.length]; const actor = actors[index % actors.length];
+  return {
+    setId: inputSet.setId,
+    title: `${place}의 인계 기록`,
+    sharedSecret: `${first}와 ${second}에 같은 인계 번호가 남아 있다.`,
+    revealHint: '같은 인계 번호와 보관소 표식',
+    incidentTitle: `${place} 제${index + 1}호 누락 장부 발견`,
+    incidentSummary: `${actor}이 ${place}에서 ${first}와 ${second}를 함께 적은 누락 장부를 발견했다.`,
+    newspaperLead: `${place} 정리 중 발견된 장부에서 ${first}와 ${second}의 공동 인계 기록이 확인됐다. 도시 기록국은 두 물품의 이전 보관 경위를 조사하고 있다.`,
+  };
+}
+
+async function generateBlueprint(request) {
+  let frame; let frameError;
+  for (let attempt = 1; attempt <= 2; attempt += 1) {
+    const startedAt = Date.now();
+    try {
+      const feedback = attempt === 2 ? `\nRETRY_ERRORS:\n${frameError.message}` : '';
+      frame = await callModel({ request, schema: blueprintFrameSchema(request), attempt, prompt: `${contract}${feedback}\nGenerate only the run premise and 12-day marketArc.\nINPUT:\n${JSON.stringify({ ...request, sets: undefined })}` });
+      if (frame.runSeed !== request.runSeed || frame.marketArc?.length !== 12) throw new Error('run blueprint frame shape mismatch');
+      await preserve(request, attempt, { valid: true, stage: 'frame', model, latencyMs: Date.now() - startedAt, request, output: frame });
+      break;
+    } catch (error) {
+      frameError = error;
+      await preserve(request, attempt, { valid: false, stage: 'frame', model, latencyMs: Date.now() - startedAt, request, output: frame, error: error.message });
+    }
+  }
+  if (!frame) frame = { schemaVersion: '1.0', runSeed: request.runSeed, premise: '도시 경매소에 모인 물품들의 인계 기록을 추적한다.', marketArc: request.marketSignals.map(({ day, leadingCategory, direction }) => ({ day, headline: `${leadingCategory} 거래 기록`, mood: direction })) };
+
+  const generatedSets = [];
+  for (let index = 0; index < request.sets.length; index += 1) {
+    const inputSet = request.sets[index]; let output; let lastError;
+    for (let attempt = 1; attempt <= 2; attempt += 1) {
+      const startedAt = Date.now();
+      try {
+        const feedback = attempt === 2 ? `\nRETRY_ERRORS:\n${lastError.message}` : '';
+        const usedTitles = generatedSets.map(({ incidentTitle }) => incidentTitle);
+        output = await callModel({ request, schema: setIncidentSchema(inputSet), attempt, prompt: `${contract}${feedback}\nGenerate exactly one set record. The incident must name at least two input baseName values. Do not reuse these headlines: ${JSON.stringify(usedTitles)}.\nINPUT SET:\n${JSON.stringify(inputSet)}` });
+        const errors = setIncidentErrors(inputSet, output, generatedSets);
+        if (errors.length) throw new Error(errors.join('; '));
+        await preserve(request, attempt, { valid: true, stage: 'set', setId: inputSet.setId, model, latencyMs: Date.now() - startedAt, request: inputSet, output });
+        break;
+      } catch (error) {
+        lastError = error;
+        await preserve(request, attempt, { valid: false, stage: 'set', setId: inputSet.setId, model, latencyMs: Date.now() - startedAt, request: inputSet, output, error: error.message });
+        output = null;
+      }
+    }
+    generatedSets.push(output || fallbackSetIncident(inputSet, index));
+  }
+  const merged = { ...frame, schemaVersion: '1.0', runSeed: request.runSeed, sets: generatedSets };
+  validateOutput(request, merged);
+  return merged;
 }
 
 async function generate(request) {
+  if (request.mode === 'run-blueprint') return generateBlueprint(request);
   let lastError;
   for (let attempt = 1; attempt <= 2; attempt += 1) {
     const startedAt = Date.now();
@@ -107,13 +218,7 @@ async function generate(request) {
     try {
       const retryFeedback = attempt > 1 ? `\nRETRY_ERRORS:\n${lastError.message}` : '';
       const prompt = `${contract}${retryFeedback}\nINPUT:\n${JSON.stringify(request)}`;
-      const response = await fetch(ollamaEndpoint, {
-        method: 'POST', headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ model, prompt, stream: false, think: false, format: outputSchema(request), options: { temperature: attempt === 1 ? 0.3 : 0.1 } }),
-      });
-      if (!response.ok) throw new Error(`Ollama HTTP ${response.status}`);
-      const raw = await response.json();
-      output = JSON.parse(raw.response);
+      output = await callModel({ request, schema: outputSchema(request), prompt, attempt });
       validateOutput(request, output);
       await preserve(request, attempt, { valid: true, model, latencyMs: Date.now() - startedAt, request, output });
       return output;

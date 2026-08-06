@@ -19,7 +19,10 @@ function outputSchema(request) {
   if (request.mode === 'run-blueprint') return fixedObject({
     schemaVersion: { const: '1.0' }, runSeed: { const: request.runSeed }, premise: text,
     marketArc: { type: 'array', minItems: 12, maxItems: 12, items: fixedObject({ day: { type: 'integer' }, headline: text, mood: text }) },
-    sets: { type: 'array', prefixItems: request.sets.map(({ setId }) => fixedObject({ setId: { const: setId }, title: text, sharedSecret: text, revealHint: text })), minItems: request.sets.length, maxItems: request.sets.length },
+    sets: { type: 'array', prefixItems: request.sets.map(({ setId }) => fixedObject({
+      setId: { const: setId }, title: text, sharedSecret: text, revealHint: text,
+      incidentTitle: text, incidentSummary: text, newspaperLead: text,
+    })), minItems: request.sets.length, maxItems: request.sets.length },
     castVoices: { type: 'array', prefixItems: request.bots.map(({ botId }) => fixedObject({ botId: { const: botId }, speechStyle: text, intro: text })), minItems: request.bots.length, maxItems: request.bots.length },
     relicLore: { type: 'array', prefixItems: request.relics.map(({ relicId }) => fixedObject({ relicId: { const: relicId }, displayName: text, lore: text })), minItems: request.relics.length, maxItems: request.relics.length },
     endingFrames: fixedObject({ success: text, failure: text, bankruptcy: text }),

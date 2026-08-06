@@ -1150,6 +1150,35 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
 [data-scene="hub"] .market-spark.fall i { color: #ef9884; }
 [data-scene="hub"] .market-spark.fall polyline { stroke: #dc7466; }
 [data-scene="hub"] .market-spark.fall circle { fill: #ef9884; }
+
+[data-scene="hub"] .market-incident {
+  margin: 8px 34px 0;
+  padding: 9px 10px 7px;
+  border-top: 1px solid rgba(92, 61, 30, .45);
+  color: #49321f;
+  text-align: left;
+}
+
+[data-scene="hub"] .market-incident small {
+  display: block;
+  color: #8a642f;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .08em;
+}
+
+[data-scene="hub"] .market-incident h4 {
+  margin: 3px 0 2px;
+  font-family: Georgia, "Noto Serif KR", serif;
+  font-size: 18px;
+  line-height: 1.2;
+}
+
+[data-scene="hub"] .market-incident p {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.45;
+}
 }
 
 /* Museum collection slots leave unowned display cases visually empty. */
@@ -3166,12 +3195,12 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
     constructor(config) {
       this.config = config;
     }
-    async request(body) {
+    async request(body, timeoutMs = this.config.timeoutMs || 8e3) {
       if (!this.config?.enabled || !this.config.endpoint) throw new Error("generation API is disabled");
       let lastError;
       for (let attempt = 0; attempt <= (this.config.retries || 0); attempt += 1) {
         const controller = new AbortController();
-        const timer = setTimeout(() => controller.abort(), this.config.timeoutMs || 8e3);
+        const timer = setTimeout(() => controller.abort(), timeoutMs);
         try {
           const response = await fetch(this.config.endpoint, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(body), signal: controller.signal });
           if (!response.ok) throw new Error(`generation API ${response.status}`);
@@ -3184,8 +3213,9 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
       }
       throw lastError;
     }
-    async generateBlueprint({ runSeed, sets, market }) {
+    async generateBlueprint({ runSeed, sets, schedule, market }) {
       const categories = Object.keys(market);
+      const lotById = new Map((schedule?.days || []).flatMap(({ lots }) => lots).map((lot) => [lot.lotId, lot]));
       const marketSignals = Array.from({ length: 12 }, (_, index) => {
         const leadingCategory = categories.reduce((best, category) => Math.abs(market[category][index] - 1) > Math.abs(market[best][index] - 1) ? category : best, categories[0]);
         const value = market[leadingCategory][index];
@@ -3195,12 +3225,18 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
         schemaVersion: this.config.schemaVersion || "1.0",
         mode: "run-blueprint",
         runSeed,
-        sets: sets.map(({ setId, themeKey }) => ({ setId, themeKey })),
+        sets: sets.map(({ setId, themeKey, lotIds = [] }) => ({
+          setId,
+          themeKey,
+          members: lotIds.map((lotId) => lotById.get(lotId)).filter(Boolean).map(({ lotId, baseName, category }) => ({ lotId, baseName, category }))
+        })),
         marketSignals
       };
-      const payload = await this.request(request);
+      const blueprintTimeoutMs = this.config.blueprintTimeoutMs || Math.max(this.config.timeoutMs || 8e3, 24e4);
+      const payload = await this.request(request, blueprintTimeoutMs);
       if (payload.schemaVersion !== request.schemaVersion || payload.runSeed !== runSeed || !Array.isArray(payload.marketArc) || payload.marketArc.length !== 12) throw new Error("blueprint response contract mismatch");
       if (JSON.stringify(payload.sets?.map(({ setId }) => setId)) !== JSON.stringify(request.sets.map(({ setId }) => setId))) throw new Error("blueprint set IDs mismatch");
+      if (payload.sets.some((set) => !set.incidentTitle || !set.incidentSummary || !set.newspaperLead)) throw new Error("blueprint incident copy is incomplete");
       return payload;
     }
     async generateDay({ day, lots, sets, blueprint }) {
@@ -3412,13 +3448,13 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
     const groups = Object.values(byCategory);
     const rules = [
       [groups.some((items) => items.length >= 2), 1.2],
-      [groups.some((items) => items.length >= 3), 1.8],
-      [groups.some((items) => items.filter((x) => ["EPIC", "LEGENDARY"].includes(x.grade)).length >= 3), 2.4],
-      [groups.some((items) => new Set(items.map((x) => x.grade)).size >= 3), 2.6],
-      [new Set(active.map((item) => item.category)).size >= 6, 1.4]
+      [groups.some((items) => items.length >= 3), 1.3],
+      [groups.some((items) => new Set(items.map((x) => x.grade)).size >= 3), 1.35],
+      [groups.some((items) => items.filter((x) => ["EPIC", "LEGENDARY"].includes(x.grade)).length >= 3), 1.4],
+      [new Set(active.map((item) => item.category)).size >= 6, 1.5]
     ];
     for (const [matches, bonus] of rules) {
-      if (matches) multiplier *= bonus;
+      if (matches) multiplier = Math.max(multiplier, bonus);
     }
     if (multiplier > 1) multiplier *= 1 + (balance2.shop.setBonus?.[shopStage] ?? 0);
     return multiplier + (relics.includes("house-crest") && multiplier > 1 ? 0.2 : 0);
@@ -3924,6 +3960,7 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
     state.generationBlueprint = await generation.prepareRun({
       runSeed: seed,
       sets,
+      schedule,
       market: state.marketPath
     });
     await generation.ensure({ currentDay: 1, schedule, sets, aheadDays: 0 });
@@ -3955,6 +3992,13 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
       hud.querySelector(".scene-hud-settings").onclick = () => document.querySelector("#settings-dialog").showModal();
     }
   }
+  function currentNewspaperIncident() {
+    const blueprintSets = state.generationBlueprint?.sets;
+    const todayLots = state.schedule?.days?.[Math.min(state.day, 12) - 1]?.lots || [];
+    if (!Array.isArray(blueprintSets) || !todayLots.length) return null;
+    const todaySetIds = new Set(todayLots.map((lot) => lot.setId));
+    return blueprintSets.find((set) => todaySetIds.has(set.setId) && set.incidentTitle && set.newspaperLead) || null;
+  }
   function renderHub(message = "") {
     clearActionTimer();
     audio.playBgm("city");
@@ -3969,6 +4013,8 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
       quests: state.completedQuestCount
     };
     for (const [key, value] of Object.entries(values)) adapter.setText(key, value);
+    const incident = currentNewspaperIncident();
+    const incidentArticle = incident ? `<article class="market-incident"><small>\uB3C4\uC2DC \uC0AC\uAC74 \uAE30\uB85D</small><h4>${escapeHtml(incident.incidentTitle)}</h4><p>${escapeHtml(incident.newspaperLead)}</p></article>` : "";
     document.querySelector("#market-indices").innerHTML = `<strong>\uC624\uB298\uC758 \uC2DC\uC138</strong><div class="market-sparklines">${Object.entries(state.marketPath).map(([family, valuesByDay]) => {
       const visible = valuesByDay.slice(0, state.day);
       const current = visible.at(-1);
@@ -3988,7 +4034,7 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
       const [lastX, lastY] = points.split(" ").at(-1).split(",");
       const trendImage = trend === "flat" ? "" : `<img class="trend-icon" src="./assets/ui/action-icons/market-${trend}.png" alt="">`;
       return `<span class="market-spark ${trend}" data-category="${family}"><span class="market-quote"><img src="${categoryIconUrl(family)}" alt=""><b>${CATEGORY_LABELS[family]}</b><em>${(current * 100).toFixed(0)}</em><i aria-label="${trend === "rise" ? "\uC0C1\uC2B9" : trend === "fall" ? "\uD558\uB77D" : "\uBCC0\uB3D9 \uC5C6\uC74C"}">${trendImage || arrow}</i></span><svg viewBox="0 0 100 46" preserveAspectRatio="none" aria-hidden="true"><line x1="0" y1="25" x2="100" y2="25"></line><polyline points="${points}"></polyline><circle cx="${lastX}" cy="${lastY}" r="3.4"></circle></svg></span>`;
-    }).join("")}</div>`;
+    }).join("")}</div>${incidentArticle}`;
     document.querySelector("#loan-status").textContent = state.loan ? `\uB9CC\uAE30 ${state.loan.dueDay}\uC77C \xB7 ${money(state.loan.due)}` : state.guildLocked ? "\uC870\uD569 \uC774\uC6A9 \uC81C\uD55C" : "\uB300\uCD9C \uC5C6\uC74C";
     document.querySelector("#hub-message").textContent = message;
     save();
@@ -4139,7 +4185,7 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
       const delta = now - previous;
       const trend = delta >= 0 ? "rise" : "fall";
       return `<div><img src="${categoryIconUrl(key)}" alt=""><b>${CATEGORY_LABELS[key]}</b><strong>${Math.round(now * 100)}%</strong><span class="${trend}"><img class="trend-icon" src="./assets/ui/action-icons/market-${trend}.png" alt="">${Math.abs(delta * 100).toFixed(0)}%</span></div>`;
-    }).join("")}</div><section class="set-bonus-guide"><h4>\uC138\uD2B8 \uBCF4\uB108\uC2A4</h4><div><span data-set-rule="same-2">\uD55C \uACC4\uC5F4\uC744 2\uC810 \uC774\uC0C1 \uC120\uD0DD <b>\xD71.20</b></span><span data-set-rule="same-3">\uD55C \uACC4\uC5F4\uC744 3\uC810 \uC774\uC0C1 \uC120\uD0DD <b>\xD71.80</b></span><span data-set-rule="high-3">\uAC19\uC740 \uACC4\uC5F4\uC758 \uC601\uC6C5 \uC774\uC0C1 3\uC810 <b>\xD72.40</b></span><span data-set-rule="grade-3">\uAC19\uC740 \uACC4\uC5F4\uC5D0\uC11C \uC11C\uB85C \uB2E4\uB978 \uD76C\uADC0\uB3C4 3\uC885 <b>\xD72.60</b></span><span data-set-rule="all-6">\uBAA8\uB4E0 6\uAC1C \uACC4\uC5F4\uC744 1\uC810 \uC774\uC0C1 \uC120\uD0DD <b>\xD71.40</b></span></div><small>\uB3D9\uC2DC\uC5D0 \uB9CC\uC871\uD55C \uC870\uAC74\uC740 \uAC01\uAC01 \uD55C \uBC88\uC529 \uACF1\uD558\uC5EC \uC911\uCCA9\uB429\uB2C8\uB2E4. \uC608: \uB3D9\uC77C \uACC4\uC5F4 3\uC810\uC740 \xD71.20\uACFC \xD71.80\uC774 \uD568\uAED8 \uC801\uC6A9\uB429\uB2C8\uB2E4.</small><strong id="set-bonus-summary">\uC801\uC6A9 \uBCF4\uB108\uC2A4 \uC5C6\uC74C \xB7 \uCD5C\uC885 \xD71.00</strong></section>`;
+    }).join("")}</div><section class="set-bonus-guide"><h4>\uC138\uD2B8 \uBCF4\uB108\uC2A4</h4><div><span data-set-rule="same-2">\uD55C \uACC4\uC5F4\uC744 2\uC810 \uC774\uC0C1 \uC120\uD0DD <b>\xD71.20</b></span><span data-set-rule="same-3">\uD55C \uACC4\uC5F4\uC744 3\uC810 \uC774\uC0C1 \uC120\uD0DD <b>\xD71.30</b></span><span data-set-rule="grade-3">\uAC19\uC740 \uACC4\uC5F4\uC5D0\uC11C \uC11C\uB85C \uB2E4\uB978 \uD76C\uADC0\uB3C4 3\uC885 <b>\xD71.35</b></span><span data-set-rule="high-3">\uAC19\uC740 \uACC4\uC5F4\uC758 \uC601\uC6C5 \uC774\uC0C1 3\uC810 <b>\xD71.40</b></span><span data-set-rule="all-6">\uBAA8\uB4E0 6\uAC1C \uACC4\uC5F4\uC744 1\uC810\uC529 \uC120\uD0DD <b>\xD71.50</b></span></div><small>\uC5EC\uB7EC \uC870\uAC74\uC744 \uB3D9\uC2DC\uC5D0 \uB9CC\uC871\uD558\uBA74 \uAC00\uC7A5 \uB192\uC740 \uC138\uD2B8 \uBC30\uC218 \uD558\uB098\uB9CC \uC801\uC6A9\uB429\uB2C8\uB2E4.</small><strong id="set-bonus-summary">\uC801\uC6A9 \uBCF4\uB108\uC2A4 \uC5C6\uC74C \xB7 \uCD5C\uC885 \xD71.00</strong></section>`;
     const syncBulkActions = () => {
       const ids = [...document.querySelectorAll("[data-item-select]:checked")].map((input) => input.dataset.itemSelect);
       const items = ownedItems().filter((item) => ids.includes(item.lotId) && !item.collateral);
