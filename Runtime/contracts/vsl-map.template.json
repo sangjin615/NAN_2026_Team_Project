@@ -8,7 +8,6 @@
       { "selector": "#open-new-slots", "vslActionId": "action-open-new-slots" },
       { "selector": "#open-continue-slots", "vslActionId": "action-open-continue-slots" },
       { "selector": "#title-museum", "vslActionId": "action-open-museum" },
-      { "selector": "#title-exit", "vslActionId": "action-exit-game" },
       { "selector": "#title-settings", "vslActionId": "action-open-settings" }
     ], "dataBindings": [] },
     { "runtimeSceneId": "save", "vslSceneId": "scene-save-slot", "actions": [

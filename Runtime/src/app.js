@@ -871,7 +871,6 @@ document.querySelector('#buy-relic').onclick = () => finishRelic(true); document
 document.querySelector('#return-title').onclick = () => adapter.showScene('title');
 document.querySelector('#title-museum').onclick = () => renderMuseum('title');
 document.querySelector('#museum-back').onclick = () => museumReturn === 'title' ? adapter.showScene('title') : renderHub();
-document.querySelector('#title-exit').onclick = () => status('브라우저 게임은 이 탭을 닫으면 종료됩니다.');
 document.querySelector('#title-settings').onclick = () => document.querySelector('#settings-dialog').showModal();
 document.querySelector('#hub-settings').onclick = () => document.querySelector('#settings-dialog').showModal();
 document.querySelector('#close-settings').onclick = () => document.querySelector('#settings-dialog').close();
