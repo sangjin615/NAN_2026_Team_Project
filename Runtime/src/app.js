@@ -7,7 +7,7 @@ import { SaveStore } from './save-store.js';
 import { advanceDay, createInitialState, prepareAuctionEntry, resolveLot } from './game-state.js';
 import { VslRuntimeAdapter } from './vsl-adapter.js';
 import {
-  acceptQuest, appraiseItem, botBidForLot, estimateBotDailyAssets,
+  acceptQuest, appraiseItem, botBidForLot, estimateBotDailyAssets, openingBotBid,
   deliverQuestItem, expireQuestsBeforeAuction, missedDeadline, questMatchesItem,
   quoteItemsSale, refreshDailyQuestOffers, repayLoanEarly, sellItems, settleLoan, settleQuests, takeLoan, upgradeShop,
 } from './systems.js';
@@ -30,8 +30,7 @@ let slotMode = 'new';
 let museumReturn = 'city';
 let actionTimer = null;
 let auctionBotTimer = null;
-let questMessageTimer = null;
-let shopMessageTimer = null;
+let actionToastTimer = null;
 let selectedInfoKind = 'competitors';
 
 const GRADE_LABELS = { COMMON: '일반', RARE: '희귀', EPIC: '영웅', LEGENDARY: '전설' };
@@ -190,7 +189,7 @@ async function newRun(seed) {
   recordEvent(state, 'run-start', { saveSlot: selectedSlot });
   updateRunLoading(58, '첫날 경매와 도시 정보를 생성하고 있습니다.', ['schedule', 'sets'], 'content');
   state.generationBlueprint = await generation.prepareRun({
-    runSeed: seed, sets, market: state.marketPath,
+    runSeed: seed, sets, schedule, market: state.marketPath,
   });
   await generation.ensure({ currentDay: 1, schedule, sets, aheadDays: 0 });
   updateRunLoading(88, `SLOT ${selectedSlot}에 새 여정을 저장하고 있습니다.`, ['schedule', 'sets', 'content'], 'save');
@@ -223,6 +222,14 @@ function syncHeader() {
   }
 }
 
+function currentNewspaperIncident() {
+  const blueprintSets = state.generationBlueprint?.sets;
+  const todayLots = state.schedule?.days?.[Math.min(state.day, 12) - 1]?.lots || [];
+  if (!Array.isArray(blueprintSets) || !todayLots.length) return null;
+  const todaySetIds = new Set(todayLots.map((lot) => lot.setId));
+  return blueprintSets.find((set) => todaySetIds.has(set.setId) && set.incidentTitle && set.newspaperLead) || null;
+}
+
 function renderHub(message = '') {
   clearActionTimer(); audio.playBgm('city');
   state.phase = 'hub';
@@ -236,6 +243,10 @@ function renderHub(message = '') {
     quests: state.completedQuestCount,
   };
   for (const [key, value] of Object.entries(values)) adapter.setText(key, value);
+  const incident = currentNewspaperIncident();
+  const incidentArticle = incident
+    ? `<article class="market-incident"><small>도시 사건 기록</small><h4>${escapeHtml(incident.incidentTitle)}</h4><p>${escapeHtml(incident.newspaperLead)}</p></article>`
+    : '';
   document.querySelector('#market-indices').innerHTML = `<strong>오늘의 시세</strong><div class="market-sparklines">${Object.entries(state.marketPath)
     .map(([family, valuesByDay]) => {
       const visible = valuesByDay.slice(0, state.day);
@@ -256,7 +267,7 @@ function renderHub(message = '') {
       const [lastX, lastY] = points.split(' ').at(-1).split(',');
       const trendImage = trend === 'flat' ? '' : `<img class="trend-icon" src="./assets/ui/action-icons/market-${trend}.png" alt="">`;
       return `<span class="market-spark ${trend}" data-category="${family}"><span class="market-quote"><img src="${categoryIconUrl(family)}" alt=""><b>${CATEGORY_LABELS[family]}</b><em>${(current * 100).toFixed(0)}</em><i aria-label="${trend === 'rise' ? '상승' : trend === 'fall' ? '하락' : '변동 없음'}">${trendImage || arrow}</i></span><svg viewBox="0 0 100 46" preserveAspectRatio="none" aria-hidden="true"><line x1="0" y1="25" x2="100" y2="25"></line><polyline points="${points}"></polyline><circle cx="${lastX}" cy="${lastY}" r="3.4"></circle></svg></span>`;
-    }).join('')}</div>`;
+    }).join('')}</div>${incidentArticle}`;
   document.querySelector('#loan-status').textContent = state.loan
     ? `만기 ${state.loan.dueDay}일 · ${money(state.loan.due)}`
     : state.guildLocked ? '조합 이용 제한' : '대출 없음';
@@ -291,29 +302,24 @@ function questRewardLabel(quest) {
     : money(quest.reward);
 }
 
-function showQuestMessage(message) {
-  if (questMessageTimer) window.clearTimeout(questMessageTimer);
-  questMessageTimer = null;
-  const element = document.querySelector('#quest-message');
+function showActionToast(message) {
+  if (actionToastTimer) window.clearTimeout(actionToastTimer);
+  actionToastTimer = null;
+  const element = document.querySelector('#action-toast');
   element.textContent = message;
+  element.classList.toggle('is-visible', Boolean(message));
   if (!message) return;
-  questMessageTimer = window.setTimeout(() => {
-    if (element.textContent === message) element.textContent = '';
-    questMessageTimer = null;
+  actionToastTimer = window.setTimeout(() => {
+    if (element.textContent === message) {
+      element.textContent = '';
+      element.classList.remove('is-visible');
+    }
+    actionToastTimer = null;
   }, 3500);
 }
 
-function showShopMessage(message) {
-  if (shopMessageTimer) window.clearTimeout(shopMessageTimer);
-  shopMessageTimer = null;
-  const element = document.querySelector('#shop-message');
-  element.textContent = message;
-  if (!message) return;
-  shopMessageTimer = window.setTimeout(() => {
-    if (element.textContent === message) element.textContent = '';
-    shopMessageTimer = null;
-  }, 3500);
-}
+const showQuestMessage = showActionToast;
+const showShopMessage = showActionToast;
 
 function renderQuestOffice(message = '') {
   clearActionTimer(); audio.playBgm('workplace'); state.phase = 'quests'; adapter.showScene('quests'); syncHeader();
@@ -402,7 +408,7 @@ function renderExchange(message = '') {
     const now = path[state.day - 1]; const previous = state.day > 1 ? path[state.day - 2] : 1; const delta = now - previous;
     const trend = delta >= 0 ? 'rise' : 'fall';
     return `<div><img src="${categoryIconUrl(key)}" alt=""><b>${CATEGORY_LABELS[key]}</b><strong>${Math.round(now * 100)}%</strong><span class="${trend}"><img class="trend-icon" src="./assets/ui/action-icons/market-${trend}.png" alt="">${Math.abs(delta * 100).toFixed(0)}%</span></div>`;
-  }).join('')}</div><section class="set-bonus-guide"><h4>세트 보너스</h4><div><span data-set-rule="same-2">한 계열을 2점 이상 선택 <b>×1.20</b></span><span data-set-rule="same-3">한 계열을 3점 이상 선택 <b>×1.80</b></span><span data-set-rule="high-3">같은 계열의 영웅 이상 3점 <b>×2.40</b></span><span data-set-rule="grade-3">같은 계열에서 서로 다른 희귀도 3종 <b>×2.60</b></span><span data-set-rule="all-6">모든 6개 계열을 1점 이상 선택 <b>×1.40</b></span></div><small>동시에 만족한 조건은 각각 한 번씩 곱하여 중첩됩니다. 예: 동일 계열 3점은 ×1.20과 ×1.80이 함께 적용됩니다.</small><strong id="set-bonus-summary">적용 보너스 없음 · 최종 ×1.00</strong></section>`;
+  }).join('')}</div><section class="set-bonus-guide"><h4>세트 보너스</h4><div><span data-set-rule="same-2">한 계열을 2점 이상 선택 <b>×1.20</b></span><span data-set-rule="same-3">한 계열을 3점 이상 선택 <b>×1.30</b></span><span data-set-rule="grade-3">같은 계열에서 서로 다른 희귀도 3종 <b>×1.35</b></span><span data-set-rule="high-3">같은 계열의 영웅 이상 3점 <b>×1.40</b></span><span data-set-rule="all-6">모든 6개 계열을 1점씩 선택 <b>×1.50</b></span></div><small>여러 조건을 동시에 만족하면 가장 높은 세트 배수 하나만 적용됩니다.</small><strong id="set-bonus-summary">적용 보너스 없음 · 최종 ×1.00</strong></section>`;
   const syncBulkActions = () => {
     const ids = [...document.querySelectorAll('[data-item-select]:checked')].map((input) => input.dataset.itemSelect);
     const items = ownedItems().filter((item) => ids.includes(item.lotId) && !item.collateral);
@@ -425,7 +431,8 @@ function renderExchange(message = '') {
   document.querySelectorAll('[data-item-select]').forEach((input) => { input.onchange = syncBulkActions; });
   document.querySelector('#sell-selected').textContent = '판매';
   syncBulkActions();
-  document.querySelector('#exchange-message').textContent = message;
+  document.querySelector('#exchange-message').textContent = '';
+  showActionToast(message);
 }
 
 function renderTavern(message = '') {
@@ -477,7 +484,8 @@ function renderTavern(message = '') {
     { stage: 3, competitors: '경쟁자 3명', catalog: '이름 · 계열 · 등급', forecast: '시세 6개' },
   ];
   document.querySelector('#tavern-owned').innerHTML = `<h3>상회 단계별 정보 확장</h3><p class="stage-intro">상회를 성장시키면 세 정보의 공개 범위가 함께 넓어집니다.</p><div class="tavern-stage-list">${stageRows.map((row) => `<article class="${row.stage === effectiveStage ? 'is-current' : ''}"><header><b>${row.stage}단계</b>${row.stage === effectiveStage ? '<span>현재</span>' : ''}</header><p><img src="${icons.competitors}" alt="">${row.competitors}</p><p><img src="${icons.catalog}" alt="">${row.catalog}</p><p><img src="${icons.forecast}" alt="">${row.forecast}</p></article>`).join('')}</div>`;
-  document.querySelector('#tavern-message').textContent = message;
+  document.querySelector('#tavern-message').textContent = '';
+  showActionToast(message);
 }
 
 function renderShop(message = '') {
@@ -607,14 +615,18 @@ function renderAuction() {
     const generatedFeed = [lot.content.rumor, lot.content.setHint, lot.content.npcReaction].filter(Boolean);
     const dailyAssets = estimateBotDailyAssets({ state, balance });
     const bots = botBidForLot({ lot, day: state.day, balance, marketIndex, seed: state.seed }).map((bot) => ({ ...bot, maxBid: Math.min(bot.maxBid, dailyAssets[bot.id]?.remaining || 0) }));
-    state.auctionSession = { lotId: lot.lotId, currentPrice: Math.max(1, Math.round(lot.pricing.basePrice * balance.auction.startBidRatio)), leader: null, bots, deadline: Date.now() + 15000, feed: [...(expired ? [`기한이 지난 의뢰 ${expired}건이 만료됐습니다.`] : ['경매가 시작되었습니다.']), ...generatedFeed] };
+    const opening = openingBotBid(bots, Math.max(1, Math.round(lot.pricing.basePrice * balance.auction.startBidRatio)));
+    const openingFeed = opening ? [`${opening.bidder.name} ${money(opening.price)}`] : ['입찰 가능한 상대가 없습니다.'];
+    state.auctionSession = { lotId: lot.lotId, currentPrice: opening?.price || 1, leader: opening?.bidder.id || null, bots, deadline: Date.now() + 15000, feed: [...(expired ? [`기한이 지난 의뢰 ${expired}건이 만료됐습니다.`] : ['경매가 시작되었습니다.']), ...generatedFeed, ...openingFeed] };
   }
   state.auctionSession.deadline ||= Date.now() + 15000;
   adapter.showScene('auction');
   adapter.setText('lot-progress', `${state.day}일차 · 경매품 ${state.lotIndex + 1} / 8`); adapter.setText('lot-name', lot.content.displayName);
   adapter.setText('lot-grade', lot.grade); adapter.setText('lot-description', lot.content.description); adapter.setText('base-price', money(lot.pricing.basePrice));
   adapter.setText('current-bid', money(state.auctionSession.currentPrice)); adapter.setText('cash', money(state.cash)); adapter.setSprite('current-lot', spriteUrl(lot, lot.grade)); adapter.setEffects('current-lot', normalizeVisualEffects(lot.category, lot.grade, lot.visualEffects));
-  document.querySelector('#auction-feed').innerHTML = state.auctionSession.feed.slice(-4).map((line) => `<p>${escapeHtml(line)}</p>`).join('');
+  const auctionFeed = document.querySelector('#auction-feed');
+  auctionFeed.innerHTML = state.auctionSession.feed.map((line) => `<p>${escapeHtml(line)}</p>`).join('');
+  auctionFeed.scrollTop = auctionFeed.scrollHeight;
   const participants = [
     { name: '당신', budget: state.cash, leader: state.auctionSession.leader === 'player', player: true },
     ...state.auctionSession.bots.map((bot) => ({ id: bot.id, name: bot.name, budget: estimateBotDailyAssets({ state, balance })[bot.id]?.remaining || 0, leader: state.auctionSession.leader === bot.id })),

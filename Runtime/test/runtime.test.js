@@ -5,11 +5,11 @@ import { createRunSchedule, normalizeVisualEffects, validateSchedule, VISUAL_EFF
 import { createSetGraph } from '../src/set-graph.js';
 import { FallbackContentProvider, GenerationBuffer } from '../src/generation-buffer.js';
 import { createInitialState, resolveLot, advanceDay, prepareAuctionEntry } from '../src/game-state.js';
-import { resolveAuction, appraiseAll, appraiseItem, sellAll, sellItems, quoteItemsSale, bestSetMultiplier, acceptQuest, takeLoan, botBidForLot, estimateBotDailyAssets, buyInformation, missedDeadline, isBankrupt, deliverQuestItem, refreshDailyQuestOffers, repayLoanEarly } from '../src/systems.js';
+import { resolveAuction, appraiseAll, appraiseItem, sellAll, sellItems, quoteItemsSale, bestSetMultiplier, acceptQuest, takeLoan, botBidForLot, estimateBotDailyAssets, openingBotBid, buyInformation, missedDeadline, isBankrupt, deliverQuestItem, refreshDailyQuestOffers, repayLoanEarly } from '../src/systems.js';
 import { recordEvent, runMetrics } from '../src/telemetry.js';
 import { GenerationApiProvider } from '../src/generation-api-provider.js';
 import { SaveStore } from '../src/save-store.js';
-import { qualityErrors } from '../generation-server.js';
+import { qualityErrors, setIncidentErrors } from '../generation-server.js';
 import { RELIC_AUCTION_DAY, RUN_DAYS } from '../src/constants.js';
 
 const catalog = JSON.parse(await readFile(new URL('../assets/items/catalog.json', import.meta.url), 'utf8'));
@@ -309,13 +309,24 @@ test('exchange quote matches the actual bundle sale without mutating inventory',
   assert.equal(sellItems(state, balance, ['cer-1', 'cer-2']), quote.revenue);
 });
 
-test('exchange set bonuses stack once for every condition met', () => {
+test('exchange applies only the highest matching set bonus', () => {
   const items = [
     { category: 'CER', grade: 'COMMON', sold: false, collateral: false },
     { category: 'CER', grade: 'RARE', sold: false, collateral: false },
     { category: 'CER', grade: 'EPIC', sold: false, collateral: false },
   ];
-  assert.equal(bestSetMultiplier(items, balance, [], 0), 1.2 * 1.8 * 2.6);
+  assert.equal(bestSetMultiplier(items, balance, [], 0), 1.35);
+  const highGradeItems = items.map((item, index) => ({ ...item, grade: index === 2 ? 'LEGENDARY' : 'EPIC' }));
+  assert.equal(bestSetMultiplier(highGradeItems, balance, [], 0), 1.4);
+  const allCategories = ['CER', 'CLK', 'PNT', 'BOK', 'MET', 'JEW'].map((category) => ({ category, grade: 'COMMON', sold: false, collateral: false }));
+  assert.equal(bestSetMultiplier(allCategories, balance, [], 0), 1.5);
+});
+
+test('an opponent places the opening bid without exceeding its budget', () => {
+  const bots = [{ id: 'a', name: 'A', maxBid: 900 }, { id: 'b', name: 'B', maxBid: 1400 }];
+  assert.deepEqual(openingBotBid(bots, 1000), { bidder: bots[1], price: 1000 });
+  assert.deepEqual(openingBotBid(bots, 1800), { bidder: bots[1], price: 1400 });
+  assert.equal(openingBotBid([{ id: 'a', maxBid: 0 }], 1000), null);
 });
 
 test('generation API sends only narrative identifiers and accepts fixed-order content', async () => {
@@ -324,18 +335,35 @@ test('generation API sends only narrative identifiers and accepts fixed-order co
   globalThis.fetch = async (_url, options) => {
     const request = JSON.parse(options.body); requests.push(request);
     const payload = request.mode === 'run-blueprint'
-      ? { schemaVersion: '1.0', runSeed: request.runSeed, premise: '도시의 경매 기록', marketArc: Array.from({ length: 12 }, (_, index) => ({ day: index + 1, headline: `${index + 1}일`, mood: '긴장' })), sets: request.sets.map(({ setId }) => ({ setId, title: setId, sharedSecret: '비밀', revealHint: '문양' })) }
+      ? { schemaVersion: '1.0', runSeed: request.runSeed, premise: '도시의 경매 기록', marketArc: Array.from({ length: 12 }, (_, index) => ({ day: index + 1, headline: `${index + 1}일`, mood: '긴장' })), sets: request.sets.map(({ setId }) => ({ setId, title: setId, sharedSecret: '비밀', revealHint: '문양', incidentTitle: '봉인 창고 문서 발견', incidentSummary: '세 물품이 같은 창고의 압류 기록에서 발견되었다.', newspaperLead: '항구 창고를 정리하던 조합원이 오래된 압류 문서를 발견했다. 문서에는 오늘 경매품과 같은 표식이 남아 있었다.' })) }
       : { schemaVersion: '1.0', day: request.day, lots: request.lots.map(({ lotId, baseName }) => ({ lotId, displayName: baseName, description: `${baseName}의 기록`, rumor: '소문', setHint: '문양', npcReaction: '주시한다' })) };
     return { ok: true, async json() { return payload; } };
   };
   try {
     const provider = new GenerationApiProvider({ enabled: true, endpoint: 'http://local.test/generate', timeoutMs: 1000 });
-    const sets = Array.from({ length: 12 }, (_, index) => ({ setId: `set-${index + 1}`, themeKey: 'voyage' }));
+    const sets = Array.from({ length: 12 }, (_, index) => ({
+      setId: `set-${index + 1}`,
+      themeKey: 'voyage',
+      lotIds: [`set-${index + 1}-a`, `set-${index + 1}-b`],
+    }));
+    const schedule = {
+      days: [{
+        day: 1,
+        lots: sets.flatMap((set, index) => [
+          { lotId: `${set.setId}-a`, baseName: `기록품 ${index + 1}A`, category: 'CER' },
+          { lotId: `${set.setId}-b`, baseName: `기록품 ${index + 1}B`, category: 'BOK' },
+        ]),
+      }],
+    };
     const market = Object.fromEntries(['CER', 'CLK'].map((category) => [category, Array(12).fill(category === 'CER' ? 1.1 : 0.9)]));
-    const blueprint = await provider.generateBlueprint({ runSeed: 'api-test', sets, market });
+    const blueprint = await provider.generateBlueprint({ runSeed: 'api-test', sets, schedule, market });
     const lots = Array.from({ length: 8 }, (_, index) => ({ lotId: `api-test-d1-l${index + 1}`, baseName: `물품 ${index + 1}`, category: 'CER', grade: 'COMMON', setId: sets[index].setId, pricing: { basePrice: 100, trueValue: 200 }, quality: 1.5 }));
     const generated = await provider.generateDay({ day: 1, lots, sets, blueprint });
     assert.equal(generated.length, 8);
+    assert.deepEqual(requests[0].sets[0].members, [
+      { lotId: 'set-1-a', baseName: '기록품 1A', category: 'CER' },
+      { lotId: 'set-1-b', baseName: '기록품 1B', category: 'BOK' },
+    ]);
     assert.deepEqual(Object.keys(requests[1].lots[0]), ['lotId', 'baseName', 'category', 'grade', 'setId']);
     assert.equal(JSON.stringify(requests).includes('basePrice'), false);
     assert.equal(JSON.stringify(requests).includes('trueValue'), false);
@@ -366,4 +394,21 @@ test('generation copy quality rejects supernatural, awkward and repeated catalog
     '육각 몸체와 황동 뚜껑의 마모 정도가 서로 다르게 보인다.',
   ];
   assert.deepEqual(qualityErrors(request, { lots: goodDescriptions.map(lot) }), []);
+});
+
+test('set incident quality requires Korean copy, member names, and distinct grounded reporting', () => {
+  const input = { setId: 'set-01', members: [{ baseName: '은제 항로함' }, { baseName: '선박 등록부' }] };
+  const valid = {
+    setId: 'set-01', title: '항구 인계 기록', sharedSecret: '같은 인계 번호가 남아 있다.', revealHint: '같은 번호',
+    incidentTitle: '항구 창고에서 누락 장부 발견',
+    incidentSummary: '창고 관리인이 은제 항로함과 선박 등록부를 함께 적은 장부를 발견했다.',
+    newspaperLead: '항구 정리 중 나온 문서에서 은제 항로함과 선박 등록부의 공동 보관 기록이 확인됐다.',
+  };
+  assert.deepEqual(setIncidentErrors(input, valid), []);
+  const invalid = { ...valid, incidentSummary: '마법 물품이 내일 시세를 예언한다.', newspaperLead: '마법 물품이 내일 시세를 예언한다.' };
+  const errors = setIncidentErrors(input, invalid);
+  assert.ok(errors.some((error) => error.includes('two set members')));
+  assert.ok(errors.some((error) => error.includes('magic')));
+  assert.ok(errors.some((error) => error.includes('distinct')));
+  assert.ok(setIncidentErrors(input, valid, [valid]).some((error) => error.includes('repeats another set')));
 });

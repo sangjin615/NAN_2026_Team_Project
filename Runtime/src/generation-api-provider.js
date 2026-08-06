@@ -1,10 +1,10 @@
 export class GenerationApiProvider {
   constructor(config) { this.config = config; }
-  async request(body) {
+  async request(body, timeoutMs = this.config.timeoutMs || 8000) {
     if (!this.config?.enabled || !this.config.endpoint) throw new Error('generation API is disabled');
     let lastError;
     for (let attempt = 0; attempt <= (this.config.retries || 0); attempt += 1) {
-      const controller = new AbortController(); const timer = setTimeout(() => controller.abort(), this.config.timeoutMs || 8000);
+      const controller = new AbortController(); const timer = setTimeout(() => controller.abort(), timeoutMs);
       try {
         const response = await fetch(this.config.endpoint, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body), signal: controller.signal });
         if (!response.ok) throw new Error(`generation API ${response.status}`);
@@ -14,8 +14,9 @@ export class GenerationApiProvider {
     throw lastError;
   }
 
-  async generateBlueprint({ runSeed, sets, market }) {
+  async generateBlueprint({ runSeed, sets, schedule, market }) {
     const categories = Object.keys(market);
+    const lotById = new Map((schedule?.days || []).flatMap(({ lots }) => lots).map((lot) => [lot.lotId, lot]));
     const marketSignals = Array.from({ length: 12 }, (_, index) => {
       const leadingCategory = categories.reduce((best, category) => Math.abs(market[category][index] - 1) > Math.abs(market[best][index] - 1) ? category : best, categories[0]);
       const value = market[leadingCategory][index];
@@ -23,12 +24,18 @@ export class GenerationApiProvider {
     });
     const request = {
       schemaVersion: this.config.schemaVersion || '1.0', mode: 'run-blueprint', runSeed,
-      sets: sets.map(({ setId, themeKey }) => ({ setId, themeKey })),
+      sets: sets.map(({ setId, themeKey, lotIds = [] }) => ({
+        setId,
+        themeKey,
+        members: lotIds.map((lotId) => lotById.get(lotId)).filter(Boolean).map(({ lotId, baseName, category }) => ({ lotId, baseName, category })),
+      })),
       marketSignals,
     };
-    const payload = await this.request(request);
+    const blueprintTimeoutMs = this.config.blueprintTimeoutMs || Math.max(this.config.timeoutMs || 8000, 240000);
+    const payload = await this.request(request, blueprintTimeoutMs);
     if (payload.schemaVersion !== request.schemaVersion || payload.runSeed !== runSeed || !Array.isArray(payload.marketArc) || payload.marketArc.length !== 12) throw new Error('blueprint response contract mismatch');
     if (JSON.stringify(payload.sets?.map(({ setId }) => setId)) !== JSON.stringify(request.sets.map(({ setId }) => setId))) throw new Error('blueprint set IDs mismatch');
+    if (payload.sets.some((set) => !set.incidentTitle || !set.incidentSummary || !set.newspaperLead)) throw new Error('blueprint incident copy is incomplete');
     return payload;
   }
 

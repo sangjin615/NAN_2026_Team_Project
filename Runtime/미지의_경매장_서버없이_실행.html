@@ -9,6 +9,26 @@
 <style>[hidden] { display: none !important; }
 .status:empty { display: none !important; }
 
+#action-toast {
+  position: fixed; left: 50%; top: 50%; z-index: 1000;
+  width: max-content; min-width: min(360px,72vw); max-width: min(720px,82vw);
+  margin: 0; padding: 20px 34px; box-sizing: border-box;
+  transform: translate(-50%,-44%) scale(.96);
+  visibility: hidden; opacity: 0; pointer-events: none;
+  border: 18px solid transparent;
+  border-image: url("./assets/ui/skin-v1/panel-dark.png") 46 fill / 18px / 0 stretch;
+  background: #15110ded; color: #f7e5bc;
+  font-size: clamp(15px,1.35vw,22px); font-weight: 800; line-height: 1.45;
+  text-align: center; text-wrap: balance;
+  text-shadow: 0 2px 3px #000;
+  filter: drop-shadow(0 14px 22px #000b);
+  transition: opacity .16s ease, transform .16s ease, visibility 0s linear .16s;
+}
+#action-toast.is-visible {
+  visibility: visible; opacity: 1; transform: translate(-50%,-50%) scale(1);
+  transition-delay: 0s;
+}
+
 :root {
   --design-width: 1600;
   --design-height: 900;
@@ -611,10 +631,22 @@ button.secondary:disabled { background-image: url("./assets/ui/skin-v1/button-se
 }
 [data-scene="exchange"] #inventory-list article {
   grid-template-columns: minmax(0,1.4fr) .75fr 1.2fr 100px;
-  min-height: 0; align-items: center;
+  min-height: 0; align-items: center; gap: 8px; padding: 5px 10px;
   border: 8px solid transparent;
   border-image: url("./assets/ui/skin-v1/status-card.png") 34 fill / 8px / 0 stretch;
   background: transparent;
+}
+[data-scene="exchange"] #inventory-list article > label {
+  grid-column: 1; min-width: 0; display: flex; align-items: center; gap: 6px;
+  overflow: hidden; white-space: nowrap;
+}
+[data-scene="exchange"] #inventory-list article > label input { flex: 0 0 auto; }
+[data-scene="exchange"] #inventory-list article > label b,
+[data-scene="exchange"] #inventory-list article > label ~ span {
+  min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+[data-scene="exchange"] #inventory-list article > button {
+  width: 100%; min-width: 0; height: clamp(30px,3.4vh,40px); padding: 3px 7px;
 }
 [data-scene="exchange"] #inventory-list .empty-inventory-slot {
   grid-template-columns: 46px 54px minmax(0,1fr);
@@ -1150,6 +1182,35 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
 [data-scene="hub"] .market-spark.fall i { color: #ef9884; }
 [data-scene="hub"] .market-spark.fall polyline { stroke: #dc7466; }
 [data-scene="hub"] .market-spark.fall circle { fill: #ef9884; }
+
+[data-scene="hub"] .market-incident {
+  margin: 8px 34px 0;
+  padding: 9px 10px 7px;
+  border-top: 1px solid rgba(92, 61, 30, .45);
+  color: #49321f;
+  text-align: left;
+}
+
+[data-scene="hub"] .market-incident small {
+  display: block;
+  color: #8a642f;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .08em;
+}
+
+[data-scene="hub"] .market-incident h4 {
+  margin: 3px 0 2px;
+  font-family: Georgia, "Noto Serif KR", serif;
+  font-size: 18px;
+  line-height: 1.2;
+}
+
+[data-scene="hub"] .market-incident p {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.45;
+}
 }
 
 /* Museum collection slots leave unowned display cases visually empty. */
@@ -1218,7 +1279,7 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
 }
 [data-scene="auction"] #auction-participants {
   position: absolute; left: 77%; top: 11%; width: 17.2%; height: 63.4%;
-  padding: 34px 20px 18px; box-sizing: border-box; color: #2b2015; overflow: hidden;
+  padding: clamp(48px, 5vh, 58px) 20px 18px; box-sizing: border-box; color: #2b2015; overflow: hidden;
 }
 [data-scene="auction"] #auction-participants h3 {
   position: absolute; left: 0; right: 0; top: 2%;
@@ -1244,7 +1305,8 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
 [data-scene="auction"] .participant.is-leading b { color: #377b2b; }
 [data-scene="auction"] #auction-feed {
   position: absolute; left: 6.1%; top: 61.4%; width: 13.6%; height: 30.7%;
-  margin: 0; padding: 44px 16px 12px; box-sizing: border-box; overflow: hidden;
+  margin: 0; padding: 44px 16px 12px; box-sizing: border-box; overflow-x: hidden; overflow-y: auto;
+  scrollbar-width: thin; scrollbar-color: #9b7136 #17130f;
   color: #f3e6cc; font-size: clamp(9px, .75vw, 12px);
 }
 [data-scene="auction"] #auction-feed p { margin: 4px 0; }
@@ -2107,8 +2169,10 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
 }
 [data-scene="catalog"] .catalog-grade { color: #8a5a22; font-size: clamp(8px,.68vw,11px); font-weight: 900; }
 [data-scene="catalog"] .lot-card h3 {
-  width: 100%; margin: 0; overflow: hidden; color: #332216;
-  font-size: clamp(10px,.92vw,15px); line-height: 1.15; text-overflow: ellipsis; white-space: nowrap;
+  width: 100%; min-height: 2.3em; margin: 0; overflow: visible; color: #332216;
+  display: flex; align-items: center; justify-content: center;
+  font-size: clamp(9px,.86vw,14px); line-height: 1.15;
+  text-overflow: clip; white-space: normal; overflow-wrap: anywhere; word-break: keep-all;
 }
 [data-scene="catalog"] .lot-card > .catalog-meta {
   width: 100%; display: flex; justify-content: space-between; gap: 4px; margin: 0; color: #65482d;
@@ -2847,6 +2911,7 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
 </style>
 </head>
 <body><main id="app">
+  <p id="action-toast" role="status" aria-live="polite" aria-atomic="true"></p>
   <section class="scene title" data-scene="title">
     <h1 class="sr-only">미지의 경매장</h1>
     <div class="title-actions"><button id="open-new-slots">새 게임</button><button id="open-continue-slots">이어하기</button><button id="title-museum">유물 전시관</button><button id="title-exit">게임 종료</button></div>
@@ -3166,12 +3231,12 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
     constructor(config) {
       this.config = config;
     }
-    async request(body) {
+    async request(body, timeoutMs = this.config.timeoutMs || 8e3) {
       if (!this.config?.enabled || !this.config.endpoint) throw new Error("generation API is disabled");
       let lastError;
       for (let attempt = 0; attempt <= (this.config.retries || 0); attempt += 1) {
         const controller = new AbortController();
-        const timer = setTimeout(() => controller.abort(), this.config.timeoutMs || 8e3);
+        const timer = setTimeout(() => controller.abort(), timeoutMs);
         try {
           const response = await fetch(this.config.endpoint, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(body), signal: controller.signal });
           if (!response.ok) throw new Error(`generation API ${response.status}`);
@@ -3184,8 +3249,9 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
       }
       throw lastError;
     }
-    async generateBlueprint({ runSeed, sets, market }) {
+    async generateBlueprint({ runSeed, sets, schedule, market }) {
       const categories = Object.keys(market);
+      const lotById = new Map((schedule?.days || []).flatMap(({ lots }) => lots).map((lot) => [lot.lotId, lot]));
       const marketSignals = Array.from({ length: 12 }, (_, index) => {
         const leadingCategory = categories.reduce((best, category) => Math.abs(market[category][index] - 1) > Math.abs(market[best][index] - 1) ? category : best, categories[0]);
         const value = market[leadingCategory][index];
@@ -3195,12 +3261,18 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
         schemaVersion: this.config.schemaVersion || "1.0",
         mode: "run-blueprint",
         runSeed,
-        sets: sets.map(({ setId, themeKey }) => ({ setId, themeKey })),
+        sets: sets.map(({ setId, themeKey, lotIds = [] }) => ({
+          setId,
+          themeKey,
+          members: lotIds.map((lotId) => lotById.get(lotId)).filter(Boolean).map(({ lotId, baseName, category }) => ({ lotId, baseName, category }))
+        })),
         marketSignals
       };
-      const payload = await this.request(request);
+      const blueprintTimeoutMs = this.config.blueprintTimeoutMs || Math.max(this.config.timeoutMs || 8e3, 24e4);
+      const payload = await this.request(request, blueprintTimeoutMs);
       if (payload.schemaVersion !== request.schemaVersion || payload.runSeed !== runSeed || !Array.isArray(payload.marketArc) || payload.marketArc.length !== 12) throw new Error("blueprint response contract mismatch");
       if (JSON.stringify(payload.sets?.map(({ setId }) => setId)) !== JSON.stringify(request.sets.map(({ setId }) => setId))) throw new Error("blueprint set IDs mismatch");
+      if (payload.sets.some((set) => !set.incidentTitle || !set.incidentSummary || !set.newspaperLead)) throw new Error("blueprint incident copy is incomplete");
       return payload;
     }
     async generateDay({ day, lots, sets, blueprint }) {
@@ -3371,6 +3443,11 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
     ];
     return bids.map((bot) => ({ ...bot, maxBid: Math.max(0, Math.round(Math.min(bot.cap, publicEstimate * (bot.target === lot.category ? 1.18 : 1) * ({ COMMON: 0.9, RARE: 1, EPIC: 1.05, LEGENDARY: 1.1 }[lot.grade] ?? 1) * bot.factor))) }));
   }
+  function openingBotBid(bots, openingPrice) {
+    const bidder = [...bots].filter((bot) => bot.maxBid > 0).sort((a, b) => b.maxBid - a.maxBid)[0];
+    if (!bidder) return null;
+    return { bidder, price: Math.max(1, Math.min(openingPrice, bidder.maxBid)) };
+  }
   function estimateBotDailyAssets({ state: state2, balance: balance2, day = state2.day }) {
     const lots = state2.schedule?.days?.[day - 1]?.lots || [];
     const totals = {};
@@ -3412,13 +3489,13 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
     const groups = Object.values(byCategory);
     const rules = [
       [groups.some((items) => items.length >= 2), 1.2],
-      [groups.some((items) => items.length >= 3), 1.8],
-      [groups.some((items) => items.filter((x) => ["EPIC", "LEGENDARY"].includes(x.grade)).length >= 3), 2.4],
-      [groups.some((items) => new Set(items.map((x) => x.grade)).size >= 3), 2.6],
-      [new Set(active.map((item) => item.category)).size >= 6, 1.4]
+      [groups.some((items) => items.length >= 3), 1.3],
+      [groups.some((items) => new Set(items.map((x) => x.grade)).size >= 3), 1.35],
+      [groups.some((items) => items.filter((x) => ["EPIC", "LEGENDARY"].includes(x.grade)).length >= 3), 1.4],
+      [new Set(active.map((item) => item.category)).size >= 6, 1.5]
     ];
     for (const [matches, bonus] of rules) {
-      if (matches) multiplier *= bonus;
+      if (matches) multiplier = Math.max(multiplier, bonus);
     }
     if (multiplier > 1) multiplier *= 1 + (balance2.shop.setBonus?.[shopStage] ?? 0);
     return multiplier + (relics.includes("house-crest") && multiplier > 1 ? 0.2 : 0);
@@ -3756,8 +3833,7 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
   var museumReturn = "city";
   var actionTimer = null;
   var auctionBotTimer = null;
-  var questMessageTimer = null;
-  var shopMessageTimer = null;
+  var actionToastTimer = null;
   var selectedInfoKind = "competitors";
   var GRADE_LABELS = { COMMON: "\uC77C\uBC18", RARE: "\uD76C\uADC0", EPIC: "\uC601\uC6C5", LEGENDARY: "\uC804\uC124" };
   var RELIC_TIER_LABELS = { low: "\uD558\uAE09", mid: "\uC911\uAE09", high: "\uC0C1\uAE09" };
@@ -3924,6 +4000,7 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
     state.generationBlueprint = await generation.prepareRun({
       runSeed: seed,
       sets,
+      schedule,
       market: state.marketPath
     });
     await generation.ensure({ currentDay: 1, schedule, sets, aheadDays: 0 });
@@ -3955,6 +4032,13 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
       hud.querySelector(".scene-hud-settings").onclick = () => document.querySelector("#settings-dialog").showModal();
     }
   }
+  function currentNewspaperIncident() {
+    const blueprintSets = state.generationBlueprint?.sets;
+    const todayLots = state.schedule?.days?.[Math.min(state.day, 12) - 1]?.lots || [];
+    if (!Array.isArray(blueprintSets) || !todayLots.length) return null;
+    const todaySetIds = new Set(todayLots.map((lot) => lot.setId));
+    return blueprintSets.find((set) => todaySetIds.has(set.setId) && set.incidentTitle && set.newspaperLead) || null;
+  }
   function renderHub(message = "") {
     clearActionTimer();
     audio.playBgm("city");
@@ -3969,6 +4053,8 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
       quests: state.completedQuestCount
     };
     for (const [key, value] of Object.entries(values)) adapter.setText(key, value);
+    const incident = currentNewspaperIncident();
+    const incidentArticle = incident ? `<article class="market-incident"><small>\uB3C4\uC2DC \uC0AC\uAC74 \uAE30\uB85D</small><h4>${escapeHtml(incident.incidentTitle)}</h4><p>${escapeHtml(incident.newspaperLead)}</p></article>` : "";
     document.querySelector("#market-indices").innerHTML = `<strong>\uC624\uB298\uC758 \uC2DC\uC138</strong><div class="market-sparklines">${Object.entries(state.marketPath).map(([family, valuesByDay]) => {
       const visible = valuesByDay.slice(0, state.day);
       const current = visible.at(-1);
@@ -3988,7 +4074,7 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
       const [lastX, lastY] = points.split(" ").at(-1).split(",");
       const trendImage = trend === "flat" ? "" : `<img class="trend-icon" src="./assets/ui/action-icons/market-${trend}.png" alt="">`;
       return `<span class="market-spark ${trend}" data-category="${family}"><span class="market-quote"><img src="${categoryIconUrl(family)}" alt=""><b>${CATEGORY_LABELS[family]}</b><em>${(current * 100).toFixed(0)}</em><i aria-label="${trend === "rise" ? "\uC0C1\uC2B9" : trend === "fall" ? "\uD558\uB77D" : "\uBCC0\uB3D9 \uC5C6\uC74C"}">${trendImage || arrow}</i></span><svg viewBox="0 0 100 46" preserveAspectRatio="none" aria-hidden="true"><line x1="0" y1="25" x2="100" y2="25"></line><polyline points="${points}"></polyline><circle cx="${lastX}" cy="${lastY}" r="3.4"></circle></svg></span>`;
-    }).join("")}</div>`;
+    }).join("")}</div>${incidentArticle}`;
     document.querySelector("#loan-status").textContent = state.loan ? `\uB9CC\uAE30 ${state.loan.dueDay}\uC77C \xB7 ${money(state.loan.due)}` : state.guildLocked ? "\uC870\uD569 \uC774\uC6A9 \uC81C\uD55C" : "\uB300\uCD9C \uC5C6\uC74C";
     document.querySelector("#hub-message").textContent = message;
     save();
@@ -4017,28 +4103,23 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
   function questRewardLabel(quest) {
     return quest.rewardMode === "deliveredBasePlusFeePlusBonus" ? `\uBB3C\uD488 \uAE30\uC900\uAC00 + \uC218\uC8FC\uBE44 + ${money(quest.completionBonus || 0)}` : money(quest.reward);
   }
-  function showQuestMessage(message) {
-    if (questMessageTimer) window.clearTimeout(questMessageTimer);
-    questMessageTimer = null;
-    const element = document.querySelector("#quest-message");
+  function showActionToast(message) {
+    if (actionToastTimer) window.clearTimeout(actionToastTimer);
+    actionToastTimer = null;
+    const element = document.querySelector("#action-toast");
     element.textContent = message;
+    element.classList.toggle("is-visible", Boolean(message));
     if (!message) return;
-    questMessageTimer = window.setTimeout(() => {
-      if (element.textContent === message) element.textContent = "";
-      questMessageTimer = null;
+    actionToastTimer = window.setTimeout(() => {
+      if (element.textContent === message) {
+        element.textContent = "";
+        element.classList.remove("is-visible");
+      }
+      actionToastTimer = null;
     }, 3500);
   }
-  function showShopMessage(message) {
-    if (shopMessageTimer) window.clearTimeout(shopMessageTimer);
-    shopMessageTimer = null;
-    const element = document.querySelector("#shop-message");
-    element.textContent = message;
-    if (!message) return;
-    shopMessageTimer = window.setTimeout(() => {
-      if (element.textContent === message) element.textContent = "";
-      shopMessageTimer = null;
-    }, 3500);
-  }
+  var showQuestMessage = showActionToast;
+  var showShopMessage = showActionToast;
   function renderQuestOffice(message = "") {
     clearActionTimer();
     audio.playBgm("workplace");
@@ -4139,7 +4220,7 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
       const delta = now - previous;
       const trend = delta >= 0 ? "rise" : "fall";
       return `<div><img src="${categoryIconUrl(key)}" alt=""><b>${CATEGORY_LABELS[key]}</b><strong>${Math.round(now * 100)}%</strong><span class="${trend}"><img class="trend-icon" src="./assets/ui/action-icons/market-${trend}.png" alt="">${Math.abs(delta * 100).toFixed(0)}%</span></div>`;
-    }).join("")}</div><section class="set-bonus-guide"><h4>\uC138\uD2B8 \uBCF4\uB108\uC2A4</h4><div><span data-set-rule="same-2">\uD55C \uACC4\uC5F4\uC744 2\uC810 \uC774\uC0C1 \uC120\uD0DD <b>\xD71.20</b></span><span data-set-rule="same-3">\uD55C \uACC4\uC5F4\uC744 3\uC810 \uC774\uC0C1 \uC120\uD0DD <b>\xD71.80</b></span><span data-set-rule="high-3">\uAC19\uC740 \uACC4\uC5F4\uC758 \uC601\uC6C5 \uC774\uC0C1 3\uC810 <b>\xD72.40</b></span><span data-set-rule="grade-3">\uAC19\uC740 \uACC4\uC5F4\uC5D0\uC11C \uC11C\uB85C \uB2E4\uB978 \uD76C\uADC0\uB3C4 3\uC885 <b>\xD72.60</b></span><span data-set-rule="all-6">\uBAA8\uB4E0 6\uAC1C \uACC4\uC5F4\uC744 1\uC810 \uC774\uC0C1 \uC120\uD0DD <b>\xD71.40</b></span></div><small>\uB3D9\uC2DC\uC5D0 \uB9CC\uC871\uD55C \uC870\uAC74\uC740 \uAC01\uAC01 \uD55C \uBC88\uC529 \uACF1\uD558\uC5EC \uC911\uCCA9\uB429\uB2C8\uB2E4. \uC608: \uB3D9\uC77C \uACC4\uC5F4 3\uC810\uC740 \xD71.20\uACFC \xD71.80\uC774 \uD568\uAED8 \uC801\uC6A9\uB429\uB2C8\uB2E4.</small><strong id="set-bonus-summary">\uC801\uC6A9 \uBCF4\uB108\uC2A4 \uC5C6\uC74C \xB7 \uCD5C\uC885 \xD71.00</strong></section>`;
+    }).join("")}</div><section class="set-bonus-guide"><h4>\uC138\uD2B8 \uBCF4\uB108\uC2A4</h4><div><span data-set-rule="same-2">\uD55C \uACC4\uC5F4\uC744 2\uC810 \uC774\uC0C1 \uC120\uD0DD <b>\xD71.20</b></span><span data-set-rule="same-3">\uD55C \uACC4\uC5F4\uC744 3\uC810 \uC774\uC0C1 \uC120\uD0DD <b>\xD71.30</b></span><span data-set-rule="grade-3">\uAC19\uC740 \uACC4\uC5F4\uC5D0\uC11C \uC11C\uB85C \uB2E4\uB978 \uD76C\uADC0\uB3C4 3\uC885 <b>\xD71.35</b></span><span data-set-rule="high-3">\uAC19\uC740 \uACC4\uC5F4\uC758 \uC601\uC6C5 \uC774\uC0C1 3\uC810 <b>\xD71.40</b></span><span data-set-rule="all-6">\uBAA8\uB4E0 6\uAC1C \uACC4\uC5F4\uC744 1\uC810\uC529 \uC120\uD0DD <b>\xD71.50</b></span></div><small>\uC5EC\uB7EC \uC870\uAC74\uC744 \uB3D9\uC2DC\uC5D0 \uB9CC\uC871\uD558\uBA74 \uAC00\uC7A5 \uB192\uC740 \uC138\uD2B8 \uBC30\uC218 \uD558\uB098\uB9CC \uC801\uC6A9\uB429\uB2C8\uB2E4.</small><strong id="set-bonus-summary">\uC801\uC6A9 \uBCF4\uB108\uC2A4 \uC5C6\uC74C \xB7 \uCD5C\uC885 \xD71.00</strong></section>`;
     const syncBulkActions = () => {
       const ids = [...document.querySelectorAll("[data-item-select]:checked")].map((input) => input.dataset.itemSelect);
       const items = ownedItems().filter((item) => ids.includes(item.lotId) && !item.collateral);
@@ -4162,7 +4243,8 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
     });
     document.querySelector("#sell-selected").textContent = "\uD310\uB9E4";
     syncBulkActions();
-    document.querySelector("#exchange-message").textContent = message;
+    document.querySelector("#exchange-message").textContent = "";
+    showActionToast(message);
   }
   function renderTavern(message = "") {
     clearActionTimer();
@@ -4228,7 +4310,8 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
       { stage: 3, competitors: "\uACBD\uC7C1\uC790 3\uBA85", catalog: "\uC774\uB984 \xB7 \uACC4\uC5F4 \xB7 \uB4F1\uAE09", forecast: "\uC2DC\uC138 6\uAC1C" }
     ];
     document.querySelector("#tavern-owned").innerHTML = `<h3>\uC0C1\uD68C \uB2E8\uACC4\uBCC4 \uC815\uBCF4 \uD655\uC7A5</h3><p class="stage-intro">\uC0C1\uD68C\uB97C \uC131\uC7A5\uC2DC\uD0A4\uBA74 \uC138 \uC815\uBCF4\uC758 \uACF5\uAC1C \uBC94\uC704\uAC00 \uD568\uAED8 \uB113\uC5B4\uC9D1\uB2C8\uB2E4.</p><div class="tavern-stage-list">${stageRows.map((row) => `<article class="${row.stage === effectiveStage ? "is-current" : ""}"><header><b>${row.stage}\uB2E8\uACC4</b>${row.stage === effectiveStage ? "<span>\uD604\uC7AC</span>" : ""}</header><p><img src="${icons.competitors}" alt="">${row.competitors}</p><p><img src="${icons.catalog}" alt="">${row.catalog}</p><p><img src="${icons.forecast}" alt="">${row.forecast}</p></article>`).join("")}</div>`;
-    document.querySelector("#tavern-message").textContent = message;
+    document.querySelector("#tavern-message").textContent = "";
+    showActionToast(message);
   }
   function renderShop(message = "") {
     clearActionTimer();
@@ -4382,7 +4465,9 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
       const generatedFeed = [lot.content.rumor, lot.content.setHint, lot.content.npcReaction].filter(Boolean);
       const dailyAssets = estimateBotDailyAssets({ state, balance });
       const bots = botBidForLot({ lot, day: state.day, balance, marketIndex, seed: state.seed }).map((bot) => ({ ...bot, maxBid: Math.min(bot.maxBid, dailyAssets[bot.id]?.remaining || 0) }));
-      state.auctionSession = { lotId: lot.lotId, currentPrice: Math.max(1, Math.round(lot.pricing.basePrice * balance.auction.startBidRatio)), leader: null, bots, deadline: Date.now() + 15e3, feed: [...expired ? [`\uAE30\uD55C\uC774 \uC9C0\uB09C \uC758\uB8B0 ${expired}\uAC74\uC774 \uB9CC\uB8CC\uB410\uC2B5\uB2C8\uB2E4.`] : ["\uACBD\uB9E4\uAC00 \uC2DC\uC791\uB418\uC5C8\uC2B5\uB2C8\uB2E4."], ...generatedFeed] };
+      const opening = openingBotBid(bots, Math.max(1, Math.round(lot.pricing.basePrice * balance.auction.startBidRatio)));
+      const openingFeed = opening ? [`${opening.bidder.name} ${money(opening.price)}`] : ["\uC785\uCC30 \uAC00\uB2A5\uD55C \uC0C1\uB300\uAC00 \uC5C6\uC2B5\uB2C8\uB2E4."];
+      state.auctionSession = { lotId: lot.lotId, currentPrice: opening?.price || 1, leader: opening?.bidder.id || null, bots, deadline: Date.now() + 15e3, feed: [...expired ? [`\uAE30\uD55C\uC774 \uC9C0\uB09C \uC758\uB8B0 ${expired}\uAC74\uC774 \uB9CC\uB8CC\uB410\uC2B5\uB2C8\uB2E4.`] : ["\uACBD\uB9E4\uAC00 \uC2DC\uC791\uB418\uC5C8\uC2B5\uB2C8\uB2E4."], ...generatedFeed, ...openingFeed] };
     }
     state.auctionSession.deadline ||= Date.now() + 15e3;
     adapter.showScene("auction");
@@ -4395,7 +4480,9 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
     adapter.setText("cash", money(state.cash));
     adapter.setSprite("current-lot", spriteUrl(lot, lot.grade));
     adapter.setEffects("current-lot", normalizeVisualEffects(lot.category, lot.grade, lot.visualEffects));
-    document.querySelector("#auction-feed").innerHTML = state.auctionSession.feed.slice(-4).map((line) => `<p>${escapeHtml(line)}</p>`).join("");
+    const auctionFeed = document.querySelector("#auction-feed");
+    auctionFeed.innerHTML = state.auctionSession.feed.map((line) => `<p>${escapeHtml(line)}</p>`).join("");
+    auctionFeed.scrollTop = auctionFeed.scrollHeight;
     const participants = [
       { name: "\uB2F9\uC2E0", budget: state.cash, leader: state.auctionSession.leader === "player", player: true },
       ...state.auctionSession.bots.map((bot) => ({ id: bot.id, name: bot.name, budget: estimateBotDailyAssets({ state, balance })[bot.id]?.remaining || 0, leader: state.auctionSession.leader === bot.id }))

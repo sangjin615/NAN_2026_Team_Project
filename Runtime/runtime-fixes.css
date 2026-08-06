@@ -1,6 +1,26 @@
 [hidden] { display: none !important; }
 .status:empty { display: none !important; }
 
+#action-toast {
+  position: fixed; left: 50%; top: 50%; z-index: 1000;
+  width: max-content; min-width: min(360px,72vw); max-width: min(720px,82vw);
+  margin: 0; padding: 20px 34px; box-sizing: border-box;
+  transform: translate(-50%,-44%) scale(.96);
+  visibility: hidden; opacity: 0; pointer-events: none;
+  border: 18px solid transparent;
+  border-image: url("./assets/ui/skin-v1/panel-dark.png") 46 fill / 18px / 0 stretch;
+  background: #15110ded; color: #f7e5bc;
+  font-size: clamp(15px,1.35vw,22px); font-weight: 800; line-height: 1.45;
+  text-align: center; text-wrap: balance;
+  text-shadow: 0 2px 3px #000;
+  filter: drop-shadow(0 14px 22px #000b);
+  transition: opacity .16s ease, transform .16s ease, visibility 0s linear .16s;
+}
+#action-toast.is-visible {
+  visibility: visible; opacity: 1; transform: translate(-50%,-50%) scale(1);
+  transition-delay: 0s;
+}
+
 :root {
   --design-width: 1600;
   --design-height: 900;
@@ -603,10 +623,22 @@ button.secondary:disabled { background-image: url("./assets/ui/skin-v1/button-se
 }
 [data-scene="exchange"] #inventory-list article {
   grid-template-columns: minmax(0,1.4fr) .75fr 1.2fr 100px;
-  min-height: 0; align-items: center;
+  min-height: 0; align-items: center; gap: 8px; padding: 5px 10px;
   border: 8px solid transparent;
   border-image: url("./assets/ui/skin-v1/status-card.png") 34 fill / 8px / 0 stretch;
   background: transparent;
+}
+[data-scene="exchange"] #inventory-list article > label {
+  grid-column: 1; min-width: 0; display: flex; align-items: center; gap: 6px;
+  overflow: hidden; white-space: nowrap;
+}
+[data-scene="exchange"] #inventory-list article > label input { flex: 0 0 auto; }
+[data-scene="exchange"] #inventory-list article > label b,
+[data-scene="exchange"] #inventory-list article > label ~ span {
+  min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+[data-scene="exchange"] #inventory-list article > button {
+  width: 100%; min-width: 0; height: clamp(30px,3.4vh,40px); padding: 3px 7px;
 }
 [data-scene="exchange"] #inventory-list .empty-inventory-slot {
   grid-template-columns: 46px 54px minmax(0,1fr);
@@ -1142,6 +1174,35 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
 [data-scene="hub"] .market-spark.fall i { color: #ef9884; }
 [data-scene="hub"] .market-spark.fall polyline { stroke: #dc7466; }
 [data-scene="hub"] .market-spark.fall circle { fill: #ef9884; }
+
+[data-scene="hub"] .market-incident {
+  margin: 8px 34px 0;
+  padding: 9px 10px 7px;
+  border-top: 1px solid rgba(92, 61, 30, .45);
+  color: #49321f;
+  text-align: left;
+}
+
+[data-scene="hub"] .market-incident small {
+  display: block;
+  color: #8a642f;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .08em;
+}
+
+[data-scene="hub"] .market-incident h4 {
+  margin: 3px 0 2px;
+  font-family: Georgia, "Noto Serif KR", serif;
+  font-size: 18px;
+  line-height: 1.2;
+}
+
+[data-scene="hub"] .market-incident p {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.45;
+}
 }
 
 /* Museum collection slots leave unowned display cases visually empty. */
@@ -1210,7 +1271,7 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
 }
 [data-scene="auction"] #auction-participants {
   position: absolute; left: 77%; top: 11%; width: 17.2%; height: 63.4%;
-  padding: 34px 20px 18px; box-sizing: border-box; color: #2b2015; overflow: hidden;
+  padding: clamp(48px, 5vh, 58px) 20px 18px; box-sizing: border-box; color: #2b2015; overflow: hidden;
 }
 [data-scene="auction"] #auction-participants h3 {
   position: absolute; left: 0; right: 0; top: 2%;
@@ -1236,7 +1297,8 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
 [data-scene="auction"] .participant.is-leading b { color: #377b2b; }
 [data-scene="auction"] #auction-feed {
   position: absolute; left: 6.1%; top: 61.4%; width: 13.6%; height: 30.7%;
-  margin: 0; padding: 44px 16px 12px; box-sizing: border-box; overflow: hidden;
+  margin: 0; padding: 44px 16px 12px; box-sizing: border-box; overflow-x: hidden; overflow-y: auto;
+  scrollbar-width: thin; scrollbar-color: #9b7136 #17130f;
   color: #f3e6cc; font-size: clamp(9px, .75vw, 12px);
 }
 [data-scene="auction"] #auction-feed p { margin: 4px 0; }
@@ -2099,8 +2161,10 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
 }
 [data-scene="catalog"] .catalog-grade { color: #8a5a22; font-size: clamp(8px,.68vw,11px); font-weight: 900; }
 [data-scene="catalog"] .lot-card h3 {
-  width: 100%; margin: 0; overflow: hidden; color: #332216;
-  font-size: clamp(10px,.92vw,15px); line-height: 1.15; text-overflow: ellipsis; white-space: nowrap;
+  width: 100%; min-height: 2.3em; margin: 0; overflow: visible; color: #332216;
+  display: flex; align-items: center; justify-content: center;
+  font-size: clamp(9px,.86vw,14px); line-height: 1.15;
+  text-overflow: clip; white-space: normal; overflow-wrap: anywhere; word-break: keep-all;
 }
 [data-scene="catalog"] .lot-card > .catalog-meta {
   width: 100%; display: flex; justify-content: space-between; gap: 4px; margin: 0; color: #65482d;
