@@ -331,7 +331,7 @@ function renderQuestOffice(message = '') {
   const active = state.activeQuests.filter((quest) => !quest.completed);
   const activeMarkup = active.length ? active.map((quest) => {
     const candidates = ownedItems().filter((item) => questMatchesItem(quest, item));
-    return `<article><img class="quest-icon" src="${questIconUrl(quest.id)}" alt=""><b>${questTitle(quest)}</b><span>${quest.deadlineDay}일차 경매 전까지</span>
+    return `<article class="accepted-quest" data-active-quest="${quest.offerId || quest.id}" tabindex="0" role="button" aria-label="${questTitle(quest)} 상세 보기"><img class="quest-icon" src="${questIconUrl(quest.id)}" alt=""><b>${questTitle(quest)}</b><span>${quest.deadlineDay}일차 경매 전까지</span>
       <select data-delivery-select="${quest.offerId || quest.id}"><option value="">제출할 물품 선택</option>${candidates.map((item) => `<option value="${item.lotId}">${item.name} · ${gradeLabel(item.grade)}</option>`).join('')}</select>
       <button data-deliver-quest="${quest.offerId || quest.id}" ${candidates.length ? '' : 'disabled'}>물품 제출</button></article>`;
   }).join('') : '<p class="empty-note">수주한 의뢰가 없습니다.</p>';
@@ -351,6 +351,20 @@ function renderQuestOffice(message = '') {
   document.querySelector('#active-quests').innerHTML = `
     <section class="accepted-quests"><h4>수주 의뢰 · 물품 제출</h4>${activeMarkup}</section>
     <section class="appraisal-office"><h4>보유 물품 · 정밀 감정</h4><div class="appraisal-grid">${appraisalMarkup}</div></section>`;
+  const openQuestDetail = (quest) => {
+    document.querySelector('#quest-detail-title').textContent = questTitle(quest);
+    document.querySelector('#quest-detail-icon').src = questIconUrl(quest.id);
+    document.querySelector('#quest-detail-requirement').textContent = questRequirement(quest);
+    document.querySelector('#quest-detail-fee').textContent = money(quest.fee);
+    document.querySelector('#quest-detail-reward').textContent = questRewardLabel(quest);
+    document.querySelector('#quest-detail-deadline').textContent = `${quest.deadlineDay}일차 경매 전까지`;
+    document.querySelector('#quest-detail-dialog').showModal();
+  };
+  document.querySelectorAll('[data-active-quest]').forEach((article) => {
+    const quest = active.find((entry) => (entry.offerId || entry.id) === article.dataset.activeQuest);
+    article.onclick = (event) => { if (event.target.closest('select, button')) return; openQuestDetail(quest); };
+    article.onkeydown = (event) => { if (event.target !== article || !['Enter', ' '].includes(event.key)) return; event.preventDefault(); openQuestDetail(quest); };
+  });
   document.querySelectorAll('[data-quest]').forEach((button) => {
     button.onclick = () => {
       const ok = acceptQuest(state, button.dataset.quest, balance);
@@ -856,6 +870,7 @@ document.querySelector('#title-exit').onclick = () => status('브라우저 게�
 document.querySelector('#title-settings').onclick = () => document.querySelector('#settings-dialog').showModal();
 document.querySelector('#hub-settings').onclick = () => document.querySelector('#settings-dialog').showModal();
 document.querySelector('#close-settings').onclick = () => document.querySelector('#settings-dialog').close();
+document.querySelector('#close-quest-detail').onclick = () => document.querySelector('#quest-detail-dialog').close();
 const syncSoundToggle = () => {
   const button = document.querySelector('#sound-toggle');
   button.setAttribute('aria-pressed', String(audio.enabled));

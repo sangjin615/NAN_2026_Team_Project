@@ -2921,6 +2921,25 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
 }
 [data-scene="quests"] .accepted-quests > article { position: relative; padding-left: 11%; }
 [data-scene="quests"] .accepted-quests .quest-icon { left: 1.5%; width: 10%; height: 76%; }
+[data-scene="quests"] .accepted-quest { cursor: pointer; }
+[data-scene="quests"] .accepted-quest:hover,
+[data-scene="quests"] .accepted-quest:focus-visible { outline: 2px solid #d9a83d; outline-offset: 1px; filter: brightness(1.12); }
+
+#quest-detail-dialog {
+  width: min(620px, 86vw); box-sizing: border-box; padding: 70px 72px 54px;
+  border: 0; outline: 0; overflow: visible;
+  background: transparent url("./assets/ui/vsl-v6.4/popups/common.png") center / 100% 100% no-repeat;
+  color: #342317; text-align: center; filter: drop-shadow(0 18px 24px #000b);
+}
+#quest-detail-dialog::backdrop { background: #090705c7; backdrop-filter: blur(2px); }
+#quest-detail-dialog h2 { margin: 0 0 12px; color: #5a3515; font-size: clamp(20px,2vw,30px); }
+#quest-detail-icon { width: 78px; height: 78px; object-fit: contain; filter: drop-shadow(0 3px 3px #2b160866); }
+#quest-detail-requirement { margin: 10px 0 16px; color: #4d3b29; font-size: clamp(13px,1.15vw,17px); }
+#quest-detail-dialog dl { display: grid; gap: 6px; margin: 0 auto 18px; text-align: left; }
+#quest-detail-dialog dl div { display: grid; grid-template-columns: 72px 1fr; gap: 12px; padding: 6px 10px; border-bottom: 1px solid #9a7b55; }
+#quest-detail-dialog dt { color: #754411; font-weight: 900; }
+#quest-detail-dialog dd { margin: 0; color: #302216; font-weight: 700; }
+#close-quest-detail { min-width: 150px; }
 
 /* Replace the temporary City HUD glyphs with the normalized production icons. */
 [data-scene="hub"] > header > div,
