@@ -862,7 +862,29 @@ document.querySelector('#close-market-dialog').onclick = () => document.querySel
 document.querySelector('#market-dialog').onclick = (event) => {
   if (event.target === event.currentTarget) event.currentTarget.close();
 };
-document.querySelector('#close-settings').onclick = () => document.querySelector('#settings-dialog').close();
+document.querySelector('#reset-meta-data').onclick = () => {
+  if (!window.confirm('유물 전시관 수집 기록을 초기화할까요?\n저장 슬롯과 사운드 설정은 유지됩니다.')) return;
+  localStorage.setItem('unknown-auction:relics', '[]');
+  if (state) {
+    state.metaRelics = [];
+    state.relicChoices = [];
+    if (!state.completed) save();
+  }
+  document.querySelector('#settings-dialog .settings-lead').textContent = '유물 전시관 수집 기록을 초기화했습니다.';
+};
+document.querySelector('#settings-return-title').onclick = () => {
+  if (state && !state.completed) save();
+  clearActionTimer();
+  document.querySelector('#settings-dialog .settings-lead').textContent = '게임의 전체 소리를 설정합니다.';
+  document.querySelector('#settings-dialog').close();
+  audio.playBgm('title');
+  adapter.showScene('title');
+};
+document.querySelector('#close-settings').onclick = () => {
+  document.querySelector('#settings-dialog').close();
+  document.querySelector('#settings-dialog .settings-lead').textContent = '게임의 전체 소리를 설정합니다.';
+  if (state?.phase === 'museum') renderMuseum(museumReturn);
+};
 document.querySelector('#close-quest-detail').onclick = () => document.querySelector('#quest-detail-dialog').close();
 const syncSoundToggle = () => {
   const button = document.querySelector('#sound-toggle');
