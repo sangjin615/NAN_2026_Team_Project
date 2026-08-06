@@ -3171,6 +3171,24 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
 [data-scene="settlement"] .settlement-market p:first-of-type { margin-top: 15%; }
 [data-scene="settlement"] .market-line { height: 7px; }
 
+/* Final settlement alignment pass for the painted title and small pictograms. */
+[data-scene="settlement"] > p {
+  top: 21%; z-index: 3; color: #eadbc2;
+  text-shadow: 0 2px 2px #000b;
+}
+[data-scene="settlement"] .settlement-money h4 {
+  transform: translateY(clamp(10px, 1vw, 16px));
+}
+[data-scene="settlement"] .settlement-money p img {
+  width: clamp(38px, 3vw, 50px); height: clamp(38px, 3vw, 50px);
+}
+[data-scene="settlement"] .settlement-market p img {
+  width: clamp(34px, 2.7vw, 46px); height: clamp(34px, 2.7vw, 46px);
+}
+[data-scene="settlement"] #next-day img {
+  width: clamp(38px, 3.5vw, 58px); height: clamp(38px, 3.5vw, 58px);
+}
+
 /* Replace the temporary City HUD glyphs with the normalized production icons. */
 [data-scene="hub"] > header > div,
 [data-scene="hub"] > header > strong,
