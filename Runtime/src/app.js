@@ -17,6 +17,7 @@ import { createRng } from './rng.js';
 import { JOURNEY_DAYS, RELIC_AUCTION_DAY, RUN_DAYS } from './constants.js';
 import { mergeOwnedRelicIds } from './relic-ownership.js';
 import { AUCTION_INITIAL_TIME_MS, extendAuctionDeadline, formatAuctionTime } from './auction-clock.js';
+import './tutorial-preview.js';
 
 const root = document.querySelector('#app');
 const adapter = new VslRuntimeAdapter(root);
@@ -189,6 +190,7 @@ async function newRun(seed) {
   updateRunLoading(38, '품목 세트와 시장 흐름을 연결하고 있습니다.', ['schedule'], 'sets');
   const sets = createSetGraph(schedule, seed);
   state = createInitialState({ schedule, sets, balance, startCash: balance.run.startCash, metaRelics: loadMeta() });
+  state.tutorialDay = true;
   state.saveSlot = selectedSlot;
   state.version = 2;
   recordEvent(state, 'run-start', { saveSlot: selectedSlot });
@@ -209,7 +211,7 @@ async function newRun(seed) {
 }
 
 function syncHeader() {
-  adapter.setText('day', state.day);
+  adapter.setText('day', state.tutorialDay ? 0 : state.day);
   adapter.setText('cash', money(state.cash));
   const scene = document.querySelector('.scene:not([hidden])');
   const facilityScenes = new Set(['hub', 'quests', 'tavern', 'catalog', 'exchange', 'shop', 'guild', 'museum']);

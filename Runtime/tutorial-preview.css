@@ -1,0 +1,30 @@
+.tutorial-focus {
+  position: relative !important;
+  z-index: 10001 !important;
+  outline: 4px solid #f2bf43 !important;
+  outline-offset: 5px !important;
+  box-shadow: 0 0 18px 8px #f2bf4388, 0 0 0 9999px #080603b8 !important;
+  animation: tutorial-pulse 1.15s ease-in-out infinite alternate;
+}
+
+@keyframes tutorial-pulse { to { outline-color: #fff0a0; filter: brightness(1.12); } }
+
+#tutorial-card {
+  position: fixed; z-index: 10002; left: 50%; bottom: clamp(22px, 5vh, 58px);
+  width: min(540px, calc(100vw - 36px)); box-sizing: border-box;
+  padding: 19px 22px 17px; transform: translateX(-50%);
+  border: 2px solid #a67922; background: linear-gradient(#211b13, #100d09);
+  color: #fff1ce; box-shadow: 0 12px 28px #000d, inset 0 0 0 3px #493616;
+  text-align: left;
+}
+#tutorial-card[hidden] { display: none; }
+#tutorial-card small { color: #d6a837; font-weight: 900; letter-spacing: .08em; }
+#tutorial-card h2 { margin: 6px 0 7px; font-size: clamp(20px, 2vw, 28px); }
+#tutorial-card p { margin: 0 0 14px; font-size: clamp(14px, 1.25vw, 18px); line-height: 1.55; }
+#tutorial-card .tutorial-actions { display: flex; justify-content: flex-end; gap: 9px; }
+#tutorial-card button { min-width: 104px; min-height: 40px; }
+#tutorial-card .tutorial-skip { opacity: .8; }
+#tutorial-replay {
+  position: fixed; z-index: 10003; left: 18px; bottom: 16px;
+  min-width: 0; padding: 8px 13px; font-size: 13px;
+}
