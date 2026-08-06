@@ -3177,6 +3177,13 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
   outline: 0 !important; box-shadow: none !important;
 }
 
+/* Final alignment for the exchange command row and quest paper boundary. */
+[data-scene="exchange"] .actions { left: 29%; }
+[data-scene="quests"] .office-layout .quest-grid {
+  bottom: 5%;
+  gap: 1.4%;
+}
+
 /* Center the catalog book and its primary action on the same scene axis. */
 [data-scene="catalog"] .catalog-grid {
   left: 0; right: 0; margin-left: auto; margin-right: auto;
