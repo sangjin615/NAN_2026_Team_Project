@@ -1473,7 +1473,10 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
   padding: 16px 18px; border: 0; border-image: none;
   background: transparent; color: #2b2015; box-shadow: none;
 }
-[data-scene="tavern"] .tavern-brokers { left: 1.2%; width: 28.5%; }
+[data-scene="tavern"] .tavern-brokers {
+  left: 1.2%; width: 28.5%; bottom: 11.5%;
+  display: flex; flex-direction: column; overflow: hidden;
+}
 [data-scene="tavern"] .tavern-market { left: 31.5%; width: 37.8%; }
 [data-scene="tavern"] #tavern-owned { left: 71.3%; right: auto; width: 27.3%; top: 27.4%; }
 [data-scene="tavern"] .tavern-brokers h3,
@@ -1482,7 +1485,12 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
   color: #5f421f; text-align: center;
 }
 [data-scene="tavern"] .tavern-brokers article {
-  min-height: 25%; margin: 8px 0;
+  flex: 1 1 0; min-height: 0; margin: 4px 0; padding: 3px 8px;
+  grid-template-columns: 68px minmax(0,1fr);
+}
+[data-scene="tavern"] .tavern-brokers article img { width: 68px; height: 72px; }
+[data-scene="tavern"] .return-city {
+  left: 6%; bottom: 1.5%; width: 19%; height: 6.5%;
 }
 [data-scene="tavern"] #tavern-detail h2,
 [data-scene="tavern"] #tavern-owned .owned-heading h2 { color: #2b2015; }
