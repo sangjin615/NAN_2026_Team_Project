@@ -293,7 +293,7 @@ function renderHub(message = '') {
       const points = pointList.join(' ');
       const [lastX, lastY] = points.split(' ').at(-1).split(',');
       const trendImage = trend === 'flat' ? '' : `<img class="trend-icon" src="./assets/ui/action-icons/market-${trend}.png" alt="">`;
-      return `<span class="market-spark ${trend}" data-category="${family}"><span class="market-quote"><img src="${categoryIconUrl(family)}" alt=""><b>${CATEGORY_LABELS[family]}</b><em>${(current * 100).toFixed(0)}</em><i aria-label="${trend === 'rise' ? '상승' : trend === 'fall' ? '하락' : '변동 없음'}">${trendImage || arrow}</i></span><svg viewBox="0 0 100 46" preserveAspectRatio="none" aria-hidden="true"><line x1="0" y1="25" x2="100" y2="25"></line><polyline points="${points}"></polyline><circle cx="${lastX}" cy="${lastY}" r="3.4"></circle></svg></span>`;
+      return `<span class="market-spark ${trend}" data-category="${family}"><span class="market-quote"><img src="${categoryIconUrl(family)}" alt=""><b>${CATEGORY_LABELS[family]}</b><em>${(current * 100).toFixed(0)}%</em><i aria-label="${trend === 'rise' ? '상승' : trend === 'fall' ? '하락' : '변동 없음'}">${trendImage || arrow}</i></span><svg viewBox="0 0 100 46" preserveAspectRatio="none" aria-hidden="true"><line x1="0" y1="25" x2="100" y2="25"></line><polyline points="${points}"></polyline><circle cx="${lastX}" cy="${lastY}" r="3.4"></circle></svg></span>`;
     }).join('')}</div>${incidentArticle}`;
   document.querySelector('#loan-status').textContent = state.loan
     ? `만기 ${state.loan.dueDay}일 · ${money(state.loan.due)}`
@@ -490,7 +490,7 @@ function renderTavern(message = '') {
         const tone = change > 0.5 ? 'rise' : change < -0.5 ? 'fall' : 'flat';
         const direction = tone === 'rise' ? '▲ 상승' : tone === 'fall' ? '▼ 하락' : '─ 보합';
         const changeText = tone === 'flat' ? '변동 없음' : `${direction} ${Math.abs(change).toFixed(0)}%`;
-        return `<li><img src="${categoryIconUrl(category)}" alt=""><span><b>${categoryNames[category]}</b><small>내일 시세 지수 ${Math.round(tomorrow * 100)}</small></span><strong class="market-${tone}">${changeText}</strong></li>`;
+        return `<li><img src="${categoryIconUrl(category)}" alt=""><span><b>${categoryNames[category]}</b><small>내일 시세 지수 ${Math.round(tomorrow * 100)}%</small></span><strong class="market-${tone}">${changeText}</strong></li>`;
       }).join('')}</ul>`;
     }
     if (kind === 'catalog') {
@@ -713,7 +713,7 @@ function renderSettlement() {
   document.querySelector('#settlement-summary').innerHTML = `
     <section class="settlement-lots"><h3>낙찰 / 유찰 결과 (경매품 8개)</h3>${dayHistory.map((entry, index) => { const lot = dayLots.find((candidate) => candidate.lotId === entry.lotId); const lotName = lot?.content?.displayName || lot?.baseName || `경매품 ${index + 1}`; const buyerName = buyerNames[entry.winner] || '경쟁자'; return `<article><div><b title="${escapeHtml(lotName)}">${escapeHtml(lotName)}</b><span class="${entry.won ? 'won' : 'lost'}">${entry.won ? '낙찰' : '유찰'}</span></div><p><em>구매자 · ${buyerName}</em><strong>${money(entry.price)}</strong></p></article>`; }).join('')}</section>
     <section class="settlement-center"><h3>오늘의 정산</h3><div class="settlement-owned"><b>획득 물품</b><strong>${wins.length}개</strong><span>현재 보관 ${ownedItems().length} / ${state.storage}</span></div><div class="settlement-money settlement-finance"><h4>자금 현황</h4><p><img src="./assets/ui/action-icons/total-spent.png" alt=""><span>총 지출 금액</span><strong>${money(spent)}</strong></p><p><img src="./assets/ui/action-icons/current-assets.png" alt=""><span>현재 자산</span><strong>${money(state.cash)}</strong></p></div><div class="settlement-money settlement-progress"><h4>운영 현황</h4><p><span>완료 의뢰</span><strong>${state.lastSettlement.quests}건</strong></p><p><span>대출 상태</span><strong>${loanResult}</strong></p></div></section>
-    <section class="settlement-market"><h3>계열별 시세 요약</h3>${categories.map((category) => { const value = state.marketPath[category]?.[state.day - 1] ?? 100; const trendIcon = value >= 100 ? 'market-rise.png' : 'market-fall.png'; return `<p><img src="./assets/ui/action-icons/${trendIcon}" alt=""><b>${categoryLabel(category)}</b><span class="market-line" style="--market:${Math.max(15, Math.min(95, value - 40))}%"></span><strong>${value.toFixed(2)}</strong></p>`; }).join('')}</section>`;
+    <section class="settlement-market"><h3>계열별 시세 요약</h3>${categories.map((category) => { const value = state.marketPath[category]?.[state.day - 1] ?? 1; const percent = value * 100; const trendIcon = value >= 1 ? 'market-rise.png' : 'market-fall.png'; return `<p><img src="./assets/ui/action-icons/${trendIcon}" alt=""><b>${categoryLabel(category)}</b><span class="market-line" style="--market:${Math.max(15, Math.min(95, percent - 40))}%"></span><strong>${Math.round(percent)}%</strong></p>`; }).join('')}</section>`;
   const nextDayLabel = state.failure ? '실패 결과 확인' : state.day === RUN_DAYS ? `${RELIC_AUCTION_DAY}일차 도시로` : `${state.day + 1}일차로`;
   document.querySelector('#next-day').innerHTML = `<img src="./assets/ui/action-icons/next-day.png" alt=""><span>${nextDayLabel}</span>`;
   save();
@@ -880,7 +880,7 @@ document.querySelector('#museum-back').onclick = () => museumReturn === 'title' 
 document.querySelector('#title-settings').onclick = () => document.querySelector('#settings-dialog').showModal();
 document.querySelector('#hub-settings').onclick = () => document.querySelector('#settings-dialog').showModal();
 document.querySelector('#hub-market-news').onclick = () => document.querySelector('#market-dialog').showModal();
-document.querySelector('#close-market-dialog').onclick = () => document.querySelector('#market-dialog').close();
+document.querySelector('#close-market-dialog').onclick = (event) => { document.querySelector('#market-dialog').close(); event.currentTarget.blur(); };
 document.querySelector('#market-dialog').onclick = (event) => {
   if (event.target === event.currentTarget) event.currentTarget.close();
 };
