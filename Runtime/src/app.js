@@ -491,11 +491,13 @@ function renderTavern(message = '') {
       return `<p><b>${nextDayIndex + 1}일차 계열 시세 · ${visible.length}개 공개</b></p><ul>${visible.map((category) => {
         const today = state.marketPath[category]?.[Math.max(0, nextDayIndex - 1)] ?? 1;
         const tomorrow = state.marketPath[category]?.[nextDayIndex] ?? today;
-        const change = (tomorrow - today) * 100;
-        const tone = change > 0.5 ? 'rise' : change < -0.5 ? 'fall' : 'flat';
+        const todayIndex = Math.round(today * 100);
+        const tomorrowIndex = Math.round(tomorrow * 100);
+        const change = tomorrowIndex - todayIndex;
+        const tone = change > 0 ? 'rise' : change < 0 ? 'fall' : 'flat';
         const direction = tone === 'rise' ? '▲ 상승' : tone === 'fall' ? '▼ 하락' : '─ 보합';
-        const changeText = tone === 'flat' ? '변동 없음' : `${direction} ${Math.abs(change).toFixed(0)}%p`;
-        return `<li><img src="${categoryIconUrl(category)}" alt=""><span><b>${categoryNames[category]}</b><small>내일 시세 지수 ${Math.round(tomorrow * 100)}%</small></span><strong class="market-${tone}">${changeText}</strong></li>`;
+        const changeText = tone === 'flat' ? '변동 없음' : `${direction} ${Math.abs(change)}%p`;
+        return `<li><img src="${categoryIconUrl(category)}" alt=""><span><b>${categoryNames[category]}</b><small>내일 시세 지수 ${tomorrowIndex}%</small></span><strong class="market-${tone}">${changeText}</strong></li>`;
       }).join('')}</ul>`;
     }
     if (kind === 'catalog') {
@@ -535,7 +537,7 @@ function renderShop(message = '') {
     const unlocked = index < state.storage;
     if (item) {
       const lot = scheduledLot(item.lotId);
-      return `<article class="shop-storage-slot is-filled"><span class="slot-number">${index + 1}</span><img ${spriteAnchorAttrs(lot)} src="${lot ? spriteUrl(lot, item.grade) : ''}" alt=""><div><b>${escapeHtml(item.name)}</b><small>${gradeLabel(item.grade)} · 감정가 ${money(item.appraisedValue || item.trueValue)}</small></div></article>`;
+      return `<article class="shop-storage-slot is-filled"><span class="slot-number">${index + 1}</span><img ${spriteAnchorAttrs(lot)} src="${lot ? spriteUrl(lot, item.grade) : ''}" alt=""><div><b>${escapeHtml(item.name)}</b><small>${gradeLabel(item.grade)} · 매입 ${money(item.paid)}</small></div></article>`;
     }
     return `<article class="shop-storage-slot ${unlocked ? 'is-empty' : 'is-locked'}"><span class="slot-number">${index + 1}</span><img class="storage-placeholder" src="./assets/ui/exchange/${unlocked ? 'storage-empty.png' : 'storage-locked.png'}" alt=""><div><b>${unlocked ? '빈 보관칸' : '잠긴 보관칸'}</b><small>${unlocked ? '낙찰 물품 보관' : '상회 승급 시 해금'}</small></div></article>`;
   }).join('');
