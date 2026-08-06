@@ -1271,8 +1271,8 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
   text-shadow: 0 1px 2px #000, 0 0 8px #c58a2440;
 }
 [data-scene="auction"] #auction-participants {
-  position: absolute; left: 77%; top: 11%; width: 17.2%; height: 63.4%;
-  padding: clamp(48px, 5vh, 58px) 20px 18px; box-sizing: border-box; color: #2b2015; overflow: hidden;
+  position: absolute; left: 77%; top: 13%; width: 17.2%; height: 61.4%;
+  padding: clamp(56px, 6vh, 68px) 20px 18px; box-sizing: border-box; color: #2b2015; overflow: hidden;
 }
 [data-scene="auction"] #auction-participants h3 {
   position: absolute; left: 0; right: 0; top: 2%;
@@ -1281,7 +1281,7 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
 }
 [data-scene="auction"] .participant {
   display: grid; grid-template-columns: auto 1fr; gap: 0 8px;
-  align-items: center; min-height: 20%; padding: 5% 3%;
+  align-items: center; min-height: 19%; padding: 4% 3%;
   border-bottom: 1px solid #a89070;
 }
 [data-scene="auction"] .participant .player-mark,
