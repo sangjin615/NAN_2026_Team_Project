@@ -8,8 +8,8 @@ import { advanceDay, createInitialState, prepareAuctionEntry, resolveLot } from 
 import { VslRuntimeAdapter } from './vsl-adapter.js';
 import {
   acceptQuest, appraiseItem, botBidForLot, estimateBotDailyAssets, openingBotBid, selectDistinctBotInterests,
-  deliverQuestItem, expireQuestsBeforeAuction, missedDeadline, questMatchesItem,
-  quoteItemsSale, refreshDailyQuestOffers, repayLoanEarly, sellItems, settleLoan, settleQuests, takeLoan, upgradeShop,
+  deliverQuestItem, effectiveQuestDeadline, expireQuestsBeforeAuction, missedDeadline, questMatchesItem,
+  marketIndexForDay, quoteItemsSale, refreshDailyQuestOffers, repayLoanEarly, sellItems, settleLoan, settleQuests, takeLoan, upgradeShop,
 } from './systems.js';
 import { downloadRunLog, recordEvent } from './telemetry.js';
 import { AudioBus } from './audio-bus.js';
@@ -331,7 +331,7 @@ function renderQuestOffice(message = '') {
   const active = state.activeQuests.filter((quest) => !quest.completed);
   const activeMarkup = active.length ? active.map((quest) => {
     const candidates = ownedItems().filter((item) => questMatchesItem(quest, item));
-    return `<article class="accepted-quest" data-active-quest="${quest.offerId || quest.id}" tabindex="0" role="button" aria-label="${questTitle(quest)} 상세 보기"><img class="quest-icon" src="${questIconUrl(quest.id)}" alt=""><b>${questTitle(quest)}</b><span>${quest.deadlineDay}일차 경매 전까지</span>
+    return `<article class="accepted-quest" data-active-quest="${quest.offerId || quest.id}" tabindex="0" role="button" aria-label="${questTitle(quest)} 상세 보기"><img class="quest-icon" src="${questIconUrl(quest.id)}" alt=""><b>${questTitle(quest)}</b><span>${effectiveQuestDeadline(quest)}일차 경매 전까지</span>
       <select data-delivery-select="${quest.offerId || quest.id}"><option value="">제출할 물품 선택</option>${candidates.map((item) => `<option value="${item.lotId}">${item.name} · ${gradeLabel(item.grade)}</option>`).join('')}</select>
       <button data-deliver-quest="${quest.offerId || quest.id}" ${candidates.length ? '' : 'disabled'}>물품 제출</button></article>`;
   }).join('') : '<p class="empty-note">수주한 의뢰가 없습니다.</p>';
@@ -357,7 +357,7 @@ function renderQuestOffice(message = '') {
     document.querySelector('#quest-detail-requirement').textContent = questRequirement(quest);
     document.querySelector('#quest-detail-fee').textContent = money(quest.fee);
     document.querySelector('#quest-detail-reward').textContent = questRewardLabel(quest);
-    document.querySelector('#quest-detail-deadline').textContent = `${quest.deadlineDay}일차 경매 전까지`;
+    document.querySelector('#quest-detail-deadline').textContent = `${effectiveQuestDeadline(quest)}일차 경매 전까지`;
     document.querySelector('#quest-detail-dialog').showModal();
   };
   document.querySelectorAll('[data-active-quest]').forEach((article) => {
@@ -414,7 +414,7 @@ function renderExchange(message = '') {
   }).join('');
   document.querySelector('#inventory-list').innerHTML = occupiedCards + emptyCards + lockedCards;
   document.querySelector('#exchange-market').innerHTML = `<h3>최근 시세</h3><div class="market-rates">${Object.entries(state.marketPath).map(([key, path]) => {
-    const now = path[state.day - 1]; const previous = state.day > 1 ? path[state.day - 2] : 1; const delta = now - previous;
+    const now = marketIndexForDay(path, state.day); const previous = marketIndexForDay(path, state.day - 1); const delta = now - previous;
     const trend = delta >= 0 ? 'rise' : 'fall';
     return `<div><img src="${categoryIconUrl(key)}" alt=""><b>${CATEGORY_LABELS[key]}</b><strong>${Math.round(now * 100)}%</strong><span class="${trend}"><img class="trend-icon" src="./assets/ui/action-icons/market-${trend}.png" alt="">${Math.abs(delta * 100).toFixed(0)}%</span></div>`;
   }).join('')}</div><section class="set-bonus-guide"><h4>세트 보너스</h4><div><span data-set-rule="same-2">한 계열을 2점 이상 선택 <b>×1.20</b></span><span data-set-rule="same-3">한 계열을 3점 이상 선택 <b>×1.30</b></span><span data-set-rule="grade-3">같은 계열에서 서로 다른 희귀도 3종 <b>×1.35</b></span><span data-set-rule="high-3">같은 계열의 영웅 이상 3점 <b>×1.40</b></span><span data-set-rule="all-6">모든 6개 계열을 1점씩 선택 <b>×1.50</b></span></div><small>여러 조건을 동시에 만족하면 가장 높은 세트 배수 하나만 적용됩니다.</small><strong id="set-bonus-summary">적용 보너스 없음 · 최종 ×1.00</strong></section>`;

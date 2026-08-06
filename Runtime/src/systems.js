@@ -1,4 +1,5 @@
 import { createRng, shuffle } from './rng.js';
+import { RELIC_AUCTION_DAY, RUN_DAYS } from './constants.js';
 
 const QUEST_IDS = ['designated', 'multi', 'bargain', 'restraint', 'block'];
 const GRADE_BETA = { COMMON: 0.27, RARE: 1, EPIC: 2.09, LEGENDARY: 3.64 };
@@ -35,6 +36,13 @@ export function createDailyQuestOffers(balance, day, seed, relics = []) {
     rule: balance.quests[id].rule, accepted: false, completed: false,
     targetCategory: families[index % families.length], acceptedDay: null, deadlineDay: null
   }));
+}
+
+export function marketIndexForDay(path, day) {
+  if (!Array.isArray(path) || !path.length) return 1;
+  const index = Math.max(0, Math.min(path.length - 1, Number(day || 1) - 1));
+  const value = Number(path[index]);
+  return Number.isFinite(value) ? value : 1;
 }
 
 export function refreshDailyQuestOffers(state, balance, relics = []) {
@@ -155,8 +163,9 @@ export function sellAll(state, balance) {
   const setMultiplier = bestSetMultiplier(state.inventory, balance, state.metaRelics, state.shopStage);
   let revenue = 0;
   for (const item of state.inventory.filter((entry) => !entry.sold && !entry.collateral)) {
-    const marketIndex = state.marketPath[item.category][state.day - 1];
-    const sale = Math.round(item.trueValue * marketIndex * setMultiplier * (1 - fee));
+    const marketIndex = marketIndexForDay(state.marketPath[item.category], state.day);
+    const calculatedSale = Math.round(item.trueValue * marketIndex * setMultiplier * (1 - fee));
+    const sale = Number.isFinite(calculatedSale) ? calculatedSale : 0;
     item.sold = true;
     item.salePrice = sale;
     revenue += sale;
@@ -181,10 +190,11 @@ export function quoteItemsSale(state, balance, lotIds) {
   const fee = balance.shop.auctionFee[state.shopStage] ?? 0.05;
   const items = state.inventory.filter((entry) => selected.has(entry.lotId) && !entry.sold && !entry.collateral);
   const multiplier = bestSetMultiplier(items, balance, state.metaRelics, state.shopStage);
-  const sales = Object.fromEntries(items.map((item) => [
-    item.lotId,
-    Math.round(item.trueValue * state.marketPath[item.category][state.day - 1] * multiplier * (1 - fee)),
-  ]));
+  const sales = Object.fromEntries(items.map((item) => {
+    const marketIndex = marketIndexForDay(state.marketPath[item.category], state.day);
+    const calculatedSale = Math.round(item.trueValue * marketIndex * multiplier * (1 - fee));
+    return [item.lotId, Number.isFinite(calculatedSale) ? calculatedSale : 0];
+  }));
   return { count: items.length, multiplier, revenue: Object.values(sales).reduce((sum, sale) => sum + sale, 0), sales };
 }
 
@@ -202,9 +212,9 @@ export function buyInformation(state, balance, kind) {
 
 export function acceptQuest(state, questId, balance) {
   const quest = state.questOffers.find((entry) => (entry.offerId === questId || entry.id === questId) && !entry.accepted);
-  if (!quest || balance.quests[quest.id]?.enabled === false || state.cash < quest.fee) return false;
+  if (!quest || state.day > RUN_DAYS || balance.quests[quest.id]?.enabled === false || state.cash < quest.fee) return false;
   state.cash -= quest.fee; quest.accepted = true;
-  state.activeQuests.push({ ...quest, acceptedDay: state.day, deadlineDay: Math.min(12, state.day + 2) });
+  state.activeQuests.push({ ...quest, acceptedDay: state.day, deadlineDay: Math.min(RELIC_AUCTION_DAY, state.day + 2) });
   return true;
 }
 
@@ -217,10 +227,14 @@ export function questMatchesItem(quest, item) {
   return ['EPIC', 'LEGENDARY'].includes(item.grade);
 }
 
+export function effectiveQuestDeadline(quest) {
+  return quest?.deadlineDay === RUN_DAYS ? RELIC_AUCTION_DAY : quest?.deadlineDay;
+}
+
 export function deliverQuestItem(state, questId, lotId) {
   const quest = state.activeQuests.find((entry) => (entry.offerId === questId || entry.id === questId) && !entry.completed);
   const item = state.inventory.find((entry) => entry.lotId === lotId);
-  if (!quest || state.day > quest.deadlineDay || !questMatchesItem(quest, item)) return false;
+  if (!quest || state.day > effectiveQuestDeadline(quest) || !questMatchesItem(quest, item)) return false;
   item.delivered = true; item.sold = true; item.salePrice = 0;
   quest.completed = true; quest.deliveredLotId = lotId; quest.completedDay = state.day;
   const shopBonus = state.balanceQuestBonus?.[state.shopStage] ?? 0;
@@ -234,8 +248,8 @@ export function deliverQuestItem(state, questId, lotId) {
 }
 
 export function expireQuestsBeforeAuction(state) {
-  const expired = state.activeQuests.filter((quest) => !quest.completed && state.day > quest.deadlineDay);
-  state.activeQuests = state.activeQuests.filter((quest) => !quest.completed && state.day <= quest.deadlineDay);
+  const expired = state.activeQuests.filter((quest) => !quest.completed && state.day > effectiveQuestDeadline(quest));
+  state.activeQuests = state.activeQuests.filter((quest) => !quest.completed && state.day <= effectiveQuestDeadline(quest));
   return expired.length;
 }
 

@@ -3559,6 +3559,12 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
       deadlineDay: null
     }));
   }
+  function marketIndexForDay(path, day) {
+    if (!Array.isArray(path) || !path.length) return 1;
+    const index = Math.max(0, Math.min(path.length - 1, Number(day || 1) - 1));
+    const value = Number(path[index]);
+    return Number.isFinite(value) ? value : 1;
+  }
   function refreshDailyQuestOffers(state2, balance2, relics = []) {
     state2.questOffers = createDailyQuestOffers(balance2, state2.day, state2.seed, relics);
     return state2.questOffers;
@@ -3657,18 +3663,19 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
     const fee = balance2.shop.auctionFee[state2.shopStage] ?? 0.05;
     const items = state2.inventory.filter((entry) => selected.has(entry.lotId) && !entry.sold && !entry.collateral);
     const multiplier = bestSetMultiplier(items, balance2, state2.metaRelics, state2.shopStage);
-    const sales = Object.fromEntries(items.map((item) => [
-      item.lotId,
-      Math.round(item.trueValue * state2.marketPath[item.category][state2.day - 1] * multiplier * (1 - fee))
-    ]));
+    const sales = Object.fromEntries(items.map((item) => {
+      const marketIndex = marketIndexForDay(state2.marketPath[item.category], state2.day);
+      const calculatedSale = Math.round(item.trueValue * marketIndex * multiplier * (1 - fee));
+      return [item.lotId, Number.isFinite(calculatedSale) ? calculatedSale : 0];
+    }));
     return { count: items.length, multiplier, revenue: Object.values(sales).reduce((sum, sale) => sum + sale, 0), sales };
   }
   function acceptQuest(state2, questId, balance2) {
     const quest = state2.questOffers.find((entry) => (entry.offerId === questId || entry.id === questId) && !entry.accepted);
-    if (!quest || balance2.quests[quest.id]?.enabled === false || state2.cash < quest.fee) return false;
+    if (!quest || state2.day > RUN_DAYS || balance2.quests[quest.id]?.enabled === false || state2.cash < quest.fee) return false;
     state2.cash -= quest.fee;
     quest.accepted = true;
-    state2.activeQuests.push({ ...quest, acceptedDay: state2.day, deadlineDay: Math.min(12, state2.day + 2) });
+    state2.activeQuests.push({ ...quest, acceptedDay: state2.day, deadlineDay: Math.min(RELIC_AUCTION_DAY, state2.day + 2) });
     return true;
   }
   function questMatchesItem(quest, item) {
@@ -3679,10 +3686,13 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
     if (quest.id === "restraint") return ["COMMON", "RARE"].includes(item.grade);
     return ["EPIC", "LEGENDARY"].includes(item.grade);
   }
+  function effectiveQuestDeadline(quest) {
+    return quest?.deadlineDay === RUN_DAYS ? RELIC_AUCTION_DAY : quest?.deadlineDay;
+  }
   function deliverQuestItem(state2, questId, lotId) {
     const quest = state2.activeQuests.find((entry) => (entry.offerId === questId || entry.id === questId) && !entry.completed);
     const item = state2.inventory.find((entry) => entry.lotId === lotId);
-    if (!quest || state2.day > quest.deadlineDay || !questMatchesItem(quest, item)) return false;
+    if (!quest || state2.day > effectiveQuestDeadline(quest) || !questMatchesItem(quest, item)) return false;
     item.delivered = true;
     item.sold = true;
     item.salePrice = 0;
@@ -3698,8 +3708,8 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
     return true;
   }
   function expireQuestsBeforeAuction(state2) {
-    const expired = state2.activeQuests.filter((quest) => !quest.completed && state2.day > quest.deadlineDay);
-    state2.activeQuests = state2.activeQuests.filter((quest) => !quest.completed && state2.day <= quest.deadlineDay);
+    const expired = state2.activeQuests.filter((quest) => !quest.completed && state2.day > effectiveQuestDeadline(quest));
+    state2.activeQuests = state2.activeQuests.filter((quest) => !quest.completed && state2.day <= effectiveQuestDeadline(quest));
     return expired.length;
   }
   function settleQuests(state2) {
@@ -4279,7 +4289,7 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
     const active = state.activeQuests.filter((quest) => !quest.completed);
     const activeMarkup = active.length ? active.map((quest) => {
       const candidates = ownedItems().filter((item) => questMatchesItem(quest, item));
-      return `<article class="accepted-quest" data-active-quest="${quest.offerId || quest.id}" tabindex="0" role="button" aria-label="${questTitle(quest)} \uC0C1\uC138 \uBCF4\uAE30"><img class="quest-icon" src="${questIconUrl(quest.id)}" alt=""><b>${questTitle(quest)}</b><span>${quest.deadlineDay}\uC77C\uCC28 \uACBD\uB9E4 \uC804\uAE4C\uC9C0</span>
+      return `<article class="accepted-quest" data-active-quest="${quest.offerId || quest.id}" tabindex="0" role="button" aria-label="${questTitle(quest)} \uC0C1\uC138 \uBCF4\uAE30"><img class="quest-icon" src="${questIconUrl(quest.id)}" alt=""><b>${questTitle(quest)}</b><span>${effectiveQuestDeadline(quest)}\uC77C\uCC28 \uACBD\uB9E4 \uC804\uAE4C\uC9C0</span>
       <select data-delivery-select="${quest.offerId || quest.id}"><option value="">\uC81C\uCD9C\uD560 \uBB3C\uD488 \uC120\uD0DD</option>${candidates.map((item) => `<option value="${item.lotId}">${item.name} \xB7 ${gradeLabel(item.grade)}</option>`).join("")}</select>
       <button data-deliver-quest="${quest.offerId || quest.id}" ${candidates.length ? "" : "disabled"}>\uBB3C\uD488 \uC81C\uCD9C</button></article>`;
     }).join("") : '<p class="empty-note">\uC218\uC8FC\uD55C \uC758\uB8B0\uAC00 \uC5C6\uC2B5\uB2C8\uB2E4.</p>';
@@ -4303,7 +4313,7 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
       document.querySelector("#quest-detail-requirement").textContent = questRequirement(quest);
       document.querySelector("#quest-detail-fee").textContent = money(quest.fee);
       document.querySelector("#quest-detail-reward").textContent = questRewardLabel(quest);
-      document.querySelector("#quest-detail-deadline").textContent = `${quest.deadlineDay}\uC77C\uCC28 \uACBD\uB9E4 \uC804\uAE4C\uC9C0`;
+      document.querySelector("#quest-detail-deadline").textContent = `${effectiveQuestDeadline(quest)}\uC77C\uCC28 \uACBD\uB9E4 \uC804\uAE4C\uC9C0`;
       document.querySelector("#quest-detail-dialog").showModal();
     };
     document.querySelectorAll("[data-active-quest]").forEach((article) => {
@@ -4376,8 +4386,8 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
     }).join("");
     document.querySelector("#inventory-list").innerHTML = occupiedCards + emptyCards + lockedCards;
     document.querySelector("#exchange-market").innerHTML = `<h3>\uCD5C\uADFC \uC2DC\uC138</h3><div class="market-rates">${Object.entries(state.marketPath).map(([key, path]) => {
-      const now = path[state.day - 1];
-      const previous = state.day > 1 ? path[state.day - 2] : 1;
+      const now = marketIndexForDay(path, state.day);
+      const previous = marketIndexForDay(path, state.day - 1);
       const delta = now - previous;
       const trend = delta >= 0 ? "rise" : "fall";
       return `<div><img src="${categoryIconUrl(key)}" alt=""><b>${CATEGORY_LABELS[key]}</b><strong>${Math.round(now * 100)}%</strong><span class="${trend}"><img class="trend-icon" src="./assets/ui/action-icons/market-${trend}.png" alt="">${Math.abs(delta * 100).toFixed(0)}%</span></div>`;

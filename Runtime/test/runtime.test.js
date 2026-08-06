@@ -300,6 +300,34 @@ test('new loans cannot mature beyond day twelve', () => {
   assert.equal(takeLoan(state, balance, 'late'), false);
 });
 
+test('relic-auction day uses the final market price and keeps sale cash finite', () => {
+  const schedule = createRunSchedule({ catalog, balance, seed: 'final-day-sale' });
+  const state = createInitialState({ schedule, sets: [], balance, startCash: 5000 });
+  state.day = RELIC_AUCTION_DAY;
+  state.shopStage = 4;
+  state.inventory.push({ lotId: 'final-sale', trueValue: 1000, basePrice: 1000, paid: 500, category: 'CER', grade: 'COMMON', sold: false, collateral: false });
+  const expected = Math.round(1000 * state.marketPath.CER.at(-1) * (1 - balance.shop.auctionFee[4]));
+
+  assert.equal(sellItems(state, balance, ['final-sale']), expected);
+  assert.equal(state.cash, 5000 + expected);
+  assert.equal(Number.isFinite(state.cash), true);
+});
+
+test('a quest accepted on day twelve can be delivered before the relic auction', () => {
+  const schedule = createRunSchedule({ catalog, balance, seed: 'final-day-quest' });
+  const state = createInitialState({ schedule, sets: [], balance, startCash: 100000 });
+  state.day = RUN_DAYS;
+  const quest = state.questOffers.find((entry) => entry.id === 'restraint') || state.questOffers[0];
+  quest.id = 'restraint';
+  assert.equal(acceptQuest(state, quest.offerId, balance), true);
+  state.activeQuests[0].deadlineDay = RUN_DAYS;
+  state.inventory.push({ lotId: 'final-quest-item', basePrice: 1000, paid: 500, category: 'CER', grade: 'COMMON', sold: false, collateral: false });
+  state.day = RELIC_AUCTION_DAY;
+
+  assert.equal(deliverQuestItem(state, quest.offerId, 'final-quest-item'), true);
+  assert.equal(state.completedQuestCount, 1);
+});
+
 test('three save slots keep current and backup packets independently', () => {
   const values = new Map();
   const storage = { getItem: (key) => values.get(key) ?? null, setItem: (key, value) => values.set(key, value), removeItem: (key) => values.delete(key) };
