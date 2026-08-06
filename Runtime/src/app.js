@@ -405,7 +405,7 @@ function renderExchange(message = '') {
     if (revenue) audio.playSfx('sell');
     renderExchange(`${money(revenue)}에 처분했습니다.`);
   });
-  document.querySelector('#exchange-market').innerHTML = `<h3>오늘의 시세</h3><div class="market-rates">${Object.entries(state.marketPath).map(([key, path]) => {
+  document.querySelector('#exchange-market').innerHTML = `<h3>최근 시세</h3><div class="market-rates">${Object.entries(state.marketPath).map(([key, path]) => {
     const now = path[state.day - 1]; const previous = state.day > 1 ? path[state.day - 2] : 1; const delta = now - previous;
     const trend = delta >= 0 ? 'rise' : 'fall';
     return `<div><img src="${categoryIconUrl(key)}" alt=""><b>${CATEGORY_LABELS[key]}</b><strong>${Math.round(now * 100)}%</strong><span class="${trend}"><img class="trend-icon" src="./assets/ui/action-icons/market-${trend}.png" alt="">${Math.abs(delta * 100).toFixed(0)}%</span></div>`;

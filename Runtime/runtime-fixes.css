@@ -676,6 +676,7 @@ button.secondary:disabled { background-image: url("./assets/ui/skin-v1/button-se
 }
 [data-scene="exchange"] .market-board h3 {
   position: absolute; left: 0; right: 0; top: -5%; margin: 0;
+  transform: translateY(-8px);
   color: #f1dfbd; text-align: center; font-size: clamp(20px,1.75vw,29px); text-shadow: 0 2px 2px #0009;
 }
 
