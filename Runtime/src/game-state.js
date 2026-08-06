@@ -1,7 +1,7 @@
 import { createMarketPath, createDailyQuestOffers } from './systems.js';
 
 export function createInitialState({ schedule, sets, balance, startCash = 20000, metaRelics = [] }) {
-  return { version: 1, seed: schedule.seed, day: 1, lotIndex: 0, cash: startCash, inventory: [], history: [], events: [], information: {}, schedule, sets, phase: 'hub', completed: false, marketPath: createMarketPath(balance, schedule.seed), shopStage: 1, storage: balance.shop.storage[1], completedQuestCount: 0, activeQuests: [], questOffers: createDailyQuestOffers(balance, 1, schedule.seed, metaRelics), questTarget: 'CER', loan: null, guildLocked: false, metaRelics, balanceQuestBonus: balance.shop.questBonus };
+  return { version: 1, seed: schedule.seed, day: 1, lotIndex: 0, cash: startCash, inventory: [], history: [], events: [], schedule, sets, phase: 'hub', completed: false, marketPath: createMarketPath(balance, schedule.seed), shopStage: 1, storage: balance.shop.storage[1], completedQuestCount: 0, activeQuests: [], questOffers: createDailyQuestOffers(balance, 1, schedule.seed, metaRelics), questTarget: 'CER', loan: null, guildLocked: false, metaRelics, balanceQuestBonus: balance.shop.questBonus };
 }
 
 export function resolveLot(state, { action, playerBid = 0, auctionResult }) {

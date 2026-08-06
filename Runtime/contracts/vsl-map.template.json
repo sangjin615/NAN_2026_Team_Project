@@ -30,19 +30,18 @@
       { "selector": "#market-indices", "vslDataPath": "market.indices" }
     ] },
     { "runtimeSceneId": "tavern", "vslSceneId": "scene-tavern", "actions": [
-      { "selector": "[data-info=forecast]", "vslActionId": "action-buy-forecast" },
-      { "selector": "[data-info=catalog]", "vslActionId": "action-buy-catalog" },
-      { "selector": "[data-info=competitors]", "vslActionId": "action-buy-competitors" }
+      { "selector": "[data-broker=forecast]", "vslActionId": "action-buy-forecast" },
+      { "selector": "[data-broker=catalog]", "vslActionId": "action-buy-catalog" },
+      { "selector": "[data-broker=competitors]", "vslActionId": "action-buy-competitors" }
     ], "dataBindings": [{ "selector": "#tavern-owned", "vslDataPath": "daily.info" }] },
     { "runtimeSceneId": "quests", "vslSceneId": "scene-office", "actions": [
-      { "selector": "[data-quest-accept]", "vslActionId": "action-quest-accept" },
-      { "selector": "[data-quest-deliver]", "vslActionId": "action-quest-deliver" }
+      { "selector": "[data-quest]", "vslActionId": "action-quest-accept" },
+      { "selector": "[data-deliver-quest]", "vslActionId": "action-quest-deliver" }
     ], "dataBindings": [
       { "selector": "#quest-offers", "vslDataPath": "quests.dailyOffers" },
       { "selector": "#active-quests", "vslDataPath": "quests.accepted" }
     ] },
     { "runtimeSceneId": "exchange", "vslSceneId": "scene-exchange", "actions": [
-      { "selector": "#appraise-selected", "vslActionId": "action-item-appraise" },
       { "selector": "#sell-selected", "vslActionId": "action-item-sell" }
     ], "dataBindings": [{ "selector": "#inventory-list", "vslDataPath": "player.inventory" }] },
     { "runtimeSceneId": "shop", "vslSceneId": "scene-merchant", "actions": [

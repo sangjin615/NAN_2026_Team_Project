@@ -21,7 +21,6 @@
     "gavel": { "file": "./assets/audio/sfx/sfx-gavel.wav", "volume": 0.82 },
     "sell": { "file": "./assets/audio/sfx/sfx-sale-confirm.wav", "volume": 0.76 },
     "quest": { "file": "./assets/audio/sfx/sfx-quest-accept.wav", "volume": 0.72 },
-    "information": { "file": "./assets/audio/sfx/sfx-info-buy.wav", "volume": 0.7 },
     "loan": { "file": "./assets/audio/sfx/sfx-loan-seal.wav", "volume": 0.78 },
     "repay": { "file": "./assets/audio/sfx/sfx-loan-repay.wav", "volume": 0.74 },
     "upgrade": { "file": "./assets/audio/sfx/sfx-upgrade.wav", "volume": 0.8 },

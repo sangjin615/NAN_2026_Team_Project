@@ -169,18 +169,6 @@ export function quoteItemsSale(state, balance, lotIds) {
   return { count: items.length, multiplier, revenue: Object.values(sales).reduce((sum, sale) => sum + sale, 0), sales };
 }
 
-export function buyInformation(state, balance, kind) {
-  const rate = balance.informationRate?.[kind];
-  if (!Number.isFinite(rate) || Object.keys(state.information?.[state.day] || {}).length) return false;
-  const lots = state.schedule.days[state.day - 1].lots;
-  const discount = 1 - (balance.shop.infoDiscount?.[state.shopStage] ?? 0);
-  const cost = Math.ceil(lots.reduce((sum, lot) => sum + lot.pricing.basePrice, 0) * rate * discount / 100) * 100;
-  if (state.cash < cost) return false;
-  state.cash -= cost;
-  state.information ??= {}; state.information[state.day] ??= {}; state.information[state.day][kind] = { cost, boughtAt: Date.now() };
-  return true;
-}
-
 export function acceptQuest(state, questId, balance) {
   const quest = state.questOffers.find((entry) => (entry.offerId === questId || entry.id === questId) && !entry.accepted);
   if (!quest || state.day > RUN_DAYS || balance.quests[quest.id]?.enabled === false || state.cash < quest.fee) return false;
