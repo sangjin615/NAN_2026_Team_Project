@@ -3117,10 +3117,28 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
   margin-top: 8px; color: #684519; font-weight: 700;
 }
 
+/* Guild: use the signboards painted into the scene background. */
+[data-scene="guild"] .guild-heading {
+  display: none !important;
+}
+[data-scene="guild"] #guild-collateral-list > header {
+  background: transparent !important;
+  border: 0 !important;
+  border-image: none !important;
+  box-shadow: none !important;
+}
+[data-scene="guild"] #guild-collateral-list > footer {
+  padding: 10px 22px 16px 8px;
+}
+[data-scene="guild"] #guild-limit-total {
+  margin-right: 4px;
+  transform: translateY(-3px);
+}
+
 /* Guild heading: keep the emblem, title, and description as one aligned block. */
 [data-scene="guild"] .guild-heading {
   left: 7.7%; top: 12.9%; width: 52.8%; height: 12.8%;
-  display: grid; grid-template-columns: 112px minmax(0, 1fr);
+  display: none !important; grid-template-columns: 112px minmax(0, 1fr);
   grid-template-rows: auto auto; align-content: center;
   padding: 12px 28px 12px 22px;
   border: 14px solid transparent;
