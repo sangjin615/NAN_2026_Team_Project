@@ -4297,7 +4297,7 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
       if (revenue) audio.playSfx("sell");
       renderExchange(`${money(revenue)}\uC5D0 \uCC98\uBD84\uD588\uC2B5\uB2C8\uB2E4.`);
     });
-    document.querySelector("#exchange-market").innerHTML = `<h3>\uCD5C\uADFC \uC2DC\uC138</h3><div class="market-rates">${Object.entries(state.marketPath).map(([key, path]) => {
+    document.querySelector("#exchange-market").innerHTML = `<h3>\uC624\uB298\uC758 \uC2DC\uC138</h3><div class="market-rates">${Object.entries(state.marketPath).map(([key, path]) => {
       const now = path[state.day - 1];
       const previous = state.day > 1 ? path[state.day - 2] : 1;
       const delta = now - previous;
