@@ -127,6 +127,7 @@ function renderSaveSlots() {
   document.querySelectorAll('[data-save-slot]').forEach((button) => {
     button.onclick = () => { selectedSlot = Number(button.dataset.saveSlot); renderSaveSlots(); };
   });
+  adapter.refreshBindings();
   document.querySelector('#continue-run').disabled = store.list().find((slot) => slot.slot === selectedSlot)?.empty ?? true;
   const selected = slots.find((slot) => slot.slot === selectedSlot);
   document.querySelector('#new-run').textContent = selected?.empty ? '새 여정 시작' : '선택 슬롯 덮어쓰기';
@@ -397,6 +398,7 @@ function renderQuestOffice(message = '') {
       renderQuestOffice(ok ? '물품을 제출하고 보상을 받았습니다.' : '제출 조건과 물품을 확인하세요.');
     };
   });
+  adapter.refreshBindings();
   showQuestMessage(message);
 }
 

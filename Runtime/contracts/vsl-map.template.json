@@ -1,81 +1,334 @@
 {
   "schemaVersion": "2.0",
   "projectId": "unknown-auction-v6.2",
-  "resolution": { "width": 1600, "height": 900 },
+  "resolution": {
+    "width": 1600,
+    "height": 900
+  },
   "coordinatePolicy": "VSL layout JSON is authoritative in its 1536x1024 editor space; Runtime transforms mapped coordinates into the 16:9 background content rect.",
   "scenes": [
-    { "runtimeSceneId": "title", "vslSceneId": "scene-title", "actions": [
-      { "selector": "#open-new-slots", "vslActionId": "action-open-new-slots" },
-      { "selector": "#open-continue-slots", "vslActionId": "action-open-continue-slots" },
-      { "selector": "#title-museum", "vslActionId": "action-open-museum" },
-      { "selector": "#title-settings", "vslActionId": "action-open-settings" }
-    ], "dataBindings": [] },
-    { "runtimeSceneId": "save", "vslSceneId": "scene-save-slot", "actions": [
-      { "selector": "#new-run", "vslActionId": "action-run-new" },
-      { "selector": "#continue-run", "vslActionId": "action-run-continue" },
-      { "selector": "#back-title", "vslActionId": "action-return-title" },
-      { "selector": "[data-save-slot]", "vslActionId": "action-save-slot-select" }
-    ], "dataBindings": [{ "selector": "#save-slots", "vslDataPath": "save.slots" }] },
-    { "runtimeSceneId": "hub", "vslSceneId": "scene-city", "actions": [
-      { "selector": "[data-place=quests]", "vslActionId": "action-open-office" },
-      { "selector": "[data-place=tavern]", "vslActionId": "action-open-tavern" },
-      { "selector": "[data-place=catalog]", "vslActionId": "action-open-auction" },
-      { "selector": "[data-place=exchange]", "vslActionId": "action-open-exchange" },
-      { "selector": "[data-place=shop]", "vslActionId": "action-open-shop" },
-      { "selector": "[data-place=guild]", "vslActionId": "action-open-guild" },
-      { "selector": "[data-place=museum]", "vslActionId": "action-open-museum" }
-    ], "dataBindings": [
-      { "selector": "[data-bind=day]", "vslDataPath": "run.day" },
-      { "selector": "[data-bind=cash]", "vslDataPath": "player.cash" },
-      { "selector": "#market-indices", "vslDataPath": "market.indices" }
-    ] },
-    { "runtimeSceneId": "tavern", "vslSceneId": "scene-tavern", "actions": [
-      { "selector": "[data-info=forecast]", "vslActionId": "action-buy-forecast" },
-      { "selector": "[data-info=catalog]", "vslActionId": "action-buy-catalog" },
-      { "selector": "[data-info=competitors]", "vslActionId": "action-buy-competitors" }
-    ], "dataBindings": [{ "selector": "#tavern-owned", "vslDataPath": "daily.info" }] },
-    { "runtimeSceneId": "quests", "vslSceneId": "scene-office", "actions": [
-      { "selector": "[data-quest-accept]", "vslActionId": "action-quest-accept" },
-      { "selector": "[data-quest-deliver]", "vslActionId": "action-quest-deliver" }
-    ], "dataBindings": [
-      { "selector": "#quest-offers", "vslDataPath": "quests.dailyOffers" },
-      { "selector": "#active-quests", "vslDataPath": "quests.accepted" }
-    ] },
-    { "runtimeSceneId": "exchange", "vslSceneId": "scene-exchange", "actions": [
-      { "selector": "#appraise-selected", "vslActionId": "action-item-appraise" },
-      { "selector": "#sell-selected", "vslActionId": "action-item-sell" }
-    ], "dataBindings": [{ "selector": "#inventory-list", "vslDataPath": "player.inventory" }] },
-    { "runtimeSceneId": "shop", "vslSceneId": "scene-merchant", "actions": [
-      { "selector": "#shop-upgrade", "vslActionId": "action-shop-upgrade" }
-    ], "dataBindings": [{ "selector": "#shop-detail", "vslDataPath": "shop.stage" }] },
-    { "runtimeSceneId": "guild", "vslSceneId": "scene-guild", "actions": [
-      { "selector": "#guild-loan", "vslActionId": "action-loan-take" },
-      { "selector": "#guild-repay", "vslActionId": "action-loan-repay-early" }
-    ], "dataBindings": [{ "selector": "#guild-detail", "vslDataPath": "player.loan" }] },
-    { "runtimeSceneId": "museum", "vslSceneId": "scene-museum", "actions": [], "dataBindings": [
-      { "selector": "#relic-list", "vslDataPath": "meta.relics" }
-    ] },
-    { "runtimeSceneId": "catalog", "vslSceneId": "scene-auction-catalog", "actions": [
-      { "selector": "#start-auction", "vslActionId": "action-auction-start" }
-    ], "dataBindings": [{ "selector": "#catalog-grid", "vslDataPath": "auction.dailyLots" }] },
-    { "runtimeSceneId": "auction", "vslSceneId": "scene-auction-live", "actions": [
-      { "selector": "[data-raise]", "vslActionId": "action-bid-raise" },
-      { "selector": "#pass", "vslActionId": "action-bid-pass" }
-    ], "dataBindings": [
-      { "selector": "[data-bind=current-bid]", "vslDataPath": "auction.currentBid" },
-      { "selector": "[data-sprite=current-lot]", "vslDataPath": "auction.currentLot.sprite" }
-    ] },
-    { "runtimeSceneId": "settlement", "vslSceneId": "scene-summary", "actions": [
-      { "selector": "#next-day", "vslActionId": "action-day-next" }
-    ], "dataBindings": [{ "selector": "#settlement-summary", "vslDataPath": "run.dailySettlement" }] },
-    { "runtimeSceneId": "relic", "vslSceneId": "scene-final-auction", "actions": [
-      { "selector": "#buy-relic", "vslActionId": "action-relic-bid" },
-      { "selector": "#skip-relic", "vslActionId": "action-relic-pass" }
-    ], "dataBindings": [{ "selector": "#relic-card", "vslDataPath": "relic.currentRound" }] },
-    { "runtimeSceneId": "result", "vslSceneId": "scene-result", "actions": [
-      { "selector": "#return-title", "vslActionId": "action-return-title" }
-    ], "dataBindings": [{ "selector": "#run-summary", "vslDataPath": "run.result" }] }
+    {
+      "runtimeSceneId": "title",
+      "vslSceneId": "scene-title",
+      "actions": [
+        {
+          "selector": "#open-new-slots",
+          "vslActionId": "action-open-new-slots"
+        },
+        {
+          "selector": "#open-continue-slots",
+          "vslActionId": "action-open-continue-slots"
+        },
+        {
+          "selector": "#title-museum",
+          "vslActionId": "action-open-museum"
+        },
+        {
+          "selector": "#title-settings",
+          "vslActionId": "action-open-settings"
+        }
+      ],
+      "dataBindings": []
+    },
+    {
+      "runtimeSceneId": "save",
+      "vslSceneId": "scene-save-slot",
+      "actions": [
+        {
+          "selector": "#new-run",
+          "vslActionId": "action-run-new"
+        },
+        {
+          "selector": "#continue-run",
+          "vslActionId": "action-run-continue"
+        },
+        {
+          "selector": "#back-title",
+          "vslActionId": "action-return-title"
+        },
+        {
+          "selector": "[data-save-slot]",
+          "vslActionId": "action-save-slot-select"
+        }
+      ],
+      "dataBindings": [
+        {
+          "selector": "#save-slots",
+          "vslDataPath": "save.slots"
+        }
+      ]
+    },
+    {
+      "runtimeSceneId": "hub",
+      "vslSceneId": "scene-city",
+      "actions": [
+        {
+          "selector": "[data-place=quests]",
+          "vslActionId": "action-open-office"
+        },
+        {
+          "selector": "[data-place=tavern]",
+          "vslActionId": "action-open-tavern"
+        },
+        {
+          "selector": "[data-place=catalog]",
+          "vslActionId": "action-open-auction"
+        },
+        {
+          "selector": "[data-place=exchange]",
+          "vslActionId": "action-open-exchange"
+        },
+        {
+          "selector": "[data-place=shop]",
+          "vslActionId": "action-open-shop"
+        },
+        {
+          "selector": "[data-place=guild]",
+          "vslActionId": "action-open-guild"
+        },
+        {
+          "selector": "[data-place=museum]",
+          "vslActionId": "action-open-museum"
+        }
+      ],
+      "dataBindings": [
+        {
+          "selector": "[data-bind=day]",
+          "vslDataPath": "run.day"
+        },
+        {
+          "selector": "[data-bind=cash]",
+          "vslDataPath": "player.cash"
+        },
+        {
+          "selector": "#market-indices",
+          "vslDataPath": "market.indices"
+        }
+      ]
+    },
+    {
+      "runtimeSceneId": "tavern",
+      "vslSceneId": "scene-tavern",
+      "actions": [
+        {
+          "selector": "[data-broker=\"forecast\"]",
+          "vslActionId": "action-buy-forecast"
+        },
+        {
+          "selector": "[data-broker=\"catalog\"]",
+          "vslActionId": "action-buy-catalog"
+        },
+        {
+          "selector": "[data-broker=\"competitors\"]",
+          "vslActionId": "action-buy-competitors"
+        }
+      ],
+      "dataBindings": [
+        {
+          "selector": "#tavern-owned",
+          "vslDataPath": "daily.info"
+        }
+      ]
+    },
+    {
+      "runtimeSceneId": "quests",
+      "vslSceneId": "scene-office",
+      "actions": [
+        {
+          "selector": "[data-quest]",
+          "vslActionId": "action-quest-accept"
+        },
+        {
+          "selector": "[data-deliver-quest]",
+          "vslActionId": "action-quest-deliver"
+        }
+      ],
+      "dataBindings": [
+        {
+          "selector": "#quest-offers",
+          "vslDataPath": "quests.dailyOffers"
+        },
+        {
+          "selector": "#active-quests",
+          "vslDataPath": "quests.accepted"
+        }
+      ]
+    },
+    {
+      "runtimeSceneId": "exchange",
+      "vslSceneId": "scene-exchange",
+      "actions": [
+        {
+          "selector": "#sell-selected",
+          "vslActionId": "action-item-sell"
+        }
+      ],
+      "dataBindings": [
+        {
+          "selector": "#inventory-list",
+          "vslDataPath": "player.inventory"
+        }
+      ]
+    },
+    {
+      "runtimeSceneId": "shop",
+      "vslSceneId": "scene-merchant",
+      "actions": [
+        {
+          "selector": "#shop-upgrade",
+          "vslActionId": "action-shop-upgrade"
+        }
+      ],
+      "dataBindings": [
+        {
+          "selector": "#shop-detail",
+          "vslDataPath": "shop.stage"
+        }
+      ]
+    },
+    {
+      "runtimeSceneId": "guild",
+      "vslSceneId": "scene-guild",
+      "actions": [
+        {
+          "selector": "#guild-loan",
+          "vslActionId": "action-loan-take"
+        },
+        {
+          "selector": "#guild-repay",
+          "vslActionId": "action-loan-repay-early"
+        }
+      ],
+      "dataBindings": [
+        {
+          "selector": "#guild-detail",
+          "vslDataPath": "player.loan"
+        }
+      ]
+    },
+    {
+      "runtimeSceneId": "museum",
+      "vslSceneId": "scene-museum",
+      "actions": [],
+      "dataBindings": [
+        {
+          "selector": "#relic-list",
+          "vslDataPath": "meta.relics"
+        }
+      ]
+    },
+    {
+      "runtimeSceneId": "catalog",
+      "vslSceneId": "scene-auction-catalog",
+      "actions": [
+        {
+          "selector": "#start-auction",
+          "vslActionId": "action-auction-start"
+        }
+      ],
+      "dataBindings": [
+        {
+          "selector": "#catalog-grid",
+          "vslDataPath": "auction.dailyLots"
+        }
+      ]
+    },
+    {
+      "runtimeSceneId": "auction",
+      "vslSceneId": "scene-auction-live",
+      "actions": [
+        {
+          "selector": "[data-raise]",
+          "vslActionId": "action-bid-raise"
+        },
+        {
+          "selector": "#pass",
+          "vslActionId": "action-bid-pass"
+        }
+      ],
+      "dataBindings": [
+        {
+          "selector": "[data-bind=current-bid]",
+          "vslDataPath": "auction.currentBid"
+        },
+        {
+          "selector": "[data-sprite=current-lot]",
+          "vslDataPath": "auction.currentLot.sprite"
+        }
+      ]
+    },
+    {
+      "runtimeSceneId": "settlement",
+      "vslSceneId": "scene-summary",
+      "actions": [
+        {
+          "selector": "#next-day",
+          "vslActionId": "action-day-next"
+        }
+      ],
+      "dataBindings": [
+        {
+          "selector": "#settlement-summary",
+          "vslDataPath": "run.dailySettlement"
+        }
+      ]
+    },
+    {
+      "runtimeSceneId": "relic",
+      "vslSceneId": "scene-final-auction",
+      "actions": [
+        {
+          "selector": "#buy-relic",
+          "vslActionId": "action-relic-bid"
+        },
+        {
+          "selector": "#skip-relic",
+          "vslActionId": "action-relic-pass"
+        }
+      ],
+      "dataBindings": [
+        {
+          "selector": "#relic-card",
+          "vslDataPath": "relic.currentRound"
+        }
+      ]
+    },
+    {
+      "runtimeSceneId": "result",
+      "vslSceneId": "scene-result",
+      "actions": [
+        {
+          "selector": "#return-title",
+          "vslActionId": "action-return-title"
+        }
+      ],
+      "dataBindings": [
+        {
+          "selector": "#run-summary",
+          "vslDataPath": "run.result"
+        }
+      ]
+    }
   ],
-  "audio": { "bgm": ["title", "city", "auction"], "sfx": ["navigate", "bid", "win", "sell", "upgrade"] },
-  "transitions": [{ "from": "scene-city", "to": "scene-auction-catalog", "event": "action-open-auction" }]
+  "audio": {
+    "bgm": [
+      "title",
+      "city",
+      "auction"
+    ],
+    "sfx": [
+      "navigate",
+      "bid",
+      "win",
+      "sell",
+      "upgrade"
+    ]
+  },
+  "transitions": [
+    {
+      "from": "scene-city",
+      "to": "scene-auction-catalog",
+      "event": "action-open-auction"
+    }
+  ]
 }

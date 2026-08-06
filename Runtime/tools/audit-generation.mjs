@@ -36,6 +36,8 @@ const contractText = await read('contracts/compact-generation-contract.txt');
 
 const findings = [];
 const add = (severity, message, detail = '') => findings.push({ severity, message, detail });
+// 두 모드 모두 같은 자리에 기준선을 남긴다. 연결 전후를 나란히 비교하기 위함이다.
+const summary = { auditedAt: new Date().toISOString(), mode: live ? 'live' : 'offline', seed, apiConfig };
 const percentile = (values, p) => {
   if (!values.length) return null;
   const sorted = [...values].sort((a, b) => a - b);
@@ -152,6 +154,15 @@ if (!live) {
     }
     reportLengths(bucket);
     add('info', '기존 리포트는 옛 스키마로 만들어졌을 수 있다', '연결 후 --live 기준선으로 대체할 것');
+    Object.assign(summary, {
+      source: 'reports/live-generation',
+      reportCount: names.length,
+      validCount: valid,
+      latency: Object.fromEntries(Object.entries(latencies).map(([kind, list]) => [kind, list.length
+        ? { samples: list.length, p50: percentile(list, 0.5), p90: percentile(list, 0.9), max: Math.max(...list) } : null])),
+      errorCounts,
+      lengths: bucket,
+    });
   }
 } else {
   // ------------------------------------------------ 라이브: 실제 호출 측정
@@ -204,12 +215,19 @@ if (!live) {
   if (fallbackDays) add('warn', `${days}일 중 ${fallbackDays}일이 fallback 으로 떨어졌다`, '한 런 안에서 생성문과 fallback 문구가 섞인다');
   reportLengths(bucket);
 
-  const outDir = resolve(runtimeRoot, 'reports');
-  await mkdir(outDir, { recursive: true });
-  const artifact = { auditedAt: new Date().toISOString(), seed, days, apiConfig, apiDays, fallbackDays, latencies, lengths: bucket, findings };
-  await writeFile(resolve(outDir, 'generation-audit.json'), JSON.stringify(artifact, null, 2));
-  console.log('\n  reports/generation-audit.json 에 기록했다');
+  Object.assign(summary, {
+    days,
+    apiDays,
+    fallbackDays,
+    latency: latencies.length ? { samples: latencies.length, p50: percentile(latencies, 0.5), p90: percentile(latencies, 0.9), max: Math.max(...latencies) } : null,
+    lengths: bucket,
+  });
 }
+
+summary.findings = findings;
+await mkdir(resolve(runtimeRoot, 'reports'), { recursive: true });
+await writeFile(resolve(runtimeRoot, 'reports/generation-audit.json'), `${JSON.stringify(summary, null, 2)}\n`, 'utf8');
+console.log('\nreports/generation-audit.json 에 기준선을 기록했다');
 
 // ----------------------------------------------------------------- 결과 출력
 const mark = { error: 'ERROR', warn: 'WARN ', info: 'INFO ' };

@@ -27,6 +27,12 @@ export class VslRuntimeAdapter {
     });
   }
 
+  // innerHTML 로 다시 그린 뒤에는 붙여둔 data-vsl-* 가 사라진다.
+  // 동적으로 목록을 그리는 화면은 그리고 나서 이걸 불러야 한다.
+  refreshBindings() {
+    this.applyContractMetadata();
+  }
+
   showScene(sceneId) {
     this.applyContractMetadata();
     this.root.querySelectorAll('[data-scene]').forEach((scene) => { scene.hidden = scene.dataset.scene !== sceneId; });

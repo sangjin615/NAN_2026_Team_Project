@@ -40,6 +40,7 @@ function selectorTokens(selector) {
 }
 
 const declaredScenes = [...indexHtml.matchAll(/data-scene="([\w-]+)"/g)].map((m) => m[1]);
+const dynamicBindings = [];
 let bindingCount = 0;
 for (const scene of template.scenes || []) {
   if (!declaredScenes.includes(scene.runtimeSceneId)) {
@@ -58,9 +59,25 @@ for (const scene of template.scenes || []) {
       if (!probes.some((probe) => allSource.includes(probe))) {
         add('error', '템플릿', `${label} 셀렉터가 어디에도 없다: ${entry.selector}`,
           `${scene.runtimeSceneId} / ${entry[idKey]} · 이 바인딩은 조용히 무시된다`);
+        continue;
+      }
+      // index.html 에 없으면 렌더 함수가 innerHTML 로 만드는 요소다. showScene 안에서
+      // 이미 지나간 뒤라, 그린 다음 refreshBindings() 를 부르지 않으면 붙지 않는다.
+      if (!probes.some((probe) => indexHtml.includes(probe))) {
+        dynamicBindings.push(`${scene.runtimeSceneId} ${entry.selector}`);
       }
     }
   }
+}
+
+// 동적으로 그리는 바인딩은 그린 뒤 refreshBindings() 가 있어야 실제로 붙는다.
+const refreshCallSites = (srcFiles['app.js'].match(/adapter\.refreshBindings\(\)/g) || []).length;
+if (dynamicBindings.length && refreshCallSites === 0) {
+  add('error', '템플릿', `동적 렌더 바인딩 ${dynamicBindings.length}건이 있는데 refreshBindings() 호출이 없다`,
+    `${dynamicBindings.join(', ')} · showScene 이후 다시 그려져 data-vsl-* 가 사라진다`);
+} else if (dynamicBindings.length) {
+  add('info', '템플릿', `동적 렌더 바인딩 ${dynamicBindings.length}건 · refreshBindings() 호출 ${refreshCallSites}곳`,
+    `${dynamicBindings.join(', ')} — 목록을 새로 그리는 곳마다 호출이 필요하다`);
 }
 
 // 템플릿이 선언한 해상도와 CSS 기준 해상도가 어긋나면 좌표 매핑이 틀어진다.
