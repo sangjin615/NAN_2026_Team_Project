@@ -1747,6 +1747,24 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
   background: transparent url("./assets/ui/clean-v1/buttons/button-red.png") center / 100% 100% no-repeat !important;
 }
 
+/* Continue-screen controls form one centered action row. */
+[data-scene="save"][data-mode="continue"] #back-title,
+[data-scene="save"][data-mode="continue"] .save-actions #continue-run,
+[data-scene="save"][data-mode="continue"] #delete-save {
+  top: 82.5%; width: 19.5%; height: 7.6%;
+  display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+}
+[data-scene="save"][data-mode="continue"] #back-title { left: 28%; }
+[data-scene="save"][data-mode="continue"] .save-actions #continue-run { left: 50%; }
+[data-scene="save"][data-mode="continue"] #delete-save {
+  left: 72%; color: #fff0dc; font-size: clamp(14px,1.35vw,21px);
+  filter: brightness(1.18) saturate(1.28) drop-shadow(0 0 7px #b32222aa);
+}
+[data-scene="save"][data-mode="continue"] #delete-save::before { content: "⚠"; color: #ffd06a; font-size: 1.05em; }
+[data-scene="save"][data-mode="continue"] #delete-save:hover:not(:disabled) {
+  filter: brightness(1.32) saturate(1.4) drop-shadow(0 0 10px #e13a2dcc);
+}
+
 [data-scene="result"] #return-title {
   color: #f0e4c9; font-size: clamp(14px,1.35vw,21px); font-weight: 900;
   background: transparent url("./assets/ui/clean-v1/buttons/button-green.png") center / 100% 100% no-repeat !important;
