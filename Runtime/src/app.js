@@ -575,12 +575,12 @@ function renderMuseum(returnTo = 'city') {
   document.querySelector('#relic-list').innerHTML = relics.map((relic, index) => {
     const isOwned = owned.has(relic.id);
     const art = relicArt[relic.id];
-    return `<article class="${isOwned ? 'is-owned' : 'is-empty'}" ${isOwned ? `role="button" tabindex="0" aria-label="${relic.name}" data-relic="${relic.id}"` : 'aria-label="빈 진열장"'}>${isOwned && art ? `<img src="./assets/relics/${encodeURIComponent(art)}" alt=""><b>${relic.name}</b><span>${relic.effect}</span>` : ''}</article>`;
+    return `<article class="${isOwned ? 'is-owned' : 'is-empty'}" ${isOwned ? `role="button" tabindex="0" aria-label="${relic.name}" data-relic="${relic.id}"` : 'aria-label="빈 진열장"'}>${isOwned && art ? `<img data-relic-art="${relic.id}" src="./assets/relics/${encodeURIComponent(art)}" alt=""><b>${relic.name}</b><span>${relic.effect}</span>` : ''}</article>`;
   }).join('');
   const showRelicDetail = (relic) => {
     const isOwned = owned.has(relic.id); const art = relicArt[relic.id];
     if (!isOwned) return;
-    detail.innerHTML = `<button type="button" class="relic-detail-close" aria-label="유물 정보 닫기">×</button>${art ? `<img src="./assets/relics/${encodeURIComponent(art)}" alt="">` : ''}<small>${tierNames[relic.tier]} 유물</small><h3>${relic.name}</h3><p>${relic.effect}</p>`;
+    detail.innerHTML = `<button type="button" class="relic-detail-close" aria-label="유물 정보 닫기">×</button>${art ? `<img data-relic-art="${relic.id}" src="./assets/relics/${encodeURIComponent(art)}" alt="">` : ''}<small>${tierNames[relic.tier]} 유물</small><h3>${relic.name}</h3><p>${relic.effect}</p>`;
     detail.hidden = false;
     detail.querySelector('.relic-detail-close').onclick = () => {
       detail.hidden = true;
@@ -737,7 +737,7 @@ function renderRelic() {
   }
   const session = state.relicSession;
   const art = relicArt[relic.id];
-  document.querySelector('#relic-card').innerHTML = `<p>${RELIC_TIER_LABELS[tier] || tier} · ${state.relicRound + 1}/3회</p><h2>${relic.name}</h2>${art ? `<img src="./assets/relics/${encodeURIComponent(art)}" alt="">` : ''}<p>${relic.effect}</p><strong>현재 호가 ${money(session.currentPrice)}</strong><em id="relic-timer" aria-label="남은 시간"></em>`;
+  document.querySelector('#relic-card').innerHTML = `<p>${RELIC_TIER_LABELS[tier] || tier} · ${state.relicRound + 1}/3회</p><h2>${relic.name}</h2>${art ? `<img data-relic-art="${relic.id}" src="./assets/relics/${encodeURIComponent(art)}" alt="">` : ''}<p>${relic.effect}</p><strong>현재 호가 ${money(session.currentPrice)}</strong><em id="relic-timer" aria-label="남은 시간"></em>`;
   const participants = [{ id: 'player', name: '당신', budget: state.cash }, ...session.bots.map((bot) => ({ ...bot, budget: bot.maxBid }))];
   document.querySelector('#relic-participants').innerHTML = `<h3>최종 경매 참가자</h3>${participants.map((participant) => `<div class="participant ${session.leader === participant.id ? 'is-leading' : ''}"><b>${participant.name}</b><strong>${money(participant.budget)}</strong></div>`).join('')}`;
   document.querySelector('#relic-feed').innerHTML = session.feed.slice(-4).map((line) => `<p>${line}</p>`).join('');
