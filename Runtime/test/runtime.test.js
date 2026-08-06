@@ -5,7 +5,7 @@ import { createRunSchedule, normalizeVisualEffects, validateSchedule, VISUAL_EFF
 import { createSetGraph } from '../src/set-graph.js';
 import { FallbackContentProvider, GenerationBuffer } from '../src/generation-buffer.js';
 import { createInitialState, resolveLot, advanceDay, prepareAuctionEntry } from '../src/game-state.js';
-import { resolveAuction, sellAll, sellItems, quoteItemsSale, bestSetMultiplier, acceptQuest, takeLoan, botBidForLot, estimateBotDailyAssets, openingBotBid, buyInformation, missedDeadline, isBankrupt, deliverQuestItem, questCompletionBonus, refreshDailyQuestOffers, repayLoanEarly, selectDistinctBotInterests } from '../src/systems.js';
+import { resolveAuction, sellAll, sellItems, quoteItemsSale, bestSetMultiplier, acceptQuest, takeLoan, botBidForLot, estimateBotDailyAssets, openingBotBid, missedDeadline, isBankrupt, deliverQuestItem, questCompletionBonus, refreshDailyQuestOffers, repayLoanEarly, selectDistinctBotInterests } from '../src/systems.js';
 import { recordEvent, runMetrics } from '../src/telemetry.js';
 import { GenerationApiProvider } from '../src/generation-api-provider.js';
 import { SaveStore } from '../src/save-store.js';
@@ -376,7 +376,7 @@ test('save slots preserve the day thirteen relic-auction state', () => {
   assert.equal(saves.load(1).day, RELIC_AUCTION_DAY);
 });
 
-test('individual inventory actions, information and telemetry are ready for place scenes', () => {
+test('individual inventory actions and telemetry are ready for place scenes', () => {
   const schedule = createRunSchedule({ catalog, balance, seed: 'places' });
   const sets = createSetGraph(schedule, 'places');
   const state = createInitialState({ schedule, sets, balance, startCash: 1000000 });
@@ -384,10 +384,6 @@ test('individual inventory actions, information and telemetry are ready for plac
   const auctionResult = resolveAuction({ state, lot, playerBid: 99999, balance });
   resolveLot(state, { action: 'bid', playerBid: 99999, auctionResult });
   const id = state.inventory[0].lotId;
-  const cashBeforeInformation = state.cash;
-  assert.equal(buyInformation(state, balance, 'forecast'), true);
-  assert.equal(state.cash, cashBeforeInformation);
-  assert.equal(buyInformation(state, balance, 'competitors'), false);
   assert.ok(sellItems(state, balance, [id]) > 0);
   recordEvent(state, 'test-action', { lotId: id });
   assert.equal(runMetrics(state).events.length, 1);

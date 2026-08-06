@@ -43,22 +43,6 @@
     "epic": 2.09,
     "legendary": 3.64
   },
-  "informationRate": {
-    "competitors": 0,
-    "catalog": 0,
-    "forecast": 0,
-    "order": null,
-    "note": "2026-08-05 회의 결정: 정보 효용을 먼저 체감할 수 있도록 주점 정보 선택 비용을 무료로 전환",
-    "orderNote": "출품 순서는 값이 안 나온다. 정책 셋을 다 태웠고 전부 음수 - 보관칸 3~6, 하루 8점이라 아껴둘 여지가 작다. 보류",
-    "previous": {
-      "order": 0.005,
-      "competitors": 0.007,
-      "forecast": 0.01
-    },
-    "removedChannels": {
-      "relicClue": "2026-07-30 삭제. 유물 경매를 경제 밖으로 두기로 했다 - 최적화할 여지가 없으면 정보가 팔 것도 없다. RELIC-6(거물은 이름만 표시)과도 앞뒤가 맞는다"
-    }
-  },
   "loan": {
     "limitFromDisposalValue": 1.5,
     "repayMultiplier": 1.1,
@@ -145,12 +129,11 @@
     "storageFullhouseNote": "풀하우스(6계열 각 1점)가 3단계 -> 4단계로 밀린다. 2026-07-30 사용자 결정. 판정표 #18 의 계열 6종 = 풀하우스 근거는 그대로이고 닿는 시점만 늦어진다. 대신 풀하우스가 최종 단계 전용 보상이 된다. 3/4/4/5 로 더 조이면 풀하우스가 아예 불가능해져 그 근거가 끊어지므로 여기서 멈췄다",
     "derivedFromStage": [
       "auctionFee",
-      "infoDiscount",
       "setBonus",
       "questBonus",
       "storage"
     ],
-    "derivedNote": "상회 단계 하나가 여덟을 다 준다(V5 방식): 보관칸·수수료·정보할인·세트배수·의뢰보상. 6.27 에서 분리안을 기각했다. 계단값은 V5 원본이고 이번에 문서로 옮겼다",
+    "derivedNote": "상회 단계 하나가 여럿을 다 준다(V5 방식): 보관칸·수수료·세트배수·의뢰보상. 6.27 에서 분리안을 기각했다. 계단값은 V5 원본이고 이번에 문서로 옮겼다",
     "setBonus": [
       0,
       0.1,
@@ -171,13 +154,6 @@
       0.75,
       1.0,
       1.25
-    ],
-    "infoDiscount": [
-      0,
-      0.1,
-      0.2,
-      0.3,
-      0.4
     ],
     "upgradeCostPrevious2": [
       0,
