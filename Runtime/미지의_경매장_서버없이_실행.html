@@ -3005,7 +3005,11 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
   color: #342317; text-align: center; filter: drop-shadow(0 18px 24px #000b);
 }
 #quest-detail-dialog::backdrop { background: #090705c7; backdrop-filter: blur(2px); }
-#quest-detail-dialog h2 { margin: 0 0 12px; color: #5a3515; font-size: clamp(20px,2vw,30px); }
+#quest-detail-dialog h2 {
+  position: relative; z-index: 2; top: -30px;
+  margin: 0 0 12px; color: #e8d8bb; font-size: clamp(20px,2vw,30px);
+  text-shadow: 0 2px 2px #0009;
+}
 #quest-detail-icon { width: 78px; height: 78px; object-fit: contain; filter: drop-shadow(0 3px 3px #2b160866); }
 #quest-detail-requirement { margin: 10px 0 16px; color: #4d3b29; font-size: clamp(13px,1.15vw,17px); }
 #quest-detail-dialog dl { display: grid; gap: 6px; margin: 0 auto 18px; text-align: left; }
