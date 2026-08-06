@@ -31,7 +31,7 @@ export class GenerationApiProvider {
       })),
       marketSignals,
     };
-    const blueprintTimeoutMs = this.config.blueprintTimeoutMs || Math.max(this.config.timeoutMs || 8000, 240000);
+    const blueprintTimeoutMs = this.config.blueprintTimeoutMs ?? this.config.timeoutMs ?? 8000;
     const payload = await this.request(request, blueprintTimeoutMs);
     if (payload.schemaVersion !== request.schemaVersion || payload.runSeed !== runSeed || !Array.isArray(payload.marketArc) || payload.marketArc.length !== 12) throw new Error('blueprint response contract mismatch');
     if (JSON.stringify(payload.sets?.map(({ setId }) => setId)) !== JSON.stringify(request.sets.map(({ setId }) => setId))) throw new Error('blueprint set IDs mismatch');

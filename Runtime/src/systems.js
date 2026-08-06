@@ -231,6 +231,10 @@ export function effectiveQuestDeadline(quest) {
   return quest?.deadlineDay === RUN_DAYS ? RELIC_AUCTION_DAY : quest?.deadlineDay;
 }
 
+export function questCompletionBonus(quest, shopStage) {
+  return quest?.completionBonusByStage?.[shopStage] ?? quest?.completionBonus ?? 0;
+}
+
 export function deliverQuestItem(state, questId, lotId) {
   const quest = state.activeQuests.find((entry) => (entry.offerId === questId || entry.id === questId) && !entry.completed);
   const item = state.inventory.find((entry) => entry.lotId === lotId);
@@ -238,7 +242,7 @@ export function deliverQuestItem(state, questId, lotId) {
   item.delivered = true; item.sold = true; item.salePrice = 0;
   quest.completed = true; quest.deliveredLotId = lotId; quest.completedDay = state.day;
   const shopBonus = state.balanceQuestBonus?.[state.shopStage] ?? 0;
-  const completionBonus = quest.completionBonusByStage?.[state.shopStage] ?? quest.completionBonus ?? 0;
+  const completionBonus = questCompletionBonus(quest, state.shopStage);
   const reward = quest.rewardMode === 'deliveredBasePlusFeePlusBonus'
     ? item.basePrice + quest.fee + completionBonus
     : Math.round(quest.reward * (1 + shopBonus));

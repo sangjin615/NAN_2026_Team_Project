@@ -5,7 +5,7 @@ import { createRunSchedule, normalizeVisualEffects, validateSchedule, VISUAL_EFF
 import { createSetGraph } from '../src/set-graph.js';
 import { FallbackContentProvider, GenerationBuffer } from '../src/generation-buffer.js';
 import { createInitialState, resolveLot, advanceDay, prepareAuctionEntry } from '../src/game-state.js';
-import { resolveAuction, appraiseAll, appraiseItem, sellAll, sellItems, quoteItemsSale, bestSetMultiplier, acceptQuest, takeLoan, botBidForLot, estimateBotDailyAssets, openingBotBid, buyInformation, missedDeadline, isBankrupt, deliverQuestItem, refreshDailyQuestOffers, repayLoanEarly, selectDistinctBotInterests } from '../src/systems.js';
+import { resolveAuction, appraiseAll, appraiseItem, sellAll, sellItems, quoteItemsSale, bestSetMultiplier, acceptQuest, takeLoan, botBidForLot, estimateBotDailyAssets, openingBotBid, buyInformation, missedDeadline, isBankrupt, deliverQuestItem, questCompletionBonus, refreshDailyQuestOffers, repayLoanEarly, selectDistinctBotInterests } from '../src/systems.js';
 import { recordEvent, runMetrics } from '../src/telemetry.js';
 import { GenerationApiProvider } from '../src/generation-api-provider.js';
 import { SaveStore } from '../src/save-store.js';
@@ -217,6 +217,12 @@ test('delivery quest reward refunds base price and fee, then adds a fixed 3000 c
   assert.equal(state.activeQuests[0].paidReward, 7400);
 });
 
+test('stage-based quest bonus uses the same value for display and payment', () => {
+  const quest = { completionBonus: 6000, completionBonusByStage: [0, 3000, 4500, 6000, 7500] };
+  assert.equal(questCompletionBonus(quest, 1), 3000);
+  assert.equal(questCompletionBonus(quest, 4), 7500);
+});
+
 test('the 12 normal auction days advance to a separate day 13 relic-auction hub', () => {
   const schedule = createRunSchedule({ catalog, balance, seed: 'relic-day-transition' });
   const state = createInitialState({ schedule, sets: [], balance });
@@ -356,6 +362,19 @@ test('three save slots keep current and backup packets independently', () => {
   assert.equal(saves.load(2).day, 2);
   assert.equal(saves.list()[1].empty, false);
   assert.equal(saves.list()[0].empty, true);
+});
+
+test('save slots preserve the day thirteen relic-auction state', () => {
+  const values = new Map();
+  const storage = { getItem: (key) => values.get(key) ?? null, setItem: (key, value) => values.set(key, value), removeItem: (key) => values.delete(key) };
+  const saves = new SaveStore(storage);
+  const schedule = createRunSchedule({ catalog, balance, seed: 'save-relic-day' });
+  const state = createInitialState({ schedule, sets: createSetGraph(schedule, 'save-relic-day'), balance });
+  state.day = RELIC_AUCTION_DAY;
+  state.phase = 'hub';
+
+  assert.equal(saves.save(state, 1), true);
+  assert.equal(saves.load(1).day, RELIC_AUCTION_DAY);
 });
 
 test('individual inventory actions, information and telemetry are ready for place scenes', () => {

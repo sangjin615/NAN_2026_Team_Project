@@ -9,7 +9,7 @@ import { VslRuntimeAdapter } from './vsl-adapter.js';
 import {
   acceptQuest, botBidForLot, estimateBotDailyAssets, openingBotBid, selectDistinctBotInterests,
   deliverQuestItem, effectiveQuestDeadline, expireQuestsBeforeAuction, missedDeadline, questMatchesItem,
-  marketIndexForDay, quoteItemsSale, refreshDailyQuestOffers, repayLoanEarly, sellItems, settleLoan, settleQuests, takeLoan, upgradeShop,
+  marketIndexForDay, questCompletionBonus, quoteItemsSale, refreshDailyQuestOffers, repayLoanEarly, sellItems, settleLoan, settleQuests, takeLoan, upgradeShop,
 } from './systems.js';
 import { downloadRunLog, recordEvent } from './telemetry.js';
 import { AudioBus } from './audio-bus.js';
@@ -145,7 +145,13 @@ function openSlotScene(mode) {
   renderSaveSlots();
 }
 
-const waitForPaint = () => new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+const waitForPaint = () => new Promise((resolve) => {
+  const fallback = window.setTimeout(resolve, 100);
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    window.clearTimeout(fallback);
+    resolve();
+  }));
+});
 
 function updateRunLoading(progress, message, completedSteps = [], activeStep = '') {
   const scene = document.querySelector('[data-scene="loading"]');
@@ -324,7 +330,7 @@ function questIconUrl(questId) {
 
 function questRewardLabel(quest) {
   return quest.rewardMode === 'deliveredBasePlusFeePlusBonus'
-    ? `물품 기준가 + 수주비 + ${money(quest.completionBonus || 0)}`
+    ? `물품 기준가 + 수주비 + ${money(questCompletionBonus(quest, state.shopStage))}`
     : money(quest.reward);
 }
 
@@ -485,10 +491,10 @@ function renderTavern(message = '') {
       return `<p><b>${nextDayIndex + 1}일차 계열 시세 · ${visible.length}개 공개</b></p><ul>${visible.map((category) => {
         const today = state.marketPath[category]?.[Math.max(0, nextDayIndex - 1)] ?? 1;
         const tomorrow = state.marketPath[category]?.[nextDayIndex] ?? today;
-        const change = today ? ((tomorrow / today) - 1) * 100 : 0;
+        const change = (tomorrow - today) * 100;
         const tone = change > 0.5 ? 'rise' : change < -0.5 ? 'fall' : 'flat';
         const direction = tone === 'rise' ? '▲ 상승' : tone === 'fall' ? '▼ 하락' : '─ 보합';
-        const changeText = tone === 'flat' ? '변동 없음' : `${direction} ${Math.abs(change).toFixed(0)}%`;
+        const changeText = tone === 'flat' ? '변동 없음' : `${direction} ${Math.abs(change).toFixed(0)}%p`;
         return `<li><img src="${categoryIconUrl(category)}" alt=""><span><b>${categoryNames[category]}</b><small>내일 시세 지수 ${Math.round(tomorrow * 100)}%</small></span><strong class="market-${tone}">${changeText}</strong></li>`;
       }).join('')}</ul>`;
     }
@@ -647,7 +653,7 @@ function renderAuction() {
   state.auctionSession.deadline ||= Date.now() + AUCTION_INITIAL_TIME_MS;
   adapter.showScene('auction');
   adapter.setText('lot-progress', `${state.day}일차 · 경매품 ${state.lotIndex + 1} / 8`); adapter.setText('lot-name', lot.content.displayName); adapter.setText('lot-category', categoryLabel(lot.category));
-  adapter.setText('lot-grade', lot.grade); adapter.setText('lot-description', lot.content.description); adapter.setText('base-price', money(lot.pricing.basePrice));
+  adapter.setText('lot-grade', gradeLabel(lot.grade)); adapter.setText('lot-description', lot.content.description); adapter.setText('base-price', money(lot.pricing.basePrice));
   adapter.setText('current-bid', money(state.auctionSession.currentPrice)); adapter.setText('cash', money(state.cash)); adapter.setSprite('current-lot', spriteUrl(lot, lot.grade)); adapter.setEffects('current-lot', normalizeVisualEffects(lot.category, lot.grade, lot.visualEffects));
   const currentLotSprite = document.querySelector('[data-sprite="current-lot"], [data-bind="current-lot"]');
   if (currentLotSprite) { currentLotSprite.classList.add('item-sprite-anchor'); currentLotSprite.style.setProperty('--sprite-anchor-x', `${Number(lot.spriteAnchor?.x || 0)}%`); currentLotSprite.style.setProperty('--sprite-anchor-y', `${Number(lot.spriteAnchor?.y || 0)}%`); }
@@ -710,7 +716,7 @@ function renderSettlement() {
   const categories = [...new Set(dayLots.map((lot) => lot.category))].slice(0, 4);
   const buyerNames = { player: '당신', nemesis: '갈레오', 'drifter-a': '모이라', 'drifter-b': '이네스' };
   document.querySelector('#settlement-summary').innerHTML = `
-    <section class="settlement-lots"><h3>낙찰 / 유찰 결과 (경매품 8개)</h3>${dayHistory.map((entry, index) => { const lot = dayLots.find((candidate) => candidate.lotId === entry.lotId); const lotName = lot?.content?.displayName || lot?.baseName || `경매품 ${index + 1}`; const buyerName = buyerNames[entry.winner] || '경쟁자'; return `<article><div><b title="${escapeHtml(lotName)}">${escapeHtml(lotName)}</b><span class="${entry.won ? 'won' : 'lost'}">${entry.won ? '낙찰' : '유찰'}</span></div><p><em>구매자 · ${buyerName}</em><strong>${money(entry.price)}</strong></p></article>`; }).join('')}</section>
+    <section class="settlement-lots"><h3>경매 결과 (경매품 8개)</h3>${dayHistory.map((entry, index) => { const lot = dayLots.find((candidate) => candidate.lotId === entry.lotId); const lotName = lot?.content?.displayName || lot?.baseName || `경매품 ${index + 1}`; const buyerName = buyerNames[entry.winner] || '경쟁자'; return `<article><div><b title="${escapeHtml(lotName)}">${escapeHtml(lotName)}</b><span class="${entry.won ? 'won' : 'lost'}">${entry.won ? '내 낙찰' : '경쟁자 낙찰'}</span></div><p><em>구매자 · ${buyerName}</em><strong>${money(entry.price)}</strong></p></article>`; }).join('')}</section>
     <section class="settlement-center"><h3>오늘의 정산</h3><div class="settlement-owned"><b>획득 물품</b><strong>${wins.length}개</strong><span>현재 보관 ${ownedItems().length} / ${state.storage}</span></div><div class="settlement-money settlement-finance"><h4>자금 현황</h4><p><img src="./assets/ui/action-icons/total-spent.png" alt=""><span>총 지출 금액</span><strong>${money(spent)}</strong></p><p><img src="./assets/ui/action-icons/current-assets.png" alt=""><span>현재 자산</span><strong>${money(state.cash)}</strong></p></div><div class="settlement-money settlement-progress"><h4>운영 현황</h4><p><span>완료 의뢰</span><strong>${state.lastSettlement.quests}건</strong></p><p><span>대출 상태</span><strong>${loanResult}</strong></p></div></section>
     <section class="settlement-market"><h3>계열별 시세 요약</h3>${categories.map((category) => { const value = state.marketPath[category]?.[state.day - 1] ?? 1; const percent = value * 100; const trendIcon = value >= 1 ? 'market-rise.png' : 'market-fall.png'; return `<p><img src="./assets/ui/action-icons/${trendIcon}" alt=""><b>${categoryLabel(category)}</b><span class="market-line" style="--market:${Math.max(15, Math.min(95, percent - 40))}%"></span><strong>${Math.round(percent)}%</strong></p>`; }).join('')}</section>`;
   const nextDayLabel = state.failure ? '실패 결과 확인' : state.day === RUN_DAYS ? `${RELIC_AUCTION_DAY}일차 도시로` : `${state.day + 1}일차로`;

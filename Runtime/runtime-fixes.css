@@ -1276,21 +1276,26 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
   box-sizing: border-box;
   border: 0; background: transparent; overflow: hidden;
 }
-[data-scene="auction"] .sprite-stage { width: 100%; height: 54%; min-height: 0; }
+[data-scene="auction"] .sprite-stage { width: 100%; height: 46%; min-height: 0; }
 [data-scene="auction"] .sprite-stage img { width: auto; height: 100%; max-width: 100%; max-height: 100%; margin: auto; object-fit: contain; }
 [data-scene="auction"] .auction-layout article { display: grid; gap: 2px; border: 0; background: transparent; color: #2b2015; text-align: center; }
 [data-scene="auction"] .auction-layout .grade { color: #76501c; font-weight: 900; }
-[data-scene="auction"] .auction-layout article > p { display: none; }
+[data-scene="auction"] .auction-layout article > p {
+  display: -webkit-box; margin: 1px 0; overflow: hidden;
+  color: #4b3927; font-size: clamp(7px, .57vw, 9px); line-height: 1.2;
+  -webkit-box-orient: vertical; -webkit-line-clamp: 2;
+}
 [data-scene="auction"] .auction-layout dl { display: grid; grid-template-columns: 1fr; gap: 3px; margin: 3px 0 0; font-size: clamp(8px, .7vw, 11px); }
 [data-scene="auction"] .auction-layout dl div { display: block; }
 [data-scene="auction"] .auction-layout dl div:nth-child(2) { display: none; }
 [data-scene="auction"] .auction-layout dt {
+  min-height: 0; padding: 0; line-height: 1.2;
   color: #eadfca;
   font-weight: 800;
   text-shadow: 0 1px 2px #000;
 }
 [data-scene="auction"] .auction-layout dd {
-  margin: 0;
+  height: auto; min-height: 0; margin: 0; padding: 0; line-height: 1.2;
   color: #f0bd4f;
   font-weight: 900;
   text-shadow: 0 1px 2px #000, 0 0 8px #c58a2440;

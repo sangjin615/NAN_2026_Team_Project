@@ -1,8 +1,10 @@
+import { RELIC_AUCTION_DAY } from './constants.js';
+
 const LEGACY_SAVE_KEY = 'unknown-auction:vsl-runtime:save:v1';
 const SAVE_PREFIX = 'unknown-auction:vsl-runtime:save:v2';
 
 function isState(value) {
-  return Boolean(value && typeof value === 'object' && value.schedule && Number.isInteger(value.day) && value.day >= 1 && value.day <= 12);
+  return Boolean(value && typeof value === 'object' && value.schedule && Number.isInteger(value.day) && value.day >= 1 && value.day <= RELIC_AUCTION_DAY);
 }
 
 function parse(raw) {

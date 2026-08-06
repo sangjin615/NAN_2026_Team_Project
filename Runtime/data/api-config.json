@@ -1,1 +1,1 @@
-{"enabled":false,"endpoint":"http://127.0.0.1:8787/generate","timeoutMs":15000,"retries":0,"schemaVersion":"1.0"}
+{"enabled":false,"endpoint":"http://127.0.0.1:8787/generate","timeoutMs":15000,"blueprintTimeoutMs":15000,"retries":0,"schemaVersion":"1.0"}

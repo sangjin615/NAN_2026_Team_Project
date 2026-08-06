@@ -43,8 +43,12 @@ export class GenerationBuffer {
 
   async ensure({ currentDay, schedule, sets, aheadDays = BUFFER_AHEAD_DAYS }) {
     const lastDay = Math.min(RUN_DAYS, currentDay + aheadDays);
+    const days = [];
     for (let day = currentDay; day <= lastDay; day += 1) {
       if (this.readyDays.has(day)) continue;
+      days.push(day);
+    }
+    const results = await Promise.all(days.map(async (day) => {
       const lots = schedule.days[day - 1].lots;
       let generated;
       try {
@@ -54,6 +58,9 @@ export class GenerationBuffer {
         this.failures.push({ day, message: error.message });
         generated = await this.fallback.generateDay({ day, lots, sets });
       }
+      return { day, lots, generated };
+    }));
+    for (const { day, lots, generated } of results) {
       generated.forEach((content, index) => { lots[index].content = content; });
       this.readyDays.set(day, generated);
     }
