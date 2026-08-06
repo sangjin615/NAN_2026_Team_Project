@@ -3062,6 +3062,43 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
   color: #5a3518; font-size: clamp(25px, 2.8vw, 42px); text-shadow: none;
 }
 
+/* Guild: keep the loan actions and their explanation together in the large
+   lower-left paper field instead of leaving an empty center panel. */
+[data-scene="guild"] .actions {
+  top: 61%; height: 13.8%;
+  align-items: end; padding: 38px 22px 10px;
+}
+[data-scene="guild"] .actions button {
+  height: 50px; font-size: clamp(14px, 1.2vw, 20px);
+}
+[data-scene="guild"] #guild-message {
+  left: 9.2%; right: auto; top: 75.3%; bottom: auto;
+  width: 49.8%; min-height: 0; height: 8.3%;
+  display: grid; grid-template-columns: auto minmax(0, 1fr);
+  align-content: center; align-items: center; gap: 5px 14px;
+  padding: 10px 18px; border: 1px solid #a98d68;
+  background: #ead8bd70; color: #51371f;
+}
+[data-scene="guild"] #guild-message > b {
+  grid-row: 1 / 3; color: #744314; font-size: clamp(13px, 1.05vw, 18px);
+  white-space: nowrap;
+}
+[data-scene="guild"] #guild-message p {
+  display: block; margin: 0; font-size: clamp(9px, .76vw, 13px); line-height: 1.35;
+}
+[data-scene="guild"] #guild-detail {
+  padding: 12px 24px;
+}
+[data-scene="guild"] .guild-status-grid {
+  grid-template-columns: 34% minmax(0, 1fr); gap: 10px;
+}
+[data-scene="guild"] .collateral-picker {
+  margin-top: 12px;
+}
+[data-scene="guild"] #loan-preview {
+  margin-top: 8px; color: #684519; font-weight: 700;
+}
+
 /* Replace the temporary City HUD glyphs with the normalized production icons. */
 [data-scene="hub"] > header > div,
 [data-scene="hub"] > header > strong,
