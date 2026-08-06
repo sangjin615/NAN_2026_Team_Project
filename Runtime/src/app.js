@@ -7,7 +7,7 @@ import { SaveStore } from './save-store.js';
 import { advanceDay, createInitialState, prepareAuctionEntry, resolveLot } from './game-state.js';
 import { VslRuntimeAdapter } from './vsl-adapter.js';
 import {
-  acceptQuest, appraiseItem, botBidForLot, estimateBotDailyAssets, openingBotBid,
+  acceptQuest, appraiseItem, botBidForLot, estimateBotDailyAssets, openingBotBid, selectDistinctBotInterests,
   deliverQuestItem, expireQuestsBeforeAuction, missedDeadline, questMatchesItem,
   quoteItemsSale, refreshDailyQuestOffers, repayLoanEarly, sellItems, settleLoan, settleQuests, takeLoan, upgradeShop,
 } from './systems.js';
@@ -474,8 +474,8 @@ function renderTavern(message = '') {
       return `<p><b>${nextDayIndex + 1}일차 경매품</b></p><ul>${nextLots.map((lot) => `<li><b>${escapeHtml(lot.content?.displayName || lot.baseName)}</b>${stage >= 2 ? ` · ${categoryNames[lot.category]}` : ''}${stage >= 3 ? ` · ${gradeLabel(lot.grade)}` : ''}</li>`).join('')}</ul>`;
     }
     const estimates = nextLots.flatMap((lot) => botBidForLot({ lot, day: state.day + 1, balance, marketIndex: state.marketPath[lot.category][nextDayIndex], seed: state.seed }).map((bot) => ({ ...bot, lot })));
-    const grouped = Object.groupBy(estimates, (bot) => bot.name);
-    return `<p><b>${stage}명 공개</b></p><ul>${Object.entries(grouped).slice(0, stage).map(([name, entries]) => { const interest = [...entries].sort((a, b) => b.maxBid - a.maxBid)[0]; return `<li><b>${name}</b> · ${escapeHtml(interest.lot.content?.displayName || interest.lot.baseName)}</li>`; }).join('')}</ul>`;
+    const interests = selectDistinctBotInterests(estimates);
+    return `<p><b>${stage}명 공개</b></p><ul>${interests.slice(0, stage).map(({ name, interest }) => `<li><b>${name}</b> · ${escapeHtml(interest.lot.content?.displayName || interest.lot.baseName)}</li>`).join('')}</ul>`;
   };
   document.querySelector('#tavern-detail').innerHTML = `<h3>정보 상세</h3><div class="detail-heading"><img class="detail-symbol" src="${icons[selected]}" alt=""><div><h2>${names[selected]}</h2><small>상회 ${state.shopStage}단계 공개 정보</small></div></div><p>${descriptions[selected]}</p><section class="info-result tavern-live-result info-${selected}">${informationResult(selected)}</section>`;
   const effectiveStage = Math.max(1, Math.min(3, state.shopStage));

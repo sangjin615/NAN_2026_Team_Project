@@ -58,6 +58,17 @@ export function botBidForLot({ lot, day, balance, marketIndex, seed }) {
   return bids.map((bot) => ({ ...bot, maxBid: Math.max(0, Math.round(Math.min(bot.cap, publicEstimate * (bot.target === lot.category ? 1.18 : 1) * ({ COMMON: 0.9, RARE: 1, EPIC: 1.05, LEGENDARY: 1.1 }[lot.grade] ?? 1) * bot.factor))) }));
 }
 
+export function selectDistinctBotInterests(estimates) {
+  const grouped = Object.groupBy(estimates, (bot) => bot.name);
+  const selectedLotIds = new Set();
+  return Object.entries(grouped).map(([name, entries]) => {
+    const ranked = [...entries].sort((a, b) => b.maxBid - a.maxBid);
+    const interest = ranked.find((entry) => !selectedLotIds.has(entry.lot.lotId)) || ranked[0];
+    if (interest) selectedLotIds.add(interest.lot.lotId);
+    return { name, interest };
+  }).filter(({ interest }) => interest);
+}
+
 export function openingBotBid(bots, openingPrice) {
   const bidder = [...bots].filter((bot) => bot.maxBid > 0).sort((a, b) => b.maxBid - a.maxBid)[0];
   if (!bidder) return null;

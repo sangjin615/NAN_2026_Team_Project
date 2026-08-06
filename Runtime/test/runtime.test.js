@@ -5,7 +5,7 @@ import { createRunSchedule, normalizeVisualEffects, validateSchedule, VISUAL_EFF
 import { createSetGraph } from '../src/set-graph.js';
 import { FallbackContentProvider, GenerationBuffer } from '../src/generation-buffer.js';
 import { createInitialState, resolveLot, advanceDay, prepareAuctionEntry } from '../src/game-state.js';
-import { resolveAuction, appraiseAll, appraiseItem, sellAll, sellItems, quoteItemsSale, bestSetMultiplier, acceptQuest, takeLoan, botBidForLot, estimateBotDailyAssets, openingBotBid, buyInformation, missedDeadline, isBankrupt, deliverQuestItem, refreshDailyQuestOffers, repayLoanEarly } from '../src/systems.js';
+import { resolveAuction, appraiseAll, appraiseItem, sellAll, sellItems, quoteItemsSale, bestSetMultiplier, acceptQuest, takeLoan, botBidForLot, estimateBotDailyAssets, openingBotBid, buyInformation, missedDeadline, isBankrupt, deliverQuestItem, refreshDailyQuestOffers, repayLoanEarly, selectDistinctBotInterests } from '../src/systems.js';
 import { recordEvent, runMetrics } from '../src/telemetry.js';
 import { GenerationApiProvider } from '../src/generation-api-provider.js';
 import { SaveStore } from '../src/save-store.js';
@@ -75,6 +75,18 @@ test('competitor daily capital follows the day stage', () => {
     state.day = day;
     assert.equal(estimateBotDailyAssets({ state, balance }).nemesis.initial, expected);
   }
+});
+
+test('competitor information selects a different preferred lot for each competitor', () => {
+  const lots = ['lot-a', 'lot-b', 'lot-c'].map((lotId) => ({ lotId }));
+  const estimates = ['갈레오', '모이라', '이네스'].flatMap((name) => lots.map((lot, index) => ({
+    name,
+    lot,
+    maxBid: 3000 - index * 100,
+  })));
+
+  const interests = selectDistinctBotInterests(estimates);
+  assert.deepEqual(interests.map(({ interest }) => interest.lot.lotId), ['lot-a', 'lot-b', 'lot-c']);
 });
 
 test('repairs the first-day auction cursor after generated lot content changes', () => {

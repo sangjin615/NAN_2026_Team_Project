@@ -3525,6 +3525,16 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
     ];
     return bids.map((bot) => ({ ...bot, maxBid: Math.max(0, Math.round(Math.min(bot.cap, publicEstimate * (bot.target === lot.category ? 1.18 : 1) * ({ COMMON: 0.9, RARE: 1, EPIC: 1.05, LEGENDARY: 1.1 }[lot.grade] ?? 1) * bot.factor))) }));
   }
+  function selectDistinctBotInterests(estimates) {
+    const grouped = Object.groupBy(estimates, (bot) => bot.name);
+    const selectedLotIds = /* @__PURE__ */ new Set();
+    return Object.entries(grouped).map(([name, entries]) => {
+      const ranked = [...entries].sort((a, b) => b.maxBid - a.maxBid);
+      const interest = ranked.find((entry) => !selectedLotIds.has(entry.lot.lotId)) || ranked[0];
+      if (interest) selectedLotIds.add(interest.lot.lotId);
+      return { name, interest };
+    }).filter(({ interest }) => interest);
+  }
   function openingBotBid(bots, openingPrice) {
     const bidder = [...bots].filter((bot) => bot.maxBid > 0).sort((a, b) => b.maxBid - a.maxBid)[0];
     if (!bidder) return null;
@@ -4379,11 +4389,8 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
         return `<p><b>${nextDayIndex + 1}\uC77C\uCC28 \uACBD\uB9E4\uD488</b></p><ul>${nextLots.map((lot) => `<li><b>${escapeHtml(lot.content?.displayName || lot.baseName)}</b>${stage >= 2 ? ` \xB7 ${categoryNames[lot.category]}` : ""}${stage >= 3 ? ` \xB7 ${gradeLabel(lot.grade)}` : ""}</li>`).join("")}</ul>`;
       }
       const estimates = nextLots.flatMap((lot) => botBidForLot({ lot, day: state.day + 1, balance, marketIndex: state.marketPath[lot.category][nextDayIndex], seed: state.seed }).map((bot) => ({ ...bot, lot })));
-      const grouped = Object.groupBy(estimates, (bot) => bot.name);
-      return `<p><b>${stage}\uBA85 \uACF5\uAC1C</b></p><ul>${Object.entries(grouped).slice(0, stage).map(([name, entries]) => {
-        const interest = [...entries].sort((a, b) => b.maxBid - a.maxBid)[0];
-        return `<li><b>${name}</b> \xB7 ${escapeHtml(interest.lot.content?.displayName || interest.lot.baseName)}</li>`;
-      }).join("")}</ul>`;
+      const interests = selectDistinctBotInterests(estimates);
+      return `<p><b>${stage}\uBA85 \uACF5\uAC1C</b></p><ul>${interests.slice(0, stage).map(({ name, interest }) => `<li><b>${name}</b> \xB7 ${escapeHtml(interest.lot.content?.displayName || interest.lot.baseName)}</li>`).join("")}</ul>`;
     };
     document.querySelector("#tavern-detail").innerHTML = `<h3>\uC815\uBCF4 \uC0C1\uC138</h3><div class="detail-heading"><img class="detail-symbol" src="${icons[selected]}" alt=""><div><h2>${names[selected]}</h2><small>\uC0C1\uD68C ${state.shopStage}\uB2E8\uACC4 \uACF5\uAC1C \uC815\uBCF4</small></div></div><p>${descriptions[selected]}</p><section class="info-result tavern-live-result info-${selected}">${informationResult(selected)}</section>`;
     const effectiveStage = Math.max(1, Math.min(3, state.shopStage));
