@@ -211,7 +211,8 @@ async function newRun(seed) {
 }
 
 function syncHeader() {
-  adapter.setText('day', state.tutorialDay ? 0 : state.day);
+  const displayedDay = state.tutorialDay ? 0 : state.day;
+  adapter.setText('day', displayedDay);
   adapter.setText('cash', money(state.cash));
   const scene = document.querySelector('.scene:not([hidden])');
   const facilityScenes = new Set(['hub', 'quests', 'tavern', 'catalog', 'exchange', 'shop', 'guild', 'museum']);
@@ -224,7 +225,7 @@ function syncHeader() {
       scene.prepend(hud);
     }
     const loan = state.loan ? `${state.loan.dueDay}일 만기` : '대출 없음';
-    hud.innerHTML = `<span class="hud-day"><b>${state.day}일차 / ${JOURNEY_DAYS}</b></span><span class="hud-cash"><b>${money(state.cash)}</b></span><span class="hud-storage"><small>보관칸</small><b>${ownedItems().length} / ${state.storage}</b></span><span class="hud-stage"><b>${state.shopStage}단계</b><small>상회 단계</small></span><span class="hud-loan"><small>담보 대출</small><b>${loan}</b></span><button class="scene-hud-settings" aria-label="설정">설정</button>`;
+    hud.innerHTML = `<span class="hud-day"><b>${displayedDay}일차 / ${JOURNEY_DAYS}</b></span><span class="hud-cash"><b>${money(state.cash)}</b></span><span class="hud-storage"><small>보관칸</small><b>${ownedItems().length} / ${state.storage}</b></span><span class="hud-stage"><b>${state.shopStage}단계</b><small>상회 단계</small></span><span class="hud-loan"><small>담보 대출</small><b>${loan}</b></span><button class="scene-hud-settings" aria-label="설정">설정</button>`;
     hud.querySelector('.scene-hud-settings').onclick = () => document.querySelector('#settings-dialog').showModal();
   }
 }
@@ -648,7 +649,7 @@ function renderAuction() {
   }
   state.auctionSession.deadline ||= Date.now() + AUCTION_INITIAL_TIME_MS;
   adapter.showScene('auction');
-  adapter.setText('lot-progress', `${state.day}일차 · 경매품 ${state.lotIndex + 1} / 8`); adapter.setText('lot-name', lot.content.displayName); adapter.setText('lot-category', categoryLabel(lot.category));
+  adapter.setText('lot-progress', `${state.tutorialDay ? 0 : state.day}일차 · 경매품 ${state.lotIndex + 1} / 8`); adapter.setText('lot-name', lot.content.displayName); adapter.setText('lot-category', categoryLabel(lot.category));
   adapter.setText('lot-grade', lot.grade); adapter.setText('lot-description', lot.content.description); adapter.setText('base-price', money(lot.pricing.basePrice));
   adapter.setText('current-bid', money(state.auctionSession.currentPrice)); adapter.setText('cash', money(state.cash)); adapter.setSprite('current-lot', spriteUrl(lot, lot.grade)); adapter.setEffects('current-lot', normalizeVisualEffects(lot.category, lot.grade, lot.visualEffects));
   const currentLotSprite = document.querySelector('[data-sprite="current-lot"], [data-bind="current-lot"]');

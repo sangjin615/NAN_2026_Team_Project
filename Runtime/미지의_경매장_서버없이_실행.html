@@ -4491,7 +4491,8 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
     generation.ensure({ currentDay: 1, schedule, sets }).then(save);
   }
   function syncHeader() {
-    adapter.setText("day", state.tutorialDay ? 0 : state.day);
+    const displayedDay = state.tutorialDay ? 0 : state.day;
+    adapter.setText("day", displayedDay);
     adapter.setText("cash", money(state.cash));
     const scene = document.querySelector(".scene:not([hidden])");
     const facilityScenes = /* @__PURE__ */ new Set(["hub", "quests", "tavern", "catalog", "exchange", "shop", "guild", "museum"]);
@@ -4504,7 +4505,7 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
         scene.prepend(hud);
       }
       const loan = state.loan ? `${state.loan.dueDay}\uC77C \uB9CC\uAE30` : "\uB300\uCD9C \uC5C6\uC74C";
-      hud.innerHTML = `<span class="hud-day"><b>${state.day}\uC77C\uCC28 / ${JOURNEY_DAYS}</b></span><span class="hud-cash"><b>${money(state.cash)}</b></span><span class="hud-storage"><small>\uBCF4\uAD00\uCE78</small><b>${ownedItems().length} / ${state.storage}</b></span><span class="hud-stage"><b>${state.shopStage}\uB2E8\uACC4</b><small>\uC0C1\uD68C \uB2E8\uACC4</small></span><span class="hud-loan"><small>\uB2F4\uBCF4 \uB300\uCD9C</small><b>${loan}</b></span><button class="scene-hud-settings" aria-label="\uC124\uC815">\uC124\uC815</button>`;
+      hud.innerHTML = `<span class="hud-day"><b>${displayedDay}\uC77C\uCC28 / ${JOURNEY_DAYS}</b></span><span class="hud-cash"><b>${money(state.cash)}</b></span><span class="hud-storage"><small>\uBCF4\uAD00\uCE78</small><b>${ownedItems().length} / ${state.storage}</b></span><span class="hud-stage"><b>${state.shopStage}\uB2E8\uACC4</b><small>\uC0C1\uD68C \uB2E8\uACC4</small></span><span class="hud-loan"><small>\uB2F4\uBCF4 \uB300\uCD9C</small><b>${loan}</b></span><button class="scene-hud-settings" aria-label="\uC124\uC815">\uC124\uC815</button>`;
       hud.querySelector(".scene-hud-settings").onclick = () => document.querySelector("#settings-dialog").showModal();
     }
   }
@@ -4969,7 +4970,7 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
     }
     state.auctionSession.deadline ||= Date.now() + AUCTION_INITIAL_TIME_MS;
     adapter.showScene("auction");
-    adapter.setText("lot-progress", `${state.day}\uC77C\uCC28 \xB7 \uACBD\uB9E4\uD488 ${state.lotIndex + 1} / 8`);
+    adapter.setText("lot-progress", `${state.tutorialDay ? 0 : state.day}\uC77C\uCC28 \xB7 \uACBD\uB9E4\uD488 ${state.lotIndex + 1} / 8`);
     adapter.setText("lot-name", lot.content.displayName);
     adapter.setText("lot-category", categoryLabel(lot.category));
     adapter.setText("lot-grade", lot.grade);
