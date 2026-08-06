@@ -611,10 +611,22 @@ button.secondary:disabled { background-image: url("./assets/ui/skin-v1/button-se
 }
 [data-scene="exchange"] #inventory-list article {
   grid-template-columns: minmax(0,1.4fr) .75fr 1.2fr 100px;
-  min-height: 0; align-items: center;
+  min-height: 0; align-items: center; gap: 8px; padding: 5px 10px;
   border: 8px solid transparent;
   border-image: url("./assets/ui/skin-v1/status-card.png") 34 fill / 8px / 0 stretch;
   background: transparent;
+}
+[data-scene="exchange"] #inventory-list article > label {
+  grid-column: 1; min-width: 0; display: flex; align-items: center; gap: 6px;
+  overflow: hidden; white-space: nowrap;
+}
+[data-scene="exchange"] #inventory-list article > label input { flex: 0 0 auto; }
+[data-scene="exchange"] #inventory-list article > label b,
+[data-scene="exchange"] #inventory-list article > label ~ span {
+  min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+[data-scene="exchange"] #inventory-list article > button {
+  width: 100%; min-width: 0; height: clamp(30px,3.4vh,40px); padding: 3px 7px;
 }
 [data-scene="exchange"] #inventory-list .empty-inventory-slot {
   grid-template-columns: 46px 54px minmax(0,1fr);
