@@ -1518,6 +1518,7 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
 [data-scene="tavern"] #tavern-detail > p { flex: 0 0 auto; margin: 4px 0 7px; line-height: 1.35; }
 [data-scene="tavern"] .tavern-live-result {
   flex: 1 1 auto; min-height: 0; max-height: none; overflow: auto;
+  margin-right: 8px; margin-left: 8px; box-sizing: border-box;
   font-size: clamp(12px,1vw,16px);
 }
 [data-scene="tavern"] .tavern-live-result li {
