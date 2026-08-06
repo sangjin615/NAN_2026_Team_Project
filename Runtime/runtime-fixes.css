@@ -1495,6 +1495,10 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
   display: flex; flex-direction: column; overflow: hidden;
 }
 [data-scene="tavern"] .tavern-market { left: 31.5%; width: 37.8%; }
+[data-scene="tavern"] .tavern-market {
+  bottom: 8.5%;
+  overflow: hidden;
+}
 [data-scene="tavern"] #tavern-owned { left: 71.3%; right: auto; width: 27.3%; top: 27.4%; }
 [data-scene="tavern"] .tavern-brokers h3,
 [data-scene="tavern"] #tavern-detail > h3,
@@ -1525,7 +1529,6 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
 [data-scene="tavern"] .tavern-market .tavern-rule { bottom: 24px; }
 
 /* Tavern no longer sells information: the center shows live data and the right explains upgrades. */
-[data-scene="tavern"] .tavern-market,
 [data-scene="tavern"] #tavern-owned { overflow: auto; }
 [data-scene="tavern"] #tavern-detail {
   display: flex; flex-direction: column; height: 100%; min-height: 0; overflow: hidden;
@@ -3063,18 +3066,6 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
 }
 [data-scene="hub"] #market-dialog #market-indices:has(.market-incident) .market-sparklines { bottom: 34%; }
 [data-scene="hub"] #market-dialog .market-spark { height: auto; }
-[data-scene="hub"] #market-dialog .market-incident-visuals span {
-  position: absolute; z-index: 1; top: 0; width: 12%; height: 15%;
-  display: grid; place-items: center;
-}
-[data-scene="hub"] #market-dialog .market-incident-visuals span:first-child { left: 4%; }
-[data-scene="hub"] #market-dialog .market-incident-visuals span:nth-child(2) { right: 4%; }
-[data-scene="hub"] #market-dialog .market-incident-visuals span:only-child { left: auto; right: 4%; }
-[data-scene="hub"] #market-dialog .market-incident-visuals img {
-  width: 74%; height: 74%; object-fit: contain;
-  transform: translate(var(--sprite-anchor-x), var(--sprite-anchor-y));
-  filter: sepia(.18) drop-shadow(0 3px 2px #51361d66);
-}
 [data-scene="hub"] #market-dialog .market-incident {
   position: absolute; left: 6%; right: 6%; bottom: 5%;
   margin: 0; padding: 1.4% 3% 1.6%;
@@ -3127,6 +3118,54 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
 }
 [data-scene="guild"] #loan-preview {
   margin-top: 8px; color: #684519; font-weight: 700;
+}
+
+/* Guild: use the signboards painted into the scene background. */
+[data-scene="guild"] .guild-heading { display: none !important; }
+[data-scene="guild"] #guild-collateral-list > header {
+  background: transparent !important;
+  border: 0 !important;
+  border-image: none !important;
+  box-shadow: none !important;
+}
+[data-scene="guild"] #guild-collateral-list > footer { padding: 10px 22px 16px 8px; }
+[data-scene="guild"] #guild-limit-total {
+  margin-right: 4px;
+  transform: translateY(-3px);
+}
+
+/* Market news: align the masthead, quotes, and article copy. */
+[data-scene="hub"] #market-dialog #market-indices > strong {
+  left: 21%; right: 21%; top: 6%; height: 12%;
+  color: #4d3521;
+  font-family: "Batang", "바탕", "Noto Serif KR", serif;
+  font-size: clamp(24px, 2.25vw, 36px); font-weight: 700; line-height: 1;
+  letter-spacing: .02em; text-shadow: none;
+}
+[data-scene="hub"] #market-dialog .market-sparklines {
+  left: 6%; right: 6%; top: 25.5%; gap: 4.5% 7%;
+}
+[data-scene="hub"] #market-dialog .market-quote {
+  grid-template-columns: clamp(28px, 2.2vw, 38px) max-content 1fr auto;
+  gap: 7px;
+}
+[data-scene="hub"] #market-dialog .market-incident {
+  left: 8%; right: 8%; bottom: 5.5%; padding: 1.3% 3% 1.5%;
+}
+[data-scene="hub"] #market-dialog .market-incident small { letter-spacing: .12em; }
+[data-scene="hub"] #market-dialog .market-incident h4 { margin: 4px 0 5px; line-height: 1.15; }
+[data-scene="hub"] #market-dialog .market-incident p { line-height: 1.45; }
+[data-scene="hub"] #close-market-dialog {
+  right: 5.8%; top: 5.8%; width: 5.5%; height: 7.5%;
+  min-width: 38px; min-height: 34px; line-height: 1;
+  outline: 0 !important; box-shadow: none !important;
+}
+
+/* Final alignment for the exchange command row and quest paper boundary. */
+[data-scene="exchange"] .actions { left: 29%; }
+[data-scene="quests"] .office-layout .quest-grid {
+  bottom: 5%;
+  gap: 1.4%;
 }
 
 /* Center the catalog book and its primary action on the same scene axis. */
@@ -3208,6 +3247,15 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
 }
 [data-scene="settlement"] #next-day img {
   width: clamp(38px, 3.5vw, 58px); height: clamp(38px, 3.5vw, 58px);
+}
+
+/* Settlement content alignment inside the painted panel headers. */
+[data-scene="settlement"] .settlement-lots article:first-of-type { margin-top: 18%; }
+[data-scene="settlement"] .settlement-finance p:first-of-type {
+  margin-top: clamp(8px, .75vw, 12px);
+}
+[data-scene="settlement"] .settlement-progress h4 {
+  transform: translateY(clamp(20px, 1.7vw, 27px));
 }
 
 /* Replace the temporary City HUD glyphs with the normalized production icons. */
