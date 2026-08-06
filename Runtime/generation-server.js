@@ -13,6 +13,7 @@ const reportRoot = path.join(runtimeRoot, 'reports', 'live-generation');
 const text = { type: 'string', minLength: 1 };
 const boundedText = (maxLength) => ({ type: 'string', minLength: 1, maxLength });
 const fixedObject = (properties) => ({ type: 'object', properties, required: Object.keys(properties), additionalProperties: false });
+const dailyLotSchema = ({ lotId }) => fixedObject({ lotId: { const: lotId }, displayName: boundedText(20), description: boundedText(70), rumor: boundedText(45), setHint: boundedText(25), npcReaction: boundedText(45) });
 
 function outputSchema(request) {
   if (request.mode === 'run-blueprint') return fixedObject({
@@ -25,7 +26,7 @@ function outputSchema(request) {
   });
   return fixedObject({
     schemaVersion: { const: '1.0' }, day: { const: request.day }, marketHeadline: text,
-    lots: { type: 'array', prefixItems: request.lots.map(({ lotId }) => fixedObject({ lotId: { const: lotId }, displayName: boundedText(20), description: boundedText(70), rumor: boundedText(45), setHint: boundedText(25), npcReaction: boundedText(45) })), minItems: request.lots.length, maxItems: request.lots.length },
+    lots: { type: 'array', prefixItems: request.lots.map(dailyLotSchema), minItems: request.lots.length, maxItems: request.lots.length },
   });
 }
 
@@ -111,6 +112,19 @@ export function qualityErrors(request, output) {
   return [...new Set(errors)];
 }
 
+export function dailyRepairIndices(request, output) {
+  const all = request.lots.map((_, index) => index);
+  if (!Array.isArray(output?.lots) || output.lots.length !== request.lots.length) return all;
+  if (JSON.stringify(output.lots.map(({ lotId }) => lotId)) !== JSON.stringify(request.lots.map(({ lotId }) => lotId))) return all;
+  if (new Set(output.lots.map(({ description }) => description)).size !== output.lots.length) return all;
+  const errors = qualityErrors(request, output);
+  if (errors.some((error) => error.startsWith('repeated clause'))) return all;
+  return [...new Set(errors.flatMap((error) => {
+    const match = error.match(/^lot (\d+) /);
+    return match ? [Number(match[1]) - 1] : [];
+  }))];
+}
+
 export function validateOutput(request, output) {
   if (output.schemaVersion !== '1.0') throw new Error('schemaVersion mismatch');
   const serialized = JSON.stringify(output);
@@ -137,7 +151,8 @@ async function preserve(request, attempt, result) {
   if (process.env.GENERATION_LOG === 'off') return;
   await mkdir(reportRoot, { recursive: true });
   const safeSeed = String(request.runSeed || 'unknown').replace(/[^a-zA-Z0-9_-]/g, '_').slice(0, 60);
-  const setSuffix = result.setId ? `-${String(result.setId).replace(/[^a-zA-Z0-9_-]/g, '_')}` : '';
+  const itemId = result.setId || result.lotId;
+  const setSuffix = itemId ? `-${String(itemId).replace(/[^a-zA-Z0-9_-]/g, '_')}` : '';
   await writeFile(path.join(reportRoot, `${safeSeed}-${request.mode}${setSuffix}-d${request.day || 0}-attempt-${attempt}.json`), JSON.stringify(result, null, 2));
 }
 
@@ -212,23 +227,35 @@ async function generateBlueprint(request) {
 
 async function generate(request) {
   if (request.mode === 'run-blueprint') return generateBlueprint(request);
-  let lastError;
-  for (let attempt = 1; attempt <= 2; attempt += 1) {
-    const startedAt = Date.now();
-    let output;
+  const startedAt = Date.now();
+  let output; let firstError;
+  try {
+    output = await callModel({ request, schema: outputSchema(request), prompt: `${contract}\nINPUT:\n${JSON.stringify(request)}`, attempt: 1 });
+    validateOutput(request, output);
+    await preserve(request, 1, { valid: true, stage: 'full', model, latencyMs: Date.now() - startedAt, request, output });
+    return output;
+  } catch (error) {
+    firstError = error;
+    await preserve(request, 1, { valid: false, stage: 'full', model, latencyMs: Date.now() - startedAt, request, output, error: error.message });
+  }
+
+  const repairIndices = dailyRepairIndices(request, output);
+  if (!output?.lots || repairIndices.length === 0) throw firstError;
+  for (const index of repairIndices) {
+    const lot = request.lots[index]; const repairStartedAt = Date.now(); let repaired;
     try {
-      const retryFeedback = attempt > 1 ? `\nRETRY_ERRORS:\n${lastError.message}` : '';
-      const prompt = `${contract}${retryFeedback}\nINPUT:\n${JSON.stringify(request)}`;
-      output = await callModel({ request, schema: outputSchema(request), prompt, attempt });
-      validateOutput(request, output);
-      await preserve(request, attempt, { valid: true, model, latencyMs: Date.now() - startedAt, request, output });
-      return output;
+      const prompt = `${contract}\nRETRY_ERRORS:\n${firstError.message}\nGenerate exactly one corrected LOT record for lot ${index + 1}. The description must be one complete sentence of 45 Korean characters or fewer and end exactly with one of: 남아 있다., 보인다., 확인된다., 이어진다., 드러난다. Keep setHint at 18 Korean characters or fewer.\nINPUT LOT:\n${JSON.stringify(lot)}`;
+      repaired = await callModel({ request, schema: dailyLotSchema(lot), prompt, attempt: 2 });
+      output.lots[index] = repaired;
+      await preserve(request, 2, { valid: true, stage: 'repair', lotId: lot.lotId, model, latencyMs: Date.now() - repairStartedAt, request: lot, output: repaired });
     } catch (error) {
-      lastError = error;
-      await preserve(request, attempt, { valid: false, model, latencyMs: Date.now() - startedAt, request, output, error: error.message });
+      await preserve(request, 2, { valid: false, stage: 'repair', lotId: lot.lotId, model, latencyMs: Date.now() - repairStartedAt, request: lot, output: repaired, error: error.message });
+      throw error;
     }
   }
-  throw lastError;
+  validateOutput(request, output);
+  await preserve(request, 2, { valid: true, stage: 'merged-repair', model, latencyMs: Date.now() - startedAt, request, output });
+  return output;
 }
 
 const cors = { 'access-control-allow-origin': '*', 'access-control-allow-methods': 'POST, GET, OPTIONS', 'access-control-allow-headers': 'content-type' };

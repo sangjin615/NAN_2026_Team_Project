@@ -2,6 +2,7 @@ import { loadCatalog, spriteUrl } from './catalog.js';
 import { createRunSchedule, normalizeVisualEffects, validateSchedule } from './schedule.js';
 import { createSetGraph } from './set-graph.js';
 import { GenerationBuffer } from './generation-buffer.js';
+import { resolveGenerationApiConfig } from './generation-api-config.js';
 import { GenerationApiProvider } from './generation-api-provider.js';
 import { SaveStore } from './save-store.js';
 import { advanceDay, createInitialState, prepareAuctionEntry, resolveLot } from './game-state.js';
@@ -170,8 +171,8 @@ function updateRunLoading(progress, message, completedSteps = [], activeStep = '
 async function boot() {
   try {
     await adapter.loadContract();
-    const apiConfig = await fetch('./data/api-config.json').then((response) => response.json());
-    generation = new GenerationBuffer({ provider: new GenerationApiProvider(apiConfig) });
+    const publicApiConfig = await fetch('./data/api-config.json').then((response) => response.json());
+    generation = new GenerationBuffer({ provider: new GenerationApiProvider(resolveGenerationApiConfig(publicApiConfig)) });
     [catalog, balance] = await Promise.all([
       loadCatalog(),
       fetch('./data/balance.json').then((response) => response.json()),

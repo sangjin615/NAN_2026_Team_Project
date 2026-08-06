@@ -1,12 +1,17 @@
 export class GenerationApiProvider {
   constructor(config) { this.config = config; }
+  timeoutFor(mode) {
+    if (mode === 'run-blueprint') return this.config.blueprintTimeoutMs ?? this.config.timeoutMs ?? 8000;
+    if (mode === 'daily-content') return this.config.dayTimeoutMs ?? this.config.timeoutMs ?? 8000;
+    return this.config.timeoutMs ?? 8000;
+  }
   async request(body, timeoutMs = this.config.timeoutMs || 8000) {
     if (!this.config?.enabled || !this.config.endpoint) throw new Error('generation API is disabled');
     let lastError;
     for (let attempt = 0; attempt <= (this.config.retries || 0); attempt += 1) {
       const controller = new AbortController(); const timer = setTimeout(() => controller.abort(), timeoutMs);
       try {
-        const response = await fetch(this.config.endpoint, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body), signal: controller.signal });
+        const response = await fetch(this.config.endpoint, { method: 'POST', headers: { 'content-type': 'application/json', ...(this.config.requestHeaders || {}) }, body: JSON.stringify(body), signal: controller.signal });
         if (!response.ok) throw new Error(`generation API ${response.status}`);
         return await response.json();
       } catch (error) { lastError = error; } finally { clearTimeout(timer); }
@@ -31,8 +36,7 @@ export class GenerationApiProvider {
       })),
       marketSignals,
     };
-    const blueprintTimeoutMs = this.config.blueprintTimeoutMs ?? this.config.timeoutMs ?? 8000;
-    const payload = await this.request(request, blueprintTimeoutMs);
+    const payload = await this.request(request, this.timeoutFor(request.mode));
     if (payload.schemaVersion !== request.schemaVersion || payload.runSeed !== runSeed || !Array.isArray(payload.marketArc) || payload.marketArc.length !== 12) throw new Error('blueprint response contract mismatch');
     if (JSON.stringify(payload.sets?.map(({ setId }) => setId)) !== JSON.stringify(request.sets.map(({ setId }) => setId))) throw new Error('blueprint set IDs mismatch');
     if (payload.sets.some((set) => !set.incidentTitle || !set.incidentSummary || !set.newspaperLead)) throw new Error('blueprint incident copy is incomplete');
@@ -51,7 +55,7 @@ export class GenerationApiProvider {
       },
       lots: lots.map(({ lotId, baseName, category, grade, setId }) => ({ lotId, baseName, category, grade, setId })),
     };
-    const payload = await this.request(request);
+    const payload = await this.request(request, this.timeoutFor(request.mode));
     if (payload.schemaVersion !== request.schemaVersion || payload.day !== day || !Array.isArray(payload.lots) || payload.lots.length !== lots.length) throw new Error('generation response contract mismatch');
     if (JSON.stringify(payload.lots.map(({ lotId }) => lotId)) !== JSON.stringify(request.lots.map(({ lotId }) => lotId))) throw new Error('generation LOT IDs mismatch');
     if (payload.lots.some((lot) => !lot.displayName || !lot.description)) throw new Error('generation response contains invalid LOT data');

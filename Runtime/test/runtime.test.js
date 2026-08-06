@@ -8,8 +8,9 @@ import { createInitialState, resolveLot, advanceDay, prepareAuctionEntry } from 
 import { resolveAuction, sellAll, sellItems, quoteItemsSale, bestSetMultiplier, acceptQuest, takeLoan, botBidForLot, estimateBotDailyAssets, openingBotBid, missedDeadline, isBankrupt, deliverQuestItem, questCompletionBonus, refreshDailyQuestOffers, repayLoanEarly, selectDistinctBotInterests } from '../src/systems.js';
 import { recordEvent, runMetrics } from '../src/telemetry.js';
 import { GenerationApiProvider } from '../src/generation-api-provider.js';
+import { assertPublicGenerationConfig, resolveGenerationApiConfig } from '../src/generation-api-config.js';
 import { SaveStore } from '../src/save-store.js';
-import { qualityErrors, setIncidentErrors } from '../generation-server.js';
+import { dailyRepairIndices, qualityErrors, setIncidentErrors } from '../generation-server.js';
 import { RELIC_AUCTION_DAY, RUN_DAYS } from '../src/constants.js';
 import { mergeOwnedRelicIds } from '../src/relic-ownership.js';
 import { extendAuctionDeadline, formatAuctionTime } from '../src/auction-clock.js';
@@ -470,6 +471,31 @@ test('generation API sends only narrative identifiers and accepts fixed-order co
   } finally { globalThis.fetch = originalFetch; }
 });
 
+test('generation API separates operation timeouts and accepts auth only from runtime config', async () => {
+  const publicConfig = { enabled: false, endpoint: '/generate', timeoutMs: 15000, blueprintTimeoutMs: 12000, dayTimeoutMs: 30000 };
+  const config = resolveGenerationApiConfig(publicConfig, { enabled: true, requestHeaders: { authorization: 'Bearer runtime-only' } });
+  assert.equal(config.enabled, true);
+  assert.equal(config.endpoint, '/generate');
+  assert.throws(() => assertPublicGenerationConfig({ ...publicConfig, apiKey: 'must-not-embed' }), /must not be stored/);
+  assert.throws(() => assertPublicGenerationConfig({ ...publicConfig, requestHeaders: { authorization: 'must-not-embed' } }), /must not be stored/);
+
+  const provider = new GenerationApiProvider(config);
+  assert.equal(provider.timeoutFor('run-blueprint'), 12000);
+  assert.equal(provider.timeoutFor('daily-content'), 30000);
+
+  const originalFetch = globalThis.fetch;
+  let observedHeaders;
+  globalThis.fetch = async (_url, options) => {
+    observedHeaders = options.headers;
+    return { ok: true, async json() { return { ok: true }; } };
+  };
+  try {
+    await provider.request({ mode: 'probe' }, 1000);
+    assert.equal(observedHeaders.authorization, 'Bearer runtime-only');
+    assert.equal(observedHeaders['content-type'], 'application/json');
+  } finally { globalThis.fetch = originalFetch; }
+});
+
 test('generation copy quality rejects supernatural, awkward and repeated catalog prose', () => {
   const request = { mode: 'daily-content', lots: Array.from({ length: 8 }, (_, index) => ({ baseName: `물품 ${index + 1}` })) };
   const lot = (description, index) => ({ displayName: request.lots[index].baseName, description, rumor: '오래된 창고에서 발견됐다는 소문이 돈다.', setHint: '같은 각인', npcReaction: '중개인이 표면의 흠집을 살핀다.' });
@@ -503,6 +529,21 @@ test('generation copy quality rejects supernatural, awkward and repeated catalog
     '육각 몸체와 황동 뚜껑의 마모 정도가 서로 다르게 보인다.',
   ];
   assert.deepEqual(qualityErrors(request, { lots: goodDescriptions.map(lot) }), []);
+});
+
+test('daily generation repair targets local errors but repairs all lots for global duplication', () => {
+  const request = {
+    mode: 'daily-content',
+    lots: Array.from({ length: 8 }, (_, index) => ({ lotId: `lot-${index + 1}`, baseName: `물품 ${index + 1}`, category: 'MET' })),
+  };
+  const validLot = (index) => ({ lotId: `lot-${index + 1}`, displayName: `물품 ${index + 1}`, description: `금속 표면에 ${index + 1}번 마모 흔적이 남아 있다.`, rumor: '창고 장부에 기록됐다는 소문이 있다.', setHint: '같은 인계 표식', npcReaction: '표면의 마모를 자세히 살핀다.' });
+  const localError = { lots: Array.from({ length: 8 }, (_, index) => validLot(index)) };
+  localError.lots[3].description = '매우 특별한 물품이다.';
+  assert.deepEqual(dailyRepairIndices(request, localError), [3]);
+
+  const duplicate = { lots: Array.from({ length: 8 }, (_, index) => validLot(index)) };
+  duplicate.lots[7].description = duplicate.lots[0].description;
+  assert.deepEqual(dailyRepairIndices(request, duplicate), [0, 1, 2, 3, 4, 5, 6, 7]);
 });
 
 test('set incident quality requires Korean copy, member names, and distinct grounded reporting', () => {

@@ -96,11 +96,18 @@ day3 한 회는 중복 설명 검출 때문에 8 LOT 전체를 복구했다. 따
 
 단일 모델만 운영해야 한다면 qwen3:14b가 안전하다. 단계별 모델 라우팅이 가능하면 위 조합이 더 빠르고 안정적이다.
 
+## Runtime API 적용 상태
+
+- `generation-server.js`의 일차 생성 경로를 8 LOT 1차 생성 후 오류 LOT만 저온으로 한 번 복구하도록 변경했다. 중복 설명처럼 전체 출력에 걸친 오류는 8 LOT를 한 번 복구하며, 최종 검증 실패 시 기존 클라이언트 fallback이 게임 진행을 막지 않는다.
+- 실제 서버 HTTP 경로를 `qwen3:14b`와 day2 입력으로 호출한 결과 8 LOT가 14.6초에 production 검증을 통과했다.
+- 공개 설정은 블루프린트 15초, 일차 생성 30초로 분리했다. 기존 기록의 일차 생성 최대 22.2초를 수용하면서 블루프린트의 짧은 실패 감지는 유지한다.
+- `api-config.json`에는 인증 비밀을 둘 수 없다. standalone 빌드는 `apiKey`, `token`, `authorization`, `requestHeaders` 같은 키를 발견하면 실패한다.
+- 로컬·사내 게이트웨이에서만 실행 시점의 `window.__NAN_GENERATION_API_CONFIG__`로 `requestHeaders`를 주입할 수 있다. 공개 배포에서는 브라우저에 유료 API 키를 주입하지 말고 동일 출처 백엔드 프록시가 키를 보관해야 한다.
+
 ## API 연결 전 남은 검증
 
-- 서로 다른 seed와 2~3개 일차 입력으로 일차 콘텐츠 반복 범위를 넓힌다.
-- 선택 LOT 복구를 `generation-server.js` production 경로에 적용하고 Runtime API 통합 테스트를 추가한다.
-- 블루프린트와 일차 콘텐츠에 각각 독립 timeout과 provenance를 기록한다.
+- 더 다양한 seed로 일차 콘텐츠와 블루프린트 반복 범위를 넓힌다.
+- 단계별 모델 및 fallback provenance를 운영 텔레메트리에 기록한다.
 - 로컬에서 최종 템플릿을 고정한 뒤 유료 API 후보 1~2개만 소량 교차 검증한다.
 - 유료 API 비교는 스키마 통과율, production 통과율, 재시도율, 입력·출력 토큰, 실제 비용을 같은 보고서 형식으로 기록한다.
 
