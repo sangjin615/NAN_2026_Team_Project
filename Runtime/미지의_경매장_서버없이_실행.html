@@ -1247,7 +1247,7 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
 }
 [data-scene="auction"] #auction-participants {
   position: absolute; left: 77%; top: 11%; width: 17.2%; height: 63.4%;
-  padding: 34px 20px 18px; box-sizing: border-box; color: #2b2015; overflow: hidden;
+  padding: clamp(48px, 5vh, 58px) 20px 18px; box-sizing: border-box; color: #2b2015; overflow: hidden;
 }
 [data-scene="auction"] #auction-participants h3 {
   position: absolute; left: 0; right: 0; top: 2%;
@@ -1273,7 +1273,8 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
 [data-scene="auction"] .participant.is-leading b { color: #377b2b; }
 [data-scene="auction"] #auction-feed {
   position: absolute; left: 6.1%; top: 61.4%; width: 13.6%; height: 30.7%;
-  margin: 0; padding: 44px 16px 12px; box-sizing: border-box; overflow: hidden;
+  margin: 0; padding: 44px 16px 12px; box-sizing: border-box; overflow-x: hidden; overflow-y: auto;
+  scrollbar-width: thin; scrollbar-color: #9b7136 #17130f;
   color: #f3e6cc; font-size: clamp(9px, .75vw, 12px);
 }
 [data-scene="auction"] #auction-feed p { margin: 4px 0; }
@@ -3409,6 +3410,11 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
     ];
     return bids.map((bot) => ({ ...bot, maxBid: Math.max(0, Math.round(Math.min(bot.cap, publicEstimate * (bot.target === lot.category ? 1.18 : 1) * ({ COMMON: 0.9, RARE: 1, EPIC: 1.05, LEGENDARY: 1.1 }[lot.grade] ?? 1) * bot.factor))) }));
   }
+  function openingBotBid(bots, openingPrice) {
+    const bidder = [...bots].filter((bot) => bot.maxBid > 0).sort((a, b) => b.maxBid - a.maxBid)[0];
+    if (!bidder) return null;
+    return { bidder, price: Math.max(1, Math.min(openingPrice, bidder.maxBid)) };
+  }
   function estimateBotDailyAssets({ state: state2, balance: balance2, day = state2.day }) {
     const lots = state2.schedule?.days?.[day - 1]?.lots || [];
     const totals = {};
@@ -4430,7 +4436,9 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
       const generatedFeed = [lot.content.rumor, lot.content.setHint, lot.content.npcReaction].filter(Boolean);
       const dailyAssets = estimateBotDailyAssets({ state, balance });
       const bots = botBidForLot({ lot, day: state.day, balance, marketIndex, seed: state.seed }).map((bot) => ({ ...bot, maxBid: Math.min(bot.maxBid, dailyAssets[bot.id]?.remaining || 0) }));
-      state.auctionSession = { lotId: lot.lotId, currentPrice: Math.max(1, Math.round(lot.pricing.basePrice * balance.auction.startBidRatio)), leader: null, bots, deadline: Date.now() + 15e3, feed: [...expired ? [`\uAE30\uD55C\uC774 \uC9C0\uB09C \uC758\uB8B0 ${expired}\uAC74\uC774 \uB9CC\uB8CC\uB410\uC2B5\uB2C8\uB2E4.`] : ["\uACBD\uB9E4\uAC00 \uC2DC\uC791\uB418\uC5C8\uC2B5\uB2C8\uB2E4."], ...generatedFeed] };
+      const opening = openingBotBid(bots, Math.max(1, Math.round(lot.pricing.basePrice * balance.auction.startBidRatio)));
+      const openingFeed = opening ? [`${opening.bidder.name} ${money(opening.price)}`] : ["\uC785\uCC30 \uAC00\uB2A5\uD55C \uC0C1\uB300\uAC00 \uC5C6\uC2B5\uB2C8\uB2E4."];
+      state.auctionSession = { lotId: lot.lotId, currentPrice: opening?.price || 1, leader: opening?.bidder.id || null, bots, deadline: Date.now() + 15e3, feed: [...expired ? [`\uAE30\uD55C\uC774 \uC9C0\uB09C \uC758\uB8B0 ${expired}\uAC74\uC774 \uB9CC\uB8CC\uB410\uC2B5\uB2C8\uB2E4.`] : ["\uACBD\uB9E4\uAC00 \uC2DC\uC791\uB418\uC5C8\uC2B5\uB2C8\uB2E4."], ...generatedFeed, ...openingFeed] };
     }
     state.auctionSession.deadline ||= Date.now() + 15e3;
     adapter.showScene("auction");
@@ -4443,7 +4451,9 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
     adapter.setText("cash", money(state.cash));
     adapter.setSprite("current-lot", spriteUrl(lot, lot.grade));
     adapter.setEffects("current-lot", normalizeVisualEffects(lot.category, lot.grade, lot.visualEffects));
-    document.querySelector("#auction-feed").innerHTML = state.auctionSession.feed.slice(-4).map((line) => `<p>${escapeHtml(line)}</p>`).join("");
+    const auctionFeed = document.querySelector("#auction-feed");
+    auctionFeed.innerHTML = state.auctionSession.feed.map((line) => `<p>${escapeHtml(line)}</p>`).join("");
+    auctionFeed.scrollTop = auctionFeed.scrollHeight;
     const participants = [
       { name: "\uB2F9\uC2E0", budget: state.cash, leader: state.auctionSession.leader === "player", player: true },
       ...state.auctionSession.bots.map((bot) => ({ id: bot.id, name: bot.name, budget: estimateBotDailyAssets({ state, balance })[bot.id]?.remaining || 0, leader: state.auctionSession.leader === bot.id }))

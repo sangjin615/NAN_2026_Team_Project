@@ -56,6 +56,12 @@ export function botBidForLot({ lot, day, balance, marketIndex, seed }) {
   return bids.map((bot) => ({ ...bot, maxBid: Math.max(0, Math.round(Math.min(bot.cap, publicEstimate * (bot.target === lot.category ? 1.18 : 1) * ({ COMMON: 0.9, RARE: 1, EPIC: 1.05, LEGENDARY: 1.1 }[lot.grade] ?? 1) * bot.factor))) }));
 }
 
+export function openingBotBid(bots, openingPrice) {
+  const bidder = [...bots].filter((bot) => bot.maxBid > 0).sort((a, b) => b.maxBid - a.maxBid)[0];
+  if (!bidder) return null;
+  return { bidder, price: Math.max(1, Math.min(openingPrice, bidder.maxBid)) };
+}
+
 export function estimateBotDailyAssets({ state, balance, day = state.day }) {
   const lots = state.schedule?.days?.[day - 1]?.lots || [];
   const totals = {};

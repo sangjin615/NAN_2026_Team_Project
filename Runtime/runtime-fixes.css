@@ -1239,7 +1239,7 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
 }
 [data-scene="auction"] #auction-participants {
   position: absolute; left: 77%; top: 11%; width: 17.2%; height: 63.4%;
-  padding: 34px 20px 18px; box-sizing: border-box; color: #2b2015; overflow: hidden;
+  padding: clamp(48px, 5vh, 58px) 20px 18px; box-sizing: border-box; color: #2b2015; overflow: hidden;
 }
 [data-scene="auction"] #auction-participants h3 {
   position: absolute; left: 0; right: 0; top: 2%;
@@ -1265,7 +1265,8 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
 [data-scene="auction"] .participant.is-leading b { color: #377b2b; }
 [data-scene="auction"] #auction-feed {
   position: absolute; left: 6.1%; top: 61.4%; width: 13.6%; height: 30.7%;
-  margin: 0; padding: 44px 16px 12px; box-sizing: border-box; overflow: hidden;
+  margin: 0; padding: 44px 16px 12px; box-sizing: border-box; overflow-x: hidden; overflow-y: auto;
+  scrollbar-width: thin; scrollbar-color: #9b7136 #17130f;
   color: #f3e6cc; font-size: clamp(9px, .75vw, 12px);
 }
 [data-scene="auction"] #auction-feed p { margin: 4px 0; }

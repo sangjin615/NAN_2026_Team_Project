@@ -5,7 +5,7 @@ import { createRunSchedule, normalizeVisualEffects, validateSchedule, VISUAL_EFF
 import { createSetGraph } from '../src/set-graph.js';
 import { FallbackContentProvider, GenerationBuffer } from '../src/generation-buffer.js';
 import { createInitialState, resolveLot, advanceDay, prepareAuctionEntry } from '../src/game-state.js';
-import { resolveAuction, appraiseAll, appraiseItem, sellAll, sellItems, quoteItemsSale, bestSetMultiplier, acceptQuest, takeLoan, botBidForLot, estimateBotDailyAssets, buyInformation, missedDeadline, isBankrupt, deliverQuestItem, refreshDailyQuestOffers, repayLoanEarly } from '../src/systems.js';
+import { resolveAuction, appraiseAll, appraiseItem, sellAll, sellItems, quoteItemsSale, bestSetMultiplier, acceptQuest, takeLoan, botBidForLot, estimateBotDailyAssets, openingBotBid, buyInformation, missedDeadline, isBankrupt, deliverQuestItem, refreshDailyQuestOffers, repayLoanEarly } from '../src/systems.js';
 import { recordEvent, runMetrics } from '../src/telemetry.js';
 import { GenerationApiProvider } from '../src/generation-api-provider.js';
 import { SaveStore } from '../src/save-store.js';
@@ -320,6 +320,13 @@ test('exchange applies only the highest matching set bonus', () => {
   assert.equal(bestSetMultiplier(highGradeItems, balance, [], 0), 1.4);
   const allCategories = ['CER', 'CLK', 'PNT', 'BOK', 'MET', 'JEW'].map((category) => ({ category, grade: 'COMMON', sold: false, collateral: false }));
   assert.equal(bestSetMultiplier(allCategories, balance, [], 0), 1.5);
+});
+
+test('an opponent places the opening bid without exceeding its budget', () => {
+  const bots = [{ id: 'a', name: 'A', maxBid: 900 }, { id: 'b', name: 'B', maxBid: 1400 }];
+  assert.deepEqual(openingBotBid(bots, 1000), { bidder: bots[1], price: 1000 });
+  assert.deepEqual(openingBotBid(bots, 1800), { bidder: bots[1], price: 1400 });
+  assert.equal(openingBotBid([{ id: 'a', maxBid: 0 }], 1000), null);
 });
 
 test('generation API sends only narrative identifiers and accepts fixed-order content', async () => {
