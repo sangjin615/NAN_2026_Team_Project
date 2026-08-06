@@ -395,9 +395,8 @@ function renderExchange(message = '') {
   const exchangeItems = ownedItems();
   const maxStorage = Math.max(...balance.shop.storage);
   const occupiedCards = exchangeItems.map((item) => `
-    <article><label><input type="checkbox" data-item-select="${item.lotId}"> <b>${item.name}</b></label>
-    <span>${gradeLabel(item.grade)} · ${categoryLabel(item.category)}</span><span>매입 ${money(item.paid)} · ${item.appraised ? `감정 ${money(item.trueValue)} ±${money(item.appraisalRange)}` : '미감정'}</span>
-    <button data-sell-item="${item.lotId}" ${item.collateral ? 'disabled' : ''}>즉시 처분</button></article>`).join('');
+    <article><label><input type="checkbox" data-item-select="${item.lotId}" ${item.collateral ? 'disabled' : ''}> <b>${item.name}</b></label>
+    <span>${gradeLabel(item.grade)} · ${categoryLabel(item.category)}</span><span>매입 ${money(item.paid)} · ${item.appraised ? `감정 ${money(item.trueValue)} ±${money(item.appraisalRange)}` : '미감정'}</span></article>`).join('');
   const emptyCards = Array.from({ length: Math.max(0, state.storage - exchangeItems.length) }, (_, index) => `
     <article class="empty-inventory-slot" aria-label="빈 보관칸 ${exchangeItems.length + index + 1}">
       <span class="empty-slot-number">${String(exchangeItems.length + index + 1).padStart(2, '0')}</span>
@@ -414,11 +413,6 @@ function renderExchange(message = '') {
     </article>`;
   }).join('');
   document.querySelector('#inventory-list').innerHTML = occupiedCards + emptyCards + lockedCards;
-  document.querySelectorAll('[data-sell-item]').forEach((button) => button.onclick = () => {
-    const revenue = sellItems(state, balance, [button.dataset.sellItem]);
-    if (revenue) audio.playSfx('sell');
-    renderExchange(`${money(revenue)}에 처분했습니다.`);
-  });
   document.querySelector('#exchange-market').innerHTML = `<h3>최근 시세</h3><div class="market-rates">${Object.entries(state.marketPath).map(([key, path]) => {
     const now = path[state.day - 1]; const previous = state.day > 1 ? path[state.day - 2] : 1; const delta = now - previous;
     const trend = delta >= 0 ? 'rise' : 'fall';
@@ -430,6 +424,10 @@ function renderExchange(message = '') {
     const quote = quoteItemsSale(state, balance, ids);
     const groups = Object.values(Object.groupBy(items, (item) => item.category));
     document.querySelector('#sell-selected').disabled = !quote.count;
+    const selectable = [...document.querySelectorAll('[data-item-select]:not(:disabled)')];
+    const allSelected = selectable.length > 0 && selectable.every((input) => input.checked);
+    document.querySelector('#select-all-items').disabled = !selectable.length;
+    document.querySelector('#select-all-items').textContent = allSelected ? '모두 해제' : '모두 선택';
     const activeRules = {
       'same-2': groups.some((group) => group.length >= 2),
       'same-3': groups.some((group) => group.length >= 3),
@@ -444,7 +442,12 @@ function renderExchange(message = '') {
       : `적용 보너스 없음 · 최종 ×${quote.multiplier.toFixed(2)} · 예상 판매액 ${money(quote.revenue)}`;
   };
   document.querySelectorAll('[data-item-select]').forEach((input) => { input.onchange = syncBulkActions; });
-  document.querySelector('#sell-selected').textContent = '판매';
+  document.querySelector('#select-all-items').onclick = () => {
+    const selectable = [...document.querySelectorAll('[data-item-select]:not(:disabled)')];
+    const shouldSelect = !selectable.every((input) => input.checked);
+    selectable.forEach((input) => { input.checked = shouldSelect; });
+    syncBulkActions();
+  };
   syncBulkActions();
   document.querySelector('#exchange-message').textContent = '';
   showActionToast(message);

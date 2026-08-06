@@ -631,7 +631,7 @@ button.secondary:disabled { background-image: url("./assets/ui/skin-v1/button-se
   text-shadow: 0 2px 2px #0009; pointer-events: none;
 }
 [data-scene="exchange"] #inventory-list article {
-  grid-template-columns: minmax(0,1.4fr) .75fr 1.2fr 100px;
+  grid-template-columns: minmax(0,1.4fr) .75fr 1.2fr;
   min-height: 0; align-items: center; gap: 8px; padding: 5px 10px;
   border: 8px solid transparent;
   border-image: url("./assets/ui/skin-v1/status-card.png") 34 fill / 8px / 0 stretch;
@@ -718,11 +718,18 @@ button.secondary:disabled { background-image: url("./assets/ui/skin-v1/button-se
   [data-scene="exchange"] #set-bonus-summary { margin-top: 3px; font-size: 10px; }
 }
 [data-scene="exchange"] .actions {
-  left: 42%; bottom: .35%; width: 20%; height: 5.5%;
+  left: 34%; bottom: .35%; width: 36%; height: 5.5%;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 3%;
   margin: 0; padding: 0; border: 0 !important; border-image: none !important;
   background: transparent !important; box-shadow: none !important;
 }
-[data-scene="exchange"] .actions #sell-selected { width: 100%; height: 100%; }
+[data-scene="exchange"] .actions #select-all-items,
+[data-scene="exchange"] .actions #sell-selected { width: 100%; height: 100%; min-width: 0; }
+[data-scene="exchange"] .actions #select-all-items {
+  color: #f4ecd8; text-shadow: 0 2px 2px #0009;
+  border: 0 !important; border-image: none !important;
+  background: transparent url("./assets/ui/clean-v1/buttons/button-dark.png") center / 100% 100% no-repeat !important;
+}
 [data-scene="exchange"] .actions #sell-selected {
   display: flex; align-items: center; justify-content: center; gap: 8px;
   color: #f4ecd8; text-shadow: 0 2px 2px #0009;
@@ -1665,7 +1672,7 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
 [data-scene="quests"] .appraisal-card strong { color: #e9c66c; font-size: calc(11px * var(--text-scale)); }
 [data-scene="quests"] .appraisal-card button { width: 86px; min-height: 30px; padding: 3px 5px; font-size: calc(10px * var(--text-scale)); }
 [data-scene="quests"] .empty-note { margin: 6px; color: #bdae92; font-size: calc(11px * var(--text-scale)); }
-[data-scene="exchange"] #inventory-list article { grid-template-columns: minmax(0,1.4fr) .75fr 1.2fr 100px; }
+[data-scene="exchange"] #inventory-list article { grid-template-columns: minmax(0,1.4fr) .75fr 1.2fr; }
 
 /* Guild collateral selection uses the existing left parchment. */
 [data-scene="guild"] .collateral-picker { display: grid; grid-template-columns: 90px 1fr; align-items: center; gap: 8px; margin: 10px 0 6px; }
@@ -3027,7 +3034,7 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
   <section class="scene hub" data-scene="hub" hidden><header><div><p class="eyebrow"><span data-bind="day"></span>일차 / 13</p><h2>미지의 도시</h2></div><strong data-bind="cash"></strong></header><div class="hub-stats"><span class="storage-stat">보관칸 <b data-bind="storage"></b></span><span class="stage-stat"><b data-bind="stage"></b>단계 <small>상회 단계</small></span><span class="hub-quests">완료 의뢰 <b data-bind="quests"></b></span><span id="loan-status"></span></div><button id="hub-settings" aria-label="설정">설정</button><div id="market-indices" class="market"></div><div class="place-grid"><button data-place="quests"><span>의뢰소</span></button><button data-place="tavern"><span>술집</span></button><button data-place="catalog"><span>경매장</span></button><button data-place="exchange"><span>거래소</span></button><button data-place="shop"><span>상회</span></button><button data-place="guild"><span>조합</span></button><button data-place="museum"><span>유물 전시관</span></button></div><button id="download-log" class="secondary">플레이 기록 다운로드</button><p id="hub-message" class="status"></p></section>
   <section class="scene place" data-scene="quests" hidden><header><div><p class="eyebrow">QUEST & APPRAISAL OFFICE · <span data-bind="day"></span>일차</p><h2>의뢰소 · 감정소</h2></div><strong data-bind="cash"></strong></header><div class="office-layout"><section><h3>오늘의 의뢰</h3><div id="quest-offers" class="quest-grid"></div></section><section><h3>의뢰 진행 · 정밀 감정</h3><div id="active-quests" class="inventory-list"></div></section></div><p id="quest-message" class="status"></p><button data-place="city" class="secondary">도시로</button></section>
   <section class="scene place" data-scene="tavern" hidden><header><div><p class="eyebrow">TAVERN · <span data-bind="day"></span>일차</p><h2>술집</h2></div><strong data-bind="cash"></strong></header><section class="tavern-brokers"><h3>정보상 목록</h3><article data-broker="competitors" role="button" tabindex="0"><img src="./assets/ui/tavern/bartender.png" alt=""><div><b>바텐더</b><small>항구의 소식통</small><span></span></div></article><article data-broker="catalog" role="button" tabindex="0"><img src="./assets/ui/tavern/informant.png" alt=""><div><b>정보상</b><small>도시의 뒷골목 정보망</small><span></span></div></article><article data-broker="forecast" role="button" tabindex="0"><img src="./assets/ui/tavern/traveling-merchant.png" alt=""><div><b>여행 상인</b><small>내일의 시세를 전하는 상인</small><span></span></div></article></section><section class="tavern-market"><div id="tavern-detail" aria-live="polite"></div></section><aside id="tavern-owned" aria-live="polite"></aside><p id="tavern-message" class="status"></p><button data-place="city" class="secondary return-city">도시로 돌아가기</button></section>
-  <section class="scene place" data-scene="exchange" hidden><header><div><p class="eyebrow">EXCHANGE · <span data-bind="day"></span>일차</p><h2>거래소</h2></div><strong data-bind="cash"></strong></header><div id="inventory-list" class="inventory-list"></div><aside id="exchange-market" class="market-board" aria-label="오늘의 시세"></aside><div class="actions"><button id="sell-selected">선택 판매</button></div><p id="exchange-message" class="status"></p><button data-place="city" class="secondary return-city">도시로</button></section>
+  <section class="scene place" data-scene="exchange" hidden><header><div><p class="eyebrow">EXCHANGE · <span data-bind="day"></span>일차</p><h2>거래소</h2></div><strong data-bind="cash"></strong></header><div id="inventory-list" class="inventory-list"></div><aside id="exchange-market" class="market-board" aria-label="오늘의 시세"></aside><div class="actions"><button id="select-all-items" class="secondary">모두 선택</button><button id="sell-selected">판매</button></div><p id="exchange-message" class="status"></p><button data-place="city" class="secondary return-city">도시로</button></section>
   <section class="scene place" data-scene="shop" hidden><header><div><p class="eyebrow">상회의 성장과 보유품을 관리합니다.</p><h2>상회</h2></div><strong data-bind="cash"></strong></header><div id="shop-detail" class="place-panel"></div><button id="shop-upgrade">상점 확장</button><p id="shop-message" class="status"></p><button data-place="city" class="secondary return-city">도시로</button></section>
   <section class="scene place" data-scene="guild" hidden><div class="guild-heading"><p class="eyebrow">미판매 물품을 담보로 단기 자금을 조달합니다.</p><h2>조합</h2><strong data-bind="cash"></strong></div><div id="guild-detail" class="place-panel"></div><aside id="guild-collateral-list" aria-label="담보 보유품"></aside><div class="actions"><button id="guild-loan">대출 실행</button><button id="guild-repay" class="secondary">대출 상환</button></div><p id="guild-message" class="status"></p><button id="guild-return" data-place="city" class="secondary return-city">도시로 돌아가기</button></section>
   <section class="scene place" data-scene="museum" hidden><p class="eyebrow">RELIC MUSEUM</p><h2>유물 전시관</h2><div id="relic-list" class="relic-list"></div><aside id="relic-detail" class="relic-detail" aria-live="polite"></aside><div id="museum-progress" class="museum-progress"></div><aside class="museum-effects"><h3>수집 효과</h3><p><b>하급 세트</b><span>경매 정보 보조</span></p><p><b>중급 세트</b><span>거래 보너스 강화</span></p><p><b>상급 세트</b><span>최종 여정 보너스</span></p></aside><button id="museum-back" class="secondary">돌아가기</button></section>
@@ -4324,9 +4331,8 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
     const exchangeItems = ownedItems();
     const maxStorage = Math.max(...balance.shop.storage);
     const occupiedCards = exchangeItems.map((item) => `
-    <article><label><input type="checkbox" data-item-select="${item.lotId}"> <b>${item.name}</b></label>
-    <span>${gradeLabel(item.grade)} \xB7 ${categoryLabel(item.category)}</span><span>\uB9E4\uC785 ${money(item.paid)} \xB7 ${item.appraised ? `\uAC10\uC815 ${money(item.trueValue)} \xB1${money(item.appraisalRange)}` : "\uBBF8\uAC10\uC815"}</span>
-    <button data-sell-item="${item.lotId}" ${item.collateral ? "disabled" : ""}>\uC989\uC2DC \uCC98\uBD84</button></article>`).join("");
+    <article><label><input type="checkbox" data-item-select="${item.lotId}" ${item.collateral ? "disabled" : ""}> <b>${item.name}</b></label>
+    <span>${gradeLabel(item.grade)} \xB7 ${categoryLabel(item.category)}</span><span>\uB9E4\uC785 ${money(item.paid)} \xB7 ${item.appraised ? `\uAC10\uC815 ${money(item.trueValue)} \xB1${money(item.appraisalRange)}` : "\uBBF8\uAC10\uC815"}</span></article>`).join("");
     const emptyCards = Array.from({ length: Math.max(0, state.storage - exchangeItems.length) }, (_, index) => `
     <article class="empty-inventory-slot" aria-label="\uBE48 \uBCF4\uAD00\uCE78 ${exchangeItems.length + index + 1}">
       <span class="empty-slot-number">${String(exchangeItems.length + index + 1).padStart(2, "0")}</span>
@@ -4343,11 +4349,6 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
     </article>`;
     }).join("");
     document.querySelector("#inventory-list").innerHTML = occupiedCards + emptyCards + lockedCards;
-    document.querySelectorAll("[data-sell-item]").forEach((button) => button.onclick = () => {
-      const revenue = sellItems(state, balance, [button.dataset.sellItem]);
-      if (revenue) audio.playSfx("sell");
-      renderExchange(`${money(revenue)}\uC5D0 \uCC98\uBD84\uD588\uC2B5\uB2C8\uB2E4.`);
-    });
     document.querySelector("#exchange-market").innerHTML = `<h3>\uCD5C\uADFC \uC2DC\uC138</h3><div class="market-rates">${Object.entries(state.marketPath).map(([key, path]) => {
       const now = path[state.day - 1];
       const previous = state.day > 1 ? path[state.day - 2] : 1;
@@ -4361,6 +4362,10 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
       const quote = quoteItemsSale(state, balance, ids);
       const groups = Object.values(Object.groupBy(items, (item) => item.category));
       document.querySelector("#sell-selected").disabled = !quote.count;
+      const selectable = [...document.querySelectorAll("[data-item-select]:not(:disabled)")];
+      const allSelected = selectable.length > 0 && selectable.every((input) => input.checked);
+      document.querySelector("#select-all-items").disabled = !selectable.length;
+      document.querySelector("#select-all-items").textContent = allSelected ? "\uBAA8\uB450 \uD574\uC81C" : "\uBAA8\uB450 \uC120\uD0DD";
       const activeRules = {
         "same-2": groups.some((group) => group.length >= 2),
         "same-3": groups.some((group) => group.length >= 3),
@@ -4375,7 +4380,14 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
     document.querySelectorAll("[data-item-select]").forEach((input) => {
       input.onchange = syncBulkActions;
     });
-    document.querySelector("#sell-selected").textContent = "\uD310\uB9E4";
+    document.querySelector("#select-all-items").onclick = () => {
+      const selectable = [...document.querySelectorAll("[data-item-select]:not(:disabled)")];
+      const shouldSelect = !selectable.every((input) => input.checked);
+      selectable.forEach((input) => {
+        input.checked = shouldSelect;
+      });
+      syncBulkActions();
+    };
     syncBulkActions();
     document.querySelector("#exchange-message").textContent = "";
     showActionToast(message);

@@ -623,7 +623,7 @@ button.secondary:disabled { background-image: url("./assets/ui/skin-v1/button-se
   text-shadow: 0 2px 2px #0009; pointer-events: none;
 }
 [data-scene="exchange"] #inventory-list article {
-  grid-template-columns: minmax(0,1.4fr) .75fr 1.2fr 100px;
+  grid-template-columns: minmax(0,1.4fr) .75fr 1.2fr;
   min-height: 0; align-items: center; gap: 8px; padding: 5px 10px;
   border: 8px solid transparent;
   border-image: url("./assets/ui/skin-v1/status-card.png") 34 fill / 8px / 0 stretch;
@@ -710,11 +710,18 @@ button.secondary:disabled { background-image: url("./assets/ui/skin-v1/button-se
   [data-scene="exchange"] #set-bonus-summary { margin-top: 3px; font-size: 10px; }
 }
 [data-scene="exchange"] .actions {
-  left: 42%; bottom: .35%; width: 20%; height: 5.5%;
+  left: 34%; bottom: .35%; width: 36%; height: 5.5%;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 3%;
   margin: 0; padding: 0; border: 0 !important; border-image: none !important;
   background: transparent !important; box-shadow: none !important;
 }
-[data-scene="exchange"] .actions #sell-selected { width: 100%; height: 100%; }
+[data-scene="exchange"] .actions #select-all-items,
+[data-scene="exchange"] .actions #sell-selected { width: 100%; height: 100%; min-width: 0; }
+[data-scene="exchange"] .actions #select-all-items {
+  color: #f4ecd8; text-shadow: 0 2px 2px #0009;
+  border: 0 !important; border-image: none !important;
+  background: transparent url("./assets/ui/clean-v1/buttons/button-dark.png") center / 100% 100% no-repeat !important;
+}
 [data-scene="exchange"] .actions #sell-selected {
   display: flex; align-items: center; justify-content: center; gap: 8px;
   color: #f4ecd8; text-shadow: 0 2px 2px #0009;
@@ -1657,7 +1664,7 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
 [data-scene="quests"] .appraisal-card strong { color: #e9c66c; font-size: calc(11px * var(--text-scale)); }
 [data-scene="quests"] .appraisal-card button { width: 86px; min-height: 30px; padding: 3px 5px; font-size: calc(10px * var(--text-scale)); }
 [data-scene="quests"] .empty-note { margin: 6px; color: #bdae92; font-size: calc(11px * var(--text-scale)); }
-[data-scene="exchange"] #inventory-list article { grid-template-columns: minmax(0,1.4fr) .75fr 1.2fr 100px; }
+[data-scene="exchange"] #inventory-list article { grid-template-columns: minmax(0,1.4fr) .75fr 1.2fr; }
 
 /* Guild collateral selection uses the existing left parchment. */
 [data-scene="guild"] .collateral-picker { display: grid; grid-template-columns: 90px 1fr; align-items: center; gap: 8px; margin: 10px 0 6px; }
