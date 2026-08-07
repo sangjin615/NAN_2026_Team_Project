@@ -33,11 +33,12 @@ export function createDailyQuestOffers(balance, day, seed, relics = []) {
   return dailyIds.map((id, index) => {
     const definition = balance.quests[id] || balance.quests.submissionDefaults || {};
     const [kind, target] = id.split('-');
+    const rewardType = kind === 'category' ? 'category' : id;
     return ({
     offerId: `day-${day}-${id}-${index + 1}`, offeredDay: day, acceptDeadlineDay: Math.min(12, day + 1),
     id, fee: definition.fee || 0, reward: definition.reward || 0,
     rewardMode: rewardPolicy.mode, completionBonus: rewardPolicy.completionBonus,
-    completionBonusByStage: rewardPolicy.completionBonusByStage,
+    completionBonusByStage: rewardPolicy.completionBonusByType?.[rewardType] || rewardPolicy.completionBonusByStage,
     rule: definition.rule, accepted: false, completed: false,
     targetCategory: kind === 'category' ? target : null,
     targetGrade: kind === 'grade' ? target : null,
@@ -222,7 +223,9 @@ export function deliverQuestItem(state, questId, lotId) {
   quest.completed = true; quest.deliveredLotId = lotId; quest.completedDay = state.day;
   const shopBonus = state.balanceQuestBonus?.[state.shopStage] ?? 0;
   const completionBonus = questCompletionBonus(quest, state.shopStage);
-  const reward = quest.rewardMode === 'deliveredBasePlusFeePlusBonus'
+  const reward = quest.rewardMode === 'deliveredBasePlusBonus'
+    ? item.basePrice + completionBonus
+    : quest.rewardMode === 'deliveredBasePlusFeePlusBonus'
     ? item.basePrice + quest.fee + completionBonus
     : Math.round(quest.reward * (1 + shopBonus));
   quest.paidReward = reward;

@@ -414,7 +414,9 @@ function questIconUrl(quest) {
 }
 
 function questRewardLabel(quest) {
-  return quest.rewardMode === 'deliveredBasePlusFeePlusBonus'
+  return quest.rewardMode === 'deliveredBasePlusBonus'
+    ? `물품 기준가 + ${money(questCompletionBonus(quest, state.shopStage))}`
+    : quest.rewardMode === 'deliveredBasePlusFeePlusBonus'
     ? `물품 기준가 + 수주비 + ${money(questCompletionBonus(quest, state.shopStage))}`
     : money(quest.reward);
 }
@@ -442,7 +444,7 @@ function renderQuestOffice(message = '') {
   clearActionTimer(); audio.playBgm('workplace'); state.phase = 'quests'; adapter.showScene('quests'); syncHeader();
   const visibleQuestOffers = state.questOffers.filter((quest) => balance.quests[quest.id]?.enabled !== false);
   document.querySelector('#quest-offers').innerHTML = visibleQuestOffers.map((quest) => `
-    <article><img class="quest-icon" src="${questIconUrl(quest)}" alt=""><b>${questTitle(quest)}</b><small>${questRequirement(quest)}</small><span>수주비 ${money(quest.fee)} · 보상 ${questRewardLabel(quest)}</span>
+    <article><img class="quest-icon" src="${questIconUrl(quest)}" alt=""><b>${questTitle(quest)}</b><small>${questRequirement(quest)}</small><span>보상 ${questRewardLabel(quest)}</span>
     <button data-quest="${quest.offerId || quest.id}" ${quest.accepted ? 'disabled' : ''}>${quest.accepted ? '수주 완료' : '수주'}</button></article>`).join('');
   const active = state.activeQuests.filter((quest) => !quest.completed);
   const activeMarkup = active.length ? active.map((quest) => {
@@ -457,7 +459,6 @@ function renderQuestOffice(message = '') {
     document.querySelector('#quest-detail-title').textContent = questTitle(quest);
     document.querySelector('#quest-detail-icon').src = questIconUrl(quest);
     document.querySelector('#quest-detail-requirement').textContent = questRequirement(quest);
-    document.querySelector('#quest-detail-fee').textContent = money(quest.fee);
     document.querySelector('#quest-detail-reward').textContent = questRewardLabel(quest);
     document.querySelector('#quest-detail-deadline').textContent = `${effectiveQuestDeadline(quest)}일차 경매 전까지`;
     document.querySelector('#quest-detail-dialog').showModal();
@@ -471,7 +472,7 @@ function renderQuestOffice(message = '') {
     button.onclick = () => {
       const ok = acceptQuest(state, button.dataset.quest, balance);
       if (ok) { recordEvent(state, 'quest-accept', { questId: button.dataset.quest }); audio.playSfx('quest'); }
-      renderQuestOffice(ok ? '의뢰를 수주했습니다.' : '수주비와 오늘 제시된 의뢰인지 확인하세요.');
+      renderQuestOffice(ok ? '의뢰를 수주했습니다.' : '오늘 제시된 의뢰인지 확인하세요.');
     };
   });
   document.querySelectorAll('[data-deliver-quest]').forEach((button) => {

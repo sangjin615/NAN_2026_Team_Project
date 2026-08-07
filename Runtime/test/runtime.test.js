@@ -486,6 +486,48 @@ test('daily quests draw from four grades and six categories', async () => {
   assert.match(app, /startsWith\('category-'\)\) return categoryIconUrl\(quest\.targetCategory\)/);
 });
 
+test('submission quest bonuses follow type and shop stage without an acceptance fee', () => {
+  const expected = {
+    'grade-COMMON': [0, 1000, 1600, 2300, 3000],
+    'grade-RARE': [0, 1400, 2200, 3000, 3900],
+    category: [0, 1700, 2600, 3500, 4500],
+    'grade-EPIC': [0, 2200, 3300, 4400, 5700],
+    'grade-LEGENDARY': [0, 3000, 4500, 6000, 7500],
+  };
+  assert.equal(balance.quests.rewardPolicy.mode, 'deliveredBasePlusBonus');
+  assert.equal(balance.quests.rewardPolicy.refundAcceptanceFee, false);
+  assert.deepEqual(balance.quests.rewardPolicy.completionBonusByType, expected);
+  const offers = Array.from({ length: 40 }, (_, day) => createDailyQuestOffers(balance, day + 1, 'quest-reward-table')).flat();
+  for (const offer of offers) {
+    const rewardType = offer.id.startsWith('category-') ? 'category' : offer.id;
+    assert.equal(offer.fee, 0);
+    assert.deepEqual(offer.completionBonusByStage, expected[rewardType]);
+    for (let stage = 1; stage <= 4; stage += 1) assert.equal(questCompletionBonus(offer, stage), expected[rewardType][stage]);
+  }
+});
+
+test('submission quest UI does not show an acceptance fee', async () => {
+  const html = await readFile(new URL('../index.html', import.meta.url), 'utf8');
+  const app = await readFile(new URL('../src/app.js', import.meta.url), 'utf8');
+  assert.doesNotMatch(html, /id="quest-detail-fee"/);
+  assert.doesNotMatch(app, /<span>수주비 \$\{money\(quest\.fee\)\}/);
+  assert.match(app, /<span>보상 \$\{questRewardLabel\(quest\)\}<\/span>/);
+});
+
+test('new submission rewards pay base price plus the table bonus only', () => {
+  const schedule = createRunSchedule({ catalog, balance, seed: 'submission-reward-no-fee' });
+  const state = createInitialState({ schedule, sets: createSetGraph(schedule, 'submission-reward-no-fee'), balance, startCash: 1000000 });
+  const lot = schedule.days[0].lots[0];
+  state.shopStage = 2;
+  state.inventory.push({ lotId: lot.lotId, name: lot.baseName, paid: 1, basePrice: 4000, category: lot.category, grade: lot.grade, sold: false, collateral: false });
+  state.questOffers = [{ id: 'category-test', fee: 999, rewardMode: 'deliveredBasePlusBonus', completionBonusByStage: [0, 1700, 2600, 3500, 4500], accepted: false, targetCategory: lot.category }];
+  assert.equal(acceptQuest(state, 'category-test', balance), true);
+  const beforeDelivery = state.cash;
+  assert.equal(deliverQuestItem(state, 'category-test', lot.lotId), true);
+  assert.equal(state.cash - beforeDelivery, 6600);
+  assert.equal(state.activeQuests[0].paidReward, 6600);
+});
+
 test('daily quest refresh removes active quests after their deadline', () => {
   const schedule = createRunSchedule({ catalog, balance, seed: 'quest-expiry' });
   const state = createInitialState({ schedule, sets: createSetGraph(schedule, 'quest-expiry'), balance, startCash: 100000 });
