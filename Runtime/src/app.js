@@ -200,6 +200,25 @@ async function completeLoadingWindow(visibleSince, message) {
   await waitForPaint();
 }
 
+function queueRelicBotResponse(round, expectedLeader, expectedPrice) {
+  if (auctionBotTimer) window.clearTimeout(auctionBotTimer);
+  const delay = 1000 + Math.floor(Math.random() * 1001);
+  auctionBotTimer = window.setTimeout(() => {
+    auctionBotTimer = null;
+    const session = state.relicSession;
+    if (!session || session.round !== round || session.leader !== expectedLeader || session.currentPrice !== expectedPrice) return;
+    const next = nextBotBid({ bots: session.bots, currentPrice: session.currentPrice, leader: session.leader, minRaiseRate: balance.auction.minRaiseRate });
+    if (!next) { if (session.leader === 'player') finishRelic('pass'); return; }
+    session.currentPrice = next.price;
+    session.leader = next.bidder.id;
+    session.autoBidStreak = (session.autoBidStreak || 0) + 1;
+    session.feed.push(`${next.bidder.name} ${money(session.currentPrice)}`);
+    session.deadline = extendAuctionDeadline(session.deadline);
+    audio.playSfx('bot-bid');
+    renderRelic();
+  }, delay);
+}
+
 function updateRunLoading(progress, message, completedSteps = [], activeStep = '') {
   const scene = document.querySelector('[data-scene="loading"]');
   const value = Math.max(0, Math.min(100, Math.round(progress)));
@@ -894,13 +913,14 @@ function renderRelic() {
     const names = ['왕실 대리인', '북부 대상인', '해외 수집가'];
     const botMaxBid = balance.relicAuction.botMaxBid || Math.round((balance.relicAuction.valueRange?.[1] || opening * 2) / 1.1);
     const bots = bands.map(([low, high], index) => ({ id: `royal-${index + 1}`, name: names[index], maxBid: Math.max(opening, Math.min(botMaxBid, Math.round(state.cash * (low + rng() * (high - low))))) }));
-    state.relicSession = { round: state.relicRound, currentPrice: opening, leader: null, bots, deadline: Date.now() + 15000, feed: ['최종 유물 경매가 시작되었습니다.'] };
+    state.relicSession = { round: state.relicRound, currentPrice: opening, leader: null, bots, autoBidStreak: 0, deadline: Date.now() + 15000, feed: ['최종 유물 경매가 시작되었습니다.'] };
   }
   const session = state.relicSession;
   const art = relicArt[relic.id];
   const participants = [{ id: 'player', name: '당신', budget: state.cash }, ...session.bots.map((bot) => ({ ...bot, budget: bot.maxBid }))];
   const currentLeader = participants.find((participant) => participant.id === session.leader);
-  document.querySelector('#relic-card').innerHTML = `<header><span>${RELIC_TIER_LABELS[tier] || tier} 유물</span><b>${state.relicRound + 1} / 3회</b></header><h2>${relic.name}</h2>${art ? `<img data-relic-art="${relic.id}" src="./assets/relics/${encodeURIComponent(art)}" alt="">` : ''}<p>${relic.effect}</p><footer><small>현재 호가</small><strong>${money(session.currentPrice)}</strong><span class="relic-current-leader">최고 입찰자 · <b>${currentLeader?.name || '없음'}</b></span></footer><em id="relic-timer" aria-label="남은 시간"></em>`;
+  document.querySelector('#relic-card').innerHTML = `<header><span>${RELIC_TIER_LABELS[tier] || tier} 유물</span><b>${state.relicRound + 1} / 3회</b></header><h2>${relic.name}</h2>${art ? `<img data-relic-art="${relic.id}" src="./assets/relics/${encodeURIComponent(art)}" alt="">` : ''}<p>${relic.effect}</p><footer><small>현재 호가</small><strong>${money(session.currentPrice)}</strong><span class="relic-current-leader">최고 입찰자 · <b>${currentLeader?.name || '없음'}</b></span></footer>`;
+  document.querySelector('#relic-lot-status').innerHTML = `<b>유물 경매 ${state.relicRound + 1} / 3</b><span>최고 입찰자 · ${currentLeader?.name || '없음'}</span><strong>${money(session.currentPrice)}</strong>`;
   const relicPortraits = {
     player: './assets/ui/auction/portraits/player-merchant.png',
     'royal-1': './assets/ui/auction/portraits/royal-agent.png',
@@ -913,6 +933,7 @@ function renderRelic() {
   document.querySelectorAll('[data-relic-raise]').forEach((button) => { button.disabled = state.cash < Math.max(minimumBid, Math.ceil(session.currentPrice * Number(button.dataset.relicRaise))); });
   document.querySelector('#direct-relic-bid').disabled = state.cash < minimumBid;
   armActionTimer('#relic-timer', session.deadline, () => finishRelic('pass'), formatAuctionTime);
+  if (session.leader && (session.autoBidStreak || 0) < 4) queueRelicBotResponse(session.round, session.leader, session.currentPrice);
 }
 
 function finishRelic(action, multiplier = 1, directPrice = null) {
@@ -922,12 +943,10 @@ function finishRelic(action, multiplier = 1, directPrice = null) {
     const price = directPrice === null ? Math.max(minimumBid, Math.ceil(session.currentPrice * multiplier)) : directPrice;
     if (!Number.isInteger(price) || price < minimumBid) { session.feed.push(`최소 입찰 금액은 ${money(minimumBid)}입니다.`); return renderRelic(); }
     if (state.cash < price) { session.feed.push('보유 자금이 부족합니다.'); return renderRelic(); }
-    session.currentPrice = price; session.leader = 'player'; session.feed.push(`당신 ${money(price)}`); audio.playSfx('relic-bid');
+    session.currentPrice = price; session.leader = 'player'; session.autoBidStreak = 0; session.feed.push(`당신 ${money(price)}`); audio.playSfx('relic-bid');
     session.deadline = extendAuctionDeadline(session.deadline);
-    const challenger = [...session.bots].filter((bot) => bot.maxBid > price).sort((a, b) => b.maxBid - a.maxBid)[0];
-    if (challenger) {
-      session.currentPrice = Math.min(challenger.maxBid, Math.ceil(price * 1.1)); session.leader = challenger.id; session.feed.push(`${challenger.name} ${money(session.currentPrice)}`); audio.playSfx('bot-bid'); return renderRelic();
-    }
+    renderRelic();
+    return;
   }
   if (session.leader === 'player') {
     state.cash -= session.currentPrice; state.relicChoices.push(state.currentRelic.id); audio.playSfx('relic-gavel');
