@@ -55,9 +55,39 @@ export function outputSchema(request) {
   });
   return fixedObject({
     schemaVersion: { const: '1.0' }, day: { const: request.day }, marketHeadline: text,
-    lots: { type: 'array', prefixItems: request.lots.map(dailyLotSchema), minItems: request.lots.length, maxItems: request.lots.length },
+    lots: dailyLotsSchema(request),
   });
 }
+
+// LOT 정의를 여덟 번 반복하지 않는다.
+//
+// 예전에는 `prefixItems: request.lots.map(dailyLotSchema)` 였다. 자리마다 온전한
+// 객체 정의가 들어가는데 서로 다른 것은 `lotId` 의 const 한 줄뿐이라, 길이 상한
+// 다섯 개가 여덟 번 똑같이 실렸다. 스키마 하나가 3,997자였고 그 중 약 3,600자가
+// 이 반복이었다. 계약서(1,343자)의 세 배다.
+//
+// 지금은 모양을 하나만 두고 `lotId` 를 여덟 개의 enum 으로 좁힌다. 약 500자다.
+// 한 판(12일)로 치면 스키마만 48,000자에서 6,000자로 내려간다.
+//
+// **자리 고정을 잃는 대신 값 집합은 지킨다.** 예전 스키마는 "1번째 자리는
+// lot-1" 까지 못박았고 지금은 "여덟 중 하나" 까지만 말한다. 순서는 `INPUT` 의
+// lots 배열이 그대로 알려주고, 어긋나면 `validateOutput` 의 LOT ID 검사가 잡는다.
+// 스키마는 어차피 강제되는 것이 아니라 프롬프트에 실리는 안내문이라 —
+// json_object 모드다 — 검증을 스키마에 기대고 있지 않았다.
+//
+// `$ref`/`$defs` 로 줄이는 방법도 있었지만 쓰지 않았다. 모델은 평평한 스키마를
+// 더 잘 따르고, 간접 참조는 준수율을 떨어뜨릴 수 있다. 토큰을 아끼려다 static
+// 낙하가 늘면 손해다.
+const dailyLotsSchema = (request) => ({
+  type: 'array',
+  minItems: request.lots.length,
+  maxItems: request.lots.length,
+  items: fixedObject({
+    lotId: { enum: request.lots.map(({ lotId }) => lotId) },
+    displayName: boundedText(20), description: boundedText(70),
+    rumor: boundedText(45), setHint: boundedText(25), npcReaction: boundedText(45),
+  }),
+});
 
 export const blueprintFrameSchema = (request) => fixedObject({
   schemaVersion: { const: '1.0' }, runSeed: { const: request.runSeed }, premise: text,
