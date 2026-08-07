@@ -33,6 +33,10 @@
 :root {
   --design-width: 1600;
   --design-height: 900;
+  --browser-zoom: 1;
+  --browser-zoom-inverse: 1;
+  --layout-viewport-width: 100vw;
+  --layout-viewport-height: 100vh;
   --live-panel: #090806e8;
   --live-line: #9d7638;
   --skin-root: "./assets/ui/skin-v1";
@@ -48,13 +52,19 @@ body {
   background: #050403;
 }
 
-#app { display: grid; place-items: center; width: 100%; height: 100%; overflow: hidden; }
+#app {
+  display: grid; place-items: center;
+  width: var(--layout-viewport-width); height: var(--layout-viewport-height);
+  overflow: hidden; transform: scale(var(--browser-zoom-inverse)); transform-origin: center;
+}
+
+body > dialog[open] { transform: scale(var(--browser-zoom-inverse)); transform-origin: center; }
 
 .scene {
   --mockup: none;
   position: relative;
-  width: min(100vw, calc(100vh * 16 / 9), calc(var(--design-width) * 1px));
-  height: min(100vh, calc(100vw * 9 / 16), calc(var(--design-height) * 1px));
+  width: min(var(--layout-viewport-width), calc(var(--layout-viewport-height) * 16 / 9), calc(var(--design-width) * 1px));
+  height: min(var(--layout-viewport-height), calc(var(--layout-viewport-width) * 9 / 16), calc(var(--design-height) * 1px));
   min-height: 0;
   box-sizing: border-box;
   aspect-ratio: auto;
@@ -70,11 +80,11 @@ body {
 /* Keep the complete 16:9 canvas inside the phone's actually visible area,
    excluding dynamic browser bars instead of relying on legacy 100vh. */
 @supports (height: 100dvh) {
-  html, body, #app { width: 100dvw; height: 100dvh; min-height: 100dvh; }
+  html, body { width: 100dvw; height: 100dvh; min-height: 100dvh; }
   .scene,
   [data-scene="loading"] {
-    width: min(100dvw, calc(100dvh * 16 / 9), calc(var(--design-width) * 1px));
-    height: min(100dvh, calc(100dvw * 9 / 16), calc(var(--design-height) * 1px));
+    width: min(var(--layout-viewport-width), calc(var(--layout-viewport-height) * 16 / 9), calc(var(--design-width) * 1px));
+    height: min(var(--layout-viewport-height), calc(var(--layout-viewport-width) * 9 / 16), calc(var(--design-height) * 1px));
   }
 }
 
@@ -5547,6 +5557,20 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
     renderGuild(ok ? "\uC6D0\uAE08\uC744 \uC911\uB3C4 \uC0C1\uD658\uD588\uC2B5\uB2C8\uB2E4." : "\uC0C1\uD658\uD560 \uC218 \uC5C6\uC2B5\uB2C8\uB2E4.");
   };
   document.querySelector("#download-log").onclick = () => downloadRunLog(state);
+  function syncBrowserZoomCompensation() {
+    const viewportWidth = Math.max(1, window.innerWidth);
+    const viewportHeight = Math.max(1, window.innerHeight);
+    const measuredZoom = window.outerWidth > 0 ? window.outerWidth / viewportWidth : 1;
+    const browserZoom = Math.min(5, Math.max(0.25, measuredZoom));
+    const root2 = document.documentElement;
+    root2.style.setProperty("--browser-zoom", String(browserZoom));
+    root2.style.setProperty("--browser-zoom-inverse", String(1 / browserZoom));
+    root2.style.setProperty("--layout-viewport-width", `${viewportWidth * browserZoom}px`);
+    root2.style.setProperty("--layout-viewport-height", `${viewportHeight * browserZoom}px`);
+  }
+  syncBrowserZoomCompensation();
+  window.addEventListener("resize", syncBrowserZoomCompensation);
+  window.visualViewport?.addEventListener("resize", syncBrowserZoomCompensation);
   boot();
 })();
 </script></body></html>

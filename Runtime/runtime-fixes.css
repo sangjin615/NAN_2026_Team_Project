@@ -25,6 +25,10 @@
 :root {
   --design-width: 1600;
   --design-height: 900;
+  --browser-zoom: 1;
+  --browser-zoom-inverse: 1;
+  --layout-viewport-width: 100vw;
+  --layout-viewport-height: 100vh;
   --live-panel: #090806e8;
   --live-line: #9d7638;
   --skin-root: "./assets/ui/skin-v1";
@@ -40,13 +44,19 @@ body {
   background: #050403;
 }
 
-#app { display: grid; place-items: center; width: 100%; height: 100%; overflow: hidden; }
+#app {
+  display: grid; place-items: center;
+  width: var(--layout-viewport-width); height: var(--layout-viewport-height);
+  overflow: hidden; transform: scale(var(--browser-zoom-inverse)); transform-origin: center;
+}
+
+body > dialog[open] { transform: scale(var(--browser-zoom-inverse)); transform-origin: center; }
 
 .scene {
   --mockup: none;
   position: relative;
-  width: min(100vw, calc(100vh * 16 / 9), calc(var(--design-width) * 1px));
-  height: min(100vh, calc(100vw * 9 / 16), calc(var(--design-height) * 1px));
+  width: min(var(--layout-viewport-width), calc(var(--layout-viewport-height) * 16 / 9), calc(var(--design-width) * 1px));
+  height: min(var(--layout-viewport-height), calc(var(--layout-viewport-width) * 9 / 16), calc(var(--design-height) * 1px));
   min-height: 0;
   box-sizing: border-box;
   aspect-ratio: auto;
@@ -62,11 +72,11 @@ body {
 /* Keep the complete 16:9 canvas inside the phone's actually visible area,
    excluding dynamic browser bars instead of relying on legacy 100vh. */
 @supports (height: 100dvh) {
-  html, body, #app { width: 100dvw; height: 100dvh; min-height: 100dvh; }
+  html, body { width: 100dvw; height: 100dvh; min-height: 100dvh; }
   .scene,
   [data-scene="loading"] {
-    width: min(100dvw, calc(100dvh * 16 / 9), calc(var(--design-width) * 1px));
-    height: min(100dvh, calc(100dvw * 9 / 16), calc(var(--design-height) * 1px));
+    width: min(var(--layout-viewport-width), calc(var(--layout-viewport-height) * 16 / 9), calc(var(--design-width) * 1px));
+    height: min(var(--layout-viewport-height), calc(var(--layout-viewport-width) * 9 / 16), calc(var(--design-height) * 1px));
   }
 }
 

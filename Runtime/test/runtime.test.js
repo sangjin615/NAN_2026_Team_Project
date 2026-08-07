@@ -56,6 +56,18 @@ test('relic auction renders a three-lot guide with effects and auction states', 
   assert.match(app, /대기 중/);
 });
 
+test('browser zoom is inversely compensated while preserving the 16:9 layout viewport', async () => {
+  const [app, css] = await Promise.all([
+    readFile(new URL('../src/app.js', import.meta.url), 'utf8'),
+    readFile(new URL('../runtime-fixes.css', import.meta.url), 'utf8'),
+  ]);
+  assert.match(app, /outerWidth \/ viewportWidth/);
+  assert.match(app, /--browser-zoom-inverse/);
+  assert.match(app, /visualViewport\?\.addEventListener\('resize'/);
+  assert.match(css, /transform: scale\(var\(--browser-zoom-inverse\)\)/);
+  assert.match(css, /width: min\(var\(--layout-viewport-width\)/);
+});
+
 test('successful result uses the full ending scene instead of the clear icon', async () => {
   const appSource = await readFile(new URL('../src/app.js', import.meta.url), 'utf8');
   const cssSource = await readFile(new URL('../runtime-fixes.css', import.meta.url), 'utf8');

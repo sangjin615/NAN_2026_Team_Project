@@ -1013,4 +1013,20 @@ document.querySelector('#guild-loan').onclick = () => {
 document.querySelector('#guild-repay').onclick = () => { const ok = repayLoanEarly(state, balance); if (ok) audio.playSfx('repay'); renderGuild(ok ? '원금을 중도 상환했습니다.' : '상환할 수 없습니다.'); };
 document.querySelector('#download-log').onclick = () => downloadRunLog(state);
 
+function syncBrowserZoomCompensation() {
+  const viewportWidth = Math.max(1, window.innerWidth);
+  const viewportHeight = Math.max(1, window.innerHeight);
+  const measuredZoom = window.outerWidth > 0 ? window.outerWidth / viewportWidth : 1;
+  const browserZoom = Math.min(5, Math.max(.25, measuredZoom));
+  const root = document.documentElement;
+  root.style.setProperty('--browser-zoom', String(browserZoom));
+  root.style.setProperty('--browser-zoom-inverse', String(1 / browserZoom));
+  root.style.setProperty('--layout-viewport-width', `${viewportWidth * browserZoom}px`);
+  root.style.setProperty('--layout-viewport-height', `${viewportHeight * browserZoom}px`);
+}
+
+syncBrowserZoomCompensation();
+window.addEventListener('resize', syncBrowserZoomCompensation);
+window.visualViewport?.addEventListener('resize', syncBrowserZoomCompensation);
+
 boot();
