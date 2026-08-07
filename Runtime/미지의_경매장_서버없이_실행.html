@@ -4690,6 +4690,13 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
       resolve();
     }));
   });
+  var MIN_LOADING_VISIBLE_MS = 2e3;
+  async function completeLoadingWindow(visibleSince, message) {
+    const remainingMs = MIN_LOADING_VISIBLE_MS - (performance.now() - visibleSince);
+    if (remainingMs > 0) await new Promise((resolve) => window.setTimeout(resolve, remainingMs));
+    updateRunLoading(100, message, ["schedule", "sets", "content", "save"]);
+    await waitForPaint();
+  }
   function updateRunLoading(progress, message, completedSteps = [], activeStep = "") {
     const scene = document.querySelector('[data-scene="loading"]');
     const value = Math.max(0, Math.min(100, Math.round(progress)));
@@ -4720,7 +4727,6 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
     }
   }
   async function newRun(seed) {
-    const loadingStartedAt = performance.now();
     generationProvider?.reset();
     generation = new GenerationBuffer(generationProvider ? { provider: generationProvider } : {});
     const skip = document.querySelector("#skip-generation");
@@ -4729,6 +4735,7 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
     adapter.showScene("loading");
     updateRunLoading(6, "\uC800\uC7A5 \uC2AC\uB86F\uACFC \uC0C8 \uC5EC\uC815\uC744 \uC900\uBE44\uD558\uACE0 \uC788\uC2B5\uB2C8\uB2E4.", [], "schedule");
     await waitForPaint();
+    const loadingVisibleSince = performance.now();
     updateRunLoading(18, "12\uC77C \uACBD\uB9E4 \uC77C\uC815\uC744 \uAD6C\uC131\uD588\uC2B5\uB2C8\uB2E4.", ["schedule"], "sets");
     const schedule = createRunSchedule({ catalog, balance, seed });
     if (!validateSchedule(schedule).valid) throw new Error("96 LOT \uC0DD\uC131 \uC2E4\uD328");
@@ -4750,10 +4757,7 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
     await generation.ensure({ currentDay: 1, schedule, sets, aheadDays: 0 });
     updateRunLoading(88, `SLOT ${selectedSlot}\uC5D0 \uC0C8 \uC5EC\uC815\uC744 \uC800\uC7A5\uD558\uACE0 \uC788\uC2B5\uB2C8\uB2E4.`, ["schedule", "sets", "content"], "save");
     save();
-    const remainingMs = 2e3 - (performance.now() - loadingStartedAt);
-    if (remainingMs > 0) await new Promise((resolve) => window.setTimeout(resolve, remainingMs));
-    updateRunLoading(100, "\uC900\uBE44\uAC00 \uC644\uB8CC\uB418\uC5C8\uC2B5\uB2C8\uB2E4. \uB3C4\uC2DC\uB85C \uC774\uB3D9\uD569\uB2C8\uB2E4.", ["schedule", "sets", "content", "save"]);
-    await waitForPaint();
+    await completeLoadingWindow(loadingVisibleSince, "\uC900\uBE44\uAC00 \uC644\uB8CC\uB418\uC5C8\uC2B5\uB2C8\uB2E4. \uB3C4\uC2DC\uB85C \uC774\uB3D9\uD569\uB2C8\uB2E4.");
     audio.playBgm("city");
     renderHub();
     generation.ensure({ currentDay: 1, schedule, sets }).then(save);
@@ -5369,21 +5373,31 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
     if (state.failure) return renderResult();
     const nextDayButton = document.querySelector("#next-day");
     nextDayButton.disabled = true;
+    adapter.showScene("loading");
+    updateRunLoading(12, `${state.day + 1}\uC77C\uCC28 \uC5EC\uC815\uC744 \uC900\uBE44\uD558\uACE0 \uC788\uC2B5\uB2C8\uB2E4.`, ["schedule", "sets"], "content");
+    await waitForPaint();
+    const loadingVisibleSince = performance.now();
     advanceDay(state);
     state.settledDay = null;
     if (state.day <= RUN_DAYS) refreshDailyQuestOffers(state, balance, state.metaRelics);
     save();
     if (state.day === RELIC_AUCTION_DAY) {
+      updateRunLoading(88, "\uCD5C\uC885 \uC720\uBB3C \uACBD\uB9E4\uB97C \uC900\uBE44\uD558\uACE0 \uC788\uC2B5\uB2C8\uB2E4.", ["schedule", "sets", "content"], "save");
+      await completeLoadingWindow(loadingVisibleSince, "\uC900\uBE44\uAC00 \uC644\uB8CC\uB418\uC5C8\uC2B5\uB2C8\uB2E4. \uB3C4\uC2DC\uB85C \uC774\uB3D9\uD569\uB2C8\uB2E4.");
       renderHub("12\uC77C\uCC28 \uACBD\uB9E4\uAC00 \uB05D\uB0AC\uC2B5\uB2C8\uB2E4. \uACBD\uB9E4\uC7A5\uC73C\uB85C \uC774\uB3D9\uD574 \uCD5C\uC885 \uC720\uBB3C \uACBD\uB9E4\uB97C \uC2DC\uC791\uD558\uC138\uC694.");
       nextDayButton.disabled = false;
       return;
     }
     try {
+      updateRunLoading(45, `${state.day}\uC77C\uCC28 \uACBD\uB9E4\uD488 \uC815\uBCF4\uB97C \uC900\uBE44\uD558\uACE0 \uC788\uC2B5\uB2C8\uB2E4.`, ["schedule", "sets"], "content");
       await generation.ensure({ currentDay: state.day, schedule: state.schedule, sets: state.sets, aheadDays: 0 });
+      updateRunLoading(88, `${state.day}\uC77C\uCC28 \uC815\uBCF4\uB97C \uC800\uC7A5\uD558\uACE0 \uC788\uC2B5\uB2C8\uB2E4.`, ["schedule", "sets", "content"], "save");
+      await completeLoadingWindow(loadingVisibleSince, "\uC900\uBE44\uAC00 \uC644\uB8CC\uB418\uC5C8\uC2B5\uB2C8\uB2E4. \uB3C4\uC2DC\uB85C \uC774\uB3D9\uD569\uB2C8\uB2E4.");
       renderHub();
       generation.ensure({ currentDay: state.day, schedule: state.schedule, sets: state.sets }).then(save);
     } catch (error) {
       console.warn("Daily content buffer failed; continuing with prepared fallback.", error);
+      await completeLoadingWindow(loadingVisibleSince, "\uB300\uCCB4 \uB370\uC774\uD130\uB97C \uC900\uBE44\uD588\uC2B5\uB2C8\uB2E4. \uB3C4\uC2DC\uB85C \uC774\uB3D9\uD569\uB2C8\uB2E4.");
       renderHub("\uCF58\uD150\uCE20 \uC900\uBE44\uC5D0 \uC2E4\uD328\uD574 \uAE30\uBCF8 \uB370\uC774\uD130\uB97C \uC0AC\uC6A9\uD569\uB2C8\uB2E4.");
     } finally {
       nextDayButton.disabled = false;
