@@ -3337,6 +3337,8 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
 [data-scene="relic"] #relic-participants .participant.is-leading { background: #e4c77c55; }
 [data-scene="relic"] #relic-participants .participant.is-leading > span { color: #9b381f; }
 [data-scene="relic"] > .actions { left: 24%; bottom: 1.8%; width: 54%; height: 15%; }
+[data-scene="relic"] > .actions button { min-width: 0; padding: 7px 9px; font-size: clamp(11px,1.08vw,17px); }
+[data-scene="relic"] > .actions button img { width: clamp(20px,2vw,32px); height: clamp(20px,2vw,32px); }
 
 /* Ending: a single centered parchment with a non-overlapping hero, stats and action. */
 [data-scene="result"] > h2 { display: none; }
@@ -3438,7 +3440,7 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
     <div class="actions"><button data-raise="1.05"><img src="./assets/ui/action-icons/bid.png" alt="">+5%</button><button data-raise="1.1"><img src="./assets/ui/action-icons/bid.png" alt="">+10%</button><button data-raise="1.2"><img src="./assets/ui/action-icons/bid.png" alt="">+20%</button><button id="direct-bid"><img src="./assets/ui/action-icons/bid.png" alt="">직접입력</button><button id="pass" class="secondary"><img src="./assets/ui/action-icons/pass.png" alt="">패스</button></div>
   </section>
   <section class="scene" data-scene="settlement" hidden><p class="eyebrow">DAILY SETTLEMENT</p><h2><span data-bind="day"></span>일차 결산</h2><p>오늘의 경매품 8개가 모두 종료되었습니다. 다음 이틀의 경매품을 준비합니다.</p><div id="settlement-summary"></div><button id="next-day"><img src="./assets/ui/action-icons/next-day.png" alt="">다음 날</button></section>
-  <section class="scene relic" data-scene="relic" hidden><p class="eyebrow">RELIC AUCTION</p><aside id="relic-participants"></aside><div id="relic-card"></div><div id="relic-feed" class="auction-feed"></div><div class="actions"><button id="buy-relic"><img src="./assets/ui/action-icons/bid.png" alt="">유물 입찰</button><button id="skip-relic" class="secondary"><img src="./assets/ui/action-icons/pass.png" alt="">포기</button></div></section>
+  <section class="scene relic" data-scene="relic" hidden><p class="eyebrow">RELIC AUCTION</p><aside id="relic-participants"></aside><div id="relic-card"></div><div id="relic-feed" class="auction-feed"></div><div class="actions"><button data-relic-raise="1.05"><img src="./assets/ui/action-icons/bid.png" alt="">+5%</button><button data-relic-raise="1.1"><img src="./assets/ui/action-icons/bid.png" alt="">+10%</button><button data-relic-raise="1.2"><img src="./assets/ui/action-icons/bid.png" alt="">+20%</button><button id="direct-relic-bid"><img src="./assets/ui/action-icons/bid.png" alt="">직접입력</button><button id="skip-relic" class="secondary"><img src="./assets/ui/action-icons/pass.png" alt="">패스</button></div></section>
   <section class="scene" data-scene="result" hidden><p class="eyebrow">RUN RESULT</p><h2 id="result-title">13일 여정 종료</h2><div id="run-summary"></div><button id="return-title">타이틀로 돌아가기</button></section>
 </main><dialog id="settings-dialog"><h2>설정</h2><p class="settings-lead">게임의 전체 소리를 설정합니다.</p><button id="sound-toggle" type="button" aria-pressed="true"><span>전체 소리</span><strong>켜짐</strong></button><button id="reset-meta-data" type="button" class="secondary">메타데이터 초기화</button><button id="settings-return-title" type="button" class="secondary">타이틀 화면으로</button><button id="close-settings" class="secondary">닫기</button></dialog><dialog id="quest-detail-dialog"><h2 id="quest-detail-title"></h2><img id="quest-detail-icon" alt=""><p id="quest-detail-requirement"></p><dl><div><dt>수주비</dt><dd id="quest-detail-fee"></dd></div><div><dt>보상</dt><dd id="quest-detail-reward"></dd></div><div><dt>마감</dt><dd id="quest-detail-deadline"></dd></div></dl><button id="close-quest-detail" class="secondary">닫기</button></dialog>
 <script>
@@ -5250,17 +5252,27 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
     const participants = [{ id: "player", name: "\uB2F9\uC2E0", budget: state.cash }, ...session.bots.map((bot) => ({ ...bot, budget: bot.maxBid }))];
     document.querySelector("#relic-participants").innerHTML = `<h3>\uCD5C\uC885 \uACBD\uB9E4 \uCC38\uAC00\uC790</h3>${participants.map((participant, index) => `<div class="participant ${session.leader === participant.id ? "is-leading" : ""}"><span>${session.leader === participant.id ? "\uC120\uB450" : String(index + 1).padStart(2, "0")}</span><b>${participant.name}</b><small>\uC785\uCC30 \uD55C\uB3C4</small><strong>${money(participant.budget)}</strong></div>`).join("")}`;
     document.querySelector("#relic-feed").innerHTML = `<header><small>RELIC AUCTION</small><h3>\uC720\uBB3C \uACBD\uB9E4</h3><p><b>${state.relicRound + 1}</b><span>/ 3\uD68C</span></p><strong>${RELIC_TIER_LABELS[tier] || tier} \uB4F1\uAE09</strong></header><section><h4>\uC785\uCC30 \uAE30\uB85D</h4>${session.feed.slice(-4).map((line) => `<p>${line}</p>`).join("")}</section>`;
-    document.querySelector("#buy-relic").innerHTML = `<img src="./assets/ui/action-icons/bid.png" alt=""><span>10% \uC778\uC0C1 \uC785\uCC30</span>`;
-    document.querySelector("#skip-relic").innerHTML = `<img src="./assets/ui/action-icons/pass.png" alt=""><span>\uBB3C\uB7EC\uB098\uAE30</span>`;
-    document.querySelector("#buy-relic").disabled = state.cash < Math.ceil(session.currentPrice * 1.1);
-    armActionTimer("#relic-timer", session.deadline, () => finishRelic(false));
+    const minimumBid = session.currentPrice + Math.max(1, Math.ceil(session.currentPrice * balance.auction.minRaiseRate));
+    document.querySelectorAll("[data-relic-raise]").forEach((button) => {
+      button.disabled = state.cash < Math.max(minimumBid, Math.ceil(session.currentPrice * Number(button.dataset.relicRaise)));
+    });
+    document.querySelector("#direct-relic-bid").disabled = state.cash < minimumBid;
+    armActionTimer("#relic-timer", session.deadline, () => finishRelic("pass"));
   }
-  function finishRelic(bid) {
+  function finishRelic(action, multiplier = 1, directPrice = null) {
     clearActionTimer();
     const session = state.relicSession;
-    if (bid) {
-      const price = Math.ceil(session.currentPrice * 1.1);
-      if (state.cash < price) return renderRelic();
+    if (action === "bid") {
+      const minimumBid = session.currentPrice + Math.max(1, Math.ceil(session.currentPrice * balance.auction.minRaiseRate));
+      const price = directPrice === null ? Math.max(minimumBid, Math.ceil(session.currentPrice * multiplier)) : directPrice;
+      if (!Number.isInteger(price) || price < minimumBid) {
+        session.feed.push(`\uCD5C\uC18C \uC785\uCC30 \uAE08\uC561\uC740 ${money(minimumBid)}\uC785\uB2C8\uB2E4.`);
+        return renderRelic();
+      }
+      if (state.cash < price) {
+        session.feed.push("\uBCF4\uC720 \uC790\uAE08\uC774 \uBD80\uC871\uD569\uB2C8\uB2E4.");
+        return renderRelic();
+      }
       session.currentPrice = price;
       session.leader = "player";
       session.feed.push(`\uB2F9\uC2E0 ${money(price)}`);
@@ -5378,8 +5390,17 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
   };
   document.querySelector("#pass").onclick = () => finishLot("pass");
   document.querySelector("#next-day").onclick = nextDay;
-  document.querySelector("#buy-relic").onclick = () => finishRelic(true);
-  document.querySelector("#skip-relic").onclick = () => finishRelic(false);
+  document.querySelectorAll("[data-relic-raise]").forEach((button) => button.onclick = () => finishRelic("bid", Number(button.dataset.relicRaise)));
+  document.querySelector("#direct-relic-bid").onclick = () => {
+    const session = state.relicSession;
+    if (!session) return;
+    const minimumBid = session.currentPrice + Math.max(1, Math.ceil(session.currentPrice * balance.auction.minRaiseRate));
+    const input = window.prompt("\uC785\uCC30 \uAE08\uC561\uC744 \uC785\uB825\uD558\uC138\uC694.", String(minimumBid));
+    if (input === null) return;
+    const proposed = Number(input.replace(/[^0-9]/g, ""));
+    finishRelic("bid", 1, proposed);
+  };
+  document.querySelector("#skip-relic").onclick = () => finishRelic("pass");
   document.querySelector("#return-title").onclick = () => adapter.showScene("title");
   document.querySelector("#title-museum").onclick = () => renderMuseum("title");
   document.querySelector("#museum-back").onclick = () => museumReturn === "title" ? adapter.showScene("title") : renderHub();
