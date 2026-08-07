@@ -68,6 +68,19 @@ test('browser zoom is inversely compensated while preserving the 16:9 layout vie
   assert.match(css, /width: min\(var\(--layout-viewport-width\)/);
 });
 
+test('guild artwork keeps its native ratio inside the 16:9 canvas', async () => {
+  const css = await readFile(new URL('../runtime-fixes.css', import.meta.url), 'utf8');
+  assert.match(css, /\[data-scene="guild"\]::before\s*\{[\s\S]*?inset: -1px;[\s\S]*?background-size: cover;/);
+});
+
+test('the 16:9 canvas can grow beyond 1600 by 900', async () => {
+  const css = await readFile(new URL('../runtime-fixes.css', import.meta.url), 'utf8');
+  const sceneRule = css.match(/\.scene\s*\{[\s\S]*?\n\}/)?.[0] || '';
+  assert.match(sceneRule, /width: min\(var\(--layout-viewport-width\), calc\(var\(--layout-viewport-height\) \* 16 \/ 9\)\)/);
+  assert.doesNotMatch(sceneRule, /--design-width/);
+  assert.doesNotMatch(sceneRule, /--design-height/);
+});
+
 test('successful result uses the full ending scene instead of the clear icon', async () => {
   const appSource = await readFile(new URL('../src/app.js', import.meta.url), 'utf8');
   const cssSource = await readFile(new URL('../runtime-fixes.css', import.meta.url), 'utf8');

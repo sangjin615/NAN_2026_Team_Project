@@ -31,8 +31,6 @@
 }
 
 :root {
-  --design-width: 1600;
-  --design-height: 900;
   --browser-zoom: 1;
   --browser-zoom-inverse: 1;
   --layout-viewport-width: 100vw;
@@ -63,8 +61,8 @@ body > dialog[open] { transform: scale(var(--browser-zoom-inverse)); transform-o
 .scene {
   --mockup: none;
   position: relative;
-  width: min(var(--layout-viewport-width), calc(var(--layout-viewport-height) * 16 / 9), calc(var(--design-width) * 1px));
-  height: min(var(--layout-viewport-height), calc(var(--layout-viewport-width) * 9 / 16), calc(var(--design-height) * 1px));
+  width: min(var(--layout-viewport-width), calc(var(--layout-viewport-height) * 16 / 9));
+  height: min(var(--layout-viewport-height), calc(var(--layout-viewport-width) * 9 / 16));
   min-height: 0;
   box-sizing: border-box;
   aspect-ratio: auto;
@@ -83,8 +81,8 @@ body > dialog[open] { transform: scale(var(--browser-zoom-inverse)); transform-o
   html, body { width: 100dvw; height: 100dvh; min-height: 100dvh; }
   .scene,
   [data-scene="loading"] {
-    width: min(var(--layout-viewport-width), calc(var(--layout-viewport-height) * 16 / 9), calc(var(--design-width) * 1px));
-    height: min(var(--layout-viewport-height), calc(var(--layout-viewport-width) * 9 / 16), calc(var(--design-height) * 1px));
+    width: min(var(--layout-viewport-width), calc(var(--layout-viewport-height) * 16 / 9));
+    height: min(var(--layout-viewport-height), calc(var(--layout-viewport-width) * 9 / 16));
   }
 }
 
@@ -113,6 +111,14 @@ body > dialog[open] { transform: scale(var(--browser-zoom-inverse)); transform-o
 [data-scene="exchange"] { --mockup: url("./assets/scene-backgrounds/exchange.png"); }
 [data-scene="shop"] { --mockup: url("./assets/scene-backgrounds/shop.png"); }
 [data-scene="guild"] { --mockup: url("./assets/scene-backgrounds/guild.png"); }
+[data-scene="guild"]::before {
+  /* The painted guild frame is a few pixels wider than strict 16:9. Keep its
+     native ratio and bleed one pixel so the frame is not stretched or split. */
+  inset: -1px;
+  background-position: center;
+  background-size: cover;
+  image-rendering: auto;
+}
 [data-scene="museum"] { --mockup: url("./assets/scene-backgrounds/museum.png"); }
 [data-scene="catalog"] { --mockup: url("./assets/scene-backgrounds/auction-entrance.png"); }
 [data-scene="auction"] { --mockup: url("./assets/scene-backgrounds/auction.png"); }
