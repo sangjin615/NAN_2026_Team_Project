@@ -94,6 +94,16 @@ const bannedDescription = [
 ];
 const safeDescriptionEnding = /(남아 있다|보인다|확인된다|이어진다|드러난다)\.$/;
 
+// 복구 프롬프트는 로컬 서버와 라우터가 **같은 것**을 써야 한다. 2026-08-07 실측에서
+// 라우터에만 이 지시가 빠져 있었고, 그 결과 복구가 같은 `unsafe ending` 을 반복해
+// 하루치가 static 으로 떨어졌다 — 8판 중 3판이 그 경로였다.
+//
+// 어미 목록은 `safeDescriptionEnding` 에서 끌어온다. 문장에 새로 적으면 검증기와
+// 갈라진다. 길이 상한을 계약서(70자·25자)보다 좁게(45자·18자) 부르는 것은 의도된
+// 여유다 — 복구는 이미 한 번 어긴 뒤라 넉넉히 잡는다.
+const descriptionEndings = safeDescriptionEnding.source.match(/\(([^)]+)\)/)?.[1].split('|') ?? [];
+export const dailyRepairInstruction = (lotNumber) => `Generate exactly one corrected LOT record for lot ${lotNumber}. The description must be one complete sentence of 45 Korean characters or fewer and end exactly with one of: ${descriptionEndings.map((ending) => `${ending}.`).join(', ')} Keep setHint at 18 Korean characters or fewer.`;
+
 // 여기 있던 `lotWritingHint` 는 지웠다. LOT 을 하나씩 만들 때 여덟이 서로를 못
 // 봐서 문구가 닮던 것을 보완하는 장치였는데, 2026-08-07 에 라우터가 하루치를 한
 // 번에 만드는 방식으로 돌아가면서 필요가 없어졌다. 모델이 여덟을 다 보면
@@ -293,7 +303,7 @@ export async function generate(request) {
   for (const index of repairIndices) {
     const lot = request.lots[index]; const repairStartedAt = Date.now(); let repaired;
     try {
-      const prompt = `${contractFor(request.mode)}\nRETRY_ERRORS:\n${firstError.message}\nGenerate exactly one corrected LOT record for lot ${index + 1}. The description must be one complete sentence of 45 Korean characters or fewer and end exactly with one of: 남아 있다., 보인다., 확인된다., 이어진다., 드러난다. Keep setHint at 18 Korean characters or fewer.\nINPUT LOT:\n${JSON.stringify(lot)}`;
+      const prompt = `${contractFor(request.mode)}\nRETRY_ERRORS:\n${firstError.message}\n${dailyRepairInstruction(index + 1)}\nINPUT LOT:\n${JSON.stringify(lot)}`;
       repaired = await callModel({ request, schema: dailyLotSchema(lot), prompt, attempt: 2 });
       output.lots[index] = repaired;
       await preserve(request, 2, { valid: true, stage: 'repair', lotId: lot.lotId, model, latencyMs: Date.now() - repairStartedAt, request: lot, output: repaired });

@@ -3,6 +3,7 @@ import {
   dailyFrameSchema,
   dailyLotSchema,
   dailyRepairIndices,
+  dailyRepairInstruction,
   fallbackSetIncident,
   // 계약서 전문이 아니라 모드에 필요한 절만 싣는다. LOT 하나짜리 호출이 세트
   // 사건 규칙까지 나르던 것을 없앤다 — 한 판 입력의 30%다.
@@ -324,7 +325,9 @@ async function generateDaily(request, provider, fetchImpl, logger) {
         // LOT 하나짜리 복구는 짧다. 본 호출에 20초를 줬으므로 여기에도 같은 예산을
         // 주면 둘이 합쳐 게이트웨이 30초를 넘는다. 복구에는 따로 상한을 둔다.
         timeoutMs: REPAIR_TIMEOUT_MS,
-        prompt: `RETRY_ERRORS:\n${error.message}\nGenerate exactly one corrected LOT record for lot ${index + 1}.\nINPUT LOT:\n${JSON.stringify(request.lots[index])}`,
+        // 로컬 서버와 같은 지시를 쓴다. 라우터에만 어미 목록이 빠져 있어서 복구가
+        // 같은 unsafe ending 을 반복했다.
+        prompt: `RETRY_ERRORS:\n${error.message}\n${dailyRepairInstruction(index + 1)}\nINPUT LOT:\n${JSON.stringify(request.lots[index])}`,
       }, provider, fetchImpl).catch((repairError) => {
         logger?.warn?.('generation_daily_repair_fallback', { provider: provider.name, model: provider.model, lotId: request.lots[index].lotId, error: cleanError(repairError) });
         return fallbackLots[index];
