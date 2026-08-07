@@ -68,6 +68,14 @@ test('browser zoom is inversely compensated while preserving the 16:9 layout vie
   assert.match(css, /width: min\(var\(--layout-viewport-width\)/);
 });
 
+test('run start and every day transition keep the painted loading scene visible for two seconds', async () => {
+  const app = await readFile(new URL('../src/app.js', import.meta.url), 'utf8');
+  assert.match(app, /const MIN_LOADING_VISIBLE_MS = 2000;/);
+  assert.match(app, /await waitForPaint\(\);\r?\n  const loadingVisibleSince = performance\.now\(\);/);
+  assert.match(app, /async function nextDay\(\)[\s\S]*?adapter\.showScene\('loading'\);[\s\S]*?completeLoadingWindow\(loadingVisibleSince/);
+  assert.match(app, /MIN_LOADING_VISIBLE_MS - \(performance\.now\(\) - visibleSince\)/);
+});
+
 test('guild artwork keeps its native ratio inside the 16:9 canvas', async () => {
   const css = await readFile(new URL('../runtime-fixes.css', import.meta.url), 'utf8');
   assert.match(css, /\[data-scene="guild"\]::before\s*\{[\s\S]*?inset: -1px;[\s\S]*?background-size: cover;/);

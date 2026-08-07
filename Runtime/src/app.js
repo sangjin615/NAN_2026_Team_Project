@@ -191,6 +191,15 @@ const waitForPaint = () => new Promise((resolve) => {
   }));
 });
 
+const MIN_LOADING_VISIBLE_MS = 2000;
+
+async function completeLoadingWindow(visibleSince, message) {
+  const remainingMs = MIN_LOADING_VISIBLE_MS - (performance.now() - visibleSince);
+  if (remainingMs > 0) await new Promise((resolve) => window.setTimeout(resolve, remainingMs));
+  updateRunLoading(100, message, ['schedule', 'sets', 'content', 'save']);
+  await waitForPaint();
+}
+
 function updateRunLoading(progress, message, completedSteps = [], activeStep = '') {
   const scene = document.querySelector('[data-scene="loading"]');
   const value = Math.max(0, Math.min(100, Math.round(progress)));
@@ -223,7 +232,6 @@ async function boot() {
 }
 
 async function newRun(seed) {
-  const loadingStartedAt = performance.now();
   generationProvider?.reset();
   // 버퍼는 런마다 새로 만든다. readyDays 가 날짜 번호로만 키를 잡아서, 같은
   // 세션에서 두 번째 런을 시작하면 1일차가 이미 있다고 판단하고 건너뛴다.
@@ -235,6 +243,7 @@ async function newRun(seed) {
   adapter.showScene('loading');
   updateRunLoading(6, '저장 슬롯과 새 여정을 준비하고 있습니다.', [], 'schedule');
   await waitForPaint();
+  const loadingVisibleSince = performance.now();
 
   updateRunLoading(18, '12일 경매 일정을 구성했습니다.', ['schedule'], 'sets');
   const schedule = createRunSchedule({ catalog, balance, seed });
@@ -259,10 +268,7 @@ async function newRun(seed) {
   // 로딩창 최소 표시 시간. 생성이 즉시 끝나는 경우가 있다 — 공급자가 static
   // 으로 답하거나, 앞으로 넣을 선행 생성이 이미 끝나 있는 경우다. 그때 화면이
   // 한순간 떴다 사라지면 준비가 된 것이 아니라 무언가 잘못된 것처럼 보인다.
-  const remainingMs = 2000 - (performance.now() - loadingStartedAt);
-  if (remainingMs > 0) await new Promise((resolve) => window.setTimeout(resolve, remainingMs));
-  updateRunLoading(100, '준비가 완료되었습니다. 도시로 이동합니다.', ['schedule', 'sets', 'content', 'save']);
-  await waitForPaint();
+  await completeLoadingWindow(loadingVisibleSince, '준비가 완료되었습니다. 도시로 이동합니다.');
   audio.playBgm('city');
   renderHub();
   generation.ensure({ currentDay: 1, schedule, sets }).then(save);
@@ -802,10 +808,16 @@ async function nextDay() {
   if (state.failure) return renderResult();
   const nextDayButton = document.querySelector('#next-day');
   nextDayButton.disabled = true;
+  adapter.showScene('loading');
+  updateRunLoading(12, `${state.day + 1}일차 여정을 준비하고 있습니다.`, ['schedule', 'sets'], 'content');
+  await waitForPaint();
+  const loadingVisibleSince = performance.now();
   advanceDay(state); state.settledDay = null;
   if (state.day <= RUN_DAYS) refreshDailyQuestOffers(state, balance, state.metaRelics);
   save();
   if (state.day === RELIC_AUCTION_DAY) {
+    updateRunLoading(88, '최종 유물 경매를 준비하고 있습니다.', ['schedule', 'sets', 'content'], 'save');
+    await completeLoadingWindow(loadingVisibleSince, '준비가 완료되었습니다. 도시로 이동합니다.');
     renderHub('12일차 경매가 끝났습니다. 경매장으로 이동해 최종 유물 경매를 시작하세요.');
     nextDayButton.disabled = false;
     return;
@@ -814,11 +826,15 @@ async function nextDay() {
     // 들어갈 날만 기다린다. 예전에는 기본 aheadDays=2 로 기다려서 N+2 일차
     // 생성 1건이 매 전환마다 끼어들었다 — 실측 16~29초 동안 화면에는 비활성화된
     // 버튼뿐이었다. 앞당김은 newRun 과 같은 방식으로 뒤로 돌린다.
+    updateRunLoading(45, `${state.day}일차 경매품 정보를 준비하고 있습니다.`, ['schedule', 'sets'], 'content');
     await generation.ensure({ currentDay: state.day, schedule: state.schedule, sets: state.sets, aheadDays: 0 });
+    updateRunLoading(88, `${state.day}일차 정보를 저장하고 있습니다.`, ['schedule', 'sets', 'content'], 'save');
+    await completeLoadingWindow(loadingVisibleSince, '준비가 완료되었습니다. 도시로 이동합니다.');
     renderHub();
     generation.ensure({ currentDay: state.day, schedule: state.schedule, sets: state.sets }).then(save);
   } catch (error) {
     console.warn('Daily content buffer failed; continuing with prepared fallback.', error);
+    await completeLoadingWindow(loadingVisibleSince, '대체 데이터를 준비했습니다. 도시로 이동합니다.');
     renderHub('콘텐츠 준비에 실패해 기본 데이터를 사용합니다.');
   } finally {
     nextDayButton.disabled = false;
