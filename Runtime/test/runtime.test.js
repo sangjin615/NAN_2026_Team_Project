@@ -47,6 +47,15 @@ test('auction participant portraits include the player and all relic rivals', as
   }
 });
 
+test('relic auction renders a three-lot guide with effects and auction states', async () => {
+  const app = await readFile(new URL('../src/app.js', import.meta.url), 'utf8');
+  assert.match(app, /class="relic-lot-list"/);
+  assert.match(app, /세 유물의 효과와 낙찰 현황/);
+  assert.match(app, /낙찰 ·/);
+  assert.match(app, /경매 중 ·/);
+  assert.match(app, /대기 중/);
+});
+
 test('successful result uses the full ending scene instead of the clear icon', async () => {
   const appSource = await readFile(new URL('../src/app.js', import.meta.url), 'utf8');
   const cssSource = await readFile(new URL('../runtime-fixes.css', import.meta.url), 'utf8');

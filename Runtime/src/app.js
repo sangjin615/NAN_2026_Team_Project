@@ -773,12 +773,39 @@ function startRelicAuction() {
   state.phase = 'relic'; state.relicRound ??= 0; state.relicChoices ??= []; state.relicSession = null; renderRelic();
 }
 
+function relicForAuctionRound(round, owned) {
+  const tier = balance.relicAuction.tiers[round];
+  const choices = balance.relics.list.filter((relic) => relic.tier === tier && !owned.has(relic.id));
+  return choices[(round + state.seed.length) % Math.max(1, choices.length)] || balance.relics.list.find((entry) => entry.tier === tier);
+}
+
+function renderRelicLotGuide(session, owned) {
+  const results = (state.events || []).filter((event) => event.type === 'relic-auction');
+  const winnerNames = { player: '당신', 'royal-1': '왕실 대리인', 'royal-2': '북부 대상인', 'royal-3': '해외 수집가' };
+  const lots = balance.relicAuction.tiers.map((tier, round) => {
+    const relic = round === state.relicRound ? state.currentRelic : relicForAuctionRound(round, owned);
+    const art = relicArt[relic?.id];
+    const result = results[round];
+    const phase = round < state.relicRound ? 'complete' : round === state.relicRound ? 'current' : 'waiting';
+    const statusText = result
+      ? `낙찰 · ${winnerNames[result.winner] || '경쟁자'} ${money(result.price)}`
+      : phase === 'current'
+        ? `경매 중 · ${money(session.currentPrice)}`
+        : '대기 중';
+    return `<li class="relic-lot-${phase}" ${phase === 'current' ? 'aria-current="step"' : ''}>
+      <span class="relic-lot-number">${String(round + 1).padStart(2, '0')}</span>
+      ${art ? `<img data-relic-art="${relic.id}" src="./assets/relics/${encodeURIComponent(art)}" alt="">` : ''}
+      <div><small>${RELIC_TIER_LABELS[tier] || tier} 유물</small><b>${relic?.name || '미공개 유물'}</b><p>${relic?.effect || ''}</p><strong>${statusText}</strong></div>
+    </li>`;
+  }).join('');
+  document.querySelector('#relic-feed').innerHTML = `<header><small>RELIC AUCTION</small><h3>오늘의 유물</h3><p>세 유물의 효과와 낙찰 현황</p></header><ol class="relic-lot-list">${lots}</ol>`;
+}
+
 function renderRelic() {
   if (state.relicRound >= 3) return renderResult();
   adapter.showScene('relic'); audio.playBgm('relic'); const tier = balance.relicAuction.tiers[state.relicRound]; const opening = balance.relicAuction.startBid[state.relicRound];
   const owned = new Set(ownedRelicIds());
-  const choices = balance.relics.list.filter((relic) => relic.tier === tier && !owned.has(relic.id));
-  const relic = choices[(state.relicRound + state.seed.length) % Math.max(1, choices.length)] || balance.relics.list.find((entry) => entry.tier === tier);
+  const relic = relicForAuctionRound(state.relicRound, owned);
   state.currentRelic = relic;
   if (!state.relicSession || state.relicSession.round !== state.relicRound) {
     const rng = createRng(`${state.seed}:relic:${state.relicRound}`);
@@ -798,7 +825,7 @@ function renderRelic() {
     'royal-3': './assets/ui/auction/portraits/foreign-collector.png',
   };
   document.querySelector('#relic-participants').innerHTML = `<h3>최종 경매 참가자</h3>${participants.map((participant, index) => `<div class="participant ${session.leader === participant.id ? 'is-leading' : ''}"><img class="relic-participant-portrait" src="${relicPortraits[participant.id]}" alt="${participant.name} 초상"><span>${session.leader === participant.id ? '선두' : String(index + 1).padStart(2, '0')}</span><b>${participant.name}</b><small>입찰 한도</small><strong>${money(participant.budget)}</strong></div>`).join('')}`;
-  document.querySelector('#relic-feed').innerHTML = `<header><small>RELIC AUCTION</small><h3>유물 경매</h3><p><b>${state.relicRound + 1}</b><span>/ 3회</span></p><strong>${RELIC_TIER_LABELS[tier] || tier} 등급</strong></header><section><h4>입찰 기록</h4>${session.feed.slice(-4).map((line) => `<p>${line}</p>`).join('')}</section>`;
+  renderRelicLotGuide(session, owned);
   const minimumBid = session.currentPrice + Math.max(1, Math.ceil(session.currentPrice * balance.auction.minRaiseRate));
   document.querySelectorAll('[data-relic-raise]').forEach((button) => { button.disabled = state.cash < Math.max(minimumBid, Math.ceil(session.currentPrice * Number(button.dataset.relicRaise))); });
   document.querySelector('#direct-relic-bid').disabled = state.cash < minimumBid;

@@ -3306,6 +3306,35 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
 [data-scene="relic"] #relic-feed > section h4 { position: absolute; left: 8%; top: 8%; margin: 0; color: #deb65d; font-size: clamp(11px,1vw,16px); }
 [data-scene="relic"] #relic-feed > section p { margin: 0; padding: 3.5% 0; border-bottom: 1px solid #725d3d; font-size: clamp(9px,.78vw,13px); line-height: 1.25; }
 
+[data-scene="relic"] #relic-feed > header {
+  height: 19%; padding: 19% 8% 3%; gap: 2%;
+}
+[data-scene="relic"] #relic-feed > header h3 { font-size: clamp(14px,1.3vw,21px); }
+[data-scene="relic"] #relic-feed > header p {
+  display: block; margin: 0; color: #765b38; font-size: clamp(7px,.56vw,9px); line-height: 1.25;
+}
+[data-scene="relic"] .relic-lot-list {
+  position: absolute; inset: 20% 5% 3%; display: grid; grid-template-rows: repeat(3,minmax(0,1fr)); gap: 2.5%;
+  margin: 0; padding: 0; list-style: none;
+}
+[data-scene="relic"] .relic-lot-list > li {
+  position: relative; display: grid; grid-template-columns: 34% minmax(0,1fr); align-items: center; gap: 5%; min-height: 0;
+  box-sizing: border-box; padding: 5% 5% 4%; border: 1px solid #b99a6c; background: #efe3d1cc; box-shadow: inset 0 0 0 1px #fff7e5aa;
+}
+[data-scene="relic"] .relic-lot-list > li.relic-lot-current {
+  border-color: #bb7a1d; background: #f4dfb8ed; box-shadow: inset 0 0 0 2px #e1b35a,0 2px 7px #4b2d1455;
+}
+[data-scene="relic"] .relic-lot-list > li.relic-lot-waiting { filter: saturate(.55); opacity: .72; }
+[data-scene="relic"] .relic-lot-list img { width: 100%; max-height: 82%; object-fit: contain; filter: drop-shadow(0 2px 2px #0005); }
+[data-scene="relic"] .relic-lot-list div { align-self: stretch; display: flex; flex-direction: column; justify-content: center; min-width: 0; }
+[data-scene="relic"] .relic-lot-list small { color: #8a6633; font-size: clamp(6px,.48vw,8px); font-weight: 800; }
+[data-scene="relic"] .relic-lot-list b { overflow: hidden; font-size: clamp(9px,.76vw,12px); line-height: 1.3; text-overflow: ellipsis; white-space: nowrap; }
+[data-scene="relic"] .relic-lot-list p { display: -webkit-box; overflow: hidden; margin: 2% 0; color: #564331; font-size: clamp(6px,.5vw,8px); line-height: 1.25; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
+[data-scene="relic"] .relic-lot-list strong { color: #7e321b; font-size: clamp(6px,.5vw,8px); line-height: 1.25; }
+[data-scene="relic"] .relic-lot-number {
+  position: absolute; left: 2%; top: 3%; color: #9d7b4c; font-size: clamp(6px,.48vw,8px); font-weight: 900;
+}
+
 [data-scene="relic"] #relic-card {
   left: 40.5%; top: 39%; width: 19%; height: 44%; box-sizing: border-box; padding: 1.3% 1.5% 1.2%;
   display: grid; grid-template-rows: auto auto minmax(0,1fr) auto auto; justify-items: center; gap: 1.2%;
@@ -5239,6 +5268,28 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
     state.relicSession = null;
     renderRelic();
   }
+  function relicForAuctionRound(round, owned) {
+    const tier = balance.relicAuction.tiers[round];
+    const choices = balance.relics.list.filter((relic) => relic.tier === tier && !owned.has(relic.id));
+    return choices[(round + state.seed.length) % Math.max(1, choices.length)] || balance.relics.list.find((entry) => entry.tier === tier);
+  }
+  function renderRelicLotGuide(session, owned) {
+    const results = (state.events || []).filter((event) => event.type === "relic-auction");
+    const winnerNames = { player: "\uB2F9\uC2E0", "royal-1": "\uC655\uC2E4 \uB300\uB9AC\uC778", "royal-2": "\uBD81\uBD80 \uB300\uC0C1\uC778", "royal-3": "\uD574\uC678 \uC218\uC9D1\uAC00" };
+    const lots = balance.relicAuction.tiers.map((tier, round) => {
+      const relic = round === state.relicRound ? state.currentRelic : relicForAuctionRound(round, owned);
+      const art = relicArt[relic?.id];
+      const result = results[round];
+      const phase = round < state.relicRound ? "complete" : round === state.relicRound ? "current" : "waiting";
+      const statusText = result ? `\uB099\uCC30 \xB7 ${winnerNames[result.winner] || "\uACBD\uC7C1\uC790"} ${money(result.price)}` : phase === "current" ? `\uACBD\uB9E4 \uC911 \xB7 ${money(session.currentPrice)}` : "\uB300\uAE30 \uC911";
+      return `<li class="relic-lot-${phase}" ${phase === "current" ? 'aria-current="step"' : ""}>
+      <span class="relic-lot-number">${String(round + 1).padStart(2, "0")}</span>
+      ${art ? `<img data-relic-art="${relic.id}" src="./assets/relics/${encodeURIComponent(art)}" alt="">` : ""}
+      <div><small>${RELIC_TIER_LABELS[tier] || tier} \uC720\uBB3C</small><b>${relic?.name || "\uBBF8\uACF5\uAC1C \uC720\uBB3C"}</b><p>${relic?.effect || ""}</p><strong>${statusText}</strong></div>
+    </li>`;
+    }).join("");
+    document.querySelector("#relic-feed").innerHTML = `<header><small>RELIC AUCTION</small><h3>\uC624\uB298\uC758 \uC720\uBB3C</h3><p>\uC138 \uC720\uBB3C\uC758 \uD6A8\uACFC\uC640 \uB099\uCC30 \uD604\uD669</p></header><ol class="relic-lot-list">${lots}</ol>`;
+  }
   function renderRelic() {
     if (state.relicRound >= 3) return renderResult();
     adapter.showScene("relic");
@@ -5246,8 +5297,7 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
     const tier = balance.relicAuction.tiers[state.relicRound];
     const opening = balance.relicAuction.startBid[state.relicRound];
     const owned = new Set(ownedRelicIds());
-    const choices = balance.relics.list.filter((relic2) => relic2.tier === tier && !owned.has(relic2.id));
-    const relic = choices[(state.relicRound + state.seed.length) % Math.max(1, choices.length)] || balance.relics.list.find((entry) => entry.tier === tier);
+    const relic = relicForAuctionRound(state.relicRound, owned);
     state.currentRelic = relic;
     if (!state.relicSession || state.relicSession.round !== state.relicRound) {
       const rng = createRng(`${state.seed}:relic:${state.relicRound}`);
@@ -5267,7 +5317,7 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
       "royal-3": "./assets/ui/auction/portraits/foreign-collector.png"
     };
     document.querySelector("#relic-participants").innerHTML = `<h3>\uCD5C\uC885 \uACBD\uB9E4 \uCC38\uAC00\uC790</h3>${participants.map((participant, index) => `<div class="participant ${session.leader === participant.id ? "is-leading" : ""}"><img class="relic-participant-portrait" src="${relicPortraits[participant.id]}" alt="${participant.name} \uCD08\uC0C1"><span>${session.leader === participant.id ? "\uC120\uB450" : String(index + 1).padStart(2, "0")}</span><b>${participant.name}</b><small>\uC785\uCC30 \uD55C\uB3C4</small><strong>${money(participant.budget)}</strong></div>`).join("")}`;
-    document.querySelector("#relic-feed").innerHTML = `<header><small>RELIC AUCTION</small><h3>\uC720\uBB3C \uACBD\uB9E4</h3><p><b>${state.relicRound + 1}</b><span>/ 3\uD68C</span></p><strong>${RELIC_TIER_LABELS[tier] || tier} \uB4F1\uAE09</strong></header><section><h4>\uC785\uCC30 \uAE30\uB85D</h4>${session.feed.slice(-4).map((line) => `<p>${line}</p>`).join("")}</section>`;
+    renderRelicLotGuide(session, owned);
     const minimumBid = session.currentPrice + Math.max(1, Math.ceil(session.currentPrice * balance.auction.minRaiseRate));
     document.querySelectorAll("[data-relic-raise]").forEach((button) => {
       button.disabled = state.cash < Math.max(minimumBid, Math.ceil(session.currentPrice * Number(button.dataset.relicRaise)));
