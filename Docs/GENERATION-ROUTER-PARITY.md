@@ -112,10 +112,45 @@ gpt-4o-mini(7초)를 모두 태우고 static 으로 떨어졌다. 프레임 + LO
   남는다.** 배포하면 여기가 실패 지점이 된다
 - **호출 수가 늘어 비용과 rate limit 위험이 커졌다.** 동시 3일이면 27건이다
 
-## 미결 — groq 가 계속 떨어진다
+## 해결 — groq 는 키가 틀렸다 (2026-08-07)
 
-세 번 측정 중 두 번이 3순위 `gpt-5.6-luna`, 한 번만 `gpt-4o-mini` 였다. LOT
-하나짜리 작은 요청인데도 1순위 groq 가 매번 실패한다. 이유는 아직 모른다.
+**`invalid_request_error: 401 Invalid API Key`.** 8 LOT 전부, 프레임까지, 매번
+같은 사유다. 타임아웃도 rate limit 도 계약 문제도 아니었다.
+
+`GROQ_API_KEY` 는 설정되어 있었다. **설정 여부와 유효 여부는 다르다.** 측정
+도구의 `GROQ_API_KEY: 설정됨` 은 값이 있다는 뜻일 뿐이고, groq 는 그 값을
+거부했다. 만료·오타·다른 서비스 키를 넣은 경우가 후보다. groq 키는 `gsk_` 로
+시작한다.
+
+**세워뒀던 타임아웃 가설은 틀렸다.** 7초짜리 둘이 떨어지고 9초짜리만 살아남은
+것은 우연이었다. groq 는 401 로 즉시 떨어졌고 시간과 무관했다.
+
+키를 고치기 전에는 라우터가 사실상 2단 구성(gpt-4o-mini → gpt-5.6-luna)으로
+돈다. 1순위가 없는 상태의 실측을 groq 성능으로 읽으면 안 된다.
+
+### 그 옆에서 나온 진짜 미결 — gpt-4o-mini 가 계약을 못 지킨다
+
+같은 측정에서 2순위도 떨어졌다.
+
+```
+openai:gpt-4o-mini · generation_candidate_failed ·
+  copy quality: lot 4 description has unsafe ending; lot 4 description does not match
+```
+
+LOT 8건은 개별로 다 생성됐다(`lot_fallback` 기록이 없다). 묶어서 `validateOutput`
+할 때 lot 4 가 걸렸고, `dailyRepairIndices` 복구를 거치고도 통과하지 못했다.
+`description` 은 계약이 정한 다섯 어미 중 하나로 끝나야 하는데 그것을 어겼다.
+
+복구 단계는 로그를 하나도 남기지 않아 **복구가 손을 댔는지, 대체로 메웠는지,
+고치고도 또 틀렸는지 구분되지 않았다.** `generation_daily_repair` 와
+`generation_daily_repair_fallback` 을 넣어 메웠다. 다음 측정에서 이 세 경우가
+갈린다.
+
+문서 앞쪽 경고와 짝이다 — **복구 프롬프트로 형식을 강제하려 하지 마라.** 이미
+`RETRY_ERRORS` 로 사유를 넣어 다시 부르고 있는데도 같은 어미를 또 틀린다.
+`response_format` 이나 모델 교체가 다음 후보다.
+
+### 사유를 보이게 만든 과정
 
 라우터는 실패할 때마다 `generation_candidate_failed` 로 사유를 남기는데,
 측정 도구가 `logger.warn` 을 빈 함수로 막아 삼키고 있었다. 지금은 모아서
@@ -133,11 +168,10 @@ gpt-4o-mini(7초)를 모두 태우고 static 으로 떨어졌다. 프레임 + LO
 - LOT 첫 시도 실패를 `generation_daily_lot_retry` 로 남긴다. 재시도가 성공하면
   기존 경로에서는 첫 실패가 어디에도 안 남아, 공급자가 매번 한 번씩 태우고
   있어도 기록에 보이지 않았다
+- 복구 단계에 `generation_daily_repair`(복구 전 사유와 고칠 자리)와
+  `generation_daily_repair_fallback`(복구 호출마저 실패) 을 남긴다
 
-가짜 키(401)로 경로를 확인했다. 이제 사유가 `invalid_request_error: 401
-Invalid API Key` 처럼 공급자·모델별로 나온다.
-
-다음 세션이 할 일은 실제 키로 이것을 돌려 사유를 확인하는 것이다.
+측정은 이렇게 돌린다.
 
 ```
 node tools/measure-generation-router.mjs --single
@@ -147,11 +181,6 @@ node tools/measure-generation-router.mjs --single
 `process.argv[2]` 를 그대로 시드로 써서 `--single` 만 주면 시드가 문자열
 `'--single'` 이 되고 LOT ID 까지 `--single-d1-l1` 로 나왔다. 지금은 플래그를
 건너뛴다.
-
-돌리기 전에 세워둔 가설 하나. **실패가 공급자보다 타임아웃 값과 더 잘 맞는다.**
-세 번 측정에서 7초짜리 둘(groq, gpt-4o-mini)이 각각 3/3·2/3 떨어졌고 9초짜리
-gpt-5.6-luna 만 매번 살았다. groq 고유의 문제가 아니라 7초가 빠듯한 것일 수
-있다. 이것은 추론이지 실측이 아니다 — 위 명령의 사유가 확인해 준다.
 
 사유별로 대응이 다르다.
 

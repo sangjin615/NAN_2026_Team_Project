@@ -303,6 +303,10 @@ async function generateDaily(request, provider, fetchImpl, logger) {
     // 반복 어절처럼 전역 규칙에 걸린 경우다. dailyRepairIndices 가 고칠 자리를
     // 골라준다.
     const repairIndices = dailyRepairIndices(request, output);
+    // 복구 전 사유를 남긴다. 복구가 실패하면 아래 validateOutput 이 다시 던지는데,
+    // 그 두 번째 오류만 candidate_failed 로 보여서 원래 무엇이 문제였는지,
+    // 복구가 손을 댔는지조차 구분되지 않았다.
+    logger?.warn?.('generation_daily_repair', { provider: provider.name, model: provider.model, indices: repairIndices, error: cleanError(error) });
     if (repairIndices.length === 0) throw error;
     const repairs = await Promise.all(repairIndices.map(async (index) => ({
       index,
@@ -311,7 +315,10 @@ async function generateDaily(request, provider, fetchImpl, logger) {
         schema: dailyLotSchema(request.lots[index]),
         temperature: 0.1,
         prompt: `RETRY_ERRORS:\n${error.message}\nGenerate exactly one corrected LOT record for lot ${index + 1}.\nINPUT LOT:\n${JSON.stringify(request.lots[index])}`,
-      }, provider, fetchImpl).catch(() => fallbackLots[index]),
+      }, provider, fetchImpl).catch((repairError) => {
+        logger?.warn?.('generation_daily_repair_fallback', { provider: provider.name, model: provider.model, lotId: request.lots[index].lotId, error: cleanError(repairError) });
+        return fallbackLots[index];
+      }),
     })));
     for (const { index, repaired } of repairs) output.lots[index] = repaired;
     validateOutput(request, output);

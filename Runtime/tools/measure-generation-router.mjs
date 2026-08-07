@@ -84,13 +84,16 @@ function reportProviderFailures(label) {
   const mine = events.splice(0, events.length);
   if (!mine.length) return;
   const bucket = new Map();
-  for (const { name, provider, model, error, errors, lotId, setId } of mine) {
+  for (const { name, provider, model, error, errors, lotId, setId, indices } of mine) {
     const who = model ? `${provider}:${model}` : provider || '-';
     const why = describeReason(error) || describeReason(errors) || name;
     const key = `${who} · ${name} · ${String(why).slice(0, 90)}`;
     const entry = bucket.get(key) || { count: 0, where: [] };
     entry.count += 1;
-    if (lotId || setId) entry.where.push(lotId || setId);
+    // 복구 로그는 lotId 대신 고칠 자리 목록을 남긴다. dailyRepairIndices 가
+    // 전체를 돌려줬는지 한 자리만 골랐는지가 진단에서 갈린다.
+    const at = lotId || setId || (Array.isArray(indices) ? `lot ${indices.map((index) => index + 1).join(',') || '없음'}` : null);
+    if (at) entry.where.push(at);
     bucket.set(key, entry);
   }
   console.log(`  실패 기록 (${label})`);
