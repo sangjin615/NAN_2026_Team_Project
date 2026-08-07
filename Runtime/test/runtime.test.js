@@ -199,11 +199,15 @@ test('generation buffer prepares current day plus two and falls back without blo
   assert.ok(schedule.days.slice(0, 3).every((day) => day.lots.every((lot) => lot.content?.rumor && lot.content?.setHint && lot.content?.npcReaction)));
 });
 
-test('daily price stages are fixed once from catalog prices', () => {
+test('public prices vary by ten percent and shift upward five percent per grade', () => {
   const schedule = createRunSchedule({ catalog, balance, seed: 'daily-price-stages' });
+  const gradeIndex = { COMMON: 0, RARE: 1, EPIC: 2, LEGENDARY: 3 };
   for (const [dayIndex, multiplier] of [0.5, 0.5, 0.5, 0.75, 0.75, 0.75, 1, 1, 1, 1.25, 1.25, 1.25].entries()) {
     for (const lot of schedule.days[dayIndex].lots) {
-      assert.equal(lot.pricing.basePrice, Math.round(lot.pricing.catalogBasePrice * multiplier / 100) * 100);
+      const bonus = gradeIndex[lot.grade] * 0.05;
+      assert.ok(lot.pricing.variationRate >= -0.1 + bonus);
+      assert.ok(lot.pricing.variationRate < 0.1 + bonus);
+      assert.equal(lot.pricing.basePrice, Math.round(lot.pricing.catalogBasePrice * multiplier * (1 + lot.pricing.variationRate) / 100) * 100);
       assert.equal(lot.pricing.priceMultiplier, multiplier);
     }
   }

@@ -39,6 +39,7 @@ export function createRunSchedule({ catalog, balance, seed }) {
   const weights = normalizedGradeWeights(balance);
   const gradeEntries = GRADES.map((grade) => [grade, weights[grade]]);
   const gradeBase = balance?.gradeBase || { common: 8000, rare: 16000, epic: 32000, legendary: 64000 };
+  const priceVariation = balance?.publicPriceVariation || { min: -0.1, max: 0.1, gradeStep: 0.05 };
 
   const days = Array.from({ length: RUN_DAYS }, (_, dayIndex) => ({
     day: dayIndex + 1,
@@ -48,7 +49,11 @@ export function createRunSchedule({ catalog, balance, seed }) {
       const catalogBasePrice = Number(gradeBase[grade.toLowerCase()] || 8000);
       const dayStage = Math.min(4, Math.floor(dayIndex / 3) + 1);
       const priceMultiplier = balance.shop?.priceMultiplierByDayStage?.[dayStage] ?? 1;
-      const basePrice = Math.round(catalogBasePrice * priceMultiplier / 100) * 100;
+      const gradeBonus = Math.max(0, GRADES.indexOf(grade)) * Number(priceVariation.gradeStep ?? 0.05);
+      const variationRate = Number(priceVariation.min ?? -0.1)
+        + rng() * (Number(priceVariation.max ?? 0.1) - Number(priceVariation.min ?? -0.1))
+        + gradeBonus;
+      const basePrice = Math.round(catalogBasePrice * priceMultiplier * (1 + variationRate) / 100) * 100;
       return {
         lotId: `${seed}-d${dayIndex + 1}-l${lotIndex + 1}`,
         day: dayIndex + 1,
@@ -60,7 +65,7 @@ export function createRunSchedule({ catalog, balance, seed }) {
         grade,
         spritePath: item.grades[grade],
         spriteAnchor: item.sprite_anchors?.[grade] || { x: 0, y: 0 },
-        pricing: { catalogBasePrice, priceMultiplier, basePrice },
+        pricing: { catalogBasePrice, priceMultiplier, variationRate, basePrice },
         visualEffects: selectVisualEffects(item.category, grade, rng),
         content: null
       };
