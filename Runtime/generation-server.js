@@ -48,10 +48,7 @@ export function outputSchema(request) {
   if (request.mode === 'run-blueprint') return fixedObject({
     schemaVersion: { const: '1.0' }, runSeed: { const: request.runSeed }, premise: text,
     marketArc: { type: 'array', minItems: 12, maxItems: 12, items: fixedObject({ day: { type: 'integer' }, headline: text, mood: text }) },
-    sets: { type: 'array', prefixItems: request.sets.map(({ setId }) => fixedObject({
-      setId: { const: setId }, title: text, sharedSecret: text, revealHint: text,
-      incidentTitle: text, incidentSummary: text, newspaperLead: text,
-    })), minItems: request.sets.length, maxItems: request.sets.length },
+    sets: blueprintSetsSchema(request),
   });
   return fixedObject({
     schemaVersion: { const: '1.0' }, day: { const: request.day }, marketHeadline: text,
@@ -78,6 +75,21 @@ export function outputSchema(request) {
 // `$ref`/`$defs` 로 줄이는 방법도 있었지만 쓰지 않았다. 모델은 평평한 스키마를
 // 더 잘 따르고, 간접 참조는 준수율을 떨어뜨릴 수 있다. 토큰을 아끼려다 static
 // 낙하가 늘면 손해다.
+// blueprint 의 sets 도 같은 반복이었다 — 세트 정의가 12벌 들어가고 다른 것은
+// `setId` 뿐이라 6,248자였다. 같은 방식으로 하나만 둔다.
+//
+// **라우터는 이 스키마를 쓰지 않는다.** blueprint 를 프레임 + 세트로 쪼개
+// `blueprintFrameSchema`(494자)와 `setIncidentSchema`(472자)를 따로 보낸다.
+// 이 경로는 `generation-server.js` 의 단발 생성만 탄다. 그래서 여기서 줄인 것은
+// 배포본 비용에 잡히지 않는다 — 다만 두 가지가 남는다. 로컬 단발 경로가 실제로
+// 가벼워지고, 세트 필드 목록이 파일 안에서 두 번 적히던 것이 하나로 합쳐진다.
+const blueprintSetsSchema = (request) => ({
+  type: 'array',
+  minItems: request.sets.length,
+  maxItems: request.sets.length,
+  items: fixedObject({ setId: { enum: request.sets.map(({ setId }) => setId) }, ...setIncidentFields }),
+});
+
 const dailyLotsSchema = (request) => ({
   type: 'array',
   minItems: request.lots.length,
@@ -94,10 +106,14 @@ export const blueprintFrameSchema = (request) => fixedObject({
   marketArc: { type: 'array', minItems: 12, maxItems: 12, items: fixedObject({ day: { type: 'integer' }, headline: text, mood: text }) },
 });
 
-export const setIncidentSchema = ({ setId }) => fixedObject({
-  setId: { const: setId }, title: text, sharedSecret: text, revealHint: text,
+// 세트 사건의 필드는 한 곳에만 둔다. 예전에는 `outputSchema` 의 blueprint 가지가
+// 같은 목록을 따로 적고 있었다 — 갈라질 자리였다.
+const setIncidentFields = {
+  title: text, sharedSecret: text, revealHint: text,
   incidentTitle: text, incidentSummary: text, newspaperLead: text,
-});
+};
+
+export const setIncidentSchema = ({ setId }) => fixedObject({ setId: { const: setId }, ...setIncidentFields });
 
 // 일자 생성을 LOT 단위로 쪼갤 때 쓰는 머리 부분. blueprint 의 프레임과 같은 역할이다.
 export const dailyFrameSchema = (request) => fixedObject({
