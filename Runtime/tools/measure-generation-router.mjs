@@ -17,7 +17,9 @@ import { createRunSchedule } from '../src/schedule.js';
 import { createSetGraph } from '../src/set-graph.js';
 import { createMarketPath } from '../src/systems.js';
 import { createHandler, deterministicFallback } from '../aws/generation-router.mjs';
-import { validateOutput } from '../generation-server.js';
+// 세트 대체는 deterministicFallback 이 아니라 fallbackSetIncident 가 만든다.
+// 문구가 서로 달라서 전자와만 비교하면 대체된 세트를 생성으로 잘못 센다.
+import { fallbackSetIncident, validateOutput } from '../generation-server.js';
 
 // 플래그를 시드로 먹지 않는다. `--single` 만 주면 argv[2] 가 그것이라 시드가
 // 문자열 '--single' 이 되어 LOT ID 까지 그 이름으로 나온다.
@@ -120,11 +122,18 @@ function fallbackShare(request, output) {
   const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
   const key = output.lots ? 'lots' : 'sets';
   const produced = output[key] || [];
-  const fell = produced.filter((item, index) => same(item, (base[key] || [])[index])).length;
+  // 대체 문구의 출처가 둘이다. 일자 LOT 은 deterministicFallback().lots 를 그대로
+  // 쓰지만, 세트는 fallbackSetIncident() 가 따로 만든다. 둘 다 대조해야 한다.
+  const isFallbackItem = (item, index) => same(item, (base[key] || [])[index])
+    || (key === 'sets' && same(item, fallbackSetIncident(request.sets[index], index)));
+  const fell = produced.filter(isFallbackItem).length;
   return {
     key,
     total: produced.length,
     fell,
+    // 표본은 실제로 생성된 항목에서 뽑아야 한다. 앞자리가 대체된 응답에서
+    // [0] 을 찍으면 대체 문구를 생성 결과로 보여주게 된다.
+    firstGenerated: produced.findIndex((item, index) => !isFallbackItem(item, index)),
     // 프레임(일자 헤드라인 · 런 premise)은 항목 밖이라 따로 본다.
     frameFell: output.lots ? same(output.marketHeadline, base.marketHeadline) : same(output.premise, base.premise),
     whole: same(output, base),
@@ -152,9 +161,10 @@ async function measure(label, request) {
   if (!isFallback && (share.fell || share.frameFell)) {
     console.log(`  ⚠ 부분 대체         : 헤더는 ${source} 지만 내용 일부는 생성이 아니다`);
   }
-  const sample = output.sets?.find((set) => set) && !isFallback ? output.sets[0].incidentTitle : null;
-  if (sample) console.log(`  표본                : ${sample}`);
-  if (!isFallback && output.lots?.[0]) console.log(`  표본                : ${output.lots[0].description}`);
+  if (share.firstGenerated >= 0) {
+    const item = output[share.key][share.firstGenerated];
+    console.log(`  표본                : ${item.incidentTitle || item.description}  [${share.key.slice(0, -1)} ${share.firstGenerated + 1}]`);
+  }
   reportProviderFailures(label);
   return { label, elapsed, source, contractOk, isFallback, share };
 }
