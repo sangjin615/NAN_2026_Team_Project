@@ -130,6 +130,9 @@ export function deterministicFallback(request) {
   };
 }
 
+const mini = (env) => env.OPENAI_API_KEY && { name: 'openai', model: env.SECONDARY_MODEL || 'gpt-4o-mini', apiKey: env.OPENAI_API_KEY, timeoutMs: 7000, call: callOpenAI };
+const luna = (env) => env.OPENAI_API_KEY && { name: 'openai', model: env.FALLBACK_MODEL || 'gpt-5.6-luna', apiKey: env.OPENAI_API_KEY, timeoutMs: 9000, call: callOpenAI };
+
 function providersFromEnv(env, request) {
   if (env.LIVE_GENERATION_ENABLED !== 'true') return [];
   return [
@@ -145,8 +148,19 @@ function providersFromEnv(env, request) {
     // 요금제를 올리거나 DAILY_WAVE 를 낮춰 다시 붙일 수 있도록 경로는 남긴다.
     // GROQ_API_KEY 만으로는 붙지 않는다. GROQ_DAILY_ENABLED=true 가 함께 필요하다.
     env.GROQ_DAILY_ENABLED === 'true' && request.mode === 'daily-content' && env.GROQ_API_KEY && { name: 'groq', model: env.PRIMARY_MODEL || 'openai/gpt-oss-120b', apiKey: env.GROQ_API_KEY, timeoutMs: 7000, call: callGroq },
-    env.OPENAI_API_KEY && { name: 'openai', model: env.SECONDARY_MODEL || 'gpt-4o-mini', apiKey: env.OPENAI_API_KEY, timeoutMs: 7000, call: callOpenAI },
-    env.OPENAI_API_KEY && { name: 'openai', model: env.FALLBACK_MODEL || 'gpt-5.6-luna', apiKey: env.OPENAI_API_KEY, timeoutMs: 9000, call: callOpenAI },
+    // 순서가 모드마다 다르다. 2026-08-07 실측이 근거다.
+    //
+    // 일자 생성에서 gpt-4o-mini 는 두 번 연속 계약을 어겼다. description 이
+    // 계약이 정한 다섯 어미를 벗어나고 category 어휘와도 어긋났으며,
+    // dailyRepairIndices 가 자리를 골라 복구한 뒤에도 통과하지 못했다. 그동안
+    // gpt-5.6-luna 는 8/8 을 냈다. 실패가 확실한 쪽을 먼저 태울 이유가 없다.
+    //
+    // blueprint 는 반대다. gpt-4o-mini 가 네 번 다 성공했고 luna 로는 이 경로를
+    // 재본 적이 없다. 근거가 없으므로 blueprint 순서는 건드리지 않는다.
+    //
+    // 환경변수 이름(SECONDARY/FALLBACK)은 그대로 둔다. 배포된 설정을 깨지 않기
+    // 위해서다. 이름이 곧 순위가 아니라는 점만 여기서 기억한다.
+    ...(request.mode === 'daily-content' ? [luna(env), mini(env)] : [mini(env), luna(env)]),
   ].filter(Boolean);
 }
 

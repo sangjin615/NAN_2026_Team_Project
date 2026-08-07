@@ -184,11 +184,25 @@ tokens: 429 Rate limit reached for model `qwen/qwen3.6-27b` in organization ...
 | `gpt-4o-mini` | 10/12 · 27.7초 | **계약 실패 · 복구도 실패** |
 | `gpt-5.6-luna` | — | **8/8 · 23.1초** |
 
-일자 생성은 사실상 `gpt-5.6-luna` 단독이다. 1순위 `gpt-4o-mini` 는 두 번
-연속으로 `description has unsafe ending` / `does not match category` 를 냈고,
+일자 생성은 사실상 `gpt-5.6-luna` 단독이다. `gpt-4o-mini` 는 두 번 연속으로
+`description has unsafe ending` / `does not match category` 를 냈고,
 `dailyRepairIndices` 가 lot 1·2·3 을 골라 복구한 뒤에도 통과하지 못했다.
-**실패가 확실한 공급자를 매번 먼저 태우고 있다** — 순서를 바꿔 luna 를 먼저
-부르는 것이 다음 검토 대상이다.
+
+**그래서 일자 생성만 순서를 뒤집었다.** 실패가 확실한 공급자를 매번 먼저 태울
+이유가 없다.
+
+| 모드 | 순서 |
+|---|---|
+| `daily-content` | (groq — 꺼짐) → **`gpt-5.6-luna`** → `gpt-4o-mini` |
+| `run-blueprint` | **`gpt-4o-mini`** → `gpt-5.6-luna` |
+
+**blueprint 는 건드리지 않았다.** `gpt-4o-mini` 가 네 번 다 성공했고 luna 로는
+이 경로를 재본 적이 없다. 근거가 없는 곳까지 바꾸면 다음에 문제가 생겼을 때
+원인이 둘로 늘어난다.
+
+환경변수 이름(`SECONDARY_MODEL` / `FALLBACK_MODEL`)은 그대로 뒀다. 배포된
+설정을 깨지 않기 위해서다. **이름이 곧 순위가 아니다** — 측정 도구 머리말이
+모드별 순서를 함께 찍는다.
 
 blueprint 는 `gpt-4o-mini` 가 12.7 / 14.6 / 27.7 / 34.5초로 편차가 20초 넘는다.
 29초를 넘는 실행이 실제로 나왔다.

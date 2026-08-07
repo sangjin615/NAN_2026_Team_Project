@@ -70,8 +70,9 @@ console.log(`GROQ_DAILY_ENABLED: ${env.GROQ_DAILY_ENABLED === 'true'
 // 무엇으로 불렸는지 여기 찍지 않으면 "내가 바꾼 게 먹었나"를 확인할 길이 없다.
 for (const [key, fallback, note] of [
   ['PRIMARY_MODEL', 'openai/gpt-oss-120b', 'groq · GROQ_DAILY_ENABLED 일 때만'],
-  ['SECONDARY_MODEL', 'gpt-4o-mini', 'openai'],
-  ['FALLBACK_MODEL', 'gpt-5.6-luna', 'openai'],
+  // 이름이 곧 순위가 아니다. 일자 생성은 luna 를 먼저 부른다.
+  ['SECONDARY_MODEL', 'gpt-4o-mini', 'openai · blueprint 먼저 / daily 나중'],
+  ['FALLBACK_MODEL', 'gpt-5.6-luna', 'openai · daily 먼저 / blueprint 나중'],
 ]) {
   console.log(`${key}: ${env[key] || `${fallback} (기본값)`}  — ${note}`);
 }

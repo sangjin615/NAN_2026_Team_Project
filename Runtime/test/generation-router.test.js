@@ -64,7 +64,9 @@ test('uses Groq first and stops after a valid result', async () => {
   assert.ok(models.every((model) => model === 'openai/gpt-oss-120b'));
 });
 
-test('falls through Groq to gpt-4o-mini, then stops', async () => {
+test('falls through Groq to Luna, not to gpt-4o-mini', async () => {
+  // 일자 생성 순서는 groq → luna → gpt-4o-mini 다. 2026-08-07 실측에서
+  // gpt-4o-mini 가 두 번 연속 계약을 어겼고 복구를 거치고도 실패했다.
   const models = [];
   const fetchImpl = async (url, options) => {
     const body = JSON.parse(options.body); models.push(body.model);
@@ -72,24 +74,37 @@ test('falls through Groq to gpt-4o-mini, then stops', async () => {
     return jsonResponse(openAiPayload(dailyPartFromBody(body)));
   };
   const response = await createHandler({ env: { LIVE_GENERATION_ENABLED: 'true', GROQ_DAILY_ENABLED: 'true', GROQ_API_KEY: 'test', OPENAI_API_KEY: 'test' }, fetchImpl, logger: {} })(event(dailyRequest));
-  assert.equal(response.headers['x-generation-source'], 'openai:gpt-4o-mini');
+  assert.equal(response.headers['x-generation-source'], 'openai:gpt-5.6-luna');
   // groq 는 조각마다 429 를 받아 전부 떨어지고, 그제서야 다음 공급자로 넘어간다.
-  assert.deepEqual([...new Set(models)], ['openai/gpt-oss-120b', 'gpt-4o-mini']);
-  assert.equal(models.at(-1), 'gpt-4o-mini');
+  assert.deepEqual([...new Set(models)], ['openai/gpt-oss-120b', 'gpt-5.6-luna']);
+  assert.ok(!models.includes('gpt-4o-mini'), 'luna 가 성공했으면 gpt-4o-mini 는 불리지 않는다');
 });
 
-test('uses Luna after two invalid candidates', async () => {
+test('uses gpt-4o-mini as the last resort for a day', async () => {
   const models = [];
   const fetchImpl = async (url, options) => {
     const body = JSON.parse(options.body); models.push(body.model);
-    if (body.model !== 'gpt-5.6-luna') {
+    if (body.model !== 'gpt-4o-mini') {
       return url.includes('groq.com') ? jsonResponse(groqPayload({ bad: true })) : jsonResponse(openAiPayload({ bad: true }));
     }
     return jsonResponse(openAiPayload(dailyPartFromBody(body)));
   };
   const response = await createHandler({ env: { LIVE_GENERATION_ENABLED: 'true', GROQ_DAILY_ENABLED: 'true', GROQ_API_KEY: 'test', OPENAI_API_KEY: 'test' }, fetchImpl, logger: {} })(event(dailyRequest));
-  assert.equal(response.headers['x-generation-source'], 'openai:gpt-5.6-luna');
-  assert.deepEqual([...new Set(models)], ['openai/gpt-oss-120b', 'gpt-4o-mini', 'gpt-5.6-luna']);
+  assert.equal(response.headers['x-generation-source'], 'openai:gpt-4o-mini');
+  assert.deepEqual([...new Set(models)], ['openai/gpt-oss-120b', 'gpt-5.6-luna', 'gpt-4o-mini']);
+});
+
+test('keeps gpt-4o-mini first for the blueprint it actually passes', async () => {
+  // 순서 교체는 일자 생성에만 적용한다. blueprint 는 gpt-4o-mini 가 네 번 다
+  // 성공했고 luna 로는 재본 적이 없다. 근거 없이 바꾸지 않는다.
+  const models = [];
+  const fetchImpl = async (url, options) => {
+    const body = JSON.parse(options.body); models.push(body.model);
+    return jsonResponse(openAiPayload(blueprintPartFromBody(body)));
+  };
+  const response = await createHandler({ env: { LIVE_GENERATION_ENABLED: 'true', OPENAI_API_KEY: 'test' }, fetchImpl, logger: {} })(event(blueprintRequest));
+  assert.equal(response.headers['x-generation-source'], 'openai:gpt-4o-mini');
+  assert.ok(!models.includes('gpt-5.6-luna'), 'blueprint 1순위는 gpt-4o-mini 다');
 });
 
 test('a lot that keeps failing falls back alone and the rest of the day survives', async () => {
@@ -103,7 +118,7 @@ test('a lot that keeps failing falls back alone and the rest of the day survives
     return jsonResponse(openAiPayload(dailyPartFromBody(body)));
   };
   const response = await createHandler({ env: { LIVE_GENERATION_ENABLED: 'true', OPENAI_API_KEY: 'test' }, fetchImpl, logger: {} })(event(dailyRequest));
-  assert.equal(response.headers['x-generation-source'], 'openai:gpt-4o-mini');
+  assert.equal(response.headers['x-generation-source'], 'openai:gpt-5.6-luna');
   const output = JSON.parse(response.body);
   validateOutput(dailyRequest, output);
   assert.equal(output.lots.length, 8);
@@ -142,8 +157,8 @@ test('leaves Groq out of daily generation unless it is explicitly enabled', asyn
     return jsonResponse(openAiPayload(dailyPartFromBody(body)));
   };
   const response = await createHandler({ env: { LIVE_GENERATION_ENABLED: 'true', GROQ_API_KEY: 'test', OPENAI_API_KEY: 'test' }, fetchImpl, logger: {} })(event(dailyRequest));
-  assert.equal(response.headers['x-generation-source'], 'openai:gpt-4o-mini');
-  assert.ok(models.every((model) => model === 'gpt-4o-mini'), JSON.stringify([...new Set(models)]));
+  assert.equal(response.headers['x-generation-source'], 'openai:gpt-5.6-luna');
+  assert.ok(!models.some((model) => model.includes('gpt-oss')), JSON.stringify([...new Set(models)]));
 });
 
 test('skips Groq for the blueprint that exceeds its free TPM budget', async () => {
