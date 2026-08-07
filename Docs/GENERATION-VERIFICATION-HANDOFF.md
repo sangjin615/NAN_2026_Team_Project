@@ -71,6 +71,49 @@ qwen3:14b · seed newspaper-grounded-14b-20260806
 (`incident must name at least two set members` 14회/24회)도 이 구형 경로가 남긴
 기록이다. **새 진단의 근거로 인용하면 안 된다.**
 
+## 저장소 계약서로 바꾸자 출력이 붕괴했다 (2026-08-07 실측)
+
+실험 도구를 고친 뒤(`51a786e`) 같은 seed 로 다시 돌렸다. 결과가 **더 나빠졌다.**
+
+```
+qwen3:14b · seed newspaper-grounded-14b-20260806 · 2회 모두 탈락
+attempt 1 (temp 0.3, 25.5초) 실패 세트 12/12
+attempt 2 (temp 0.1, 28.7초) 실패 세트 12/12
+  incident must name at least two set members   12회
+  incident fields must be distinct              12회
+```
+
+그런데 실패의 성격이 다르다. 산출물을 열어 보면 **모든 텍스트 필드가 `기본`
+한 단어다.** `incidentTitle` 뿐 아니라 `premise`, `marketArc[].headline`,
+`marketArc[].mood`, 세트의 `title` · `sharedSecret` · `revealHint` 까지 전부
+`기본` 이다. 12개 세트 전부 그렇다. 규칙을 못 지킨 것이 아니라 스키마만 채우고
+내용 생성을 포기한 것이다.
+
+직전 실행(사용자 홈의 스킬 계약을 쓰던 때)에는 실제 한국어 문장이 나왔고
+`needs-two-member-names` 로 떨어졌다. 계약서 출처를 저장소로 바꾸자 문장 자체가
+사라졌다.
+
+**검증기 차이는 아니다.** `setIncidentErrors` 는 `codex/vsl-runtime-core` 와
+`codex/api-integration` 이 완전히 동일하다(diff 없음).
+
+남은 변수는 두 가지다.
+
+- `Runtime/contracts/compact-generation-contract.txt` 의 본문. 홈 스킬 계약보다
+  길고 조밀한 한 덩어리라 지시가 묻혔을 수 있다
+- 선택적 복구의 부재. 이 경로는 여전히 blueprint 전체를 한 번에 만든다
+
+계약서는 `generation-server.js` 와 짝을 이루는 운영 계약이고
+`codex/api-integration` 에서 강화 중이다. 런타임 코어에서 임의로 손대면 그
+작업과 충돌하므로 건드리지 않았다.
+
+산출물은
+`Runtime/reports/local-model-experiment/run-start-output-latest.newspaper-grounded-14b-20260806.attempt-1/2.json`
+에 남겼다.
+
+**결론: 런타임 코어의 계약서로는 whole-blueprint 일괄 생성이 붕괴한다.**
+fixture 재생성은 강화된 계약과 선택적 복구가 들어온 뒤에 다시 시도한다.
+승격 가드(`npm run experiment:promote`)는 그때 그대로 쓰인다.
+
 ## 감정 제거가 아직 닿지 않은 곳
 
 `AGENTS.md` 는 감정(appraisal)을 제거된 기능으로 못박았다. 런타임 코드와 VSL
