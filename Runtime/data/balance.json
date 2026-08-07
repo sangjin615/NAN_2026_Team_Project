@@ -299,12 +299,12 @@
   "bots": {
     "capitalByStage": [
       0,
-      8000,
-      12000,
-      16000,
-      20000
+      14000,
+      21000,
+      28000,
+      35000
     ],
-    "capitalMode": "fixedByDayStage",
+    "capitalMode": "fixedByShopStage",
     "nemesisInitial": 25000,
     "growthPerDay": 1.155,
     "capitalFormula": "25000 * 1.155^day  (day 는 1..12. 1일차 28,875 · 12일차 140,904)",

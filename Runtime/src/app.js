@@ -567,7 +567,7 @@ function renderTavern(message = '') {
     const currentDayIndex = Math.max(0, state.day - 1);
     const currentLots = state.schedule.days[currentDayIndex]?.lots || [];
     if (!currentLots.length) return '<p>오늘 확인할 경매품이 없습니다.</p>';
-    const estimates = currentLots.flatMap((lot) => botBidForLot({ lot, day: state.day, balance, marketIndex: state.marketPath[lot.category][currentDayIndex], seed: state.seed }).map((bot) => ({ ...bot, lot })));
+    const estimates = currentLots.flatMap((lot) => botBidForLot({ lot, day: state.day, shopStage: state.shopStage, balance, marketIndex: state.marketPath[lot.category][currentDayIndex], seed: state.seed }).map((bot) => ({ ...bot, lot })));
     const interests = selectDistinctBotInterests(estimates);
     return `<p><b>오늘의 관심 물품 · ${stage}명 공개</b></p><ul>${interests.slice(0, stage).map(({ name, interest }) => `<li><b>${name}</b> · ${escapeHtml(interest.lot.content?.displayName || interest.lot.baseName)}</li>`).join('')}</ul>`;
   };
@@ -723,7 +723,7 @@ function renderAuction() {
     const marketIndex = state.marketPath[lot.category][state.day - 1];
     const generatedFeed = [lot.content.rumor, lot.content.setHint, lot.content.npcReaction].filter(Boolean);
     const dailyAssets = estimateBotDailyAssets({ state, balance });
-    const bots = botBidForLot({ lot, day: state.day, balance, marketIndex, seed: state.seed }).map((bot) => ({ ...bot, maxBid: Math.min(bot.maxBid, dailyAssets[bot.id]?.remaining || 0) }));
+    const bots = botBidForLot({ lot, day: state.day, shopStage: state.shopStage, balance, marketIndex, seed: state.seed }).map((bot) => ({ ...bot, maxBid: Math.min(bot.maxBid, dailyAssets[bot.id]?.remaining || 0) }));
     const opening = openingBotBid(bots, Math.max(1, Math.round(lot.pricing.basePrice * balance.auction.startBidRatio)));
     const openingFeed = opening ? [`${opening.bidder.name} ${money(opening.price)}`] : ['입찰 가능한 상대가 없습니다.'];
     state.auctionSession = { lotId: lot.lotId, currentPrice: opening?.price || 1, leader: opening?.bidder.id || null, bots, deadline: Date.now() + AUCTION_INITIAL_TIME_MS, feed: [...(expired ? [`기한이 지난 의뢰 ${expired}건이 만료됐습니다.`] : ['경매가 시작되었습니다.']), ...generatedFeed, ...openingFeed] };

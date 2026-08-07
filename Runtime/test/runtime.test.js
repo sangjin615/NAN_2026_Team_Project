@@ -176,8 +176,8 @@ test('competitor estimated assets stay fixed for the day and decrease after a wi
   const schedule = createRunSchedule({ catalog, balance, seed: 'daily-assets' });
   const state = createInitialState({ schedule, sets: [], balance });
   const before = estimateBotDailyAssets({ state, balance });
-  assert.equal(before.nemesis.initial, 8000);
-  assert.equal(before['drifter-a'].initial, 8000);
+  assert.equal(before.nemesis.initial, 14000);
+  assert.equal(before['drifter-a'].initial, 14000);
   const winner = 'nemesis';
   state.history.push({ day: 1, winner, price: 3000 });
   const after = estimateBotDailyAssets({ state, balance });
@@ -186,11 +186,11 @@ test('competitor estimated assets stay fixed for the day and decrease after a wi
   assert.equal(after['drifter-a'].remaining, before['drifter-a'].remaining);
 });
 
-test('competitor daily capital follows the day stage', () => {
+test('competitor daily capital follows the shop stage', () => {
   const schedule = createRunSchedule({ catalog, balance, seed: 'capital-stages' });
   const state = createInitialState({ schedule, sets: [], balance });
-  for (const [day, expected] of [[1, 8000], [4, 12000], [7, 16000], [10, 20000]]) {
-    state.day = day;
+  for (const [shopStage, expected] of [[1, 14000], [2, 21000], [3, 28000], [4, 35000]]) {
+    state.shopStage = shopStage;
     assert.equal(estimateBotDailyAssets({ state, balance }).nemesis.initial, expected);
   }
 });

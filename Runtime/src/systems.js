@@ -51,10 +51,10 @@ export function refreshDailyQuestOffers(state, balance, relics = []) {
   return state.questOffers;
 }
 
-export function botBidForLot({ lot, day, balance, marketIndex, seed }) {
+export function botBidForLot({ lot, day, shopStage = 1, balance, marketIndex, seed }) {
   const rng = createRng(`${seed}:bots:${lot.lotId}`);
-  const dayStage = Math.min(4, Math.floor((day - 1) / 3) + 1);
-  const dailyCapital = balance.bots.capitalByStage?.[dayStage] ?? balance.bots.nemesisInitial * (balance.bots.growthPerDay ** day);
+  const capitalStage = Math.max(1, Math.min(4, shopStage));
+  const dailyCapital = balance.bots.capitalByStage?.[capitalStage] ?? balance.bots.nemesisInitial * (balance.bots.growthPerDay ** day);
   const demand = (balance.market.expectedDemand ?? 1.05) + (GRADE_BETA[lot.grade] ?? 1) * (marketIndex - 1);
   const publicEstimate = lot.pricing.basePrice * demand;
   const families = ['CER', 'CLK', 'PNT', 'BOK', 'MET', 'JEW'];
@@ -85,8 +85,8 @@ export function openingBotBid(bots, openingPrice) {
 }
 
 export function estimateBotDailyAssets({ state, balance, day = state.day }) {
-  const dayStage = Math.min(4, Math.floor((day - 1) / 3) + 1);
-  const initial = balance.bots.capitalByStage?.[dayStage] ?? 0;
+  const capitalStage = Math.max(1, Math.min(4, state.shopStage || 1));
+  const initial = balance.bots.capitalByStage?.[capitalStage] ?? 0;
   const ids = ['nemesis', 'drifter-a', 'drifter-b'];
   const spent = {};
   for (const entry of state.history || []) {
@@ -101,7 +101,7 @@ export function estimateBotDailyAssets({ state, balance, day = state.day }) {
 
 export function resolveAuction({ state, lot, playerBid, balance }) {
   const marketIndex = state.marketPath[lot.category][state.day - 1];
-  const bots = botBidForLot({ lot, day: state.day, balance, marketIndex, seed: state.seed });
+  const bots = botBidForLot({ lot, day: state.day, shopStage: state.shopStage, balance, marketIndex, seed: state.seed });
   const topBot = [...bots].sort((a, b) => b.maxBid - a.maxBid)[0];
   const minimumRaise = Math.max(1, Math.round(lot.pricing.basePrice * balance.auction.minRaiseRate));
   const occupiedStorage = state.inventory.filter((item) => !item.sold).length;
