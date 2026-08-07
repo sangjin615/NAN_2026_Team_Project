@@ -42,10 +42,11 @@ const blueprintRequest = {
   }),
 };
 
-const dailyRequest = {
-  schemaVersion: '1.0', mode: 'daily-content', runSeed: seed, day: 1,
-  lots: schedule.days[0].lots.map(({ lotId, baseName, category, grade, setId }) => ({ lotId, baseName, category, grade, setId })),
-};
+const dailyRequestFor = (day) => ({
+  schemaVersion: '1.0', mode: 'daily-content', runSeed: seed, day,
+  lots: schedule.days[day - 1].lots.map(({ lotId, baseName, category, grade, setId }) => ({ lotId, baseName, category, grade, setId })),
+});
+const dailyRequest = dailyRequestFor(1);
 
 const env = process.env;
 if (env.LIVE_GENERATION_ENABLED !== 'true') {
@@ -83,11 +84,48 @@ results.push(await measure('run-blueprint', blueprintRequest));
 console.log('');
 results.push(await measure('daily-content', dailyRequest));
 
+// GenerationBuffer.ensure 는 당일+BUFFER_AHEAD_DAYS 를 Promise.all 로 한꺼번에
+// 부른다. 즉 실제 플레이에서는 일자 요청 3건이 동시에 나간다. 단건 측정만으로는
+// 공급자 rate limit 이 드러나지 않는다 — 로컬 ollama 는 순차 처리라 느릴 뿐이지만
+// Groq·OpenAI 는 동시 요청에 다르게 반응한다.
+if (!process.argv.includes('--single')) {
+  const waveDays = [1, 2, 3];
+  console.log(`\n[동시 ${waveDays.length}일] GenerationBuffer.ensure 와 같은 모양으로 한꺼번에 부른다`);
+  const waveStartedAt = Date.now();
+  const wave = await Promise.all(waveDays.map(async (day) => {
+    const startedAt = Date.now();
+    const request = dailyRequestFor(day);
+    const response = await handler({ body: JSON.stringify(request), requestContext: { http: { method: 'POST' } } });
+    const output = JSON.parse(response.body);
+    return {
+      day,
+      elapsed: Date.now() - startedAt,
+      source: response.headers['x-generation-source'] || '(없음)',
+      isFallback: JSON.stringify(output) === JSON.stringify(deterministicFallback(request)),
+    };
+  }));
+  const waveElapsed = Date.now() - waveStartedAt;
+  for (const { day, elapsed, source, isFallback } of wave) {
+    console.log(`  day ${day}  ${(elapsed / 1000).toFixed(1)}초 · ${source} · ${isFallback ? 'fallback' : '생성'}`);
+  }
+  const fell = wave.filter(({ isFallback }) => isFallback).length;
+  console.log(`  전체 ${(waveElapsed / 1000).toFixed(1)}초 · fallback ${fell}/${wave.length}`);
+  // 단건은 되는데 동시에는 떨어진다면 원인은 계약이 아니라 동시성이다.
+  if (fell && !results[1].isFallback) {
+    console.log('  단건은 생성됐는데 동시 호출에서 떨어졌다. rate limit 을 의심할 것.');
+  }
+  results.push({ label: `동시 ${waveDays.length}일`, elapsed: waveElapsed, source: `fallback ${fell}/${wave.length}`, isFallback: fell > 0 });
+}
+
 console.log('\n[요약]');
 for (const { label, elapsed, source, isFallback } of results) {
   console.log(`  ${label.padEnd(14)} ${(elapsed / 1000).toFixed(1)}초 · ${source} · ${isFallback ? 'fallback' : '생성'}`);
 }
 console.log('  로컬 기준선     blueprint 51~70초 · daily 16~29초 (qwen3:14b)');
+// API Gateway 통합 타임아웃은 보통 29초다. 배포하면 이걸 넘는 요청은 아예 못 쓴다.
+for (const { label, elapsed } of results) {
+  if (elapsed > 29000) console.log(`  ${label} 이 29초를 넘는다 — API Gateway 통합 타임아웃에 걸린다`);
+}
 if (results.some(({ isFallback }) => isFallback)) {
   console.log('\n하나라도 fallback 이면 공급자가 실패했거나 꺼져 있다. 200 응답만으로 판단하지 말 것.');
   process.exitCode = 1;
