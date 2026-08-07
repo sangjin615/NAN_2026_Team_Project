@@ -82,3 +82,14 @@ test('keeps live providers disabled until explicitly enabled', async () => {
   assert.equal(response.headers['x-generation-source'], 'static');
   assert.equal(called, false);
 });
+
+test('skips Groq for the blueprint that exceeds its free TPM budget', async () => {
+  const models = [];
+  const fetchImpl = async (url, options) => {
+    const body = JSON.parse(options.body); models.push(body.model);
+    return jsonResponse(openAiPayload(deterministicFallback(blueprintRequest)));
+  };
+  const response = await createHandler({ env: { LIVE_GENERATION_ENABLED: 'true', GROQ_API_KEY: 'test', OPENAI_API_KEY: 'test' }, fetchImpl, logger: {} })(event(blueprintRequest));
+  assert.equal(response.headers['x-generation-source'], 'openai:gpt-4o-mini');
+  assert.deepEqual(models, ['gpt-4o-mini']);
+});

@@ -40,7 +40,7 @@ async function callGroq(request, provider, fetchImpl) {
     body: JSON.stringify({
       model: provider.model,
       temperature: 0.2,
-      max_completion_tokens: 12000,
+      max_completion_tokens: 4000,
       response_format: { type: 'json_object' },
       messages: [
         { role: 'system', content: contract },
@@ -55,7 +55,7 @@ async function callOpenAI(request, provider, fetchImpl) {
   const body = {
     model: provider.model,
     instructions: contract,
-    input: `OUTPUT_SCHEMA:\n${JSON.stringify(outputSchema(request))}\nINPUT:\n${JSON.stringify(request)}`,
+    input: `Return valid JSON only.\nOUTPUT_SCHEMA:\n${JSON.stringify(outputSchema(request))}\nINPUT:\n${JSON.stringify(request)}`,
     max_output_tokens: 12000,
     text: { format: { type: 'json_object' } },
     store: false,
@@ -118,10 +118,10 @@ export function deterministicFallback(request) {
   };
 }
 
-function providersFromEnv(env) {
+function providersFromEnv(env, request) {
   if (env.LIVE_GENERATION_ENABLED !== 'true') return [];
   return [
-    env.GROQ_API_KEY && { name: 'groq', model: env.PRIMARY_MODEL || 'openai/gpt-oss-120b', apiKey: env.GROQ_API_KEY, timeoutMs: 7000, call: callGroq },
+    request.mode === 'daily-content' && env.GROQ_API_KEY && { name: 'groq', model: env.PRIMARY_MODEL || 'openai/gpt-oss-120b', apiKey: env.GROQ_API_KEY, timeoutMs: 7000, call: callGroq },
     env.OPENAI_API_KEY && { name: 'openai', model: env.SECONDARY_MODEL || 'gpt-4o-mini', apiKey: env.OPENAI_API_KEY, timeoutMs: 7000, call: callOpenAI },
     env.OPENAI_API_KEY && { name: 'openai', model: env.FALLBACK_MODEL || 'gpt-5.6-luna', apiKey: env.OPENAI_API_KEY, timeoutMs: 9000, call: callOpenAI },
   ].filter(Boolean);
@@ -138,7 +138,7 @@ export function createHandler({ env = process.env, fetchImpl = fetch, logger = c
       return { statusCode: 400, headers: jsonHeaders, body: JSON.stringify({ ok: false, error: 'invalid_request' }) };
     }
 
-    for (const provider of providersFromEnv(env)) {
+    for (const provider of providersFromEnv(env, request)) {
       const startedAt = Date.now();
       try {
         const output = await provider.call(request, provider, fetchImpl);
