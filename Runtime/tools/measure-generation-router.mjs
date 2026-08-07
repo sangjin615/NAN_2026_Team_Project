@@ -59,7 +59,32 @@ for (const key of ['OPENAI_API_KEY', 'GROQ_API_KEY']) {
 console.log(`LIVE_GENERATION_ENABLED: ${env.LIVE_GENERATION_ENABLED === 'true' ? 'true' : String(env.LIVE_GENERATION_ENABLED)}`);
 console.log(`seed: ${seed}\n`);
 
-const handler = createHandler({ env, logger: { info() {}, warn() {} } });
+// 라우터는 공급자가 떨어질 때마다 이유를 logger.warn 으로 남긴다. 그걸 삼키면
+// "왜 groq 가 안 잡히는지" 같은 질문에 답할 수 없다. 모아서 뒤에 요약한다.
+const events = [];
+const handler = createHandler({
+  env,
+  logger: { info() {}, warn(name, detail) { events.push({ name, ...detail }); } },
+});
+
+function reportProviderFailures(label) {
+  const mine = events.splice(0, events.length);
+  if (!mine.length) return;
+  const bucket = new Map();
+  for (const { name, provider, model, error, errors, lotId, setId } of mine) {
+    const who = model ? `${provider}:${model}` : provider || '-';
+    const why = error || (Array.isArray(errors) ? errors.join('; ') : errors) || name;
+    const key = `${who} · ${name} · ${String(why).slice(0, 90)}`;
+    const entry = bucket.get(key) || { count: 0, where: [] };
+    entry.count += 1;
+    if (lotId || setId) entry.where.push(lotId || setId);
+    bucket.set(key, entry);
+  }
+  console.log(`  실패 기록 (${label})`);
+  for (const [key, { count, where }] of [...bucket].sort((a, b) => b[1].count - a[1].count)) {
+    console.log(`    ${String(count).padStart(2)}회  ${key}${where.length ? `  [${where.slice(0, 3).join(', ')}${where.length > 3 ? ' …' : ''}]` : ''}`);
+  }
+}
 
 async function measure(label, request) {
   const startedAt = Date.now();
@@ -76,6 +101,7 @@ async function measure(label, request) {
   console.log(`  대체 문구인가       : ${isFallback ? '그렇다 — 생성이 아니다' : '아니다 — 실제 생성'}`);
   if (!isFallback && output.sets?.[0]) console.log(`  표본                : ${output.sets[0].incidentTitle}`);
   if (!isFallback && output.lots?.[0]) console.log(`  표본                : ${output.lots[0].description}`);
+  reportProviderFailures(label);
   return { label, elapsed, source, contractOk, isFallback };
 }
 
@@ -110,6 +136,7 @@ if (!process.argv.includes('--single')) {
   }
   const fell = wave.filter(({ isFallback }) => isFallback).length;
   console.log(`  전체 ${(waveElapsed / 1000).toFixed(1)}초 · fallback ${fell}/${wave.length}`);
+  reportProviderFailures(`동시 ${waveDays.length}일`);
   // 단건은 되는데 동시에는 떨어진다면 원인은 계약이 아니라 동시성이다.
   if (fell && !results[1].isFallback) {
     console.log('  단건은 생성됐는데 동시 호출에서 떨어졌다. rate limit 을 의심할 것.');
