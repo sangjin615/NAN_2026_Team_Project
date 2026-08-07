@@ -18,7 +18,7 @@ const reportRoot = path.join(runtimeRoot, 'reports', 'live-generation');
 const text = { type: 'string', minLength: 1 };
 const boundedText = (maxLength) => ({ type: 'string', minLength: 1, maxLength });
 const fixedObject = (properties) => ({ type: 'object', properties, required: Object.keys(properties), additionalProperties: false });
-const dailyLotSchema = ({ lotId }) => fixedObject({ lotId: { const: lotId }, displayName: boundedText(20), description: boundedText(70), rumor: boundedText(45), setHint: boundedText(25), npcReaction: boundedText(45) });
+export const dailyLotSchema = ({ lotId }) => fixedObject({ lotId: { const: lotId }, displayName: boundedText(20), description: boundedText(70), rumor: boundedText(45), setHint: boundedText(25), npcReaction: boundedText(45) });
 
 export function outputSchema(request) {
   if (request.mode === 'run-blueprint') return fixedObject({
@@ -35,12 +35,12 @@ export function outputSchema(request) {
   });
 }
 
-const blueprintFrameSchema = (request) => fixedObject({
+export const blueprintFrameSchema = (request) => fixedObject({
   schemaVersion: { const: '1.0' }, runSeed: { const: request.runSeed }, premise: text,
   marketArc: { type: 'array', minItems: 12, maxItems: 12, items: fixedObject({ day: { type: 'integer' }, headline: text, mood: text }) },
 });
 
-const setIncidentSchema = ({ setId }) => fixedObject({
+export const setIncidentSchema = ({ setId }) => fixedObject({
   setId: { const: setId }, title: text, sharedSecret: text, revealHint: text,
   incidentTitle: text, incidentSummary: text, newspaperLead: text,
 });
@@ -176,7 +176,7 @@ async function callModel({ request, schema, prompt, attempt }) {
   return JSON.parse(raw.response);
 }
 
-function fallbackSetIncident(inputSet, index) {
+export function fallbackSetIncident(inputSet, index) {
   const [first, second = first] = (inputSet.members || []).map(({ baseName }) => baseName);
   const places = ['항구 보관소', '북문 세관 창고', '옛 조합 기록실', '강변 운송소'];
   const actors = ['창고 관리인', '세관 서기', '운송 조합원', '도시 기록관'];

@@ -23,6 +23,16 @@ const event = (request) => ({ body: JSON.stringify(request), requestContext: { h
 const jsonResponse = (payload, status = 200) => ({ ok: status < 400, status, statusText: '', json: async () => payload });
 const openAiPayload = (output) => ({ output_text: JSON.stringify(output) });
 const groqPayload = (output) => ({ choices: [{ message: { content: JSON.stringify(output) } }] });
+const blueprintFallback = deterministicFallback(blueprintRequest);
+const blueprintPartFromBody = (body) => {
+  const input = body.input || body.messages?.[1]?.content || '';
+  if (input.includes('Generate only the run premise')) {
+    const { sets, ...frame } = blueprintFallback;
+    return frame;
+  }
+  const setId = blueprintRequest.sets.find(({ setId }) => input.includes(`\"setId\":\"${setId}\"`))?.setId;
+  return blueprintFallback.sets.find((set) => set.setId === setId);
+};
 
 test('deterministic fallback satisfies daily and blueprint contracts', () => {
   for (const request of [dailyRequest, blueprintRequest]) validateOutput(request, deterministicFallback(request));
@@ -87,9 +97,46 @@ test('skips Groq for the blueprint that exceeds its free TPM budget', async () =
   const models = [];
   const fetchImpl = async (url, options) => {
     const body = JSON.parse(options.body); models.push(body.model);
-    return jsonResponse(openAiPayload(deterministicFallback(blueprintRequest)));
+    return jsonResponse(openAiPayload(blueprintPartFromBody(body)));
   };
   const response = await createHandler({ env: { LIVE_GENERATION_ENABLED: 'true', GROQ_API_KEY: 'test', OPENAI_API_KEY: 'test' }, fetchImpl, logger: {} })(event(blueprintRequest));
   assert.equal(response.headers['x-generation-source'], 'openai:gpt-4o-mini');
-  assert.deepEqual(models, ['gpt-4o-mini']);
+  assert.equal(models.length, 13);
+  assert.ok(models.every((model) => model === 'gpt-4o-mini'));
+});
+
+test('generates blueprint sets in bounded parallel waves and carries accepted headlines forward', async () => {
+  let active = 0; let maxActive = 0;
+  const prompts = [];
+  const fetchImpl = async (url, options) => {
+    const body = JSON.parse(options.body); prompts.push(body.input); active += 1; maxActive = Math.max(maxActive, active);
+    await new Promise((resolve) => setImmediate(resolve));
+    active -= 1;
+    return jsonResponse(openAiPayload(blueprintPartFromBody(body)));
+  };
+  const response = await createHandler({ env: { LIVE_GENERATION_ENABLED: 'true', OPENAI_API_KEY: 'test' }, fetchImpl, logger: {} })(event(blueprintRequest));
+  assert.equal(response.headers['x-generation-source'], 'openai:gpt-4o-mini');
+  assert.equal(maxActive, 5); // frame + four sets
+  assert.match(prompts.find((prompt) => prompt.includes('INPUT SET') && prompt.includes('set-5')), /1번 창고에서 발견된 운송 장부/);
+  validateOutput(blueprintRequest, JSON.parse(response.body));
+});
+
+test('repairs only invalid daily lots in parallel', async () => {
+  const initial = deterministicFallback(dailyRequest);
+  initial.lots[2] = { ...initial.lots[2], rumor: '' };
+  initial.lots[6] = { ...initial.lots[6], setHint: '' };
+  const repaired = deterministicFallback(dailyRequest);
+  const requestedLots = [];
+  const fetchImpl = async (url, options) => {
+    const body = JSON.parse(options.body);
+    const input = body.messages?.[1]?.content || '';
+    if (!input.includes('Generate exactly one corrected LOT')) return jsonResponse(groqPayload(initial));
+    const index = dailyRequest.lots.findIndex(({ lotId }) => input.includes(lotId));
+    requestedLots.push(index);
+    return jsonResponse(groqPayload(repaired.lots[index]));
+  };
+  const response = await createHandler({ env: { LIVE_GENERATION_ENABLED: 'true', GROQ_API_KEY: 'test' }, fetchImpl, logger: {} })(event(dailyRequest));
+  assert.equal(response.headers['x-generation-source'], 'groq:openai/gpt-oss-120b');
+  assert.deepEqual(requestedLots.sort((a, b) => a - b), [2, 6]);
+  validateOutput(dailyRequest, JSON.parse(response.body));
 });
