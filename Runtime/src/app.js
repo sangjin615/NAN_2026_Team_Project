@@ -788,10 +788,10 @@ function renderRelic() {
   }
   const session = state.relicSession;
   const art = relicArt[relic.id];
-  document.querySelector('#relic-card').innerHTML = `<p>${RELIC_TIER_LABELS[tier] || tier} · ${state.relicRound + 1}/3회</p><h2>${relic.name}</h2>${art ? `<img data-relic-art="${relic.id}" src="./assets/relics/${encodeURIComponent(art)}" alt="">` : ''}<p>${relic.effect}</p><strong>현재 호가 ${money(session.currentPrice)}</strong><em id="relic-timer" aria-label="남은 시간"></em>`;
+  document.querySelector('#relic-card').innerHTML = `<header><span>${RELIC_TIER_LABELS[tier] || tier} 유물</span><b>${state.relicRound + 1} / 3회</b></header><h2>${relic.name}</h2>${art ? `<img data-relic-art="${relic.id}" src="./assets/relics/${encodeURIComponent(art)}" alt="">` : ''}<p>${relic.effect}</p><footer><small>현재 호가</small><strong>${money(session.currentPrice)}</strong></footer><em id="relic-timer" aria-label="남은 시간"></em>`;
   const participants = [{ id: 'player', name: '당신', budget: state.cash }, ...session.bots.map((bot) => ({ ...bot, budget: bot.maxBid }))];
-  document.querySelector('#relic-participants').innerHTML = `<h3>최종 경매 참가자</h3>${participants.map((participant) => `<div class="participant ${session.leader === participant.id ? 'is-leading' : ''}"><b>${participant.name}</b><strong>${money(participant.budget)}</strong></div>`).join('')}`;
-  document.querySelector('#relic-feed').innerHTML = session.feed.slice(-4).map((line) => `<p>${line}</p>`).join('');
+  document.querySelector('#relic-participants').innerHTML = `<h3>최종 경매 참가자</h3>${participants.map((participant, index) => `<div class="participant ${session.leader === participant.id ? 'is-leading' : ''}"><span>${session.leader === participant.id ? '선두' : String(index + 1).padStart(2, '0')}</span><b>${participant.name}</b><small>입찰 한도</small><strong>${money(participant.budget)}</strong></div>`).join('')}`;
+  document.querySelector('#relic-feed').innerHTML = `<header><small>RELIC AUCTION</small><h3>유물 경매</h3><p><b>${state.relicRound + 1}</b><span>/ 3회</span></p><strong>${RELIC_TIER_LABELS[tier] || tier} 등급</strong></header><section><h4>입찰 기록</h4>${session.feed.slice(-4).map((line) => `<p>${line}</p>`).join('')}</section>`;
   document.querySelector('#buy-relic').innerHTML = `<img src="./assets/ui/action-icons/bid.png" alt=""><span>10% 인상 입찰</span>`;
   document.querySelector('#skip-relic').innerHTML = `<img src="./assets/ui/action-icons/pass.png" alt=""><span>물러나기</span>`;
   document.querySelector('#buy-relic').disabled = state.cash < Math.ceil(session.currentPrice * 1.1);
@@ -839,7 +839,7 @@ function renderResult() {
   const wonCount = state.history.filter((entry) => entry.won).length;
   const acquiredRelics = (state.relicChoices || []).map((id) => balance.relics.list.find((entry) => entry.id === id)?.name || id);
   const resultIcon = state.failure ? 'restart.png' : 'clear.png';
-  document.querySelector('#run-summary').innerHTML = `<section class="result-ending"><img class="result-status-icon" src="./assets/ui/action-icons/${resultIcon}" alt=""><h3>${state.failure ? '여정 실패' : `상회 ${state.shopStage}단계 달성`}</h3>${state.failure ? `<p class="failure">${state.failure}</p>` : '<p>신중한 거래와 꾸준한 성장으로 여정을 마쳤습니다.</p>'}<strong>${state.failure ? '마감 조건을 다시 확인하세요.' : '완주 성공'}</strong></section><section class="result-stats"><h3>여정 요약</h3><p><span>완주 일수</span><b>${state.day}일</b></p><p><span>최종 상회 단계</span><b>${state.shopStage}단계</b></p><p><span>최종 자산</span><b>${money(state.cash + unsold)}</b></p><p><span>낙찰 / 완료 의뢰</span><b>${wonCount}건 / ${state.completedQuestCount}건</b></p><p><span>획득 유물</span><b>${acquiredRelics.join(', ') || '없음'}</b></p></section>`;
+  document.querySelector('#run-summary').innerHTML = `<section class="result-ending"><small class="result-kicker">JOURNEY RESULT · ${state.day}일</small><img class="result-status-icon" src="./assets/ui/action-icons/${resultIcon}" alt=""><h3>${state.failure ? '여정 실패' : `상회 ${state.shopStage}단계 달성`}</h3>${state.failure ? `<p class="failure">${state.failure}</p>` : '<p>신중한 거래와 꾸준한 성장으로 여정을 마쳤습니다.</p>'}<strong>${state.failure ? '마감 조건을 다시 확인하세요.' : '완주 성공'}</strong></section><section class="result-stats"><h3>여정 요약</h3><p><span>완주 일수</span><b>${state.day}일</b></p><p><span>최종 상회 단계</span><b>${state.shopStage}단계</b></p><p><span>최종 자산</span><b>${money(state.cash + unsold)}</b></p><p><span>낙찰 / 완료 의뢰</span><b>${wonCount}건 / ${state.completedQuestCount}건</b></p><p><span>획득 유물</span><b>${acquiredRelics.join(', ') || '없음'}</b></p></section>`;
   if (state.failure) save();
   else store.clear(state.saveSlot);
 }

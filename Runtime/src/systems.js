@@ -46,6 +46,7 @@ export function marketIndexForDay(path, day) {
 }
 
 export function refreshDailyQuestOffers(state, balance, relics = []) {
+  expireQuestsBeforeAuction(state);
   state.questOffers = createDailyQuestOffers(balance, state.day, state.seed, relics);
   return state.questOffers;
 }

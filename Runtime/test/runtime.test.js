@@ -264,6 +264,19 @@ test('daily quest refresh replaces yesterday offers with three new offers', () =
   assert.equal(new Set(state.questOffers.map((quest) => quest.offerId)).size, state.questOffers.length);
 });
 
+test('daily quest refresh removes active quests after their deadline', () => {
+  const schedule = createRunSchedule({ catalog, balance, seed: 'quest-expiry' });
+  const state = createInitialState({ schedule, sets: createSetGraph(schedule, 'quest-expiry'), balance, startCash: 100000 });
+  const quest = state.questOffers[0];
+  assert.equal(acceptQuest(state, quest.offerId, balance), true);
+  state.activeQuests[0].deadlineDay = state.day;
+
+  advanceDay(state);
+  refreshDailyQuestOffers(state, balance, state.metaRelics);
+
+  assert.equal(state.activeQuests.length, 0);
+});
+
 test('royal charter expands the refreshed daily quest offers from three to five', () => {
   const schedule = createRunSchedule({ catalog, balance, seed: 'quest-royal-charter' });
   const state = createInitialState({ schedule, sets: createSetGraph(schedule, 'quest-royal-charter'), balance, startCash: 100000 });
