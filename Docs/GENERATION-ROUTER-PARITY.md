@@ -727,18 +727,51 @@ API Gateway 의 `AllowOrigins: ["*"]` 는 **리터럴 `null` 오리진을 매칭
 `access-control-allow-origin` 까지 덮어쓴다. 400 응답에도 CORS 헤더가 없는 것으로
 확인했다. 고칠 자리는 게이트웨이뿐이다.
 
-고치는 법은 `AllowOrigins` 에 `null` 을 더하는 것 하나다. 람다 재배포는 필요 없다.
+**`AllowOrigins` 에 `null` 을 더하는 방법은 없다. 시도했고 거부당했다:**
 
-```bash
-aws apigatewayv2 update-api --api-id 8tjqzce89j --region us-east-1 \
-  --cors-configuration '{"AllowCredentials":false,"AllowHeaders":["content-type"],"AllowMethods":["POST","OPTIONS"],"AllowOrigins":["*","null"],"MaxAge":0}'
+```
+BadRequestException: Invalid format for origin null
 ```
 
-**`nan-lambda-cli` 로는 안 된다.** `apigateway:PATCH` 권한이 없어서
-`AccessDeniedException` 이 난다. 콘솔에서 하거나 그 권한을 붙여야 한다.
+콘솔도 같은 이유로 조용히 안 받는다. 게이트웨이 CORS 기능으로는 `file://` 을
+지원할 수 없다는 뜻이다.
 
-`null` 허용은 일반적으로 권장되지 않지만(샌드박스 iframe 도 `null` 을 보낸다) 이
-엔드포인트는 이미 인증 없이 열려 있어서 새로 잃는 것이 없다.
+**그래서 게이트웨이 CORS 를 걷어내고 람다가 직접 붙이게 한다.** 람다가 돌려주는
+`access-control-allow-origin: *` 는 `null` 오리진에도 유효하다 — 자격 증명을 안
+쓰기 때문이다. 게이트웨이가 덮어쓰는 것이 문제였으니 덮개를 치운다.
+
+람다 쪽은 했다 (`preflightHeaders`). 게이트웨이 쪽 세 줄이 남았고 순서가 있다 —
+라우트를 먼저 만들어야 CORS 를 걷어낸 순간 OPTIONS 가 404 로 떨어지지 않는다.
+
+```bash
+# 1. OPTIONS 를 람다로 보낼 라우트. 지금은 POST /generate 하나뿐이라
+#    게이트웨이 CORS 를 걷으면 프리플라이트가 갈 곳이 없어진다
+aws apigatewayv2 create-route --api-id 8tjqzce89j --region us-east-1 \
+  --route-key "OPTIONS /generate" --target "integrations/of3tvi0"
+
+# 2. 그 라우트로 람다를 부를 권한. 이미 있으면 ResourceConflictException 이
+#    나는데 그건 무시해도 된다
+aws lambda add-permission --region us-east-1 --function-name nhn-generation-api \
+  --statement-id apigw-options-generate --action lambda:InvokeFunction \
+  --principal apigateway.amazonaws.com \
+  --source-arn "arn:aws:execute-api:us-east-1:267850879151:8tjqzce89j/*/OPTIONS/generate"
+
+# 3. 덮개를 치운다. 이 뒤로는 람다의 헤더가 그대로 나간다
+aws apigatewayv2 delete-cors-configuration --api-id 8tjqzce89j --region us-east-1
+```
+
+**`nan-lambda-cli` 로는 셋 다 안 된다.** `apigateway:PATCH`·`apigateway:POST`·
+`lambda:AddPermission` 이 모두 없다. 콘솔 CloudShell 에서 하면 로그인 권한이
+그대로 쓰인다.
+
+확인은 프리플라이트로 한다. `access-control-allow-origin: *` 와
+`access-control-allow-headers: content-type` 이 함께 나와야 한다.
+
+```bash
+curl -s -i -X OPTIONS "https://8tjqzce89j.execute-api.us-east-1.amazonaws.com/generate" \
+  -H "Origin: null" -H "Access-Control-Request-Method: POST" \
+  -H "Access-Control-Request-Headers: content-type" | grep -i access-control
+```
 
 **서버에 올려서 http(s) 로 열 거라면 이 문제는 없다.** 일반 오리진은 이미
 통과한다.

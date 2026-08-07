@@ -312,6 +312,20 @@ test('repairs only the lots that break a whole-day rule', async () => {
   validateOutput(dailyRequest, JSON.parse(response.body));
 });
 
+test('프리플라이트가 file:// 을 통과시킨다', async () => {
+  // 게이트웨이 CORS 를 걷어내면 이 분기가 프리플라이트를 직접 답한다. allow-headers
+  // 가 빠지면 본 요청이 content-type: application/json 때문에 막히고, 배포본은
+  // 조용히 static 으로 떨어진다 — 눈에 안 보이는 실패라 시험으로 묶어둔다.
+  const response = await createHandler({ env: {}, fetchImpl: async () => { throw new Error('공급자를 부르면 안 된다'); }, logger: {} })({
+    requestContext: { http: { method: 'OPTIONS', sourceIp: '1.1.1.1' } },
+  });
+  assert.equal(response.statusCode, 204);
+  // `*` 는 Origin: null 에도 유효하다. 자격 증명을 안 쓰기 때문이다.
+  assert.equal(response.headers['access-control-allow-origin'], '*');
+  assert.equal(response.headers['access-control-allow-headers'], 'content-type');
+  assert.match(response.headers['access-control-allow-methods'], /POST/);
+});
+
 // --- 상한 ---
 //
 // 엔드포인트는 열려 있다. 인증을 붙일 수 없어서(배포본이 비밀을 못 든다) 대신

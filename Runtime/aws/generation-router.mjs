@@ -19,6 +19,28 @@ const jsonHeaders = {
   'access-control-allow-origin': '*',
 };
 
+// 프리플라이트 응답에만 붙는 헤더다.
+//
+// 본 요청이 `content-type: application/json` 이라 단순 요청이 아니고, 브라우저가
+// OPTIONS 를 먼저 보낸다. 그 응답에 allow-headers 가 없으면 본 요청을 막는다.
+//
+// 2026-08-07 실측으로 알아낸 것: 게이트웨이에 CORS 를 설정해두면 게이트웨이가
+// OPTIONS 를 가로채고 람다가 붙인 CORS 헤더까지 덮어쓴다. 그런데 게이트웨이의
+// AllowOrigins 는 리터럴 `null` 을 형식 오류로 거부한다(BadRequestException).
+// file:// 에서 연 페이지는 Origin: null 을 보내므로 게이트웨이 CORS 로는 독립
+// 실행본을 지원할 방법이 없다.
+//
+// 그래서 게이트웨이 CORS 를 걷어내고 여기서 직접 붙인다. `*` 는 null 오리진에도
+// 유효하다 — 자격 증명을 안 쓰기 때문이다. 대신 OPTIONS /generate 라우트가
+// 있어야 이 분기가 실행된다.
+const preflightHeaders = {
+  ...jsonHeaders,
+  'access-control-allow-methods': 'POST,OPTIONS',
+  'access-control-allow-headers': 'content-type',
+  // 매 호출마다 왕복을 더하지 않도록 캐시한다. 한 판에 HTTP 13건이 나간다.
+  'access-control-max-age': '600',
+};
+
 const cleanError = (error) => ({
   name: String(error?.name || 'Error'),
   message: String(error?.message || error || 'unknown error').slice(0, 300),
@@ -403,7 +425,7 @@ export function createHandler({ env = process.env, fetchImpl = fetch, logger = c
   const throttle = createThrottle(env);
 
   return async (event) => {
-    if (event?.requestContext?.http?.method === 'OPTIONS') return { statusCode: 204, headers: jsonHeaders, body: '' };
+    if (event?.requestContext?.http?.method === 'OPTIONS') return { statusCode: 204, headers: preflightHeaders, body: '' };
     let request;
     try {
       request = JSON.parse(event?.body || '{}');
