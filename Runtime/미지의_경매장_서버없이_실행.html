@@ -3338,7 +3338,7 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
   </section>
   <section class="scene save-select" data-scene="save" hidden>
     <header><p class="eyebrow">SAVE SLOT</p><h2 id="save-mode-title">여정을 선택하세요</h2></header>
-    <label class="seed-field">런 시드 <input id="seed" value="nan-2026-demo"></label>
+    <label class="seed-field">런 시드 <input id="seed" placeholder="비우면 무작위" autocomplete="off"></label>
     <div id="save-slots" class="save-slots" aria-label="저장 슬롯"></div>
     <div class="save-actions"><button id="new-run">새 여정</button><button id="continue-run" class="secondary">이어하기</button></div>
     <button id="delete-save" class="secondary">저장 삭제</button>
@@ -4427,9 +4427,11 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
     document.querySelector("#save-guide").textContent = slotMode === "continue" ? "\uC800\uC7A5 \uC2AC\uB86F\uC744 \uC120\uD0DD\uD55C \uD6C4 \uC774\uC5B4\uD558\uAE30 \uBC84\uD2BC\uC744 \uB20C\uB7EC \uC9C4\uD589\uD558\uC138\uC694." : "\uC0C8 \uC5EC\uC815\uC744 \uC800\uC7A5\uD560 \uC2AC\uB86F\uC744 \uC120\uD0DD\uD558\uC138\uC694.";
     document.querySelector("#save-mode-title").textContent = slotMode === "new" ? "\uC0C8 \uC5EC\uC815 \uC2AC\uB86F \uC120\uD0DD" : "\uC774\uC5B4\uD560 \uC5EC\uC815 \uC120\uD0DD";
   }
+  var randomRunSeed = () => `run-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 6)}`;
   function openSlotScene(mode) {
     slotMode = mode;
     document.querySelector('[data-scene="save"]').dataset.mode = mode;
+    if (mode === "new") document.querySelector("#seed").value = randomRunSeed();
     adapter.showScene("save");
     renderSaveSlots();
   }
@@ -5220,7 +5222,7 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
     if (button.disabled) return;
     button.disabled = true;
     try {
-      await newRun(document.querySelector("#seed").value.trim() || Date.now());
+      await newRun(document.querySelector("#seed").value.trim() || randomRunSeed());
     } catch (error) {
       console.error("\uC0C8 \uB7F0 \uC0DD\uC131 \uC2E4\uD328", error);
       openSlotScene("new");

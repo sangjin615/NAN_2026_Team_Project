@@ -140,9 +140,15 @@ function renderSaveSlots() {
   document.querySelector('#save-mode-title').textContent = slotMode === 'new' ? '새 여정 슬롯 선택' : '이어할 여정 선택';
 }
 
+// 시드가 12일 96개 물건 구성을 통째로 정한다. 고정 기본값을 두면 새 게임을
+// 다시 시작해도 같은 물건이 나와서 매번 새로 시작하는 것처럼 보이지 않는다.
+// 새 런을 열 때마다 새로 뽑되, 같은 판을 다시 보려면 직접 입력할 수 있게 둔다.
+const randomRunSeed = () => `run-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 6)}`;
+
 function openSlotScene(mode) {
   slotMode = mode;
   document.querySelector('[data-scene="save"]').dataset.mode = mode;
+  if (mode === 'new') document.querySelector('#seed').value = randomRunSeed();
   adapter.showScene('save');
   renderSaveSlots();
 }
@@ -839,7 +845,7 @@ document.querySelector('#new-run').onclick = async () => {
   if (button.disabled) return;
   button.disabled = true;
   try {
-    await newRun(document.querySelector('#seed').value.trim() || Date.now());
+    await newRun(document.querySelector('#seed').value.trim() || randomRunSeed());
   } catch (error) {
     console.error('새 런 생성 실패', error);
     openSlotScene('new');
