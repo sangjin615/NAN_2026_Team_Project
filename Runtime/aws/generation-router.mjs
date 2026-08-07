@@ -40,10 +40,23 @@ async function fetchJson(url, options, timeoutMs, fetchImpl) {
   if (!response.ok) {
     const error = new Error(`${response.status} ${payload?.error?.message || response.statusText || 'provider error'}`);
     error.name = payload?.error?.type || 'ProviderError';
+    // 상태 코드를 실어 보낸다. 재시도해도 소용없는 실패인지 여기서만 알 수 있다.
+    error.status = response.status;
     throw error;
   }
   return payload;
 }
+
+// 이 공급자에게 이번 요청으로는 더 물어볼 것이 없는 실패다.
+//
+//   401 · 403  자격 증명이 거부됐다. 같은 키로 다시 불러도 같은 답이다
+//   429        한도에 걸렸다. 초 단위로 다시 부르면 토큰만 더 쓴다
+//
+// 2026-08-07 실측 근거. 키가 잘못됐을 때 일자 1건에 죽은 호출이 17건 나갔고,
+// groq 가 429 를 뱉는 동안에도 LOT 마다 재시도가 붙어 8 LOT 중 6개를 잃고도
+// 계속 두드렸다. 그렇게 만든 응답은 대부분이 대체 문구인데 헤더에는 그 공급자
+// 이름이 찍힌다. 그럴 바에는 이 공급자를 접고 다음으로 넘어가는 편이 낫다.
+const isTerminal = (error) => error?.status === 401 || error?.status === 403 || error?.status === 429;
 
 async function callGroq({ request, schema = outputSchema(request), prompt = `INPUT:\n${JSON.stringify(request)}`, temperature = 0.2 }, provider, fetchImpl) {
   const payload = await fetchJson('https://api.groq.com/openai/v1/chat/completions', {
@@ -184,6 +197,8 @@ async function generateBlueprint(request, provider, fetchImpl, logger) {
         return frame;
       } catch (error) {
         lastError = error;
+        // 자격 증명이나 한도 문제면 두 번째 시도도 같은 답이다.
+        if (isTerminal(error)) break;
       }
     }
     logger.warn?.('generation_blueprint_frame_fallback', { provider: provider.name, model: provider.model, error: cleanError(lastError) });
@@ -203,6 +218,15 @@ async function generateBlueprint(request, provider, fetchImpl, logger) {
       schema: setIncidentSchema(inputSet),
       prompt: `Generate exactly one set record. The incident must name at least two input baseName values. Do not reuse these headlines: ${JSON.stringify(usedTitles)}.\nINPUT SET:\n${JSON.stringify(inputSet)}`,
     }, provider, fetchImpl).catch((error) => ({ __error: error }))));
+
+    // 한 조각이라도 손절 대상이면 이 공급자는 이번 요청에서 끝이다. 남은 세트를
+    // 계속 물으면 같은 실패를 반복하고, 통과시키면 대부분이 대체 문구인 응답에
+    // 이 공급자 이름이 찍힌다.
+    const terminal = candidates.find((candidate) => isTerminal(candidate?.__error));
+    if (terminal) {
+      logger.warn?.('generation_provider_abandoned', { provider: provider.name, model: provider.model, error: cleanError(terminal.__error) });
+      throw terminal.__error;
+    }
 
     for (let offset = 0; offset < wave.length; offset += 1) {
       const index = start + offset;
@@ -289,6 +313,15 @@ async function generateDaily(request, provider, fetchImpl, logger) {
       schema: dailyLotSchema(lot),
       prompt: `Generate exactly one LOT record for lot ${start + offset + 1}. Do not reuse these descriptions: ${JSON.stringify(used)}.\nINPUT LOT:\n${JSON.stringify(lot)}`,
     }, provider, fetchImpl).catch((error) => ({ __error: error }))));
+
+    // 세트 쪽과 같은 규칙이다. 429 를 받고도 LOT 마다 재시도를 붙이던 것이
+    // 실측에서 죽은 호출 17건을 만들었다.
+    const terminal = candidates.find((candidate) => isTerminal(candidate?.__error));
+    if (terminal) {
+      logger?.warn?.('generation_provider_abandoned', { provider: provider.name, model: provider.model, error: cleanError(terminal.__error) });
+      throw terminal.__error;
+    }
+
     for (let offset = 0; offset < wave.length; offset += 1) {
       const index = start + offset;
       let lot = candidates[offset];

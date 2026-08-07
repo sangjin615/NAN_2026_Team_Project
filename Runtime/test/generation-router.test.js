@@ -80,6 +80,53 @@ test('falls through Groq to Luna, not to gpt-4o-mini', async () => {
   assert.ok(!models.includes('gpt-4o-mini'), 'luna 가 성공했으면 gpt-4o-mini 는 불리지 않는다');
 });
 
+for (const [label, status] of [['rate limits', 429], ['rejected credentials', 401]]) {
+  test(`abandons a provider on ${label} instead of retrying every lot`, async () => {
+    // 재시도해도 같은 답이 오는 실패다. 예전에는 LOT 마다 두 번씩 두드려
+    // 일자 1건에 죽은 호출이 17건 나갔다. 이제 첫 웨이브에서 접는다.
+    const groqCalls = [];
+    const fetchImpl = async (url, options) => {
+      const body = JSON.parse(options.body);
+      if (url.includes('groq.com')) {
+        groqCalls.push(body.model);
+        return jsonResponse({ error: { message: 'limit', type: 'tokens' } }, status);
+      }
+      return jsonResponse(openAiPayload(dailyPartFromBody(body)));
+    };
+    const response = await createHandler({ env: { LIVE_GENERATION_ENABLED: 'true', GROQ_DAILY_ENABLED: 'true', GROQ_API_KEY: 'test', OPENAI_API_KEY: 'test' }, fetchImpl, logger: {} })(event(dailyRequest));
+    assert.equal(response.headers['x-generation-source'], 'openai:gpt-5.6-luna');
+    // 프레임 1회 + 첫 웨이브 4회. 재시도도, 두 번째 웨이브도 없다.
+    assert.ok(groqCalls.length <= 5, `groq 호출이 ${groqCalls.length}건이다`);
+    validateOutput(dailyRequest, JSON.parse(response.body));
+  });
+}
+
+test('retries a lot when the failure is not terminal', async () => {
+  // 손절은 401·403·429 에만 적용된다. 타임아웃 같은 일시적 실패는 여전히
+  // 그 LOT 만 다시 만든다. 이걸 잃으면 부분 복구가 사라진다.
+  // 스텁은 성공해도 fallback 과 같은 내용을 돌려주므로 내용으로는 구분할 수
+  // 없다. 그 LOT 을 몇 번 물었는지로 본다.
+  let attempts = 0;
+  const badLotId = dailyRequest.lots[2].lotId;
+  const fetchImpl = async (url, options) => {
+    const body = JSON.parse(options.body);
+    const input = body.input || body.messages?.[1]?.content || '';
+    if (input.includes(`"lotId":"${badLotId}"`)) {
+      attempts += 1;
+      if (attempts === 1) {
+        const error = new Error('The operation was aborted due to timeout');
+        error.name = 'TimeoutError';
+        throw error;
+      }
+    }
+    return jsonResponse(openAiPayload(dailyPartFromBody(body)));
+  };
+  const response = await createHandler({ env: { LIVE_GENERATION_ENABLED: 'true', OPENAI_API_KEY: 'test' }, fetchImpl, logger: {} })(event(dailyRequest));
+  assert.equal(response.headers['x-generation-source'], 'openai:gpt-5.6-luna');
+  assert.equal(attempts, 2, '타임아웃은 손절 대상이 아니므로 그 LOT 만 다시 만든다');
+  validateOutput(dailyRequest, JSON.parse(response.body));
+});
+
 test('uses gpt-4o-mini as the last resort for a day', async () => {
   const models = [];
   const fetchImpl = async (url, options) => {
