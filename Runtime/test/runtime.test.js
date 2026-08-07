@@ -95,8 +95,9 @@ test('catalog exposes active quests in a dedicated side popup', async () => {
 
 test('catalog quest title uses the painted popup title bar without a duplicate panel', async () => {
   const css = await readFile(new URL('../runtime-fixes.css', import.meta.url), 'utf8');
-  assert.match(css, /#catalog-quest-dialog > header\s*\{[\s\S]*?position: absolute;[\s\S]*?top: 10px;[\s\S]*?background: transparent;/);
-  assert.match(css, /#catalog-quest-dialog > header h2[^\{]*\{[^\}]*color: #f0dfc1;/);
+  assert.match(css, /#catalog-quest-dialog > header\s*\{[\s\S]*?position: absolute;[\s\S]*?top: 10px;[\s\S]*?justify-content: flex-start;[\s\S]*?background: transparent;/);
+  assert.match(css, /#catalog-quest-dialog > header > div\s*\{[\s\S]*?left: 50%;[\s\S]*?width: calc\(100% - 190px\);[\s\S]*?text-align: center;/);
+  assert.match(css, /#catalog-quest-dialog > header h2[^\{]*\{[^\}]*overflow: hidden;[^\}]*color: #f0dfc1;[^\}]*white-space: nowrap;/);
   assert.match(css, /#catalog-quest-dialog #close-catalog-quests[^\{]*\{[\s\S]*?border-image: none !important;/);
 });
 
