@@ -1,41 +1,16 @@
 import { readFile, writeFile } from 'node:fs/promises';
 import { spawnSync } from 'node:child_process';
-import { resolve } from 'node:path';
-import { fileURLToPath, pathToFileURL } from 'node:url';
+import { fileURLToPath } from 'node:url';
+import { outputSchema, validateOutput } from '../generation-server.js';
 
 const model = process.argv[2] || 'qwen3:14b';
 const seed = process.argv[3] || `local-${Date.now()}`;
 const runtimeRoot = new URL('../', import.meta.url);
 const reportRoot = new URL('./reports/local-model-experiment/', runtimeRoot);
-const validator = pathToFileURL(resolve(process.env.USERPROFILE, '.codex/skills/generate-auction-content/scripts/validate-output.mjs'));
-const contract = await readFile(resolve(process.env.USERPROFILE, '.codex/skills/generate-auction-content/assets/compact-contract.txt'), 'utf8');
+const contract = await readFile(new URL('./contracts/compact-generation-contract.txt', runtimeRoot), 'utf8');
 
 const prepared = spawnSync(process.execPath, [fileURLToPath(new URL('./tools/prepare-local-generation-experiment.js', runtimeRoot)), seed], { stdio: 'inherit' });
 if (prepared.status !== 0) process.exit(prepared.status || 1);
-
-const text = { type: 'string', minLength: 1 };
-const fixedObject = (properties) => ({ type: 'object', properties, required: Object.keys(properties), additionalProperties: false });
-function outputSchema(request) {
-  if (request.mode === 'run-blueprint') return fixedObject({
-    schemaVersion: { const: '1.0' }, runSeed: { const: request.runSeed }, premise: text,
-    marketArc: { type: 'array', minItems: 12, maxItems: 12, items: fixedObject({ day: { type: 'integer' }, headline: text, mood: text }) },
-    sets: { type: 'array', prefixItems: request.sets.map(({ setId }) => fixedObject({
-      setId: { const: setId }, title: text, sharedSecret: text, revealHint: text,
-      incidentTitle: text, incidentSummary: text, newspaperLead: text,
-    })), minItems: request.sets.length, maxItems: request.sets.length },
-    castVoices: { type: 'array', prefixItems: request.bots.map(({ botId }) => fixedObject({ botId: { const: botId }, speechStyle: text, intro: text })), minItems: request.bots.length, maxItems: request.bots.length },
-    relicLore: { type: 'array', prefixItems: request.relics.map(({ relicId }) => fixedObject({ relicId: { const: relicId }, displayName: text, lore: text })), minItems: request.relics.length, maxItems: request.relics.length },
-    endingFrames: fixedObject({ success: text, failure: text, bankruptcy: text }),
-  });
-  return fixedObject({
-    schemaVersion: { const: '1.0' }, day: { const: request.day }, marketHeadline: text,
-    lots: { type: 'array', prefixItems: request.lots.map(({ lotId }) => fixedObject({ lotId: { const: lotId }, displayName: text, description: text, rumor: text, setHint: text, npcReaction: text })), minItems: request.lots.length, maxItems: request.lots.length },
-    questCopy: { type: 'array', prefixItems: request.questOffers.map(({ questId }) => fixedObject({ questId: { const: questId }, title: text, flavor: text })), minItems: request.questOffers.length, maxItems: request.questOffers.length },
-    appraisalCopy: fixedObject({ intro: text, success: text, warning: text }),
-    auctionCopy: fixedObject({ opening: text, outbid: text, win: text, lose: text }),
-    settlementCopy: fixedObject({ summary: text }),
-  });
-}
 
 async function generate(requestName, outputName, extraContext = '') {
   const requestUrl = new URL(requestName, reportRoot);
@@ -56,11 +31,13 @@ async function generate(requestName, outputName, extraContext = '') {
     const artifact = { model, seed, attempt, temperature: attempt === 1 ? 0.3 : 0.1, latencyMs: Date.now() - startedAt, output };
     const attemptUrl = new URL(`${outputName.replace('.json', '')}.${seed}.attempt-${attempt}.json`, reportRoot);
     await writeFile(attemptUrl, JSON.stringify(artifact, null, 2));
-    const checked = spawnSync(process.execPath, [fileURLToPath(validator), fileURLToPath(requestUrl), fileURLToPath(attemptUrl)], { encoding: 'utf8' });
-    process.stdout.write(`${outputName} attempt ${attempt}: ${checked.stdout}`);
-    if (checked.status === 0) {
+    try {
+      validateOutput(requestObject, output);
+      process.stdout.write(`${outputName} attempt ${attempt}: ${JSON.stringify({ valid: true, errors: [] })}\n`);
       await writeFile(new URL(outputName, reportRoot), JSON.stringify(artifact, null, 2));
       return artifact;
+    } catch (error) {
+      process.stdout.write(`${outputName} attempt ${attempt}: ${JSON.stringify({ valid: false, errors: [error.message] })}\n`);
     }
   }
   return null;

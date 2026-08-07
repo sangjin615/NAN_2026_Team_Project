@@ -13,7 +13,7 @@ const reportRoot = path.join(runtimeRoot, 'reports', 'live-generation');
 const text = { type: 'string', minLength: 1 };
 const fixedObject = (properties) => ({ type: 'object', properties, required: Object.keys(properties), additionalProperties: false });
 
-function outputSchema(request) {
+export function outputSchema(request) {
   if (request.mode === 'run-blueprint') return fixedObject({
     schemaVersion: { const: '1.0' }, runSeed: { const: request.runSeed }, premise: text,
     marketArc: { type: 'array', minItems: 12, maxItems: 12, items: fixedObject({ day: { type: 'integer' }, headline: text, mood: text }) },
@@ -52,7 +52,7 @@ function validateInput(request) {
 }
 
 const bannedDescription = [
-  /할 수 있/, /해 ?준다/, /번역/, /새로운 세계/, /힘[을이]?\s/, /효과/, /가치가/, /가격/, /시세/,
+  /할 수 있/, /해 ?준다/, /번역/, /새로운 세계/, /(?:^|\s)힘[을이]?(?=\s|[,.!?])/, /효과/, /가치가/, /가격/, /시세/,
   /매우 특별/, /품질이 뛰어/, /고유한 디자인/, /유용할 것/, /느껴진다/, /뛰어난다/,
   /세련된/, /돋보인다/, /는다\.$/,
 ];

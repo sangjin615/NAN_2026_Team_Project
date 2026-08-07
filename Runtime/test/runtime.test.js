@@ -482,6 +482,11 @@ test('generation copy quality rejects supernatural, awkward and repeated catalog
     { lots: [lot('재봉사의 바늘 끝에 금속 손상이 남아 있다.', 0)] },
   );
   assert.ok(categoryMismatch.some((error) => error.includes('does not match category PNT')));
+  const scratchMark = qualityErrors(
+    { mode: 'daily-content', lots: [{ baseName: '구리 종 벽시계', category: 'CLK' }] },
+    { lots: [{ displayName: '구리 종 벽시계', description: '구리 케이스 가장자리에 손때와 작은 긁힘이 확인된다.', rumor: '오래된 창고에서 발견됐다는 소문이 돈다.', setHint: '같은 각인', npcReaction: '중개인이 표면의 흠집을 살핀다.' }] },
+  );
+  assert.deepEqual(scratchMark, []);
   const goodDescriptions = [
     '은제 뚜껑 가장자리에 항로를 닮은 가는 선각이 남아 있다.',
     '검게 바랜 가죽 표지 안쪽에 여러 필체의 메모가 겹쳐 보인다.',

@@ -13,7 +13,8 @@
     "audit:generation:live": "node tools/audit-generation.mjs --live",
     "measure": "node tools/measure-generation.js && node tools/measure-project.js",
     "measure:project": "node tools/measure-project.js",
-    "experiment:prepare": "node tools/prepare-local-generation-experiment.js"
+    "experiment:prepare": "node tools/prepare-local-generation-experiment.js",
+    "experiment:codex": "node tools/run-codex-generation-experiment.mjs"
   },
   "devDependencies": {
     "esbuild": "^0.25.8"
