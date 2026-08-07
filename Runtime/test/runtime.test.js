@@ -100,6 +100,12 @@ test('catalog quest title uses the painted popup title bar without a duplicate p
   assert.match(css, /#catalog-quest-dialog #close-catalog-quests[^\{]*\{[\s\S]*?border-image: none !important;/);
 });
 
+test('auction merchandise has no repeating movement effects', async () => {
+  const css = await readFile(new URL('../runtime-fixes.css', import.meta.url), 'utf8');
+  assert.match(css, /\.mini-sprite\.vfx-focus-pulse img,[\s\S]*?animation: none !important;/);
+  assert.match(css, /\.sprite-stage\.vfx-rising-particles::after[\s\S]*?content: none !important; animation: none !important;/);
+});
+
 test('shop storage cards show the item category', async () => {
   const app = await readFile(new URL('../src/app.js', import.meta.url), 'utf8');
   assert.match(app, /class="storage-category">계열 · \$\{escapeHtml\(categoryLabel\(lot\?\.category \|\| item\.category\)\)\}/);

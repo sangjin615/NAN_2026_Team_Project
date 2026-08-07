@@ -3341,6 +3341,20 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
   filter: drop-shadow(0 2px 2px #0008);
 }
 
+/* Auction merchandise stays still; retain only non-moving shadow and glow treatments. */
+.mini-sprite.vfx-soft-halo::before,
+.sprite-stage.vfx-soft-halo::before,
+.mini-sprite.vfx-focus-pulse img,
+.sprite-stage.vfx-focus-pulse img { animation: none !important; }
+.mini-sprite.vfx-sparkle::after,
+.mini-sprite.vfx-light-sweep::after,
+.mini-sprite.vfx-dust-motes::after,
+.mini-sprite.vfx-rising-particles::after,
+.sprite-stage.vfx-sparkle::after,
+.sprite-stage.vfx-light-sweep::after,
+.sprite-stage.vfx-dust-motes::after,
+.sprite-stage.vfx-rising-particles::after { content: none !important; animation: none !important; }
+
 /* Final relic auction: use every painted panel and keep live information legible. */
 [data-scene="relic"] #relic-feed {
   left: 5.1%; top: 4.5%; width: 15.6%; height: 88%; padding: 0;
