@@ -3,8 +3,6 @@ import {
   dailyFrameSchema,
   dailyLotSchema,
   dailyRepairIndices,
-  // LOT 하나짜리 호출은 나머지 일곱을 못 본다. 자리마다 볼 곳과 어미를 정해 준다.
-  lotWritingHint,
   fallbackSetIncident,
   // 계약서 전문이 아니라 모드에 필요한 절만 싣는다. LOT 하나짜리 호출이 세트
   // 사건 규칙까지 나르던 것을 없앤다 — 한 판 입력의 30%다.
@@ -62,7 +60,11 @@ async function fetchJson(url, options, timeoutMs, fetchImpl) {
 // 이름이 찍힌다. 그럴 바에는 이 공급자를 접고 다음으로 넘어가는 편이 낫다.
 const isTerminal = (error) => error?.status === 401 || error?.status === 403 || error?.status === 429;
 
-async function callGroq({ request, schema = outputSchema(request), prompt = `INPUT:\n${JSON.stringify(request)}`, temperature = 0.2 }, provider, fetchImpl) {
+// 게이트웨이 통합 타임아웃이 30초다. 하루치 본 호출과 복구 호출이 순차로 붙으므로
+// 둘의 합이 그 안에 들어와야 한다. 본 호출 20초 + 복구 6초 = 26초.
+const REPAIR_TIMEOUT_MS = 6000;
+
+async function callGroq({ request, schema = outputSchema(request), prompt = `INPUT:\n${JSON.stringify(request)}`, temperature = 0.2, timeoutMs }, provider, fetchImpl) {
   const payload = await fetchJson('https://api.groq.com/openai/v1/chat/completions', {
     method: 'POST',
     headers: { authorization: `Bearer ${provider.apiKey}`, 'content-type': 'application/json' },
@@ -76,11 +78,11 @@ async function callGroq({ request, schema = outputSchema(request), prompt = `INP
         { role: 'user', content: `OUTPUT_SCHEMA:\n${JSON.stringify(schema)}\n${prompt}` },
       ],
     }),
-  }, provider.timeoutMs, fetchImpl);
+  }, timeoutMs ?? provider.timeoutMs, fetchImpl);
   return parseJsonText(payload?.choices?.[0]?.message?.content);
 }
 
-async function callOpenAI({ request, schema = outputSchema(request), prompt = `INPUT:\n${JSON.stringify(request)}` }, provider, fetchImpl) {
+async function callOpenAI({ request, schema = outputSchema(request), prompt = `INPUT:\n${JSON.stringify(request)}`, timeoutMs }, provider, fetchImpl) {
   const body = {
     model: provider.model,
     instructions: contractFor(request.mode),
@@ -94,7 +96,7 @@ async function callOpenAI({ request, schema = outputSchema(request), prompt = `I
     method: 'POST',
     headers: { authorization: `Bearer ${provider.apiKey}`, 'content-type': 'application/json' },
     body: JSON.stringify(body),
-  }, provider.timeoutMs, fetchImpl);
+  }, timeoutMs ?? provider.timeoutMs, fetchImpl);
   return parseJsonText(responseOutputText(payload));
 }
 
@@ -147,8 +149,18 @@ export function deterministicFallback(request) {
   };
 }
 
-const mini = (env) => env.OPENAI_API_KEY && { name: 'openai', model: env.SECONDARY_MODEL || 'gpt-4o-mini', apiKey: env.OPENAI_API_KEY, timeoutMs: 7000, call: callOpenAI };
-const luna = (env) => env.OPENAI_API_KEY && { name: 'openai', model: env.FALLBACK_MODEL || 'gpt-5.6-luna', apiKey: env.OPENAI_API_KEY, timeoutMs: 9000, call: callOpenAI };
+// 타임아웃은 모드마다 다르다. 예산은 API Gateway 통합 타임아웃 30초다.
+//
+// **일자 생성** — 하루치를 한 번에 만든다. 배포본 로그에서 luna 가 6.8초에
+// 해냈지만 9초 상한 때문에 8판 중 4판이 경계에서 떨어졌다. 1순위 luna 에 20초를
+// 주고 2순위 mini 에 8초를 준다. 둘 다 실패해도 28초로 게이트웨이 안이다.
+// mini 는 하루치를 7초 안에 못 냈으므로 사실상 마지막 시도다.
+//
+// **blueprint** — 프레임과 세트로 쪼개 부른다. 조각이 작아 지금 값이 맞고,
+// 13번 부르므로 상한을 키우면 총 시간이 게이트웨이를 넘는다. 건드리지 않는다.
+const dailyMode = (request) => request.mode === 'daily-content';
+const mini = (env, request) => env.OPENAI_API_KEY && { name: 'openai', model: env.SECONDARY_MODEL || 'gpt-4o-mini', apiKey: env.OPENAI_API_KEY, timeoutMs: dailyMode(request) ? 8000 : 7000, call: callOpenAI };
+const luna = (env, request) => env.OPENAI_API_KEY && { name: 'openai', model: env.FALLBACK_MODEL || 'gpt-5.6-luna', apiKey: env.OPENAI_API_KEY, timeoutMs: dailyMode(request) ? 20000 : 9000, call: callOpenAI };
 
 function providersFromEnv(env, request) {
   if (env.LIVE_GENERATION_ENABLED !== 'true') return [];
@@ -177,7 +189,7 @@ function providersFromEnv(env, request) {
     //
     // 환경변수 이름(SECONDARY/FALLBACK)은 그대로 둔다. 배포된 설정을 깨지 않기
     // 위해서다. 이름이 곧 순위가 아니라는 점만 여기서 기억한다.
-    ...(request.mode === 'daily-content' ? [luna(env), mini(env)] : [mini(env), luna(env)]),
+    ...(dailyMode(request) ? [luna(env, request), mini(env, request)] : [mini(env, request), luna(env, request)]),
   ].filter(Boolean);
 }
 
@@ -272,91 +284,24 @@ async function generateBlueprint(request, provider, fetchImpl, logger) {
   return output;
 }
 
-// 일자 생성도 LOT 단위로 쪼갠다. 8 LOT 을 한 번에 요구하면 공급자 타임아웃(7~9초)
-// 안에 못 들어온다. 2026-08-07 실측에서 단건 daily 가 groq·gpt-4o-mini 를 모두
-// 태우고 static 으로 떨어졌고, 3순위 gpt-5.6-luna 만 간신히 통과했다. 반면 같은
-// 모델이 blueprint 는 세트 단위로 쪼개니 통과했다. 요청 하나를 작게 만드는 것이
-// 답이다.
+// 일자 생성은 **하루치를 한 번에** 만든다. 로컬 `generation-server.js` 와 같은
+// 전략이다.
 //
-// 타임아웃으로 죽으면 output 이 없어 복구 경로도 못 탄다는 문제도 함께 사라진다.
-// 실패한 LOT 만 그 자리에서 다시 만들고, 그래도 안 되면 그 LOT 만 fallback 으로
-// 대체해 나머지를 살린다.
-const DAILY_WAVE = 4;
-
+// 한때 LOT 단위로 쪼갰다. "8 LOT 을 한 번에 요구하면 공급자 타임아웃(7~9초) 안에
+// 못 들어온다"는 판단이었는데, 2026-08-07 에 배포본의 CloudWatch 로그를 읽고
+// 그 전제가 틀렸음이 드러났다.
+//
+//   generation_succeeded { provider: 'openai', model: 'gpt-5.6-luna', latencyMs: 6795 }
+//
+// **들어온다.** 다만 9초가 빠듯해서 8판 중 4판이 그 경계에서 떨어졌을 뿐이다.
+// 게이트웨이가 30초를 주는데 9초만 쓰고 있었다. 타임아웃을 올리는 것이 쪼개기보다
+// 싸다 — 쪼개면 호출이 9~17건으로 늘어 groq TPM(8,000/분)을 확정적으로 넘기고,
+// 지연이 26~44초가 되며, 여덟 설명이 서로 못 보게 되어 문구가 닮는다.
+//
+// 실패는 여전히 그 LOT 에 가둔다. dailyRepairIndices 가 고칠 자리를 골라준다.
 async function generateDaily(request, provider, fetchImpl, logger) {
-  const framePromise = (async () => {
-    try {
-      const frame = await provider.call({
-        request,
-        schema: dailyFrameSchema(request),
-        prompt: `Generate only the day headline.\nINPUT:\n${JSON.stringify({ ...request, lots: undefined })}`,
-      }, provider, fetchImpl);
-      if (frame.day !== request.day) throw new Error('daily frame shape mismatch');
-      return frame;
-    } catch (error) {
-      logger?.warn?.('generation_daily_frame_fallback', { provider: provider.name, model: provider.model, error: cleanError(error) });
-      const { lots, ...frame } = deterministicFallback(request);
-      return frame;
-    }
-  })();
-
   const fallbackLots = deterministicFallback(request).lots;
-  const lots = [];
-  // 개별 LOT 실패는 그 자리에 가두지만, 전부 실패했다면 이 공급자가 죽은 것이다.
-  // 그때는 fallback 으로 메워 통과시키면 안 된다. 그렇게 하면 다음 공급자를 시도할
-  // 기회가 사라지고, 응답 헤더에는 생성한 적 없는 공급자 이름이 찍힌다.
-  let fellBack = 0;
-  let lastError;
-  for (let start = 0; start < request.lots.length; start += DAILY_WAVE) {
-    const wave = request.lots.slice(start, start + DAILY_WAVE);
-    // 이미 채택한 설명을 넘겨 중복을 피한다. validateOutput 이 8개 설명의 중복을
-    // 막고 qualityErrors 가 반복 어절을 세므로, 쪼개서 만들면 이 장치가 필요하다.
-    const used = lots.map(({ description }) => description).filter(Boolean);
-    const candidates = await Promise.all(wave.map((lot, offset) => provider.call({
-      request,
-      schema: dailyLotSchema(lot),
-      prompt: `Generate exactly one LOT record for lot ${start + offset + 1}. ${lotWritingHint(start + offset)} Do not reuse these descriptions: ${JSON.stringify(used)}.\nINPUT LOT:\n${JSON.stringify(lot)}`,
-    }, provider, fetchImpl).catch((error) => ({ __error: error }))));
-
-    // 세트 쪽과 같은 규칙이다. 429 를 받고도 LOT 마다 재시도를 붙이던 것이
-    // 실측에서 죽은 호출 17건을 만들었다.
-    const terminal = candidates.find((candidate) => isTerminal(candidate?.__error));
-    if (terminal) {
-      logger?.warn?.('generation_provider_abandoned', { provider: provider.name, model: provider.model, error: cleanError(terminal.__error) });
-      throw terminal.__error;
-    }
-
-    for (let offset = 0; offset < wave.length; offset += 1) {
-      const index = start + offset;
-      let lot = candidates[offset];
-      if (lot?.__error) {
-        // 첫 시도 사유를 여기서 남긴다. 재시도가 성공하면 아래 catch 가 돌지 않아
-        // 이 사유가 어디에도 남지 않는다 — 공급자가 매번 한 번씩 태우고 있어도
-        // 기록에는 보이지 않는다.
-        logger?.warn?.('generation_daily_lot_retry', { provider: provider.name, model: provider.model, lotId: wave[offset].lotId, error: cleanError(lot.__error) });
-        try {
-          lot = await provider.call({
-            request,
-            schema: dailyLotSchema(wave[offset]),
-            temperature: 0.1,
-            prompt: `RETRY_ERRORS:\n${lot.__error.message}\nGenerate exactly one corrected LOT record for lot ${index + 1}.\nINPUT LOT:\n${JSON.stringify(wave[offset])}`,
-          }, provider, fetchImpl);
-        } catch (error) {
-          // model 을 함께 남긴다. openai 공급자가 둘(gpt-4o-mini, gpt-5.6-luna)이라
-          // 이름만으로는 어느 쪽이 떨어졌는지 구분되지 않는다.
-          logger?.warn?.('generation_daily_lot_fallback', { provider: provider.name, model: provider.model, lotId: wave[offset].lotId, error: cleanError(error) });
-          lot = fallbackLots[index];
-          lastError = error;
-          fellBack += 1;
-        }
-      }
-      lots.push(lot);
-    }
-  }
-
-  if (fellBack === request.lots.length) throw lastError ?? new Error('every lot failed');
-
-  const output = { ...(await framePromise), schemaVersion: '1.0', day: request.day, lots };
+  const output = await provider.call({ request, schema: outputSchema(request) }, provider, fetchImpl);
   try {
     validateOutput(request, output);
     return output;
@@ -376,6 +321,9 @@ async function generateDaily(request, provider, fetchImpl, logger) {
         request,
         schema: dailyLotSchema(request.lots[index]),
         temperature: 0.1,
+        // LOT 하나짜리 복구는 짧다. 본 호출에 20초를 줬으므로 여기에도 같은 예산을
+        // 주면 둘이 합쳐 게이트웨이 30초를 넘는다. 복구에는 따로 상한을 둔다.
+        timeoutMs: REPAIR_TIMEOUT_MS,
         prompt: `RETRY_ERRORS:\n${error.message}\nGenerate exactly one corrected LOT record for lot ${index + 1}.\nINPUT LOT:\n${JSON.stringify(request.lots[index])}`,
       }, provider, fetchImpl).catch((repairError) => {
         logger?.warn?.('generation_daily_repair_fallback', { provider: provider.name, model: provider.model, lotId: request.lots[index].lotId, error: cleanError(repairError) });
