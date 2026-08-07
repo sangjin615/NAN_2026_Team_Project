@@ -106,6 +106,11 @@ export function qualityErrors(request, output) {
     if (!safeDescriptionEnding.test(description)) errors.push(`lot ${index + 1} description has unsafe ending`);
     if (categoryTerms[category] && !categoryTerms[category].test(description)) errors.push(`lot ${index + 1} description does not match category ${category}`);
     if (normalizedClauses(description).length !== 1) errors.push(`lot ${index + 1} description must be one sentence`);
+    // normalizedClauses 는 10자 미만 조각을 버린다. 그래서 "...있다. 확인된다."
+    // 처럼 요구된 어미를 완결된 문장 뒤에 덧붙인 형태가 한 문장으로 세어져
+    // 통과했다. 실제로 이 문구가 경매장 카탈로그에 그대로 나갔다. 마침표는
+    // 마지막 하나뿐이어야 한다.
+    if ((description.match(/\./g) || []).length > 1) errors.push(`lot ${index + 1} description must end with a single period`);
     for (const pattern of bannedDescription) if (pattern.test(description)) errors.push(`lot ${index + 1} banned phrase ${pattern.source}`);
     for (const clause of normalizedClauses(description.replace(expectedName || '', ''))) clauses.set(clause, (clauses.get(clause) || 0) + 1);
     for (const [field, limit] of [['displayName', 20], ['rumor', 45], ['setHint', 25], ['npcReaction', 45]]) {

@@ -1,75 +1,75 @@
 {
   "model": "qwen3:14b",
   "seed": "newspaper-grounded-14b-20260806",
-  "latencyMs": 19340,
+  "latencyMs": 18862,
   "output": {
     "schemaVersion": "1.0",
     "day": 1,
-    "marketHeadline": "오늘의 경매, 예기치 못한 과거의 흔적을 드러낸다",
+    "marketHeadline": "오늘의 경매: 과거의 비밀을 간직한 유물들",
     "lots": [
       {
         "lotId": "newspaper-grounded-14b-20260806-d1-l1",
         "displayName": "흑진주 리본 목걸이",
         "description": "진주 표면에 미세한 긁힘 자국이 드러난다.",
-        "rumor": "이 목걸이는 한 번의 사건으로 인해 유명해졌다고 한다.",
-        "setHint": "리본의 끝에 숨겨진 비밀",
-        "npcReaction": "이 목걸이에 대해 묻는 이는 거의 없었다."
+        "rumor": "이 목걸이는 한 번의 결혼식에서 사라진 것으로 알려져 있다.",
+        "setHint": "리본의 끝에 숨겨진 문양이 중요하다.",
+        "npcReaction": "이 목걸이를 보면 사람들의 시선이 자동으로 끌린다."
       },
       {
         "lotId": "newspaper-grounded-14b-20260806-d1-l2",
         "displayName": "구리 종 벽시계",
-        "description": "시계 몸체에 오래된 녹이 남아 있다.",
-        "rumor": "이 시계는 오래 전에 한 번도 작동하지 않았다고 한다.",
-        "setHint": "종의 울림이 이 시계를 연결한다.",
-        "npcReaction": "이 시계는 오래 전에 한 번도 작동하지 않았다고 한다."
+        "description": "시계 몸체에 오래된 녹이 이어진다.",
+        "rumor": "이 시계는 한 번의 화재로 인해 멸망한 가문의 유물로 여겨진다.",
+        "setHint": "종의 형태가 특별하다.",
+        "npcReaction": "종소리가 울릴 때마다 사람들의 표정이 변한다."
       },
       {
         "lotId": "newspaper-grounded-14b-20260806-d1-l3",
         "displayName": "가면문 알림시계",
-        "description": "시계 페이스에 손상된 부분이 확인된다.",
-        "rumor": "이 시계는 한 번의 사건으로 인해 손상되었다고 한다.",
-        "setHint": "알림 기능이 이 시계를 연결한다.",
-        "npcReaction": "이 시계는 한 번의 사건으로 인해 손상되었다고 한다."
+        "description": "시계의 앞면에 가면 문양이 새겨져 남아 있다.",
+        "rumor": "이 시계는 한 번의 흉계로 인해 가족을 잃은 사람의 유물로 알려져 있다.",
+        "setHint": "가면의 표정이 시계의 작동에 영향을 준다.",
+        "npcReaction": "시계가 움직일 때마다 사람들의 표정이 변한다."
       },
       {
         "lotId": "newspaper-grounded-14b-20260806-d1-l4",
         "displayName": "접이식 탁상시계",
-        "description": "시계의 접이 부분에 마모가 이어진다.",
-        "rumor": "이 시계는 한 번의 사건으로 인해 손상되었다고 한다.",
-        "setHint": "접이식 구조가 이 시계를 연결한다.",
-        "npcReaction": "이 시계는 한 번의 사건으로 인해 손상되었다고 한다."
+        "description": "시계의 접이 부분에 마모가 보인다.",
+        "rumor": "이 시계는 한 번의 여행에서 잃어버린 유물로 알려져 있다.",
+        "setHint": "접이식 구조가 특별하다.",
+        "npcReaction": "시계를 펼칠 때마다 사람들의 표정이 변한다."
       },
       {
         "lotId": "newspaper-grounded-14b-20260806-d1-l5",
         "displayName": "파도문 은제 티포트",
-        "description": "은제 표면에 파도 문양이 새겨져 있고, 일부 녹이 슬어 있는 티포트이다. 확인된다.",
-        "rumor": "이 티포트는 오래전 해외에서 온 유물로 알려져 있다.",
-        "setHint": "파도와 은제의 연결",
-        "npcReaction": "이 티포트는 오래된 유물로 보인다."
+        "description": "은제 표면에 파도 문양이 새겨져 있고, 일부 녹이 슬어 있는 티포트가 확인된다.",
+        "rumor": "이 티포트는 해양 항로를 따라 이동한 유물로 알려져 있다.",
+        "setHint": "파도와 관련된 유물",
+        "npcReaction": "이 티포트는 오래된 항해자의 유물로 보인다."
       },
       {
         "lotId": "newspaper-grounded-14b-20260806-d1-l6",
         "displayName": "삼색 사자손잡이 용기",
-        "description": "용기의 손잡이에 손상된 부분이 확인된다.",
-        "rumor": "이 용기는 한 번의 사건으로 인해 손상되었다고 한다.",
-        "setHint": "사자손잡이의 디자인이 이 용기를 연결한다.",
-        "npcReaction": "이 용기는 한 번의 사건으로 인해 손상되었다고 한다."
+        "description": "용기의 손잡이에 사자 문양이 새겨져 남아 있다.",
+        "rumor": "이 용기는 한 번의 전쟁에서 잃어버린 유물로 알려져 있다.",
+        "setHint": "삼색 문양이 특별하다.",
+        "npcReaction": "용기를 보면 사람들의 시선이 자동으로 끌린다."
       },
       {
         "lotId": "newspaper-grounded-14b-20260806-d1-l7",
         "displayName": "다층 천문시계",
-        "description": "시계의 다층 구조에 마모가 확인된다.",
-        "rumor": "이 시계는 한 번의 사건으로 인해 손상되었다고 한다.",
-        "setHint": "천문시계의 기능이 이 시계를 연결한다.",
-        "npcReaction": "이 시계는 한 번의 사건으로 인해 손상되었다고 한다."
+        "description": "시계의 다층 구조에 마모가 보인다.",
+        "rumor": "이 시계는 한 번의 화재로 인해 멸망한 가문의 유물로 여겨진다.",
+        "setHint": "다층 구조가 특별하다.",
+        "npcReaction": "시계가 움직일 때마다 사람들의 표정이 변한다."
       },
       {
         "lotId": "newspaper-grounded-14b-20260806-d1-l8",
         "displayName": "달과 파도 조수력",
-        "description": "책의 표지에 오래된 흠집이 남아 있다.",
-        "rumor": "이 책은 한 번의 사건으로 인해 손상되었다고 한다.",
-        "setHint": "책의 제목이 이 책을 연결한다.",
-        "npcReaction": "이 책은 한 번의 사건으로 인해 손상되었다고 한다."
+        "description": "책의 표지에 오래된 흔적이 남아 있다.",
+        "rumor": "이 책은 한 번의 여행에서 잃어버린 유물로 알려져 있다.",
+        "setHint": "책의 표지가 특별하다.",
+        "npcReaction": "책을 보면 사람들의 시선이 자동으로 끌린다."
       }
     ]
   }

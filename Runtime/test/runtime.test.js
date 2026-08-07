@@ -531,6 +531,22 @@ test('generation copy quality rejects supernatural, awkward and repeated catalog
   assert.deepEqual(qualityErrors(request, { lots: goodDescriptions.map(lot) }), []);
 });
 
+test('a required ending appended after a finished sentence is rejected', () => {
+  // 복구 경로가 실제로 만들어낸 형태다. 요구된 어미를 이미 끝난 문장 뒤에 덧붙여
+  // safeDescriptionEnding 은 만족시키지만 두 문장이 된다. normalizedClauses 가
+  // 10자 미만 조각("확인된다")을 버리는 탓에 한 문장으로 세어져 통과했고, 이
+  // 문구가 경매장 카탈로그에 그대로 나갔다.
+  const request = { mode: 'daily-content', lots: [{ baseName: '항로문 금은 상감함', category: 'MET' }] };
+  const lot = (description) => ({ displayName: '항로문 금은 상감함', description, rumor: '창고 기록에 등장했다는 소문이 있다.', setHint: '항로 각인', npcReaction: '중개인이 이음새를 살핀다.' });
+
+  const appended = qualityErrors(request, { lots: [lot('금속 표면에 세밀한 문양이 새겨져 있으며, 이음새가 잘 처리되어 있다. 확인된다.')] });
+  assert.ok(appended.some((error) => error.includes('must end with a single period')), JSON.stringify(appended));
+
+  // 같은 내용을 한 문장으로 쓰면 통과해야 한다. 규칙이 정상 문구까지 막으면 안 된다.
+  const single = qualityErrors(request, { lots: [lot('금속 표면의 세밀한 문양과 이음새 마모가 함께 확인된다.')] });
+  assert.deepEqual(single, []);
+});
+
 test('daily generation repair targets local errors but repairs all lots for global duplication', () => {
   const request = {
     mode: 'daily-content',
