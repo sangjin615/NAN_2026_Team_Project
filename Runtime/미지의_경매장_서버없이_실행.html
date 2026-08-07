@@ -3807,7 +3807,14 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
       this.failures = [];
       this.blueprint = null;
     }
-    async prepareRun(input) {
+    // prefetched 는 저장 슬롯 화면에서 미리 만들어 둔 blueprint 다. 있으면 그것을
+    // 쓰고 공급자를 부르지 않는다. 새 게임 대기 시간의 절반이 이 한 번의 호출이라,
+    // 플레이어가 슬롯을 고르는 동안 미리 만들어두면 그만큼이 사라진다.
+    async prepareRun(input, prefetched = null) {
+      if (prefetched) {
+        this.blueprint = prefetched;
+        return this.blueprint;
+      }
       if (!this.provider.generateBlueprint) return null;
       try {
         this.blueprint = await this.provider.generateBlueprint(input);
@@ -4648,10 +4655,30 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
     document.querySelector("#save-mode-title").textContent = slotMode === "new" ? "\uC0C8 \uC5EC\uC815 \uC2AC\uB86F \uC120\uD0DD" : "\uC774\uC5B4\uD560 \uC5EC\uC815 \uC120\uD0DD";
   }
   var randomRunSeed = () => `run-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 6)}`;
+  var runPrefetch = null;
+  function startRunPrefetch(seed) {
+    if (!catalog || !balance || !generationProvider?.generateBlueprint) return;
+    const schedule = createRunSchedule({ catalog, balance, seed });
+    if (!validateSchedule(schedule).valid) return;
+    const sets = createSetGraph(schedule, seed);
+    const promise = generationProvider.generateBlueprint({
+      runSeed: seed,
+      sets,
+      schedule,
+      market: createMarketPath(balance, seed)
+    }).catch(() => null);
+    runPrefetch = { seed, promise };
+  }
+  var discardRunPrefetch = () => {
+    runPrefetch = null;
+  };
   function openSlotScene(mode) {
     slotMode = mode;
     document.querySelector('[data-scene="save"]').dataset.mode = mode;
-    if (mode === "new") document.querySelector("#seed").value = randomRunSeed();
+    if (mode === "new") {
+      if (!runPrefetch) startRunPrefetch(randomRunSeed());
+      document.querySelector("#seed").value = runPrefetch?.seed ?? randomRunSeed();
+    }
     adapter.showScene("save");
     renderSaveSlots();
   }
@@ -4694,6 +4721,7 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
   async function newRun(seed) {
     const loadingStartedAt = performance.now();
     generationProvider?.reset();
+    generation = new GenerationBuffer(generationProvider ? { provider: generationProvider } : {});
     const skip = document.querySelector("#skip-generation");
     skip.disabled = false;
     skip.textContent = "\uAE30\uB2E4\uB9AC\uC9C0 \uC54A\uACE0 \uC2DC\uC791";
@@ -4710,12 +4738,14 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
     state.version = 2;
     recordEvent(state, "run-start", { saveSlot: selectedSlot });
     updateRunLoading(58, "\uCCAB\uB0A0 \uACBD\uB9E4\uC640 \uB3C4\uC2DC \uC815\uBCF4\uB97C \uC0DD\uC131\uD558\uACE0 \uC788\uC2B5\uB2C8\uB2E4.", ["schedule", "sets"], "content");
+    const prefetched = runPrefetch?.seed === seed ? await runPrefetch.promise : null;
+    discardRunPrefetch();
     state.generationBlueprint = await generation.prepareRun({
       runSeed: seed,
       sets,
       schedule,
       market: state.marketPath
-    });
+    }, prefetched);
     await generation.ensure({ currentDay: 1, schedule, sets, aheadDays: 0 });
     updateRunLoading(88, `SLOT ${selectedSlot}\uC5D0 \uC0C8 \uC5EC\uC815\uC744 \uC800\uC7A5\uD558\uACE0 \uC788\uC2B5\uB2C8\uB2E4.`, ["schedule", "sets", "content"], "save");
     save();
@@ -5345,8 +5375,9 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
       return;
     }
     try {
-      await generation.ensure({ currentDay: state.day, schedule: state.schedule, sets: state.sets });
+      await generation.ensure({ currentDay: state.day, schedule: state.schedule, sets: state.sets, aheadDays: 0 });
       renderHub();
+      generation.ensure({ currentDay: state.day, schedule: state.schedule, sets: state.sets }).then(save);
     } catch (error) {
       console.warn("Daily content buffer failed; continuing with prepared fallback.", error);
       renderHub("\uCF58\uD150\uCE20 \uC900\uBE44\uC5D0 \uC2E4\uD328\uD574 \uAE30\uBCF8 \uB370\uC774\uD130\uB97C \uC0AC\uC6A9\uD569\uB2C8\uB2E4.");
@@ -5513,7 +5544,10 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
     audio.playBgm("title");
     openSlotScene("continue");
   };
-  document.querySelector("#back-title").onclick = () => adapter.showScene("title");
+  document.querySelector("#back-title").onclick = () => {
+    discardRunPrefetch();
+    adapter.showScene("title");
+  };
   document.querySelector("#skip-generation").onclick = (event) => {
     event.currentTarget.disabled = true;
     event.currentTarget.textContent = "\uB300\uCCB4 \uBB38\uAD6C\uB85C \uC2DC\uC791\uD569\uB2C8\uB2E4";

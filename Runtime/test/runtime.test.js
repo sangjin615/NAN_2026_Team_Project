@@ -526,6 +526,30 @@ test('cancelling generation aborts the request in flight and the buffer falls ba
   }
 });
 
+test('a prefetched blueprint is adopted without calling the provider again', async () => {
+  // 저장 슬롯 화면에서 미리 만들어 둔 것을 새 런이 그대로 쓴다. 여기서 공급자를
+  // 한 번 더 부르면 미리 만든 의미가 없다 — 대기 시간도 비용도 두 배가 된다.
+  let calls = 0;
+  const provider = { async generateBlueprint() { calls += 1; return { runSeed: 'prefetch', premise: '늦게 만든 것' }; } };
+  const buffer = new GenerationBuffer({ provider });
+  const prefetched = { runSeed: 'prefetch', premise: '미리 만든 것' };
+  const adopted = await buffer.prepareRun({ runSeed: 'prefetch' }, prefetched);
+  assert.equal(calls, 0, '미리 만든 것이 있는데 공급자를 불렀다');
+  assert.deepEqual(adopted, prefetched);
+  // 일자 생성이 이 blueprint 를 맥락으로 받는다. 붙지 않으면 조용히 맥락 없는
+  // 문구가 나온다.
+  assert.deepEqual(buffer.blueprint, prefetched);
+});
+
+test('without a prefetched blueprint the run still generates one', async () => {
+  let calls = 0;
+  const provider = { async generateBlueprint() { calls += 1; return { runSeed: 'no-prefetch', premise: '지금 만든 것' }; } };
+  const buffer = new GenerationBuffer({ provider });
+  const made = await buffer.prepareRun({ runSeed: 'no-prefetch' });
+  assert.equal(calls, 1);
+  assert.equal(made.premise, '지금 만든 것');
+});
+
 test('a cancelled provider lets the buffer serve local fallback content', async () => {
   const provider = new GenerationApiProvider({ enabled: true, endpoint: '/generate' });
   provider.cancel();

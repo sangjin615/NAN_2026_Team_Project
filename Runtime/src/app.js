@@ -8,7 +8,7 @@ import { SaveStore } from './save-store.js';
 import { advanceDay, createInitialState, prepareAuctionEntry, resolveLot } from './game-state.js';
 import { VslRuntimeAdapter } from './vsl-adapter.js';
 import {
-  acceptQuest, botBidForLot, estimateBotDailyAssets, openingBotBid, selectDistinctBotInterests,
+  acceptQuest, botBidForLot, createMarketPath, estimateBotDailyAssets, openingBotBid, selectDistinctBotInterests,
   deliverQuestItem, effectiveQuestDeadline, expireQuestsBeforeAuction, missedDeadline, questMatchesItem,
   marketIndexForDay, questCompletionBonus, quoteItemsSale, refreshDailyQuestOffers, repayLoanEarly, sellItems, settleLoan, settleQuests, takeLoan, upgradeShop,
 } from './systems.js';
@@ -146,10 +146,39 @@ function renderSaveSlots() {
 // 새 런을 열 때마다 새로 뽑되, 같은 판을 다시 보려면 직접 입력할 수 있게 둔다.
 const randomRunSeed = () => `run-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 6)}`;
 
+// 저장 슬롯 화면에서 blueprint 를 미리 만든다. 새 게임 대기의 절반이 이 호출
+// 하나이고, 플레이어가 슬롯을 고르고 시드를 보는 동안은 어차피 비는 시간이다.
+//
+// **한 번 뽑으면 붙든다.** 슬롯 화면을 들락거릴 때마다 새로 만들면 그때마다
+// 공급자 호출 13건이 나가고, 시드도 매번 바뀌어 미리 만든 것이 버려진다.
+// 타이틀로 나가야 버린다.
+let runPrefetch = null;
+
+function startRunPrefetch(seed) {
+  // boot 가 아직 안 끝났거나 생성이 꺼져 있으면 그냥 건너뛴다. newRun 이 평소대로
+  // 만든다.
+  if (!catalog || !balance || !generationProvider?.generateBlueprint) return;
+  const schedule = createRunSchedule({ catalog, balance, seed });
+  if (!validateSchedule(schedule).valid) return;
+  const sets = createSetGraph(schedule, seed);
+  // 실패해도 여기서는 조용히 넘긴다. newRun 이 다시 만들 기회가 있다.
+  const promise = generationProvider.generateBlueprint({
+    runSeed: seed, sets, schedule, market: createMarketPath(balance, seed),
+  }).catch(() => null);
+  runPrefetch = { seed, promise };
+}
+
+const discardRunPrefetch = () => { runPrefetch = null; };
+
 function openSlotScene(mode) {
   slotMode = mode;
   document.querySelector('[data-scene="save"]').dataset.mode = mode;
-  if (mode === 'new') document.querySelector('#seed').value = randomRunSeed();
+  if (mode === 'new') {
+    // 이미 뽑아둔 것이 있으면 그 시드를 그대로 보여준다. 시드가 바뀌면 미리
+    // 만든 blueprint 가 쓸모없어진다.
+    if (!runPrefetch) startRunPrefetch(randomRunSeed());
+    document.querySelector('#seed').value = runPrefetch?.seed ?? randomRunSeed();
+  }
   adapter.showScene('save');
   renderSaveSlots();
 }
@@ -196,6 +225,10 @@ async function boot() {
 async function newRun(seed) {
   const loadingStartedAt = performance.now();
   generationProvider?.reset();
+  // 버퍼는 런마다 새로 만든다. readyDays 가 날짜 번호로만 키를 잡아서, 같은
+  // 세션에서 두 번째 런을 시작하면 1일차가 이미 있다고 판단하고 건너뛴다.
+  // 그러면 새 일정의 LOT 에 content 가 안 붙어 기본 이름만 보인다.
+  generation = new GenerationBuffer(generationProvider ? { provider: generationProvider } : {});
   const skip = document.querySelector('#skip-generation');
   skip.disabled = false;
   skip.textContent = '기다리지 않고 시작';
@@ -213,9 +246,13 @@ async function newRun(seed) {
   state.version = 2;
   recordEvent(state, 'run-start', { saveSlot: selectedSlot });
   updateRunLoading(58, '첫날 경매와 도시 정보를 생성하고 있습니다.', ['schedule', 'sets'], 'content');
+  // 슬롯 화면에서 미리 만든 것이 있고 시드가 그대로면 그것을 쓴다. 플레이어가
+  // 시드를 직접 고쳤으면 맞지 않으므로 버리고 지금 만든다.
+  const prefetched = runPrefetch?.seed === seed ? await runPrefetch.promise : null;
+  discardRunPrefetch();
   state.generationBlueprint = await generation.prepareRun({
     runSeed: seed, sets, schedule, market: state.marketPath,
-  });
+  }, prefetched);
   await generation.ensure({ currentDay: 1, schedule, sets, aheadDays: 0 });
   updateRunLoading(88, `SLOT ${selectedSlot}에 새 여정을 저장하고 있습니다.`, ['schedule', 'sets', 'content'], 'save');
   save();
@@ -771,8 +808,12 @@ async function nextDay() {
     return;
   }
   try {
-    await generation.ensure({ currentDay: state.day, schedule: state.schedule, sets: state.sets });
+    // 들어갈 날만 기다린다. 예전에는 기본 aheadDays=2 로 기다려서 N+2 일차
+    // 생성 1건이 매 전환마다 끼어들었다 — 실측 16~29초 동안 화면에는 비활성화된
+    // 버튼뿐이었다. 앞당김은 newRun 과 같은 방식으로 뒤로 돌린다.
+    await generation.ensure({ currentDay: state.day, schedule: state.schedule, sets: state.sets, aheadDays: 0 });
     renderHub();
+    generation.ensure({ currentDay: state.day, schedule: state.schedule, sets: state.sets }).then(save);
   } catch (error) {
     console.warn('Daily content buffer failed; continuing with prepared fallback.', error);
     renderHub('콘텐츠 준비에 실패해 기본 데이터를 사용합니다.');
@@ -915,7 +956,9 @@ document.querySelector('#new-run').onclick = async () => {
 };
 document.querySelector('#open-new-slots').onclick = () => { audio.playBgm('title'); openSlotScene('new'); };
 document.querySelector('#open-continue-slots').onclick = () => { audio.playBgm('title'); openSlotScene('continue'); };
-document.querySelector('#back-title').onclick = () => adapter.showScene('title');
+// 타이틀로 나가면 미리 만들어 둔 것을 버린다. 다음에 새 게임을 누르면 새 시드로
+// 다시 만든다. 슬롯 화면을 들락거리는 것만으로는 다시 만들지 않는다.
+document.querySelector('#back-title').onclick = () => { discardRunPrefetch(); adapter.showScene('title'); };
 // 생성을 중단하면 진행 중인 요청이 즉시 실패하고 GenerationBuffer 가 로컬 대체
 // 문구로 넘어간다. 게임은 그대로 시작된다 — 문구만 생성본이 아니게 된다.
 document.querySelector('#skip-generation').onclick = (event) => {

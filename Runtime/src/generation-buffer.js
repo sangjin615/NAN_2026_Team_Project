@@ -35,7 +35,11 @@ export class GenerationBuffer {
     this.blueprint = null;
   }
 
-  async prepareRun(input) {
+  // prefetched 는 저장 슬롯 화면에서 미리 만들어 둔 blueprint 다. 있으면 그것을
+  // 쓰고 공급자를 부르지 않는다. 새 게임 대기 시간의 절반이 이 한 번의 호출이라,
+  // 플레이어가 슬롯을 고르는 동안 미리 만들어두면 그만큼이 사라진다.
+  async prepareRun(input, prefetched = null) {
+    if (prefetched) { this.blueprint = prefetched; return this.blueprint; }
     if (!this.provider.generateBlueprint) return null;
     try { this.blueprint = await this.provider.generateBlueprint(input); return this.blueprint; }
     catch (error) { this.failures.push({ day: 0, message: error.message }); return null; }
