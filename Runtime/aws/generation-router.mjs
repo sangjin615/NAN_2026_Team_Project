@@ -1,5 +1,6 @@
 import {
   blueprintFrameSchema,
+  dailyFrameSchema,
   dailyLotSchema,
   dailyRepairIndices,
   fallbackSetIncident,
@@ -166,6 +167,8 @@ async function generateBlueprint(request, provider, fetchImpl, logger) {
 
   const accepted = [];
   const generatedSets = [];
+  let fellBack = 0;
+  let lastSetError;
   const waveSize = 4;
   for (let start = 0; start < request.sets.length; start += waveSize) {
     const wave = request.sets.slice(start, start + waveSize);
@@ -198,11 +201,17 @@ async function generateBlueprint(request, provider, fetchImpl, logger) {
       if (errors.length) {
         logger.warn?.('generation_blueprint_set_fallback', { provider: provider.name, model: provider.model, setId: inputSet.setId, errors });
         output = fallbackSetIncident(inputSet, index);
+        lastSetError = new Error(errors.join('; '));
+        fellBack += 1;
       }
       accepted.push(output);
       generatedSets.push(output);
     }
   }
+
+  // 세트가 전부 실패했으면 이 공급자는 죽은 것이다. fallback 으로 메워 통과시키면
+  // 다음 공급자를 시도할 기회가 사라지고 헤더에는 생성한 적 없는 이름이 찍힌다.
+  if (fellBack === request.sets.length) throw lastSetError ?? new Error('every set failed');
 
   const frame = await framePromise;
   const output = { ...frame, schemaVersion: '1.0', runSeed: request.runSeed, sets: generatedSets };
@@ -210,32 +219,98 @@ async function generateBlueprint(request, provider, fetchImpl, logger) {
   return output;
 }
 
-async function generateDaily(request, provider, fetchImpl) {
-  let output;
-  let firstError;
+// 일자 생성도 LOT 단위로 쪼갠다. 8 LOT 을 한 번에 요구하면 공급자 타임아웃(7~9초)
+// 안에 못 들어온다. 2026-08-07 실측에서 단건 daily 가 groq·gpt-4o-mini 를 모두
+// 태우고 static 으로 떨어졌고, 3순위 gpt-5.6-luna 만 간신히 통과했다. 반면 같은
+// 모델이 blueprint 는 세트 단위로 쪼개니 통과했다. 요청 하나를 작게 만드는 것이
+// 답이다.
+//
+// 타임아웃으로 죽으면 output 이 없어 복구 경로도 못 탄다는 문제도 함께 사라진다.
+// 실패한 LOT 만 그 자리에서 다시 만들고, 그래도 안 되면 그 LOT 만 fallback 으로
+// 대체해 나머지를 살린다.
+const DAILY_WAVE = 4;
+
+async function generateDaily(request, provider, fetchImpl, logger) {
+  const framePromise = (async () => {
+    try {
+      const frame = await provider.call({
+        request,
+        schema: dailyFrameSchema(request),
+        prompt: `Generate only the day headline.\nINPUT:\n${JSON.stringify({ ...request, lots: undefined })}`,
+      }, provider, fetchImpl);
+      if (frame.day !== request.day) throw new Error('daily frame shape mismatch');
+      return frame;
+    } catch (error) {
+      logger?.warn?.('generation_daily_frame_fallback', { provider: provider.name, error: cleanError(error) });
+      const { lots, ...frame } = deterministicFallback(request);
+      return frame;
+    }
+  })();
+
+  const fallbackLots = deterministicFallback(request).lots;
+  const lots = [];
+  // 개별 LOT 실패는 그 자리에 가두지만, 전부 실패했다면 이 공급자가 죽은 것이다.
+  // 그때는 fallback 으로 메워 통과시키면 안 된다. 그렇게 하면 다음 공급자를 시도할
+  // 기회가 사라지고, 응답 헤더에는 생성한 적 없는 공급자 이름이 찍힌다.
+  let fellBack = 0;
+  let lastError;
+  for (let start = 0; start < request.lots.length; start += DAILY_WAVE) {
+    const wave = request.lots.slice(start, start + DAILY_WAVE);
+    // 이미 채택한 설명을 넘겨 중복을 피한다. validateOutput 이 8개 설명의 중복을
+    // 막고 qualityErrors 가 반복 어절을 세므로, 쪼개서 만들면 이 장치가 필요하다.
+    const used = lots.map(({ description }) => description).filter(Boolean);
+    const candidates = await Promise.all(wave.map((lot, offset) => provider.call({
+      request,
+      schema: dailyLotSchema(lot),
+      prompt: `Generate exactly one LOT record for lot ${start + offset + 1}. Do not reuse these descriptions: ${JSON.stringify(used)}.\nINPUT LOT:\n${JSON.stringify(lot)}`,
+    }, provider, fetchImpl).catch((error) => ({ __error: error }))));
+    for (let offset = 0; offset < wave.length; offset += 1) {
+      const index = start + offset;
+      let lot = candidates[offset];
+      if (lot?.__error) {
+        try {
+          lot = await provider.call({
+            request,
+            schema: dailyLotSchema(wave[offset]),
+            temperature: 0.1,
+            prompt: `RETRY_ERRORS:\n${lot.__error.message}\nGenerate exactly one corrected LOT record for lot ${index + 1}.\nINPUT LOT:\n${JSON.stringify(wave[offset])}`,
+          }, provider, fetchImpl);
+        } catch (error) {
+          logger?.warn?.('generation_daily_lot_fallback', { provider: provider.name, lotId: wave[offset].lotId, error: cleanError(error) });
+          lot = fallbackLots[index];
+          lastError = error;
+          fellBack += 1;
+        }
+      }
+      lots.push(lot);
+    }
+  }
+
+  if (fellBack === request.lots.length) throw lastError ?? new Error('every lot failed');
+
+  const output = { ...(await framePromise), schemaVersion: '1.0', day: request.day, lots };
   try {
-    output = await provider.call({ request }, provider, fetchImpl);
     validateOutput(request, output);
     return output;
   } catch (error) {
-    firstError = error;
+    // 여기까지 왔으면 개별 LOT 이 아니라 묶어놓고 보이는 문제다. 중복 설명이나
+    // 반복 어절처럼 전역 규칙에 걸린 경우다. dailyRepairIndices 가 고칠 자리를
+    // 골라준다.
+    const repairIndices = dailyRepairIndices(request, output);
+    if (repairIndices.length === 0) throw error;
+    const repairs = await Promise.all(repairIndices.map(async (index) => ({
+      index,
+      repaired: await provider.call({
+        request,
+        schema: dailyLotSchema(request.lots[index]),
+        temperature: 0.1,
+        prompt: `RETRY_ERRORS:\n${error.message}\nGenerate exactly one corrected LOT record for lot ${index + 1}.\nINPUT LOT:\n${JSON.stringify(request.lots[index])}`,
+      }, provider, fetchImpl).catch(() => fallbackLots[index]),
+    })));
+    for (const { index, repaired } of repairs) output.lots[index] = repaired;
+    validateOutput(request, output);
+    return output;
   }
-
-  const repairIndices = dailyRepairIndices(request, output);
-  if (!output?.lots || repairIndices.length === 0) throw firstError;
-  const repairs = await Promise.all(repairIndices.map(async (index) => {
-    const lot = request.lots[index];
-    const repaired = await provider.call({
-      request,
-      schema: dailyLotSchema(lot),
-      temperature: 0.1,
-      prompt: `RETRY_ERRORS:\n${firstError.message}\nGenerate exactly one corrected LOT record for lot ${index + 1}.\nINPUT LOT:\n${JSON.stringify(lot)}`,
-    }, provider, fetchImpl);
-    return { index, repaired };
-  }));
-  for (const { index, repaired } of repairs) output.lots[index] = repaired;
-  validateOutput(request, output);
-  return output;
 }
 
 export function createHandler({ env = process.env, fetchImpl = fetch, logger = console } = {}) {
@@ -254,7 +329,7 @@ export function createHandler({ env = process.env, fetchImpl = fetch, logger = c
       try {
         const output = request.mode === 'run-blueprint'
           ? await generateBlueprint(request, provider, fetchImpl, logger)
-          : await generateDaily(request, provider, fetchImpl);
+          : await generateDaily(request, provider, fetchImpl, logger);
         logger.info?.('generation_succeeded', { provider: provider.name, model: provider.model, latencyMs: Date.now() - startedAt });
         return { statusCode: 200, headers: { ...jsonHeaders, 'x-generation-source': `${provider.name}:${provider.model}` }, body: JSON.stringify(output) };
       } catch (error) {

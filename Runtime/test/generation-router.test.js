@@ -23,6 +23,18 @@ const event = (request) => ({ body: JSON.stringify(request), requestContext: { h
 const jsonResponse = (payload, status = 200) => ({ ok: status < 400, status, statusText: '', json: async () => payload });
 const openAiPayload = (output) => ({ output_text: JSON.stringify(output) });
 const groqPayload = (output) => ({ choices: [{ message: { content: JSON.stringify(output) } }] });
+const dailyFallback = deterministicFallback(dailyRequest);
+// 일자 생성도 프레임 1회 + LOT 단위로 쪼개진다. 공급자를 흉내낼 때 어느 조각을
+// 물었는지 보고 그 조각만 돌려줘야 한다.
+const dailyPartFromBody = (body) => {
+  const input = body.input || body.messages?.[1]?.content || '';
+  if (input.includes('Generate only the day headline')) {
+    const { lots, ...frame } = dailyFallback;
+    return frame;
+  }
+  const index = dailyRequest.lots.findIndex(({ lotId }) => input.includes(`"lotId":"${lotId}"`));
+  return dailyFallback.lots[index] ?? dailyFallback.lots[0];
+};
 const blueprintFallback = deterministicFallback(blueprintRequest);
 const blueprintPartFromBody = (body) => {
   const input = body.input || body.messages?.[1]?.content || '';
@@ -39,36 +51,63 @@ test('deterministic fallback satisfies daily and blueprint contracts', () => {
 });
 
 test('uses Groq first and stops after a valid result', async () => {
-  const calls = [];
-  const fetchImpl = async (url) => { calls.push(url); return jsonResponse(groqPayload(deterministicFallback(dailyRequest))); };
+  const models = [];
+  const fetchImpl = async (url, options) => {
+    const body = JSON.parse(options.body); models.push(body.model);
+    return jsonResponse(groqPayload(dailyPartFromBody(body)));
+  };
   const response = await createHandler({ env: { LIVE_GENERATION_ENABLED: 'true', GROQ_API_KEY: 'test', OPENAI_API_KEY: 'test' }, fetchImpl, logger: {} })(event(dailyRequest));
   assert.equal(response.statusCode, 200);
   assert.equal(response.headers['x-generation-source'], 'groq:openai/gpt-oss-120b');
-  assert.equal(calls.length, 1);
+  // 프레임 1회 + LOT 8회. 하나라도 다른 모델이 섞이면 폴스루가 일어난 것이다.
+  assert.equal(models.length, 9);
+  assert.ok(models.every((model) => model === 'openai/gpt-oss-120b'));
 });
 
 test('falls through Groq to gpt-4o-mini, then stops', async () => {
-  const bodies = [];
+  const models = [];
   const fetchImpl = async (url, options) => {
-    bodies.push(JSON.parse(options.body));
+    const body = JSON.parse(options.body); models.push(body.model);
     if (url.includes('groq.com')) return jsonResponse({ error: { message: 'rate limited' } }, 429);
-    return jsonResponse(openAiPayload(deterministicFallback(dailyRequest)));
+    return jsonResponse(openAiPayload(dailyPartFromBody(body)));
   };
   const response = await createHandler({ env: { LIVE_GENERATION_ENABLED: 'true', GROQ_API_KEY: 'test', OPENAI_API_KEY: 'test' }, fetchImpl, logger: {} })(event(dailyRequest));
   assert.equal(response.headers['x-generation-source'], 'openai:gpt-4o-mini');
-  assert.deepEqual(bodies.map(({ model }) => model), ['openai/gpt-oss-120b', 'gpt-4o-mini']);
+  // groq 는 조각마다 429 를 받아 전부 떨어지고, 그제서야 다음 공급자로 넘어간다.
+  assert.deepEqual([...new Set(models)], ['openai/gpt-oss-120b', 'gpt-4o-mini']);
+  assert.equal(models.at(-1), 'gpt-4o-mini');
 });
 
 test('uses Luna after two invalid candidates', async () => {
   const models = [];
   const fetchImpl = async (url, options) => {
     const body = JSON.parse(options.body); models.push(body.model);
-    if (models.length < 3) return url.includes('groq.com') ? jsonResponse(groqPayload({ bad: true })) : jsonResponse(openAiPayload({ bad: true }));
-    return jsonResponse(openAiPayload(deterministicFallback(dailyRequest)));
+    if (body.model !== 'gpt-5.6-luna') {
+      return url.includes('groq.com') ? jsonResponse(groqPayload({ bad: true })) : jsonResponse(openAiPayload({ bad: true }));
+    }
+    return jsonResponse(openAiPayload(dailyPartFromBody(body)));
   };
   const response = await createHandler({ env: { LIVE_GENERATION_ENABLED: 'true', GROQ_API_KEY: 'test', OPENAI_API_KEY: 'test' }, fetchImpl, logger: {} })(event(dailyRequest));
   assert.equal(response.headers['x-generation-source'], 'openai:gpt-5.6-luna');
-  assert.deepEqual(models, ['openai/gpt-oss-120b', 'gpt-4o-mini', 'gpt-5.6-luna']);
+  assert.deepEqual([...new Set(models)], ['openai/gpt-oss-120b', 'gpt-4o-mini', 'gpt-5.6-luna']);
+});
+
+test('a lot that keeps failing falls back alone and the rest of the day survives', async () => {
+  // 예전에는 하루치를 한 번에 만들다 타임아웃이 나면 output 이 없어 복구 경로도
+  // 못 탔다. 이제 실패는 그 LOT 하나에 갇힌다.
+  const badLotId = dailyRequest.lots[3].lotId;
+  const fetchImpl = async (url, options) => {
+    const body = JSON.parse(options.body);
+    const input = body.input || body.messages?.[1]?.content || '';
+    if (input.includes(`"lotId":"${badLotId}"`)) throw new Error('timeout');
+    return jsonResponse(openAiPayload(dailyPartFromBody(body)));
+  };
+  const response = await createHandler({ env: { LIVE_GENERATION_ENABLED: 'true', OPENAI_API_KEY: 'test' }, fetchImpl, logger: {} })(event(dailyRequest));
+  assert.equal(response.headers['x-generation-source'], 'openai:gpt-4o-mini');
+  const output = JSON.parse(response.body);
+  validateOutput(dailyRequest, output);
+  assert.equal(output.lots.length, 8);
+  assert.deepEqual(output.lots[3], dailyFallback.lots[3]);
 });
 
 test('returns validated static content when every provider fails', async () => {
@@ -121,22 +160,28 @@ test('generates blueprint sets in bounded parallel waves and carries accepted he
   validateOutput(blueprintRequest, JSON.parse(response.body));
 });
 
-test('repairs only invalid daily lots in parallel', async () => {
-  const initial = deterministicFallback(dailyRequest);
-  initial.lots[2] = { ...initial.lots[2], rumor: '' };
-  initial.lots[6] = { ...initial.lots[6], setHint: '' };
-  const repaired = deterministicFallback(dailyRequest);
-  const requestedLots = [];
+test('repairs only the lots that break a whole-day rule', async () => {
+  // LOT 단위로 만들면 개별 검증은 통과하는데 묶어놓고 보면 설명이 겹치는 경우가
+  // 생긴다. 그때 dailyRepairIndices 가 고칠 자리만 고른다.
+
+  const requestedRepairs = [];
   const fetchImpl = async (url, options) => {
     const body = JSON.parse(options.body);
-    const input = body.messages?.[1]?.content || '';
-    if (!input.includes('Generate exactly one corrected LOT')) return jsonResponse(groqPayload(initial));
-    const index = dailyRequest.lots.findIndex(({ lotId }) => input.includes(lotId));
-    requestedLots.push(index);
-    return jsonResponse(groqPayload(repaired.lots[index]));
+    const input = body.input || body.messages?.[1]?.content || '';
+    if (input.includes('Generate exactly one corrected LOT')) {
+      const index = dailyRequest.lots.findIndex(({ lotId }) => input.includes(`"lotId":"${lotId}"`));
+      requestedRepairs.push(index);
+      return jsonResponse(groqPayload(dailyFallback.lots[index]));
+    }
+    // 5번 LOT 만 rumor 가 상한 45자를 넘는다. lot 5 로 특정되는 국소 오류다.
+    // (중복 설명은 설계상 전체 복구 대상이라 부분 복구 검증에 쓸 수 없다.)
+    if (input.includes(`"lotId":"${dailyRequest.lots[4].lotId}"`)) {
+      return jsonResponse(groqPayload({ ...dailyFallback.lots[4], rumor: '소'.repeat(60) }));
+    }
+    return jsonResponse(groqPayload(dailyPartFromBody(body)));
   };
   const response = await createHandler({ env: { LIVE_GENERATION_ENABLED: 'true', GROQ_API_KEY: 'test' }, fetchImpl, logger: {} })(event(dailyRequest));
   assert.equal(response.headers['x-generation-source'], 'groq:openai/gpt-oss-120b');
-  assert.deepEqual(requestedLots.sort((a, b) => a - b), [2, 6]);
+  assert.ok(requestedRepairs.length > 0 && requestedRepairs.length < dailyRequest.lots.length, JSON.stringify(requestedRepairs));
   validateOutput(dailyRequest, JSON.parse(response.body));
 });

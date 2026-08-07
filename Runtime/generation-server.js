@@ -45,6 +45,11 @@ export const setIncidentSchema = ({ setId }) => fixedObject({
   incidentTitle: text, incidentSummary: text, newspaperLead: text,
 });
 
+// 일자 생성을 LOT 단위로 쪼갤 때 쓰는 머리 부분. blueprint 의 프레임과 같은 역할이다.
+export const dailyFrameSchema = (request) => fixedObject({
+  schemaVersion: { const: '1.0' }, day: { const: request.day }, marketHeadline: text,
+});
+
 export function validateInput(request) {
   if (request?.schemaVersion !== '1.0') throw new Error('unsupported schemaVersion');
   if (request.mode === 'run-blueprint') {
