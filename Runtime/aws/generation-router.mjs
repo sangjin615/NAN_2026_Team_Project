@@ -226,7 +226,17 @@ async function generateBlueprint(request, provider, fetchImpl, logger) {
   const generatedSets = [];
   let fellBack = 0;
   let lastSetError;
-  const waveSize = 4;
+  // 세트 12개를 몇 개씩 묶어 부를지. 웨이브마다 가장 느린 호출을 기다리므로
+  // 웨이브 수가 곧 지연이다.
+  //
+  // 2026-08-07 배포 실측: 4개씩 3웨이브면 14.6~30.6초였고 8판 중 1판이 API
+  // Gateway 통합 타임아웃 30초를 넘겨 **503** 을 받았다. static 보다 나쁘다 —
+  // 응답 자체가 끊겨 클라이언트가 오류를 받는다.
+  //
+  // 6으로 올려 2웨이브로 만든다. 12(=1웨이브)로 하지 않는 이유는 웨이브 사이에
+  // 넘기는 `usedTitles` 때문이다. 그것이 사라지면 세트끼리 서로를 못 보게 되고,
+  // 일자 생성을 쪼갰을 때 겪은 "문구가 서로 닮는" 문제가 여기서 재현된다.
+  const waveSize = 6;
   for (let start = 0; start < request.sets.length; start += waveSize) {
     const wave = request.sets.slice(start, start + waveSize);
     const usedTitles = accepted.map(({ incidentTitle }) => incidentTitle);

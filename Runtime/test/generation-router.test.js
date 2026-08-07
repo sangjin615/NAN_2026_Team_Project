@@ -279,8 +279,10 @@ test('generates blueprint sets in bounded parallel waves and carries accepted he
   };
   const response = await createHandler({ env: { LIVE_GENERATION_ENABLED: 'true', OPENAI_API_KEY: 'test' }, fetchImpl, logger: {} })(event(blueprintRequest));
   assert.equal(response.headers['x-generation-source'], 'openai:gpt-4o-mini');
-  assert.equal(maxActive, 5); // frame + four sets
-  assert.match(prompts.find((prompt) => prompt.includes('INPUT SET') && prompt.includes('set-5')), /1번 창고에서 발견된 운송 장부/);
+  assert.equal(maxActive, 7); // 프레임 1 + 세트 6. 웨이브를 6으로 올렸다
+  // 두 번째 웨이브(set-7 부터)는 첫 웨이브가 만든 헤드라인을 받아 중복을 피한다.
+  // 이것이 사라지면 세트끼리 서로를 못 보게 되므로 웨이브를 12로 올리지 않았다.
+  assert.match(prompts.find((prompt) => prompt.includes('INPUT SET') && prompt.includes('set-7')), /1번 창고에서 발견된 운송 장부/);
   validateOutput(blueprintRequest, JSON.parse(response.body));
 });
 
