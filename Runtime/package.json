@@ -14,7 +14,8 @@
     "measure": "node tools/measure-generation.js && node tools/measure-project.js",
     "measure:project": "node tools/measure-project.js",
     "experiment:prepare": "node tools/prepare-local-generation-experiment.js",
-    "experiment:codex": "node tools/run-codex-generation-experiment.mjs"
+    "experiment:codex": "node tools/run-codex-generation-experiment.mjs",
+    "build:lambda": "node tools/build-generation-lambda.mjs"
   },
   "devDependencies": {
     "esbuild": "^0.25.8"

@@ -7,7 +7,10 @@ const runtimeRoot = path.dirname(fileURLToPath(import.meta.url));
 const port = Number(process.env.GENERATION_PORT || 8787);
 const ollamaEndpoint = process.env.OLLAMA_ENDPOINT || 'http://127.0.0.1:11434/api/generate';
 const model = process.env.OLLAMA_MODEL || 'qwen3:14b';
-const contract = await readFile(path.join(runtimeRoot, 'contracts', 'compact-generation-contract.txt'), 'utf8');
+const contract = typeof __BUNDLED_GENERATION_CONTRACT__ === 'string'
+  ? __BUNDLED_GENERATION_CONTRACT__
+  : await readFile(path.join(runtimeRoot, 'contracts', 'compact-generation-contract.txt'), 'utf8');
+export const generationContract = contract;
 const reportRoot = path.join(runtimeRoot, 'reports', 'live-generation');
 
 const text = { type: 'string', minLength: 1 };
@@ -38,7 +41,7 @@ const setIncidentSchema = ({ setId }) => fixedObject({
   incidentTitle: text, incidentSummary: text, newspaperLead: text,
 });
 
-function validateInput(request) {
+export function validateInput(request) {
   if (request?.schemaVersion !== '1.0') throw new Error('unsupported schemaVersion');
   if (request.mode === 'run-blueprint') {
     if (!request.runSeed || request.sets?.length !== 12 || request.marketSignals?.length !== 12) throw new Error('invalid run-blueprint request');
