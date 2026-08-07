@@ -308,6 +308,61 @@ node tools/measure-generation-router.mjs --single
 선택지가 있다. 대신 웨이브 간 "이미 쓴 설명" 전달이 사라져 중복 위험이 커진다
 — 중복은 `dailyRepairIndices` 가 전체 복구로 잡는다.
 
+## 쪼개면 여덟 설명이 서로 닮는다 (2026-08-07)
+
+실제 게임에서 확인된 것이다. 하루치 여덟 설명이 **모두 `보인다.` 로 끝나고 서로
+다른 특징을 말하지 않았다.** 길이도 어미도 카테고리 어휘도 규칙대로였다.
+넘치지도 않았다. 다양성만 없었다.
+
+**계약서를 모드별로 나눈 것 때문이 아니다.** 다양성 규칙은 DAY 절에 그대로
+있다. 원인은 쪼개기 자체다.
+
+```js
+const used = lots.map(({ description }) => description).filter(Boolean);  // 끝난 웨이브 것만
+const candidates = await Promise.all(wave.map((lot) => provider.call({ ... })));  // 4개 동시
+```
+
+- 1~4번 LOT — `used` 가 비어 있다. **넷이 서로를 전혀 모른 채 동시에 만들어진다**
+- 5~8번 LOT — 앞 넷은 피하지만 **자기들끼리는 또 모른다**
+
+그리고 계약서의 이 줄이
+
+> Vary the observed feature across all eight items
+
+**LOT 하나짜리 호출에는 실행 불가능한 지시다.** 모델은 여덟을 보지 못한다.
+각자 가장 무난한 답으로 수렴한다.
+
+검증기도 못 잡는다. `validateOutput` 은 **완전히 같은 문장**만, `qualityErrors`
+는 같은 어절이 **3회 이상** 반복될 때만 거른다. 여덟이 전부 같은 어미로 끝나면서
+조금씩 다르면 통과한다.
+
+**로컬은 이 문제가 없다.** `generation-server.js` 는 하루치를 한 번에 만들어
+모델이 여덟을 다 본다. 이것도 라우터와 로컬의 차이다.
+
+### 고친 방법 — 자리마다 볼 곳을 정해 준다
+
+`lotWritingHint(index)` 가 LOT 번호로 **볼 곳**과 **맺을 어미**를 돌려가며
+배정한다. 호출을 늘리지도, 순차로 돌리지도 않는다. 프롬프트 한 문장이 늘 뿐이다.
+
+```
+1번 LOT: Focus this description on visible material. End the description with "남아 있다.".
+2번 LOT: Focus this description on engraving. End the description with "보인다.".
+...
+6번 LOT: Focus this description on wear. End the description with "남아 있다.".
+```
+
+**목록을 새로 적지 않았다.** 볼 곳 여섯 개는 계약서의 `Describe only ...` 문장에서,
+어미 다섯 개는 검증기의 `safeDescriptionEnding` 정규식에서 끌어온다. 새로 적으면
+갈라진다.
+
+끌어오기에는 대가가 있다 — **계약서 문장이나 정규식이 바뀌면 조용히 빈 힌트가
+된다.** 그래서 테스트가 여섯 가지·다섯 가지가 나오는지, 값이 잘리지 않았는지
+확인한다. 실제로 처음 구현에서 `, or wear` 를 쉼표로만 끊어 `or wear` 가 남았고
+개수만 세는 테스트는 그것을 통과시켰다.
+
+**아직 실제 모델로 확인하지 않았다.** 여덟이 실제로 갈라지는지는 한 판 돌려야
+안다.
+
 ## 한 판에 얼마가 나가나 — 그리고 30% 를 줄인 방법
 
 라우터가 실제로 만드는 프롬프트를 그대로 조립해 셌다. 추정이 아니다.

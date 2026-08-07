@@ -3,6 +3,8 @@ import {
   dailyFrameSchema,
   dailyLotSchema,
   dailyRepairIndices,
+  // LOT 하나짜리 호출은 나머지 일곱을 못 본다. 자리마다 볼 곳과 어미를 정해 준다.
+  lotWritingHint,
   fallbackSetIncident,
   // 계약서 전문이 아니라 모드에 필요한 절만 싣는다. LOT 하나짜리 호출이 세트
   // 사건 규칙까지 나르던 것을 없앤다 — 한 판 입력의 30%다.
@@ -313,7 +315,7 @@ async function generateDaily(request, provider, fetchImpl, logger) {
     const candidates = await Promise.all(wave.map((lot, offset) => provider.call({
       request,
       schema: dailyLotSchema(lot),
-      prompt: `Generate exactly one LOT record for lot ${start + offset + 1}. Do not reuse these descriptions: ${JSON.stringify(used)}.\nINPUT LOT:\n${JSON.stringify(lot)}`,
+      prompt: `Generate exactly one LOT record for lot ${start + offset + 1}. ${lotWritingHint(start + offset)} Do not reuse these descriptions: ${JSON.stringify(used)}.\nINPUT LOT:\n${JSON.stringify(lot)}`,
     }, provider, fetchImpl).catch((error) => ({ __error: error }))));
 
     // 세트 쪽과 같은 규칙이다. 429 를 받고도 LOT 마다 재시도를 붙이던 것이

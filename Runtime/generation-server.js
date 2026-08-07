@@ -93,6 +93,31 @@ const bannedDescription = [
   /세련된/, /돋보인다/, /는다\.$/,
 ];
 const safeDescriptionEnding = /(남아 있다|보인다|확인된다|이어진다|드러난다)\.$/;
+
+// LOT 하나만 만드는 호출은 나머지 일곱을 보지 못한다. 그래서 계약서의 "여덟
+// 항목의 관찰 특징을 서로 다르게" 가 그 호출에서는 실행 불가능한 지시다. 각자
+// 가장 무난한 답으로 수렴한다 — 2026-08-07 실측에서 여덟 설명이 모두 `보인다.`
+// 로 끝나고 같은 곳을 봤다.
+//
+// 검증기도 이것을 못 잡는다. 완전히 같은 문장(`duplicate descriptions`)과 3회
+// 이상 반복되는 어절(`repeated clause`)만 거르기 때문이다.
+//
+// 자리마다 볼 곳과 맺을 어미를 정해 주면 호출을 늘리지도 순차로 돌리지도 않고
+// 갈라진다. **목록은 계약서와 검증기에서 끌어온다.** 여기에 새로 적으면 계약서와
+// 갈라진다 — 이 저장소가 반복해서 당한 사고다.
+// 목록 마지막이 `, or wear` 처럼 온다. 쉼표로만 끊으면 `or wear` 가 남는다.
+const observationFacets = (contract.match(/Describe only ([^.]+)\./)?.[1] || '')
+  .split(/,\s*|\s+or\s+/).map((facet) => facet.trim().replace(/^or\s+/, '')).filter(Boolean);
+const descriptionEndings = safeDescriptionEnding.source.match(/\(([^)]+)\)/)?.[1].split('|') ?? [];
+
+// 하루치를 한 번에 만드는 경로(로컬 서버)에는 필요 없다. 모델이 여덟을 다 보므로
+// 계약서 규칙이 그대로 작동한다. 쪼개서 부르는 쪽만 이것을 쓴다.
+export function lotWritingHint(index) {
+  const facet = observationFacets[index % observationFacets.length];
+  const ending = descriptionEndings[index % descriptionEndings.length];
+  if (!facet || !ending) return '';
+  return `Focus this description on ${facet}. End the description with "${ending}.".`;
+}
 const categoryTerms = {
   CER: /유약|굽|몸체|손잡이|뚜껑|항아리|도자/, CLK: /문자판|바늘|태엽|케이스|시계|크로노미터|유리돔|골격/,
   PNT: /화폭|안료|액자|그림|캔버스/, BOK: /종이|표지|제본|책등|잉크|지도|문서/,

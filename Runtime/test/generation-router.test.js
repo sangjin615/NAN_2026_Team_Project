@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { createHandler, deterministicFallback } from '../aws/generation-router.mjs';
-import { contractFor, generationContract, validateOutput } from '../generation-server.js';
+import { contractFor, generationContract, lotWritingHint, validateOutput } from '../generation-server.js';
 
 const dailyRequest = {
   schemaVersion: '1.0', mode: 'daily-content', runSeed: 'router-test', day: 1,
@@ -62,6 +62,37 @@ test('the mode contract keeps every rule and drops the other mode', () => {
   assert.ok(!run.includes('Daily limits per item'), 'blueprint 가 일자 길이 규칙을 나르고 있다');
   assert.ok(!day.includes('Each input set includes members'), 'daily 가 세트 사건 규칙을 나르고 있다');
   assert.ok(day.length < generationContract.length, 'daily 절이 전문보다 짧아야 한다');
+});
+
+test('each lot gets a different thing to look at and a different ending', () => {
+  // 여덟 호출이 서로를 못 보므로 자리마다 미리 갈라 준다. 목록이 계약서와
+  // 검증기에서 나오므로, 계약서 문장이나 어미 정규식이 바뀌면 여기서 먼저 깨진다.
+  const hints = Array.from({ length: 8 }, (_, index) => lotWritingHint(index));
+  assert.ok(hints.every(Boolean), `힌트가 비었다: ${JSON.stringify(hints)}`);
+  const facets = new Set(hints.map((hint) => hint.match(/Focus this description on ([^.]+)\./)[1]));
+  const endings = new Set(hints.map((hint) => hint.match(/End the description with "([^"]+)"/)[1]));
+  assert.equal(facets.size, 6, `볼 곳이 ${facets.size}가지다. 계약서의 Describe only 목록을 확인할 것`);
+  // 목록 마지막이 `, or wear` 로 와서 `or wear` 가 그대로 남은 적이 있다.
+  // 개수만 세면 통과한다. 값도 본다.
+  for (const facet of facets) assert.doesNotMatch(facet, /^(or|and)\s/, `잘라내다 만 값: "${facet}"`);
+  assert.equal(endings.size, 5, `어미가 ${endings.size}가지다. safeDescriptionEnding 을 확인할 것`);
+  // 같은 자리에는 늘 같은 지시가 가야 재현이 된다.
+  assert.equal(lotWritingHint(0), hints[0]);
+});
+
+test('the daily prompt carries the per-lot hint', async () => {
+  const prompts = [];
+  const fetchImpl = async (url, options) => {
+    const body = JSON.parse(options.body);
+    prompts.push(body.input);
+    return jsonResponse(openAiPayload(dailyPartFromBody(body)));
+  };
+  await createHandler({ env: { LIVE_GENERATION_ENABLED: 'true', OPENAI_API_KEY: 'test' }, fetchImpl, logger: {} })(event(dailyRequest));
+  const lotPrompts = prompts.filter((prompt) => prompt.includes('INPUT LOT'));
+  assert.equal(lotPrompts.length, 8);
+  for (const [index, prompt] of lotPrompts.entries()) {
+    assert.ok(prompt.includes(lotWritingHint(index)), `lot ${index + 1} 에 힌트가 없다`);
+  }
 });
 
 test('the router sends only the mode section as instructions', async () => {
