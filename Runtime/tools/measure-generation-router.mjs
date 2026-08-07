@@ -111,6 +111,26 @@ function reportProviderFailures(label) {
   }
 }
 
+// 응답 전체가 fallback 과 같은지만 보면 **부분 대체를 놓친다.** 2026-08-07 실측에서
+// groq 가 8 LOT 중 6개를 429 로 잃고 그 자리를 대체 문구로 메웠는데, 헤더에는
+// groq 가 찍히고 전체 비교로는 '실제 생성' 으로 보였다. 라우터의 전멸 방지 장치도
+// 전부 실패했을 때만 도니 6/8 은 그대로 통과한다. 항목 단위로 센다.
+function fallbackShare(request, output) {
+  const base = deterministicFallback(request);
+  const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
+  const key = output.lots ? 'lots' : 'sets';
+  const produced = output[key] || [];
+  const fell = produced.filter((item, index) => same(item, (base[key] || [])[index])).length;
+  return {
+    key,
+    total: produced.length,
+    fell,
+    // 프레임(일자 헤드라인 · 런 premise)은 항목 밖이라 따로 본다.
+    frameFell: output.lots ? same(output.marketHeadline, base.marketHeadline) : same(output.premise, base.premise),
+    whole: same(output, base),
+  };
+}
+
 async function measure(label, request) {
   const startedAt = Date.now();
   const response = await handler({ body: JSON.stringify(request), requestContext: { http: { method: 'POST' } } });
@@ -119,15 +139,24 @@ async function measure(label, request) {
   const output = JSON.parse(response.body);
   let contractOk = true;
   try { validateOutput(request, output); } catch { contractOk = false; }
-  const isFallback = JSON.stringify(output) === JSON.stringify(deterministicFallback(request));
+  const share = fallbackShare(request, output);
+  const isFallback = share.whole;
+  const generated = share.total - share.fell;
   console.log(`[${label}] ${response.statusCode} · ${(elapsed / 1000).toFixed(1)}초`);
   console.log(`  x-generation-source : ${source}`);
   console.log(`  계약 검증           : ${contractOk ? '통과' : '실패'}`);
-  console.log(`  대체 문구인가       : ${isFallback ? '그렇다 — 생성이 아니다' : '아니다 — 실제 생성'}`);
-  if (!isFallback && output.sets?.[0]) console.log(`  표본                : ${output.sets[0].incidentTitle}`);
+  console.log(`  실제 생성           : ${share.key} ${generated}/${share.total}${share.fell ? ` · 대체 ${share.fell}` : ''}${share.frameFell ? ' · 프레임 대체' : ''}`);
+  // 헤더는 공급자가 하나라도 만들면 그 이름을 찍는다. 절반이 대체 문구여도
+  // 200 과 provider 이름이 온다. 여기서 그것을 드러낸다.
+  // 전체가 fallback 인 경우는 '부분' 이 아니다. 헤더도 static 이라 오해가 없다.
+  if (!isFallback && (share.fell || share.frameFell)) {
+    console.log(`  ⚠ 부분 대체         : 헤더는 ${source} 지만 내용 일부는 생성이 아니다`);
+  }
+  const sample = output.sets?.find((set) => set) && !isFallback ? output.sets[0].incidentTitle : null;
+  if (sample) console.log(`  표본                : ${sample}`);
   if (!isFallback && output.lots?.[0]) console.log(`  표본                : ${output.lots[0].description}`);
   reportProviderFailures(label);
-  return { label, elapsed, source, contractOk, isFallback };
+  return { label, elapsed, source, contractOk, isFallback, share };
 }
 
 const results = [];
@@ -148,19 +177,25 @@ if (!process.argv.includes('--single')) {
     const request = dailyRequestFor(day);
     const response = await handler({ body: JSON.stringify(request), requestContext: { http: { method: 'POST' } } });
     const output = JSON.parse(response.body);
+    const share = fallbackShare(request, output);
     return {
       day,
       elapsed: Date.now() - startedAt,
       source: response.headers['x-generation-source'] || '(없음)',
-      isFallback: JSON.stringify(output) === JSON.stringify(deterministicFallback(request)),
+      isFallback: share.whole,
+      share,
     };
   }));
   const waveElapsed = Date.now() - waveStartedAt;
-  for (const { day, elapsed, source, isFallback } of wave) {
-    console.log(`  day ${day}  ${(elapsed / 1000).toFixed(1)}초 · ${source} · ${isFallback ? 'fallback' : '생성'}`);
+  for (const { day, elapsed, source, isFallback, share } of wave) {
+    const made = `${share.total - share.fell}/${share.total} 생성`;
+    console.log(`  day ${day}  ${(elapsed / 1000).toFixed(1)}초 · ${source} · ${isFallback ? 'fallback' : made}${share.fell && !isFallback ? ' ⚠ 부분 대체' : ''}`);
   }
   const fell = wave.filter(({ isFallback }) => isFallback).length;
-  console.log(`  전체 ${(waveElapsed / 1000).toFixed(1)}초 · fallback ${fell}/${wave.length}`);
+  // 동시 호출에서 부분 대체가 늘어나면 rate limit 이다. 전체 fallback 만 세면
+  // 그 신호를 놓친다.
+  const partial = wave.filter(({ isFallback, share }) => !isFallback && (share.fell || share.frameFell)).length;
+  console.log(`  전체 ${(waveElapsed / 1000).toFixed(1)}초 · fallback ${fell}/${wave.length} · 부분 대체 ${partial}/${wave.length}`);
   reportProviderFailures(`동시 ${waveDays.length}일`);
   // 단건은 되는데 동시에는 떨어진다면 원인은 계약이 아니라 동시성이다.
   if (fell && !results[1].isFallback) {
@@ -170,8 +205,9 @@ if (!process.argv.includes('--single')) {
 }
 
 console.log('\n[요약]');
-for (const { label, elapsed, source, isFallback } of results) {
-  console.log(`  ${label.padEnd(14)} ${(elapsed / 1000).toFixed(1)}초 · ${source} · ${isFallback ? 'fallback' : '생성'}`);
+for (const { label, elapsed, source, isFallback, share } of results) {
+  const made = share ? `${share.total - share.fell}/${share.total} 생성${share.fell ? ` · 대체 ${share.fell}` : ''}` : '생성';
+  console.log(`  ${label.padEnd(14)} ${(elapsed / 1000).toFixed(1)}초 · ${source} · ${isFallback ? 'fallback' : made}`);
 }
 console.log('  로컬 기준선     blueprint 51~70초 · daily 16~29초 (qwen3:14b)');
 // API Gateway 통합 타임아웃은 보통 29초다. 배포하면 이걸 넘는 요청은 아예 못 쓴다.
@@ -180,5 +216,11 @@ for (const { label, elapsed } of results) {
 }
 if (results.some(({ isFallback }) => isFallback)) {
   console.log('\n하나라도 fallback 이면 공급자가 실패했거나 꺼져 있다. 200 응답만으로 판단하지 말 것.');
+  process.exitCode = 1;
+}
+// 부분 대체는 헤더도 200 도 계약 검증도 통과한다. 여기서 걸러내지 않으면
+// 절반이 대체 문구인 응답을 성공으로 읽게 된다.
+if (results.some(({ isFallback, share }) => !isFallback && share && (share.fell || share.frameFell))) {
+  console.log('\n부분 대체가 있다. 헤더에 공급자 이름이 찍혀도 내용 일부는 생성이 아니다.');
   process.exitCode = 1;
 }
