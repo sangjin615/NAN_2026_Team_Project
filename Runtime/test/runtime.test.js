@@ -93,6 +93,11 @@ test('catalog exposes active quests in a dedicated side popup', async () => {
   assert.match(app, /#catalog-quest-dialog'\)\.showModal\(\)/);
 });
 
+test('shop storage cards show the item category', async () => {
+  const app = await readFile(new URL('../src/app.js', import.meta.url), 'utf8');
+  assert.match(app, /class="storage-category">계열 · \$\{escapeHtml\(categoryLabel\(lot\?\.category \|\| item\.category\)\)\}/);
+});
+
 test('successful result uses the full ending scene instead of the clear icon', async () => {
   const appSource = await readFile(new URL('../src/app.js', import.meta.url), 'utf8');
   const cssSource = await readFile(new URL('../runtime-fixes.css', import.meta.url), 'utf8');

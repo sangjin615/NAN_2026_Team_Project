@@ -552,7 +552,7 @@ function renderShop(message = '') {
     const unlocked = index < state.storage;
     if (item) {
       const lot = scheduledLot(item.lotId);
-      return `<article class="shop-storage-slot is-filled"><span class="slot-number">${index + 1}</span><img ${spriteAnchorAttrs(lot)} src="${lot ? spriteUrl(lot, item.grade) : ''}" alt=""><div><b>${escapeHtml(item.name)}</b><small>${gradeLabel(item.grade)} · 매입 ${money(item.paid)}</small></div></article>`;
+      return `<article class="shop-storage-slot is-filled"><span class="slot-number">${index + 1}</span><img ${spriteAnchorAttrs(lot)} src="${lot ? spriteUrl(lot, item.grade) : ''}" alt=""><div><b>${escapeHtml(item.name)}</b><small class="storage-category">계열 · ${escapeHtml(categoryLabel(lot?.category || item.category))}</small><small>${gradeLabel(item.grade)} · 매입 ${money(item.paid)}</small></div></article>`;
     }
     return `<article class="shop-storage-slot ${unlocked ? 'is-empty' : 'is-locked'}"><span class="slot-number">${index + 1}</span><img class="storage-placeholder" src="./assets/ui/exchange/${unlocked ? 'storage-empty.png' : 'storage-locked.png'}" alt=""><div><b>${unlocked ? '빈 보관칸' : '잠긴 보관칸'}</b><small>${unlocked ? '낙찰 물품 보관' : '상회 승급 시 해금'}</small></div></article>`;
   }).join('');
