@@ -1,0 +1,106 @@
+# AWS 라우터에 로컬 생성 구조를 옮기는 방법
+
+`Runtime/aws/generation-router.mjs` 와 `Runtime/generation-server.js` 는 같은 계약을
+쓰지만 **생성 전략이 다르다.** 로컬 쪽이 훨씬 강하다. 이 문서는 그 차이가 무엇이고
+왜 그렇게 만들었는지, 라우터에 어떻게 옮기는지를 적는다.
+
+## 왜 이 문서가 있나
+
+2026-08-07 실측이다. 같은 `qwen3:14b` 로,
+
+- **한 번에 통째로 생성** → 두 번 모두 탈락. premise 부터 세트 제목까지 모든 텍스트
+  필드가 `기본` 한 단어로 나왔다. 규칙을 어긴 게 아니라 스키마만 채우고 내용 생성을
+  포기했다
+- **세트 단위로 나눠 생성** → 통과. blueprint 51.1초, 일자 생성 19.3초
+
+모델을 바꾼 게 아니다. **요청을 쪼갠 것만 다르다.** 그래서 "모델이 계약을 못 지킨다"는
+진단은 틀렸고, "한 번에 다 만들라고 하면 무너진다"가 맞다.
+
+라우터는 지금 전자다.
+
+## 현재 차이
+
+| | `generation-server.js` (로컬) | `generation-router.mjs` (AWS) |
+|---|---|---|
+| run-blueprint | 프레임 1회 + **세트마다 1회** (총 13회) | **1회** |
+| daily-content | 1회 + **실패한 LOT만 복구** | **1회** |
+| 세트 실패 시 | 그 세트만 재시도, 그래도 실패하면 그 세트만 fallback | 전체 실패 → 다음 공급자 → 전체 fallback |
+| LOT 실패 시 | `dailyRepairIndices` 가 고른 LOT만 재생성 | 없음 |
+| 중복 방지 | 이미 만든 `incidentTitle` 목록을 프롬프트에 넣어 회피 | 없음 |
+
+일자 생성은 첫 시도가 서로 같다. **차이는 복구 단계의 유무다.**
+
+라우터에는 blueprint 에 groq 가 아예 안 붙는 점도 있다 —
+`request.mode === 'daily-content' && env.GROQ_API_KEY` 조건이라 blueprint 는 OpenAI
+계열만 쓴다.
+
+## 옮겨야 할 것 세 가지
+
+### 1. blueprint 를 프레임과 세트로 쪼갠다
+
+`generateBlueprint()` 가 하는 일이다.
+
+- **프레임 먼저** — `premise` 와 12일 `marketArc` 만 만든다. 스키마는
+  `blueprintFrameSchema`, 입력에서 `sets` 를 빼고 보낸다. 실패하면 2회까지 재시도하고,
+  그래도 안 되면 결정론적 프레임으로 채운다. 프레임이 없다고 전체를 버리지 않는다
+- **세트는 하나씩** — 세트마다 `setIncidentSchema(inputSet)` 로 1건씩 만든다. 입력도
+  그 세트 하나만 보낸다. 검증은 `setIncidentErrors(inputSet, output, accepted)` 로 그
+  자리에서 한다
+- **실패는 그 세트에 가둔다** — 2회 재시도 후에도 안 되면 `fallbackSetIncident` 로
+  그 세트만 대체하고 다음으로 넘어간다. 12개 중 1개가 나빠도 나머지 11개는 살린다
+
+라우터에서는 세트 수만큼 공급자 호출이 늘어난다. 지금 공급자 타임아웃이 7~9초이니
+세트당 그 예산으로 잡으면 blueprint 총 시간이 Lambda 실행 한도를 넘을 수 있다.
+**세트를 병렬로 부르거나, blueprint 를 여러 요청으로 나누는 설계가 필요하다.** 순차로
+12번 부르는 것을 그대로 옮기면 안 된다.
+
+### 2. 이미 쓴 헤드라인을 프롬프트에 넣는다
+
+세트를 따로 만들면 서로 비슷한 사건이 나온다. 로컬은 지금까지 만든
+`incidentTitle` 배열을 프롬프트에 실어 `Do not reuse these headlines` 로 회피한다.
+`setIncidentErrors` 의 `incident title repeats another set` / `incident copy repeats
+another set` 검사와 짝이다. 쪼개면 이 장치가 반드시 따라와야 한다.
+
+### 3. 일자 생성에 선택적 복구를 붙인다
+
+`dailyRepairIndices(request, output)` 가 이미 export 되어 있다. 이 함수는 오류
+메시지에서 `lot N` 을 뽑아 **고쳐야 할 LOT 인덱스만** 돌려준다. LOT ID 불일치나 전역
+중복처럼 부분 수정으로 못 고치는 경우에는 전체 인덱스를 돌려준다.
+
+복구 호출은 `dailyLotSchema(lot)` 로 **LOT 하나만** 만들고 그 자리를 교체한 뒤 전체를
+다시 `validateOutput` 한다. 실측에서 8개 중 6개가 이 경로로 살아났다.
+
+## 옮길 때 조심할 것
+
+**검증기를 복제하지 마라.** `validateInput` / `validateOutput` / `outputSchema` /
+`qualityErrors` / `setIncidentErrors` / `dailyRepairIndices` 는 전부
+`generation-server.js` 가 export 한다. 라우터는 이미 앞의 셋을 import 하고 있다.
+나머지도 같은 방식으로 가져다 쓴다. 복제하면 갈라진다 — 실제로 갈라져서
+`tools/run-local-generation-experiment.mjs` 가 계약에 없는 필드 7개를 요구하고 있었고,
+저장소 밖 검증기 하나는 감정 제거 뒤에도 `appraisalCopy` 를 요구해 옳은 결과를 계속
+떨어뜨렸다.
+
+**복구 프롬프트로 형식을 강제하려 하지 마라.** "마침표는 하나" 같은 지시를 문장으로
+넣어봤지만 이전과 같은 비율로 어겼다(8건 중 1건). 형식은 검증기가 잡는다.
+`qualityErrors` 의 `description must end with a single period` 가 그 예다.
+
+**타임아웃은 엔드포인트와 한 벌이다.** `data/api-config.json` 의 현재 값
+(blueprint 120초 / 일자 60초)은 로컬 qwen3:14b 실측 기준이다. 엔드포인트를 AWS 로
+바꾸면 이 값도 함께 내려야 한다.
+
+## 옮긴 뒤 확인하는 법
+
+라우터는 응답 헤더에 출처를 찍는다.
+
+```
+x-generation-source: openai:gpt-4o-mini   실제 생성
+x-generation-source: static               deterministicFallback
+```
+
+`static` 이면 생성이 아니라 대체 문구다. 2026-08-07 기준 배포된 Lambda 는 응답 본문이
+로컬 `deterministicFallback` 과 바이트 단위로 동일했다 —
+`env.LIVE_GENERATION_ENABLED !== 'true'` 라 공급자 목록이 비어 있었다. 공급자를 켜기
+전에는 속도를 측정해도 의미가 없다.
+
+로컬과 비교하려면 같은 request 로 양쪽을 부르고 `x-generation-source` 와 지연을 함께
+본다. 로컬 기준선은 blueprint 51~70초, 일자 생성 16~29초다.

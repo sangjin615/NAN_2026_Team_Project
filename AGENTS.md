@@ -10,6 +10,11 @@
 남는데 `.team-loop/` 는 `.gitignore` 대상이라 저장소에 흔적이 없다. 그래서 기능
 제거나 계약 변경 같은 판단은 이 저장소 문서에도 남긴다.
 
+`Runtime/aws/generation-router.mjs` 는 생성 전략이 `generation-server.js` 와 다르다.
+로컬은 blueprint 를 세트 단위로 나눠 만들고 일자 생성은 실패한 LOT 만 복구하는데,
+라우터는 둘 다 한 번에 만든다. 한 번에 만들면 같은 모델도 무너진다 —
+`Docs/GENERATION-ROUTER-PARITY.md` 에 실측과 옮기는 방법을 적어 뒀다.
+
 ## 무엇이든 고친 뒤에 돌릴 것
 
 ```bash
