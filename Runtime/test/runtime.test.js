@@ -40,6 +40,16 @@ test('relic auction exposes the same bid controls as the normal auction', async 
   assert.match(relicScene, /id="skip-relic"/);
 });
 
+test('relic auction identifies the current highest bidder in both main card and participant list', async () => {
+  const app = await readFile(new URL('../src/app.js', import.meta.url), 'utf8');
+  const css = await readFile(new URL('../runtime-fixes.css', import.meta.url), 'utf8');
+  assert.match(app, /class="relic-current-leader">최고 입찰자 · <b>\$\{currentLeader\?\.name \|\| '없음'\}<\/b>/);
+  assert.match(app, /session\.leader === participant\.id \? '최고 호가'/);
+  assert.match(app, /aria-current="true"/);
+  assert.match(css, /\.participant\.is-leading\s*\{[^}]*border: 2px solid #c99634;[^}]*box-shadow:/);
+  assert.match(css, /\.relic-current-leader\s*\{[^}]*flex-basis: 100%;/);
+});
+
 test('auction participant portraits include the player and all relic rivals', async () => {
   const appSource = await readFile(new URL('../src/app.js', import.meta.url), 'utf8');
   for (const portrait of ['player-merchant.png', 'royal-agent.png', 'northern-merchant.png', 'foreign-collector.png']) {

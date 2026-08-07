@@ -898,15 +898,16 @@ function renderRelic() {
   }
   const session = state.relicSession;
   const art = relicArt[relic.id];
-  document.querySelector('#relic-card').innerHTML = `<header><span>${RELIC_TIER_LABELS[tier] || tier} 유물</span><b>${state.relicRound + 1} / 3회</b></header><h2>${relic.name}</h2>${art ? `<img data-relic-art="${relic.id}" src="./assets/relics/${encodeURIComponent(art)}" alt="">` : ''}<p>${relic.effect}</p><footer><small>현재 호가</small><strong>${money(session.currentPrice)}</strong></footer><em id="relic-timer" aria-label="남은 시간"></em>`;
   const participants = [{ id: 'player', name: '당신', budget: state.cash }, ...session.bots.map((bot) => ({ ...bot, budget: bot.maxBid }))];
+  const currentLeader = participants.find((participant) => participant.id === session.leader);
+  document.querySelector('#relic-card').innerHTML = `<header><span>${RELIC_TIER_LABELS[tier] || tier} 유물</span><b>${state.relicRound + 1} / 3회</b></header><h2>${relic.name}</h2>${art ? `<img data-relic-art="${relic.id}" src="./assets/relics/${encodeURIComponent(art)}" alt="">` : ''}<p>${relic.effect}</p><footer><small>현재 호가</small><strong>${money(session.currentPrice)}</strong><span class="relic-current-leader">최고 입찰자 · <b>${currentLeader?.name || '없음'}</b></span></footer><em id="relic-timer" aria-label="남은 시간"></em>`;
   const relicPortraits = {
     player: './assets/ui/auction/portraits/player-merchant.png',
     'royal-1': './assets/ui/auction/portraits/royal-agent.png',
     'royal-2': './assets/ui/auction/portraits/northern-merchant.png',
     'royal-3': './assets/ui/auction/portraits/foreign-collector.png',
   };
-  document.querySelector('#relic-participants').innerHTML = `<h3>최종 경매 참가자</h3>${participants.map((participant, index) => `<div class="participant ${session.leader === participant.id ? 'is-leading' : ''}"><img class="relic-participant-portrait" src="${relicPortraits[participant.id]}" alt="${participant.name} 초상"><span>${session.leader === participant.id ? '선두' : String(index + 1).padStart(2, '0')}</span><b>${participant.name}</b><small>입찰 한도</small><strong>${money(participant.budget)}</strong></div>`).join('')}`;
+  document.querySelector('#relic-participants').innerHTML = `<h3>최종 경매 참가자</h3>${participants.map((participant, index) => `<div class="participant ${session.leader === participant.id ? 'is-leading' : ''}" ${session.leader === participant.id ? 'aria-current="true"' : ''}><img class="relic-participant-portrait" src="${relicPortraits[participant.id]}" alt="${participant.name} 초상"><span>${session.leader === participant.id ? '최고 호가' : String(index + 1).padStart(2, '0')}</span><b>${participant.name}</b><small>입찰 한도</small><strong>${money(participant.budget)}</strong></div>`).join('')}`;
   renderRelicLotGuide(session, owned);
   const minimumBid = session.currentPrice + Math.max(1, Math.ceil(session.currentPrice * balance.auction.minRaiseRate));
   document.querySelectorAll('[data-relic-raise]').forEach((button) => { button.disabled = state.cash < Math.max(minimumBid, Math.ceil(session.currentPrice * Number(button.dataset.relicRaise))); });
