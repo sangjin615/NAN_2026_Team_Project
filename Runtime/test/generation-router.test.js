@@ -312,6 +312,34 @@ test('repairs only the lots that break a whole-day rule', async () => {
   validateOutput(dailyRequest, JSON.parse(response.body));
 });
 
+test('static 문구는 하루 안에서 겹치지 않는다', () => {
+  // 예전 fallback 은 카테고리당 문장이 하나였다. 하루가 8 LOT 인데 카테고리는
+  // 6종이라 비둘기집 원리로 **매일 최소 두 쌍이 글자 그대로 같았다.** 앞뒤에
+  // 품목 이름과 번호만 갈아끼운 모양이라 대놓고 템플릿으로 보였고, 생성이
+  // 실패한 판을 본 사람에게는 그 화면이 이 게임이 된다.
+  //
+  // 지금은 지난 실제 생성물에서 걷은 은행에서 고른다. 이 시험이 지키는 것은
+  // 은행이 비거나 얇아졌을 때 조용히 예전 상태로 돌아가지 않는 것이다.
+  const output = deterministicFallback(dailyRequest);
+  const descriptions = output.lots.map(({ description }) => description);
+  assert.equal(new Set(descriptions).size, dailyRequest.lots.length, JSON.stringify(descriptions, null, 1));
+  validateOutput(dailyRequest, output);
+});
+
+test('static 문구도 어미가 갈린다', () => {
+  // 예전에는 여섯 틀 중 다섯이 "남아 있다" 로 끝나 사실상 2가지였다.
+  const endings = ['남아 있다.', '보인다.', '확인된다.', '이어진다.', '드러난다.'];
+  const output = deterministicFallback(dailyRequest);
+  const used = new Set(output.lots.map(({ description }) => endings.find((e) => description.endsWith(e))));
+  assert.ok(used.size >= 3, `어미 ${used.size}가지: ${JSON.stringify([...used])}`);
+});
+
+test('같은 요청이면 static 문구도 같아야 한다', () => {
+  // 측정 도구가 이 함수와 대조해 "생성인지 대체인지" 를 가린다. 무작위로
+  // 고르면 그 비교가 무너져 대체를 생성으로 세게 된다.
+  assert.deepEqual(deterministicFallback(dailyRequest), deterministicFallback(dailyRequest));
+});
+
 test('프리플라이트가 file:// 을 통과시킨다', async () => {
   // 게이트웨이 CORS 를 걷어내면 이 분기가 프리플라이트를 직접 답한다. allow-headers
   // 가 빠지면 본 요청이 content-type: application/json 때문에 막히고, 배포본은

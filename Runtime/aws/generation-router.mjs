@@ -123,6 +123,44 @@ async function callOpenAI({ request, schema = outputSchema(request), prompt = `I
   return parseJsonText(responseOutputText(payload));
 }
 
+// static 으로 떨어졌을 때 나오는 문구를 실제 생성물에서 걷어 둔 은행이다.
+//
+// 예전에는 카테고리당 문장이 하나였다. 하루가 8 LOT 인데 카테고리는 6종이라
+// **매일 최소 두 쌍이 글자 그대로 같은 문장**을 썼고, 앞뒤에 품목 이름과 번호만
+// 갈아끼운 모양이라 대놓고 템플릿으로 보였다. 낙하율은 16판에 1판이지만 걸린
+// 사람에게는 그 화면이 이 게임이다.
+//
+// 은행은 `reports/live-generation` 에 쌓인 지난 생성물에서 걷었다. 새로 지어낸
+// 것이 아니라 이미 계약을 통과한 문장들이다. 걸러낸 것 셋 — 계약 위반(길이·어미·
+// 금지 상투구), **특정 품목 이름이 박힌 문장**(다른 물품에 붙으면 틀린 설명이
+// 된다. 카탈로그 60종 이름으로 걸렀다), 어미만 다른 중복.
+//
+// **완벽하지는 않다.** 같은 카테고리 안에서 돌려쓰므로 도자기 설명이 다른
+// 도자기에 붙는다. 문양 같은 세부가 실제 물품과 어긋날 수 있다. 다만 지금 것은
+// 100% 티가 나고 이것은 가끔 어긋날 뿐이다.
+import fallbackCopy from '../data/fallback-copy.json' with { type: 'json' };
+
+// 같은 요청이면 같은 결과여야 한다(측정 도구가 이 함수와 대조해 대체 여부를
+// 가린다). 그래서 무작위가 아니라 키 해시로 고른다. FNV-1a.
+const hashKey = (text) => {
+  let h = 2166136261;
+  for (let i = 0; i < text.length; i += 1) { h ^= text.charCodeAt(i); h = Math.imul(h, 16777619); }
+  return h >>> 0;
+};
+
+// 하루 안에서 같은 문장이 두 번 나오지 않게 한다. 겹치면 고르던 자리에서
+// 앞으로 밀어 빈 것을 찾는다. 은행이 모자라면 결국 겹치지만 그때도 계약은
+// 지킨다 — 검증기가 보는 것은 길이와 어미다.
+const pickFromBank = (list, key, used) => {
+  if (!Array.isArray(list) || !list.length) return null;
+  const start = hashKey(key) % list.length;
+  for (let step = 0; step < list.length; step += 1) {
+    const value = list[(start + step) % list.length];
+    if (!used.has(value)) { used.add(value); return value; }
+  }
+  return list[start];
+};
+
 const categoryCopy = {
   CER: '표면의 유약 자국이 은은하게 남아 있다',
   CLK: '가장자리의 시계 문자 문양이 길게 이어진다',
@@ -157,18 +195,34 @@ export function deterministicFallback(request) {
       }),
     };
   }
+  // 문구는 지난 실제 생성물에서 걷은 은행에서 고른다. 은행이 비어 있으면 아래
+  // `categoryCopy` 틀로 떨어진다 — 데이터가 없거나 깨져도 계약은 지킨다.
+  const used = { description: new Set(), rumor: new Set(), setHint: new Set(), npcReaction: new Set() };
+  // 설명은 2단이다. 다른 품목 이름이 없는 것을 먼저 쓰고, 다 떨어지면 예비로
+  // 내려간다. 하루에 같은 카테고리가 최대 5개인데 깨끗한 것이 6개 이상이라
+  // 예비까지 가는 일은 사실상 없다.
+  const bankFor = (lot, field, key) => {
+    const slot = fallbackCopy[lot.category];
+    return pickFromBank(slot?.[field], key, used[field])
+      || (field === 'description' ? pickFromBank(slot?.descriptionSpare, key, used[field]) : null);
+  };
+
   return {
     schemaVersion: '1.0',
     day: request.day,
     marketHeadline: `${request.day}일차 경매 물품 기록`,
-    lots: request.lots.map((lot, index) => ({
-      lotId: lot.lotId,
-      displayName: lot.baseName,
-      description: `${lot.baseName}의 ${index + 1}번째 ${categoryCopy[lot.category] || '표면 기록이 또렷하게 남아 있다'}.`,
-      rumor: `${index + 1}번 보관 장부에 같은 이름이 적혔다`,
-      setHint: `${index + 1}번 보관 표식`,
-      npcReaction: `기록원이 ${index + 1}번 항목을 다시 살핀다`,
-    })),
+    lots: request.lots.map((lot, index) => {
+      const key = `${request.runSeed}:${request.day}:${lot.lotId}`;
+      return {
+        lotId: lot.lotId,
+        displayName: lot.baseName,
+        description: bankFor(lot, 'description', key)
+          || `${lot.baseName}의 ${index + 1}번째 ${categoryCopy[lot.category] || '표면 기록이 또렷하게 남아 있다'}.`,
+        rumor: bankFor(lot, 'rumor', key) || `${index + 1}번 보관 장부에 같은 이름이 적혔다`,
+        setHint: bankFor(lot, 'setHint', key) || `${index + 1}번 보관 표식`,
+        npcReaction: bankFor(lot, 'npcReaction', key) || `기록원이 ${index + 1}번 항목을 다시 살핀다`,
+      };
+    }),
   };
 }
 

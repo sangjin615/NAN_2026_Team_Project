@@ -18,6 +18,7 @@
     "experiment:run": "node tools/run-local-generation-experiment.mjs",
     "experiment:promote": "node tools/promote-generation-fixture.mjs",
     "build:lambda": "node tools/build-generation-lambda.mjs",
+    "build:fallback-bank": "node tools/build-fallback-bank.mjs",
     "measure:router": "node tools/measure-generation-router.mjs"
   },
   "devDependencies": {
