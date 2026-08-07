@@ -56,6 +56,17 @@ test('relic auction renders a three-lot guide with effects and auction states', 
   assert.match(app, /대기 중/);
 });
 
+test('relic auction side panels fill their painted frames', async () => {
+  const css = await readFile(new URL('../runtime-fixes.css', import.meta.url), 'utf8');
+  assert.match(css, /#relic-feed\s*\{[\s\S]*?top: \.5%;[\s\S]*?height: 98%;/);
+  assert.match(css, /#relic-participants h3\s*\{[\s\S]*?place-items: center;/);
+});
+
+test('successful ending content fills the inner parchment without a dead lower section', async () => {
+  const css = await readFile(new URL('../runtime-fixes.css', import.meta.url), 'utf8');
+  assert.match(css, /grid-template-rows: 50% 45%; gap: 1%;[\s\S]*?padding: 15% 7% 7%;/);
+});
+
 test('final relic auction values stay around two hundred to two hundred fifty thousand gold', async () => {
   const app = await readFile(new URL('../src/app.js', import.meta.url), 'utf8');
   assert.deepEqual(balance.relicAuction.startBid, [200000, 210000, 220000]);
