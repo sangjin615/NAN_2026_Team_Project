@@ -651,6 +651,18 @@ function renderCatalog() {
     <p class="catalog-meta"><span>${escapeHtml(categoryLabel(lot.category))}</span><strong>${money(lot.pricing.basePrice)}</strong></p>
     <aside class="catalog-tooltip" role="tooltip"><b>${escapeHtml(lot.content.displayName)}</b><span>${gradeLabel(lot.grade)} · ${escapeHtml(categoryLabel(lot.category))}</span><p>${escapeHtml(lot.content.description)}</p>${lot.content.setHint ? `<em>${escapeHtml(lot.content.setHint)}</em>` : ''}<strong>기준가 ${money(lot.pricing.basePrice)}</strong></aside>
   </article>`; }).join('');
+  const activeQuestCount = state.activeQuests.filter((quest) => !quest.completed).length;
+  document.querySelector('#catalog-quest-count').textContent = String(activeQuestCount);
+  document.querySelector('#catalog-quests').setAttribute('aria-label', `수주 의뢰 ${activeQuestCount}건 확인`);
+}
+
+function openCatalogQuestDialog() {
+  const active = state.activeQuests.filter((quest) => !quest.completed);
+  document.querySelector('#catalog-quest-list').innerHTML = active.length ? active.map((quest) => `
+    <article class="${effectiveQuestDeadline(quest) <= state.day ? 'is-urgent' : ''}">
+      <img src="${questIconUrl(quest.id)}" alt=""><div><small>${effectiveQuestDeadline(quest)}일차 경매 전까지</small><h3>${questTitle(quest)}</h3><p>${questRequirement(quest)}</p><strong>보상 · ${questRewardLabel(quest)}</strong></div>
+    </article>`).join('') : '<div class="catalog-quest-empty"><img src="./assets/ui/quest-icons/quest-board.png" alt=""><b>수주한 의뢰가 없습니다.</b><span>도시의 의뢰소에서 오늘의 의뢰를 확인할 수 있습니다.</span></div>';
+  document.querySelector('#catalog-quest-dialog').showModal();
 }
 
 function renderAuction() {
@@ -949,6 +961,11 @@ document.querySelector('#direct-relic-bid').onclick = () => {
   if (input === null) return;
   const proposed = Number(input.replace(/[^0-9]/g, ''));
   finishRelic('bid', 1, proposed);
+};
+document.querySelector('#catalog-quests').onclick = openCatalogQuestDialog;
+document.querySelector('#close-catalog-quests').onclick = () => document.querySelector('#catalog-quest-dialog').close();
+document.querySelector('#catalog-quest-dialog').onclick = (event) => {
+  if (event.target === event.currentTarget) event.currentTarget.close();
 };
 document.querySelector('#skip-relic').onclick = () => finishRelic('pass');
 document.querySelector('#return-title').onclick = () => adapter.showScene('title');

@@ -81,6 +81,18 @@ test('the 16:9 canvas can grow beyond 1600 by 900', async () => {
   assert.doesNotMatch(sceneRule, /--design-height/);
 });
 
+test('catalog exposes active quests in a dedicated side popup', async () => {
+  const [html, app] = await Promise.all([
+    readFile(new URL('../index.html', import.meta.url), 'utf8'),
+    readFile(new URL('../src/app.js', import.meta.url), 'utf8'),
+  ]);
+  assert.match(html, /id="catalog-quests"[^>]*aria-controls="catalog-quest-dialog"/);
+  assert.match(html, /id="catalog-quest-dialog"/);
+  assert.match(app, /function openCatalogQuestDialog\(\)/);
+  assert.match(app, /state\.activeQuests\.filter\(\(quest\) => !quest\.completed\)/);
+  assert.match(app, /#catalog-quest-dialog'\)\.showModal\(\)/);
+});
+
 test('successful result uses the full ending scene instead of the clear icon', async () => {
   const appSource = await readFile(new URL('../src/app.js', import.meta.url), 'utf8');
   const cssSource = await readFile(new URL('../runtime-fixes.css', import.meta.url), 'utf8');

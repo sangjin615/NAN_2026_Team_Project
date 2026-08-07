@@ -1052,6 +1052,52 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
 [data-scene="catalog"] .catalog-grid .mini-sprite { height: min(10vh, 82px); }
 [data-scene="catalog"] .catalog-grid .mini-sprite img { width: min(9vh, 76px); height: min(9vh, 76px); }
 [data-scene="catalog"] #start-auction { position: absolute; left: 50%; bottom: 2%; transform: translateX(-50%); min-width: 230px; }
+[data-scene="catalog"] #catalog-quests {
+  position: absolute; z-index: 12; right: 2.6%; top: 39%; width: 8.2%; height: 22%; min-width: 0; min-height: 0;
+  display: grid; grid-template-rows: minmax(0,1fr) auto; place-items: center; gap: 0; padding: 12% 10% 10%;
+  border: 0 !important; border-image: none !important;
+  background: transparent url("./assets/ui/skin-v1/panel-dark.png") center / 100% 100% no-repeat !important;
+  color: #f6dfad; filter: drop-shadow(0 7px 8px #0009);
+}
+[data-scene="catalog"] #catalog-quests::before {
+  content: ""; position: absolute; left: -19%; top: 12%; width: 22%; height: 76%;
+  background: #7d521f; border: 1px solid #d3a14a; box-shadow: 0 3px 5px #0008;
+}
+[data-scene="catalog"] #catalog-quests img { width: 72%; height: 72%; object-fit: contain; filter: drop-shadow(0 3px 3px #0008); }
+[data-scene="catalog"] #catalog-quests span { font-size: clamp(13px,1.12vw,18px); font-weight: 900; }
+[data-scene="catalog"] #catalog-quest-count {
+  position: absolute; right: 6%; top: 5%; display: grid; place-items: center; min-width: 24px; aspect-ratio: 1; padding: 2px;
+  border-radius: 50%; background: #9c321e; color: #fff0cb; font-size: clamp(10px,.82vw,13px); box-shadow: 0 2px 4px #0008;
+}
+[data-scene="catalog"] #catalog-quests:hover,
+[data-scene="catalog"] #catalog-quests:focus-visible { filter: brightness(1.18) drop-shadow(0 7px 8px #0009); transform: translateX(-2px); }
+
+#catalog-quest-dialog {
+  width: min(720px,88vw); max-height: min(720px,82vh); box-sizing: border-box; padding: 64px 62px 54px;
+  border: 0; outline: 0; overflow: hidden;
+  background: transparent url("./assets/ui/vsl-v6.4/popups/common.png") center / 100% 100% no-repeat;
+  color: #392718; filter: drop-shadow(0 18px 26px #000c);
+}
+#catalog-quest-dialog::backdrop { background: #090705cf; backdrop-filter: blur(2px); }
+#catalog-quest-dialog > header { position: relative; display: flex; align-items: center; gap: 14px; margin: -32px 0 14px; padding: 0 6px 12px; border-bottom: 1px solid #9a7445; }
+#catalog-quest-dialog > header > img { width: 58px; height: 58px; object-fit: contain; }
+#catalog-quest-dialog > header small { color: #9a7134; font-size: 10px; font-weight: 900; letter-spacing: .14em; }
+#catalog-quest-dialog > header h2 { margin: 1px 0 0; color: #3d2817; font-size: clamp(22px,2vw,31px); }
+#catalog-quest-dialog #close-catalog-quests {
+  position: absolute; right: -8px; top: 4px; width: 38px; height: 38px; min-width: 0; padding: 0;
+  border: 0 !important; background: transparent !important; color: #5d3a1d; font-size: 31px; line-height: 1;
+}
+#catalog-quest-list { display: grid; gap: 9px; max-height: 470px; overflow: auto; padding: 2px 6px 2px 2px; }
+#catalog-quest-list > article { display: grid; grid-template-columns: 70px minmax(0,1fr); gap: 14px; align-items: center; padding: 12px 14px; border: 1px solid #ac8b61; background: #ead8bca8; }
+#catalog-quest-list > article.is-urgent { border-color: #a74c32; box-shadow: inset 4px 0 #a74c32; }
+#catalog-quest-list > article img { width: 62px; height: 62px; object-fit: contain; }
+#catalog-quest-list > article small { color: #945021; font-size: clamp(9px,.72vw,12px); font-weight: 900; }
+#catalog-quest-list > article h3 { margin: 2px 0; font-size: clamp(15px,1.25vw,20px); }
+#catalog-quest-list > article p { margin: 2px 0 5px; color: #59432e; font-size: clamp(10px,.82vw,13px); }
+#catalog-quest-list > article strong { color: #47682e; font-size: clamp(10px,.82vw,13px); }
+.catalog-quest-empty { display: grid; place-items: center; gap: 8px; min-height: 260px; color: #6a5238; text-align: center; }
+.catalog-quest-empty img { width: 86px; height: 86px; object-fit: contain; opacity: .72; }
+.catalog-quest-note { margin: 14px 0 0; color: #76593b; font-size: clamp(10px,.78vw,13px); text-align: center; }
 
 /* Live auction: keep the title compact and reserve the center for the item card. */
 [data-scene="auction"] { padding: 0; }
