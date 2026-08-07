@@ -51,9 +51,10 @@ body {
 }
 
 #app {
+  position: fixed; left: 0; top: 0;
   display: grid; place-items: center;
   width: var(--layout-viewport-width); height: var(--layout-viewport-height);
-  overflow: hidden; transform: scale(var(--browser-zoom-inverse)); transform-origin: center;
+  overflow: hidden; transform: scale(var(--browser-zoom-inverse)); transform-origin: top left;
 }
 
 body > dialog[open] { transform: scale(var(--browser-zoom-inverse)); transform-origin: center; }
