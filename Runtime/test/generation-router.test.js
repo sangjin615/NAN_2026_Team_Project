@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { createHandler, deterministicFallback } from '../aws/generation-router.mjs';
-import { validateOutput } from '../generation-server.js';
+import { contractFor, generationContract, validateOutput } from '../generation-server.js';
 
 const dailyRequest = {
   schemaVersion: '1.0', mode: 'daily-content', runSeed: 'router-test', day: 1,
@@ -45,6 +45,39 @@ const blueprintPartFromBody = (body) => {
   const setId = blueprintRequest.sets.find(({ setId }) => input.includes(`\"setId\":\"${setId}\"`))?.setId;
   return blueprintFallback.sets.find((set) => set.setId === setId);
 };
+
+test('the mode contract keeps every rule and drops the other mode', () => {
+  const run = contractFor('run-blueprint');
+  const day = contractFor('daily-content');
+  // 표식(@ALL·@RUN·@DAY)을 잘못 적으면 그 절이 어느 쪽에도 안 실린다. 모델은
+  // 규칙이 사라진 줄 모르고 답하고, 검증기만 뒤늦게 떨어뜨린다. 여기서 잡는다.
+  const rules = generationContract.split(/\r?\n/).map((line) => line.trim()).filter((line) => line && !line.startsWith('@'));
+  assert.ok(rules.length >= 8, `계약서 줄이 ${rules.length}개다. 파일이 비었나`);
+  for (const rule of rules) {
+    assert.ok(run.includes(rule) || day.includes(rule), `어느 모드에도 안 실린 줄: ${rule.slice(0, 40)}`);
+  }
+  assert.ok(run.includes('RUN: {'), 'blueprint 에 RUN 스키마가 있어야 한다');
+  assert.ok(day.includes('DAY: {'), 'daily 에 DAY 스키마가 있어야 한다');
+  // 줄이는 것이 목적이다. 서로의 규칙을 나르지 않는다.
+  assert.ok(!run.includes('Daily limits per item'), 'blueprint 가 일자 길이 규칙을 나르고 있다');
+  assert.ok(!day.includes('Each input set includes members'), 'daily 가 세트 사건 규칙을 나르고 있다');
+  assert.ok(day.length < generationContract.length, 'daily 절이 전문보다 짧아야 한다');
+});
+
+test('the router sends only the mode section as instructions', async () => {
+  const sent = [];
+  const fetchImpl = async (url, options) => {
+    const body = JSON.parse(options.body);
+    sent.push(body.instructions);
+    return jsonResponse(openAiPayload(dailyPartFromBody(body)));
+  };
+  await createHandler({ env: { LIVE_GENERATION_ENABLED: 'true', OPENAI_API_KEY: 'test' }, fetchImpl, logger: {} })(event(dailyRequest));
+  assert.ok(sent.length > 0);
+  for (const instructions of sent) {
+    assert.ok(instructions.includes('DAY: {'), '일자 호출인데 DAY 스키마가 없다');
+    assert.ok(!instructions.includes('Each input set includes members'), '일자 호출이 세트 사건 규칙을 나르고 있다');
+  }
+});
 
 test('deterministic fallback satisfies daily and blueprint contracts', () => {
   for (const request of [dailyRequest, blueprintRequest]) validateOutput(request, deterministicFallback(request));

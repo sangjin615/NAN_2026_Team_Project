@@ -13,6 +13,30 @@ const contract = typeof __BUNDLED_GENERATION_CONTRACT__ === 'string'
   ? __BUNDLED_GENERATION_CONTRACT__
   : await readFile(path.join(runtimeRoot, 'contracts', 'compact-generation-contract.txt'), 'utf8');
 export const generationContract = contract;
+
+// 계약서를 모드별 절로 나눈다. 쪼개서 만들기 시작하면서 계약서가 호출마다
+// 다시 실린다 — 한 판 121회 호출의 입력 36만 자 중 27만 자(74%)가 계약서다.
+// 그런데 LOT 하나를 만드는 호출이 세트 사건 규칙 695자를, blueprint 호출이
+// 일자 길이·어미 규칙 1,111자를 쓸 일 없이 싣고 있었다. 필요한 절만 보내면
+// 한 판에 약 11만 자, 전체의 30%가 줄어든다.
+//
+// **복제가 아니다.** 파일은 하나이고 여기서 절을 고를 뿐이라 갈라질 여지가 없다.
+// 표식이 없는 계약서를 만나면 전부 ALL 로 들어가 예전과 같이 동작한다.
+const contractSections = (() => {
+  const sections = { ALL: [], RUN: [], DAY: [] };
+  let current = 'ALL';
+  for (const line of contract.split(/\r?\n/)) {
+    const marker = line.match(/^@(ALL|RUN|DAY)\s*$/);
+    if (marker) { current = marker[1]; continue; }
+    if (line.trim()) sections[current].push(line);
+  }
+  return sections;
+})();
+
+export function contractFor(mode) {
+  const specific = mode === 'run-blueprint' ? contractSections.RUN : contractSections.DAY;
+  return [...contractSections.ALL, ...specific].join('\n');
+}
 const reportRoot = path.join(runtimeRoot, 'reports', 'live-generation');
 
 const text = { type: 'string', minLength: 1 };
@@ -203,7 +227,7 @@ async function generateBlueprint(request) {
     const startedAt = Date.now();
     try {
       const feedback = attempt === 2 ? `\nRETRY_ERRORS:\n${frameError.message}` : '';
-      frame = await callModel({ request, schema: blueprintFrameSchema(request), attempt, prompt: `${contract}${feedback}\nGenerate only the run premise and 12-day marketArc.\nINPUT:\n${JSON.stringify({ ...request, sets: undefined })}` });
+      frame = await callModel({ request, schema: blueprintFrameSchema(request), attempt, prompt: `${contractFor(request.mode)}${feedback}\nGenerate only the run premise and 12-day marketArc.\nINPUT:\n${JSON.stringify({ ...request, sets: undefined })}` });
       if (frame.runSeed !== request.runSeed || frame.marketArc?.length !== 12) throw new Error('run blueprint frame shape mismatch');
       await preserve(request, attempt, { valid: true, stage: 'frame', model, latencyMs: Date.now() - startedAt, request, output: frame });
       break;
@@ -222,7 +246,7 @@ async function generateBlueprint(request) {
       try {
         const feedback = attempt === 2 ? `\nRETRY_ERRORS:\n${lastError.message}` : '';
         const usedTitles = generatedSets.map(({ incidentTitle }) => incidentTitle);
-        output = await callModel({ request, schema: setIncidentSchema(inputSet), attempt, prompt: `${contract}${feedback}\nGenerate exactly one set record. The incident must name at least two input baseName values. Do not reuse these headlines: ${JSON.stringify(usedTitles)}.\nINPUT SET:\n${JSON.stringify(inputSet)}` });
+        output = await callModel({ request, schema: setIncidentSchema(inputSet), attempt, prompt: `${contractFor(request.mode)}${feedback}\nGenerate exactly one set record. The incident must name at least two input baseName values. Do not reuse these headlines: ${JSON.stringify(usedTitles)}.\nINPUT SET:\n${JSON.stringify(inputSet)}` });
         const errors = setIncidentErrors(inputSet, output, generatedSets);
         if (errors.length) throw new Error(errors.join('; '));
         await preserve(request, attempt, { valid: true, stage: 'set', setId: inputSet.setId, model, latencyMs: Date.now() - startedAt, request: inputSet, output });
@@ -248,7 +272,7 @@ export async function generate(request) {
   const startedAt = Date.now();
   let output; let firstError;
   try {
-    output = await callModel({ request, schema: outputSchema(request), prompt: `${contract}\nINPUT:\n${JSON.stringify(request)}`, attempt: 1 });
+    output = await callModel({ request, schema: outputSchema(request), prompt: `${contractFor(request.mode)}\nINPUT:\n${JSON.stringify(request)}`, attempt: 1 });
     validateOutput(request, output);
     await preserve(request, 1, { valid: true, stage: 'full', model, latencyMs: Date.now() - startedAt, request, output });
     return output;
@@ -262,7 +286,7 @@ export async function generate(request) {
   for (const index of repairIndices) {
     const lot = request.lots[index]; const repairStartedAt = Date.now(); let repaired;
     try {
-      const prompt = `${contract}\nRETRY_ERRORS:\n${firstError.message}\nGenerate exactly one corrected LOT record for lot ${index + 1}. The description must be one complete sentence of 45 Korean characters or fewer and end exactly with one of: 남아 있다., 보인다., 확인된다., 이어진다., 드러난다. Keep setHint at 18 Korean characters or fewer.\nINPUT LOT:\n${JSON.stringify(lot)}`;
+      const prompt = `${contractFor(request.mode)}\nRETRY_ERRORS:\n${firstError.message}\nGenerate exactly one corrected LOT record for lot ${index + 1}. The description must be one complete sentence of 45 Korean characters or fewer and end exactly with one of: 남아 있다., 보인다., 확인된다., 이어진다., 드러난다. Keep setHint at 18 Korean characters or fewer.\nINPUT LOT:\n${JSON.stringify(lot)}`;
       repaired = await callModel({ request, schema: dailyLotSchema(lot), prompt, attempt: 2 });
       output.lots[index] = repaired;
       await preserve(request, 2, { valid: true, stage: 'repair', lotId: lot.lotId, model, latencyMs: Date.now() - repairStartedAt, request: lot, output: repaired });

@@ -4,7 +4,9 @@ import {
   dailyLotSchema,
   dailyRepairIndices,
   fallbackSetIncident,
-  generationContract as contract,
+  // 계약서 전문이 아니라 모드에 필요한 절만 싣는다. LOT 하나짜리 호출이 세트
+  // 사건 규칙까지 나르던 것을 없앤다 — 한 판 입력의 30%다.
+  contractFor,
   outputSchema,
   setIncidentErrors,
   setIncidentSchema,
@@ -68,7 +70,7 @@ async function callGroq({ request, schema = outputSchema(request), prompt = `INP
       max_completion_tokens: 4000,
       response_format: { type: 'json_object' },
       messages: [
-        { role: 'system', content: contract },
+        { role: 'system', content: contractFor(request.mode) },
         { role: 'user', content: `OUTPUT_SCHEMA:\n${JSON.stringify(schema)}\n${prompt}` },
       ],
     }),
@@ -79,7 +81,7 @@ async function callGroq({ request, schema = outputSchema(request), prompt = `INP
 async function callOpenAI({ request, schema = outputSchema(request), prompt = `INPUT:\n${JSON.stringify(request)}` }, provider, fetchImpl) {
   const body = {
     model: provider.model,
-    instructions: contract,
+    instructions: contractFor(request.mode),
     input: `Return valid JSON only.\nOUTPUT_SCHEMA:\n${JSON.stringify(schema)}\n${prompt}`,
     max_output_tokens: 12000,
     text: { format: { type: 'json_object' } },
