@@ -10,8 +10,32 @@
 
 ## 검수는 아직 통과하지 못했다
 
+> **해소됐다 (2026-08-08 정정).** 아래 절 전체 — seed 불일치와 그 원인 분석 —
+> 은 2026-08-07 시점의 기록이다. `6719a6a`("실험 도구가 운영 생성 경로를 그대로
+> 쓰게 하고 fixture 를 맞춘다")가 fixture 짝을 맞췄다. 실측으로 확인했다.
+>
+> | | request | output |
+> |---|---|---|
+> | `run-start-*.json` | `newspaper-grounded-14b-20260806` | **같음** |
+> | `day-1-*.json` | `newspaper-grounded-14b-20260806` | **같음** (`…-d1-l1..l8`) |
+>
+> 저장소 밖 검증기로 두 쌍을 다시 돌려 둘 다 통과했다.
+>
+> ```
+> node ../team-loop-lite-ai-learning/tools/verification/check-auction-content.mjs \
+>   Runtime/reports/local-model-experiment/day-1-request.json \
+>   Runtime/reports/local-model-experiment/day-1-output.json
+> {"valid":true,"model":"qwen3:14b","mode":"daily-content", ...}   ← run-blueprint 도 동일
+> ```
+>
+> **아래 진단은 지우지 않는다.** 원인("승격 단계가 없다")이 옳았다는 것이
+> 승격 도구(`npm run experiment:promote`)로 해소된 사실로 확인되기 때문이다.
+> 다만 **`prepare` 가 request 를 제자리에서 덮어쓰는 성질은 그대로다** — 아래
+> "fixture 가 현재 밸런스와 어긋난다" 절을 함께 본다.
+
 Team Loop 작업 `tsk_0d80c8815ab8a0ea245b`(Unknown Auction generation
-skill-harness validation)의 검증 결과다.
+skill-harness validation)의 검증 결과다. **2026-08-07 시점 기록이다** — 표의
+`npm test 42/42` 는 그때 값이고, 2026-08-08 실측은 **97/97** 이다.
 
 | 검사 | 결과 |
 |---|---|
@@ -119,14 +143,35 @@ fixture 재생성은 강화된 계약과 선택적 복구가 들어온 뒤에 �
 `AGENTS.md` 는 감정(appraisal)을 제거된 기능으로 못박았다. 런타임 코드와 VSL
 템플릿에서는 정리됐지만 검증·문서 쪽에 남아 있다.
 
-- **`check-auction-content.mjs`** — daily-content 에서 `appraisalCopy.intro` /
+**셋 다 닿았다 (2026-08-08 확인).** 아래 목록은 무엇이 어떻게 정리됐는지의
+기록으로 남긴다.
+
+- ~~**`check-auction-content.mjs`** — daily-content 에서 `appraisalCopy.intro` /
   `success` / `warning` 을 여전히 필수로 요구한다(`appraisal:complete`).
   이 파일은 저장소 밖(`team-loop-lite-ai-learning/tools/verification/`)에 있는
-  세 번째 검증 사본이다
-- **`run-local-generation-experiment.mjs` 34행** — 출력 스키마가 `appraisalCopy`
-  를 요구한다
-- **`Docs/RUNTIME-PREPARATION-HANDOFF.md`** — "물품별/선택 감정과 판매, 정보
-  구매"를 준비된 기능으로 적어두고 있다. `AGENTS.md` 와 정면으로 어긋난다
+  세 번째 검증 사본이다~~ **해소됐다.** 계약을 자체 구현하지 않고 게임
+  저장소의 `generation-server.js` 에서 `validateOutput` 을 찾아 쓴다. 파일 위치는
+  그대로 저장소 밖이지만 **검증 사본이 아니라 호출자**가 됐다
+- ~~**`run-local-generation-experiment.mjs` 34행** — 출력 스키마가 `appraisalCopy`
+  를 요구한다~~ **해소됐다.** `Runtime/tools/` 안에 `appraisalCopy` 를 요구하는
+  코드가 남아 있지 않다
+- ~~**`Docs/RUNTIME-PREPARATION-HANDOFF.md`** — "물품별/선택 감정과 판매, 정보
+  구매"를 준비된 기능으로 적어두고 있다. `AGENTS.md` 와 정면으로 어긋난다~~
+  **해소됐다.** 지금은 `물품 판매. 감정과 정보 구매는 설계에서 빠졌다` 로 적혀
+  있다
+
+### 대신 여기 하나 남았다 (2026-08-08 발견)
+
+`Runtime/contracts/generation-response.schema.json` 이 최상위 `required` 에
+`appraisalCopy` 를 그대로 갖고 있다. 함께 요구하는 `questCopy` · `auctionCopy` ·
+`settlementCopy` 도 현재 계약에 없다.
+
+**아직 아무것도 깨지지 않았다** — 저장소 안에서 이 파일을 읽는 코드가 없다
+(`grep -rn "generation-response.schema" Runtime` 이 0건). 그래서 지금은 잔재일
+뿐이지만, **계약처럼 생긴 파일이 계약이 아니라는 점이 위험하다.** 이 저장소가
+겪은 갈라짐이 전부 그렇게 시작했다. 지우거나, 아무도 안 쓴다는 사실을 파일
+안에 적어두는 편이 낫다. 계약의 정본은 `AGENTS.md` 가 못박은 대로
+`compact-generation-contract.txt` 와 `generation-server.js` 둘뿐이다.
 
 ## Team Loop 쪽에서 바꾼 것 — git 에 안 남는다
 
@@ -147,10 +192,20 @@ fixture 재생성은 강화된 계약과 선택적 복구가 들어온 뒤에 �
 
 1. 기존 정상 output 은 참고 fixture 로 유지한다
 2. 현재 seed 의 request 를 기준으로 유지한다
-3. **`codex/api-integration` 의 강화된 계약과 선택적 복구 방식을 Runtime
-   브랜치에 반영한다** — 나머지의 선행 조건이다
-4. 로컬 Ollama 와 Groq 양쪽에 동일 validator 를 적용한다
-5. 통과한 request/output 만 명시적인 승격 명령으로 정식 파일에 반영한다
+3. ~~**`codex/api-integration` 의 강화된 계약과 선택적 복구 방식을 Runtime
+   브랜치에 반영한다** — 나머지의 선행 조건이다~~ **끝났다 (2026-08-08 확인).**
+   `codex/api-integration` 은 `codex/vsl-runtime-core` 에 완전히 병합됐고
+   (`git branch --merged`), 선택적 복구는 `dailyRepairIndices` 로 `generation-server.js`
+   가 export 해 로컬 서버와 AWS 라우터가 같이 쓴다
+4. ~~로컬 Ollama 와 Groq 양쪽에 동일 validator 를 적용한다~~ **전제가 바뀌었다
+   (2026-08-08 정정).** validator 는 한 벌이 됐지만 **Groq 은 대상이 아니다** —
+   조직 TPM 8,000 을 넘겨 일자 생성 공급자 목록에서 빠졌다
+   (`GROQ_DAILY_ENABLED` 가 없으면 안 붙는다). 지금 검증 대상은 로컬 Ollama 와
+   OpenAI 계열(`gpt-5.6-luna` · `gpt-4o-mini`)이다.
+   근거는 `GENERATION-ROUTER-PARITY.md`
+5. ~~통과한 request/output 만 명시적인 승격 명령으로 정식 파일에 반영한다~~
+   **됐다 (2026-08-08 확인).** `npm run experiment:promote`
+   (`tools/promote-generation-fixture.mjs`)가 그 자리다
 
 계약·Schema·복구 로직은 저장소 내부에 둔다. 사용자 홈의 스킬 계약을 운영
 계약으로 직접 쓰면 다른 PC 나 제출 환경에서 재현되지 않는다. 스킬은 저장소
@@ -158,8 +213,16 @@ fixture 재생성은 강화된 계약과 선택적 복구가 들어온 뒤에 �
 
 ## 아직 정하지 않은 것
 
-- **`blueprintTimeoutMs` 상향 여부.** 현재 15000ms 인데 기존 기록 94건 중 1건이
-  이를 넘는다(최대 19636ms). 중앙값은 2584ms 라 여유로워 보이지만 꼬리가 길다
+- ~~**`blueprintTimeoutMs` 상향 여부.** 현재 15000ms 인데 기존 기록 94건 중 1건이
+  이를 넘는다(최대 19636ms). 중앙값은 2584ms 라 여유로워 보이지만 꼬리가 길다~~
+  **정해졌다 (2026-08-08 정정).** 두 번 올려 **120000ms** 다
+  (`633513a` 15초 → `991968d` 30초 → `83def31` 120초). 같이 갈라진
+  `dayTimeoutMs` 는 60000ms 다.
+  `npm run audit` 재실측으로는 blueprint 기록 218건 중 2건, daily 98건 중 3건이
+  아직 이 값을 넘는다. **꼬리가 길다는 진단은 그대로 맞았고 값만 따라갔다.**
+  다만 이 코퍼스는 로컬 ollama 기록이라 지금 붙어 있는 AWS 라우터의 예산과는
+  다른 이야기다 — 라우터는 게이트웨이 통합 타임아웃 30초에 갇혀 있어 이 값을
+  쓸 수 없다
 - **`tsk_0d80c8815ab8a0ea245b` 에 네 번째 합격 기준을 넣을지.**
   `가격·실제가치·보상·배수는 생성 결과에 포함되지 않는다` 가 한국어 작업에는
   있고 영어 작업에는 없다. 쪼개진 배열 어디에도 대응 조각이 없어 임의로 추가하지
@@ -168,10 +231,35 @@ fixture 재생성은 강화된 계약과 선택적 복구가 들어온 뒤에 �
 
 ## fixture 가 현재 밸런스와 어긋난다
 
-같은 seed 로 `prepare` 를 다시 돌리면 `day-1-request.json` 이 16줄 바뀐다.
+~~같은 seed 로 `prepare` 를 다시 돌리면 `day-1-request.json` 이 16줄 바뀐다.
 lotId 는 동일하고 **가격만** 다르다(`basePrice 12000→6000`,
 `trueValue 16200→8100`). request 가 커밋된 뒤 `balance.json` 기저가가 조정됐다는
-뜻이다. 이번 검증 실패와는 무관하지만 별도로 정리해야 한다.
+뜻이다.~~ **여전히 어긋나지만 내용이 달라졌다 (2026-08-08 재측정).**
+아래는 위 문장을 쓴 방식 그대로 다시 잰 것이다.
+
+```bash
+cd Runtime && node tools/prepare-local-generation-experiment.js newspaper-grounded-14b-20260806
+git diff -- Runtime/reports/local-model-experiment/    # 되돌릴 것
+```
+
+`run-start-request.json` 은 **차이가 없다.** `day-1-request.json` 만 16줄이 아니라
+**52줄**(+6 / −46) 바뀌고, 성격이 둘이다.
+
+- **`trueValue` 와 `quality` 가 통째로 사라진다.** `prepare` 가 더 이상 만들지
+  않는다. 8개 LOT 전부에서 빠지는 것이 −46줄의 대부분이다. 이건 밸런스 드리프트가
+  아니라 **경계가 옳아진 것**이다 — `AGENTS.md` 가 "물품의 실제 가치는 계속
+  감춘다"고 못박았고, Runtime 테스트
+  (`generation API sends only narrative identifiers…`)가 같은 경계를 지킨다.
+  커밋된 fixture 가 그 경계 이전 산물이다
+- **`basePrice` 가 등급별로 흔들린다.** `6000→6500`, `800→700`, `2000→1900`,
+  `12500→13100`, `2000→2100`. 앞 기록의 "기저가가 조정됐다"와는 다른 변화다 —
+  등급마다 공개 가격에 변동 범위를 넣은 최근 밸런스 작업(`2fc9a91`, `9f04396`)
+  때문이다
+
+**여전히 이번 검증 실패와는 무관하다** — 검증은 위에 적은 대로 지금 통과한다.
+정리 방법은 승격이다. `prepare` 로 request 를 갱신하고 그 request 로 실제 생성을
+돌린 뒤, 통과한 쌍만 `npm run experiment:promote` 로 올린다. **request 만 새로
+커밋하면 output 과 다시 갈라진다** — 이 문서 맨 위가 기록한 바로 그 실패다.
 
 ## Team Loop 서버가 둘이다
 

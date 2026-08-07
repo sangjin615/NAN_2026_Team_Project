@@ -61,13 +61,27 @@ Docs/GENERATION-*.md
 무작위화와 로딩 취소 버튼(`#skip-generation`)이 최근 들어갔다. 게임 로직 수정과
 겹치므로 최신 tip 에서 시작한다.
 
-## 상태 사실 (2026-08-07 저녁 갱신)
+## 상태 사실 (2026-08-08 갱신)
 
 - `codex/vsl-runtime-core` 가 통합 브랜치다. `codex/api-integration` 은 완전히
   포함됐고, `codex/aws-generation-router` 는 `cb0fa5f` 에서 갈라져 낡았다
-- 기준선: `cd Runtime && npm test` **82/82**, `npm run audit` 오류 0
-- `api-config.json` 이 `enabled: true` 이고 **`127.0.0.1:8787` 을 가리킨다.**
-  배포된 Lambda 가 아니라 로컬 서버를 본다
+  (2026-08-08 재확인 — `git merge-base` 가 그대로 `cb0fa5f` 다)
+- 기준선: `cd Runtime && npm test` **97/97**, `npm run audit` 오류 0 · 경고 5
+  - ~~82/82~~ **낡았다 (2026-08-08 정정).** 실측 97/97 이다
+  - 경고 5는 정상이다. 오프라인 모드 안내 1, 기존 기록의 타임아웃 초과 2
+    (blueprint 218건 중 2건 > 120초 · daily 98건 중 3건 > 60초), 옛
+    `qwen2.5-coder:14b` 코퍼스의 길이 초과 2건이다. **오류 0 만이 통과 기준이다**
+- ~~`api-config.json` 이 `enabled: true` 이고 **`127.0.0.1:8787` 을 가리킨다.**
+  배포된 Lambda 가 아니라 로컬 서버를 본다~~ **틀렸다 (2026-08-08 정정).**
+  `enabled: true` 는 그대로지만 엔드포인트는 `ebd7a68` 에서 바뀌어
+  `https://8tjqzce89j.execute-api.us-east-1.amazonaws.com/generate` 다.
+  **배포된 Lambda 를 본다.** 타임아웃도 모드별로 갈라졌다 —
+  `blueprintTimeoutMs` 120초 · `dayTimeoutMs` 60초이고 `timeoutMs` 15초는
+  둘이 없을 때의 폴백으로만 남았다
+  - 로컬 서버로 되돌리려면 `endpoint` 를 `http://127.0.0.1:8787/generate` 로
+    바꾼다. **바꿨으면 `npm run build:standalone` 을 다시 돌린다** — 이 파일은
+    독립 실행본에 그대로 박히므로, 안 하면 배포본이 남의 PC 에서 localhost 를
+    부르게 된다
 - 8787 에 세울 수 있는 서버가 **둘**이다. 하나만 띄운다
   - `npm run start:generation` — 로컬 ollama(qwen3:14b). 키가 필요 없다
   - `npm run start:router` — 배포될 라우터 코드 그대로. 실제 공급자를 쓴다

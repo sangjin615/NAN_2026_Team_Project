@@ -20,6 +20,13 @@
 
 ## 현재 차이
 
+> **"현재" 는 2026-08-07 아침이다 (2026-08-08 표시).** 아래 표는 이 문서가
+> 출발한 지점이고, 문서 나머지가 그것을 좁혀 가는 기록이다. **지금은 좁혀졌다** —
+> 라우터도 blueprint 를 프레임 + 세트로 쪼개고(웨이브 6), 일자 생성은
+> 양쪽 다 1회 + `dailyRepairIndices` 선택 복구다. 되돌린 경위는 아래
+> "그래서 되돌렸다" 절에 있다. 표를 지우지 않는 것은 왜 이렇게 됐는지가
+> 여기서 시작하기 때문이다.
+
 | | `generation-server.js` (로컬) | `generation-router.mjs` (AWS) |
 |---|---|---|
 | run-blueprint | 프레임 1회 + **세트마다 1회** (총 13회) | **1회** |
@@ -833,12 +840,51 @@ curl -s -i -X OPTIONS "https://8tjqzce89j.execute-api.us-east-1.amazonaws.com/ge
 `gpt-4o-mini` 가 쓰이고, `GROQ_DAILY_ENABLED` 가 없어서 groq 는 빠진다 — 둘 다
 의도한 동작이다.
 
+> **여전히 유효하다 (2026-08-08 재확인).** 배포된 함수의 변수 이름을 그대로 읽고
+> 라우터 코드와 대조했다.
+>
+> ```bash
+> aws lambda get-function-configuration --region us-east-1 \
+>   --function-name nhn-generation-api --query "Environment.Variables | keys(@)"
+> ```
+>
+> | 변수 | 있나 | 코드가 읽나 |
+> |---|---|---|
+> | `PRIMARY_PROVIDER` · `FALLBACK_PROVIDER` | 있다 | **아니다 — 잔재** |
+> | `PRIMARY_MODEL` | 있다 | groq 경로에서만. groq 가 꺼져 있어 **지금은 죽은 값** |
+> | `SECONDARY_MODEL` | **없다** | 기본값 `gpt-4o-mini` |
+> | `FALLBACK_MODEL` | 있다 | luna 모델명 |
+> | `GROQ_DAILY_ENABLED` | **없다** | groq 빠짐 |
+> | `GENERATION_RATE_WINDOW_MS` | **없다** | 기본값 600,000(10분) |
+>
+> 잔재가 셋으로 늘었다 — `PRIMARY_MODEL` 도 groq 가 꺼진 동안에는 아무 데도
+> 닿지 않는다. 4번을 실행해 groq 를 되붙이면 그때 다시 살아나는 값이므로
+> 지우기 전에 4번과 함께 판단한다.
+
 **4. groq 를 되살리려면 요금제를 올려야 한다.** 무료 TPM 8,000 으로는 불가능하다.
 올린 뒤에는 `GROQ_DAILY_ENABLED=true` 한 줄이면 붙는다.
+
+> **유효하다 (2026-08-08). 다만 재실측은 아니다.** groq 를 켜야 다시 잴 수 있고
+> 그러려면 실제로 429 를 다시 맞아야 하므로 하지 않았다. 확인한 것은 코드
+> 경로뿐이다 — `generation-router.mjs:201` 이 `env.GROQ_DAILY_ENABLED === 'true'`
+> 를 요구하고, 배포된 함수에 그 변수가 없다. **`GROQ_API_KEY` 는 아직 남아 있다.**
+> TPM 8,000 이라는 수치는 2026-08-07 의 429 응답 본문에서 나온 실측이고 그 뒤로
+> 다시 확인하지 않았다.
 
 **5. 라우터는 부분 대체를 드러내지 않는다.** 측정 도구는 항목 단위로 세지만
 `x-generation-source` 헤더는 한 항목만 생성돼도 공급자 이름을 찍는다. 임계값을
 둘지는 게임 체감과 비용을 함께 봐야 하는 판단이다.
+
+> **여전히 유효하다 (2026-08-08 코드 재확인).** `generation-router.mjs:457` 이
+> 성공 경로에서 조건 없이 `` `${provider.name}:${provider.model}` `` 를 찍는다.
+> 대체가 섞여 들어갈 자리는 그대로 둘이다 — blueprint 는 `fallbackSetIncident`
+> 로 세트를 갈아끼우고(`fellBack === request.sets.length` 일 때만 던진다),
+> 일자 생성은 복구 호출이 실패하면 `fallbackLots[index]` 로 그 LOT 을 메운다.
+> 어느 쪽도 헤더에 남지 않는다.
+>
+> **되돌린 뒤라 노출은 줄었다.** 일자 생성이 1회 호출로 바뀌어 대체가 끼어드는
+> 경로가 복구 실패 하나로 좁아졌고, 마지막 8판 실측에서 부분 대체는 0/7 이었다.
+> **판단이 쉬워진 것이지 헤더가 고쳐진 것은 아니다.**
 
 ## 게임에 붙여 돌리는 법
 
