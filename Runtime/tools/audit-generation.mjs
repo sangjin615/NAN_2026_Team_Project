@@ -60,8 +60,24 @@ console.log(`  블루프린트 타임아웃 ${blueprintTimeout}ms · 일자 타�
 // ensure 는 당일+2일치를 병렬로 부르므로 최악 대기는 두 타임아웃의 합이다.
 console.log(`  새 게임 최악 대기 = ${((blueprintTimeout + dayTimeout) / 1000).toFixed(1)}초 (블루프린트 + 병렬 일자)`);
 if (apiConfig.schemaVersion !== '1.0') add('error', `schemaVersion 이 1.0 이 아니다: ${apiConfig.schemaVersion}`);
+// 대기가 길다는 사실만으로 경고하면 안 된다. 취소 수단이 있으면 플레이어가 빠져나갈
+// 수 있으므로 성질이 다른 문제다. 예전에는 이 검사가 존재 여부를 보지 않고 무조건
+// "취소 수단이 없다" 고 단정해서, 버튼을 넣은 뒤에도 같은 경고가 남았다.
+const loadingSection = (await read('index.html')).match(/<section[^>]*data-scene="loading"[\s\S]*?<\/section>/)?.[0] || '';
+const loadingButtonIds = [...loadingSection.matchAll(/<button[^>]*\bid="([^"]+)"/g)].map(([, id]) => id);
+const appSource = await read('src/app.js');
+const providerSource = await read('src/generation-api-provider.js');
+const cancelWired = loadingButtonIds.some((id) => new RegExp(`#${id}[\\s\\S]{0,400}?\\.cancel\\(\\)`).test(appSource));
+const cancelImplemented = /\bcancel\s*\(\s*\)\s*\{/.test(providerSource);
+const worstWaitSeconds = ((blueprintTimeout + dayTimeout) / 1000).toFixed(0);
 if (blueprintTimeout + dayTimeout > 60000) {
-  add('warn', `새 게임 최악 대기가 ${((blueprintTimeout + dayTimeout) / 1000).toFixed(0)}초다`, '로딩 화면에 취소 수단이 없다');
+  if (cancelWired && cancelImplemented) {
+    add('info', `새 게임 최악 대기가 ${worstWaitSeconds}초다`, `로딩 화면의 ${loadingButtonIds.join(', ')} 로 중단할 수 있다`);
+  } else if (!cancelImplemented) {
+    add('warn', `새 게임 최악 대기가 ${worstWaitSeconds}초다`, 'GenerationApiProvider 에 cancel() 이 없어 중단할 방법이 없다');
+  } else {
+    add('warn', `새 게임 최악 대기가 ${worstWaitSeconds}초다`, '로딩 화면의 버튼이 provider.cancel() 로 이어지지 않는다');
+  }
 }
 if (live && !apiConfig.enabled) add('error', '--live 인데 api-config.json 의 enabled 가 false 다');
 if (!live && apiConfig.enabled) add('warn', 'enabled 가 true 인데 오프라인 모드로 돌렸다', '--live 로 실제 측정을 권한다');
