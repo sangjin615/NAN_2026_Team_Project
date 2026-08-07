@@ -12,7 +12,6 @@ import {
   outputSchema,
   setIncidentErrors,
   setIncidentSchema,
-  strictSchema,
   validateInput,
   validateOutput,
 } from '../generation-server.js';
@@ -82,21 +81,12 @@ async function callGroq({ request, schema = outputSchema(request), prompt = `INP
 }
 
 async function callOpenAI({ request, schema = outputSchema(request), prompt = `INPUT:\n${JSON.stringify(request)}` }, provider, fetchImpl) {
-  // 스키마를 강제한다. json_object 는 "JSON 이기만 하면" 통과라 모델이 다른
-  // lotId 를 돌려줘도 막지 못했다 — 실측에서 LOT IDs mismatch 가 반복됐다.
-  // 바꿀 수 없는 스키마면 strictSchema 가 null 을 주고 예전 경로로 돈다.
-  //
-  // OUTPUT_SCHEMA 는 프롬프트에 그대로 남긴다. strict 가 버리는 길이 상한이
-  // 거기 실려 있고, 모델에게는 여전히 필요한 정보다.
-  const strict = strictSchema(schema);
   const body = {
     model: provider.model,
     instructions: contractFor(request.mode),
     input: `Return valid JSON only.\nOUTPUT_SCHEMA:\n${JSON.stringify(schema)}\n${prompt}`,
     max_output_tokens: 12000,
-    text: strict
-      ? { format: { type: 'json_schema', name: 'generation_output', schema: strict, strict: true } }
-      : { format: { type: 'json_object' } },
+    text: { format: { type: 'json_object' } },
     store: false,
   };
   if (provider.model.startsWith('gpt-5.6-')) body.reasoning = { effort: 'low' };

@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { createHandler, deterministicFallback } from '../aws/generation-router.mjs';
-import { contractFor, dailyLotSchema, generationContract, lotWritingHint, strictSchema, validateOutput } from '../generation-server.js';
+import { contractFor, generationContract, lotWritingHint, validateOutput } from '../generation-server.js';
 
 const dailyRequest = {
   schemaVersion: '1.0', mode: 'daily-content', runSeed: 'router-test', day: 1,
@@ -62,45 +62,6 @@ test('the mode contract keeps every rule and drops the other mode', () => {
   assert.ok(!run.includes('Daily limits per item'), 'blueprint 가 일자 길이 규칙을 나르고 있다');
   assert.ok(!day.includes('Each input set includes members'), 'daily 가 세트 사건 규칙을 나르고 있다');
   assert.ok(day.length < generationContract.length, 'daily 절이 전문보다 짧아야 한다');
-});
-
-test('the strict schema keeps the lot id and drops what strict mode rejects', () => {
-  const strict = strictSchema(dailyLotSchema({ lotId: 'lot-3' }));
-  // 강제하려던 것은 이것이다. const 는 문서에 없어 enum 한 칸으로 바꾼다.
-  assert.deepEqual(strict.properties.lotId, { enum: ['lot-3'], type: 'string' });
-  assert.equal(strict.additionalProperties, false);
-  assert.deepEqual(strict.required, ['lotId', 'displayName', 'description', 'rumor', 'setHint', 'npcReaction']);
-  // 문자열 길이 제약은 지원 목록에 없다. 버려도 qualityErrors 가 같은 값을 본다.
-  const serialized = JSON.stringify(strict);
-  assert.doesNotMatch(serialized, /minLength|maxLength/);
-});
-
-test('the strict schema gives up rather than guess', () => {
-  // prefixItems 는 문서에 없다. 바꿀 수 없으면 null 을 주고 부르는 쪽이 예전
-  // 경로로 돌아야 한다. 모르는 것을 강제하면 400 이 난다.
-  assert.equal(strictSchema({ type: 'array', prefixItems: [{ type: 'string' }] }), null);
-  assert.equal(strictSchema({ type: 'object', properties: { a: { type: 'array', prefixItems: [] } } }), null);
-  assert.equal(strictSchema(null), null);
-});
-
-test('the router asks OpenAI to enforce the schema', async () => {
-  const formats = [];
-  const fetchImpl = async (url, options) => {
-    const body = JSON.parse(options.body);
-    formats.push(body.text?.format);
-    return jsonResponse(openAiPayload(dailyPartFromBody(body)));
-  };
-  await createHandler({ env: { LIVE_GENERATION_ENABLED: 'true', OPENAI_API_KEY: 'test' }, fetchImpl, logger: {} })(event(dailyRequest));
-  assert.ok(formats.length > 0);
-  for (const format of formats) {
-    assert.equal(format.type, 'json_schema');
-    assert.equal(format.strict, true);
-    assert.ok(format.name, 'json_schema 는 이름이 필요하다');
-  }
-  // LOT 호출은 그 자리의 lotId 를 스키마로 못박는다.
-  const lotFormats = formats.filter((format) => format.schema?.properties?.lotId);
-  assert.equal(lotFormats.length, 8);
-  assert.deepEqual(lotFormats.map((format) => format.schema.properties.lotId.enum[0]), dailyRequest.lots.map(({ lotId }) => lotId));
 });
 
 test('each lot gets a different thing to look at', () => {

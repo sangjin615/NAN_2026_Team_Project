@@ -74,57 +74,6 @@ export const dailyFrameSchema = (request) => fixedObject({
   schemaVersion: { const: '1.0' }, day: { const: request.day }, marketHeadline: text,
 });
 
-// OpenAI Structured Outputs(strict) 가 받는 부분집합으로 바꾼다.
-//
-// 왜 필요한가: 지금은 `json_object` 라 스키마가 **강제되지 않는다.** 프롬프트에
-// 넣어 부탁할 뿐이다. 2026-08-07 실측에서 `gpt-5.6-luna` 가 다른 `lotId` 를
-// 돌려주는 일이 반복됐고(`LOT IDs mismatch`), 그때 dailyRepairIndices 가 전체
-// 복구를 지시해 여덟 개를 다시 만들다 공급자가 통째로 떨어졌다. 지연 40초 초과와
-// static 낙하의 주범이었다.
-//
-// 문서 기준으로 enum · minItems · maxItems · required · additionalProperties 는
-// 받고, 문자열의 minLength/maxLength 는 지원 목록에 없다. const 도 명시가 없어
-// enum 한 칸으로 바꾼다.
-//
-// **길이 상한을 스키마에서 버려도 잃는 것이 없다.** qualityErrors 가 같은 값을
-// 검사하고 넘치면 그 LOT 만 복구한다. 길이 상한은 프롬프트의 OUTPUT_SCHEMA 로도
-// 계속 전달된다. 강제하려던 것은 lotId 다.
-//
-// 바꿀 수 없는 스키마를 만나면 **null 을 돌려준다.** 부르는 쪽이 예전처럼
-// json_object 로 돈다. 모르는 것을 강제하지 않는다.
-export function strictSchema(schema) {
-  if (!schema || typeof schema !== 'object' || Array.isArray(schema)) return null;
-  // prefixItems 는 문서에 없다. outputSchema 가 쓰지만 라우터는 조각 스키마만 쓴다.
-  if (schema.prefixItems) return null;
-  const out = {};
-  for (const [key, value] of Object.entries(schema)) {
-    if (key === 'minLength' || key === 'maxLength') continue;
-    if (key === 'const') {
-      out.enum = [value];
-      if (!('type' in schema)) out.type = typeof value === 'number' ? (Number.isInteger(value) ? 'integer' : 'number') : typeof value;
-      continue;
-    }
-    if (key === 'properties') {
-      const properties = {};
-      for (const [name, child] of Object.entries(value)) {
-        const converted = strictSchema(child);
-        if (!converted) return null;
-        properties[name] = converted;
-      }
-      out.properties = properties;
-      continue;
-    }
-    if (key === 'items') {
-      const converted = strictSchema(value);
-      if (!converted) return null;
-      out.items = converted;
-      continue;
-    }
-    out[key] = value;
-  }
-  return out;
-}
-
 export function validateInput(request) {
   if (request?.schemaVersion !== '1.0') throw new Error('unsupported schemaVersion');
   if (request.mode === 'run-blueprint') {
