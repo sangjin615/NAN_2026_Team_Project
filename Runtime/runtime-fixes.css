@@ -3320,15 +3320,20 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
 [data-scene="relic"] #relic-participants { left: 79.2%; top: 11%; width: 16.5%; height: 66%; padding: 7.5% 1.3% 2%; }
 [data-scene="relic"] #relic-participants h3 { top: 2%; font-size: clamp(12px,1.12vw,18px); }
 [data-scene="relic"] #relic-participants .participant {
-  position: relative; display: grid; grid-template-columns: auto 1fr; grid-template-rows: auto auto; gap: 2px 8px; align-items: center;
-  min-height: 20%; padding: 5% 4% 5% 13%;
+  position: relative; display: grid; grid-template-columns: clamp(34px,3vw,48px) minmax(0,1fr) auto; grid-template-rows: auto auto; gap: 2px 7px; align-items: center;
+  min-height: 20%; padding: 4% 2%;
 }
-[data-scene="relic"] #relic-participants .participant > span { position: absolute; left: 2%; top: 50%; transform: translateY(-50%); color: #9a7b51; font-size: clamp(8px,.64vw,10px); font-weight: 900; }
+[data-scene="relic"] .relic-participant-portrait {
+  grid-row: 1 / 3; width: 100%; aspect-ratio: 1; box-sizing: border-box; border: 2px solid #876638; border-radius: 50%;
+  object-fit: cover; object-position: 50% 28%; background: #2b2118; box-shadow: 0 2px 5px #0006;
+}
+[data-scene="relic"] #relic-participants .participant > span { position: absolute; left: 1%; bottom: 5%; min-width: 19px; padding: 1px 3px; border-radius: 8px; background: #ead8b9; color: #775629; font-size: clamp(7px,.55vw,9px); font-weight: 900; text-align: center; }
 [data-scene="relic"] #relic-participants .participant > b { font-size: clamp(11px,1vw,16px); }
 [data-scene="relic"] #relic-participants .participant > small { color: #806c52; font-size: clamp(7px,.6vw,10px); }
-[data-scene="relic"] #relic-participants .participant > strong { grid-row: 1 / 3; grid-column: 2; justify-self: end; font-size: clamp(10px,.9vw,15px); }
+[data-scene="relic"] #relic-participants .participant > strong { grid-row: 1 / 3; grid-column: 3; justify-self: end; font-size: clamp(9px,.78vw,13px); }
 [data-scene="relic"] #relic-participants .participant.is-leading { background: #e4c77c55; }
 [data-scene="relic"] #relic-participants .participant.is-leading > span { color: #9b381f; }
+[data-scene="relic"] #relic-participants .participant.is-leading .relic-participant-portrait { border-color: #84a848; box-shadow: 0 0 0 2px #d6bd6f,0 0 10px #7db84977; }
 [data-scene="relic"] > .actions { left: 24%; bottom: 1.8%; width: 54%; height: 15%; }
 [data-scene="relic"] > .actions button { min-width: 0; padding: 7px 9px; font-size: clamp(11px,1.08vw,17px); }
 [data-scene="relic"] > .actions button img { width: clamp(20px,2vw,32px); height: clamp(20px,2vw,32px); }

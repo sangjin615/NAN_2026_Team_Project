@@ -3328,15 +3328,20 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
 [data-scene="relic"] #relic-participants { left: 79.2%; top: 11%; width: 16.5%; height: 66%; padding: 7.5% 1.3% 2%; }
 [data-scene="relic"] #relic-participants h3 { top: 2%; font-size: clamp(12px,1.12vw,18px); }
 [data-scene="relic"] #relic-participants .participant {
-  position: relative; display: grid; grid-template-columns: auto 1fr; grid-template-rows: auto auto; gap: 2px 8px; align-items: center;
-  min-height: 20%; padding: 5% 4% 5% 13%;
+  position: relative; display: grid; grid-template-columns: clamp(34px,3vw,48px) minmax(0,1fr) auto; grid-template-rows: auto auto; gap: 2px 7px; align-items: center;
+  min-height: 20%; padding: 4% 2%;
 }
-[data-scene="relic"] #relic-participants .participant > span { position: absolute; left: 2%; top: 50%; transform: translateY(-50%); color: #9a7b51; font-size: clamp(8px,.64vw,10px); font-weight: 900; }
+[data-scene="relic"] .relic-participant-portrait {
+  grid-row: 1 / 3; width: 100%; aspect-ratio: 1; box-sizing: border-box; border: 2px solid #876638; border-radius: 50%;
+  object-fit: cover; object-position: 50% 28%; background: #2b2118; box-shadow: 0 2px 5px #0006;
+}
+[data-scene="relic"] #relic-participants .participant > span { position: absolute; left: 1%; bottom: 5%; min-width: 19px; padding: 1px 3px; border-radius: 8px; background: #ead8b9; color: #775629; font-size: clamp(7px,.55vw,9px); font-weight: 900; text-align: center; }
 [data-scene="relic"] #relic-participants .participant > b { font-size: clamp(11px,1vw,16px); }
 [data-scene="relic"] #relic-participants .participant > small { color: #806c52; font-size: clamp(7px,.6vw,10px); }
-[data-scene="relic"] #relic-participants .participant > strong { grid-row: 1 / 3; grid-column: 2; justify-self: end; font-size: clamp(10px,.9vw,15px); }
+[data-scene="relic"] #relic-participants .participant > strong { grid-row: 1 / 3; grid-column: 3; justify-self: end; font-size: clamp(9px,.78vw,13px); }
 [data-scene="relic"] #relic-participants .participant.is-leading { background: #e4c77c55; }
 [data-scene="relic"] #relic-participants .participant.is-leading > span { color: #9b381f; }
+[data-scene="relic"] #relic-participants .participant.is-leading .relic-participant-portrait { border-color: #84a848; box-shadow: 0 0 0 2px #d6bd6f,0 0 10px #7db84977; }
 [data-scene="relic"] > .actions { left: 24%; bottom: 1.8%; width: 54%; height: 15%; }
 [data-scene="relic"] > .actions button { min-width: 0; padding: 7px 9px; font-size: clamp(11px,1.08vw,17px); }
 [data-scene="relic"] > .actions button img { width: clamp(20px,2vw,32px); height: clamp(20px,2vw,32px); }
@@ -5110,11 +5115,12 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
       ...state.auctionSession.bots.map((bot) => ({ id: bot.id, name: bot.name, budget: estimateBotDailyAssets({ state, balance })[bot.id]?.remaining || 0, leader: state.auctionSession.leader === bot.id }))
     ];
     const competitorPortraits = {
+      player: "./assets/ui/auction/portraits/player-merchant.png",
       nemesis: "./assets/ui/auction/competitors/galeo.png",
       "drifter-a": "./assets/ui/auction/competitors/moira.png",
       "drifter-b": "./assets/ui/auction/competitors/ines.png"
     };
-    document.querySelector("#auction-participants").innerHTML = `<h3>\uCC38\uAC00\uC790 \uBA85\uB2E8 (${participants.length} / 4)</h3>${participants.map((participant) => `<div class="participant ${participant.leader ? "is-leading" : ""}">${participant.player ? '<span class="player-mark">\uB098</span>' : `<img class="competitor-portrait" src="${competitorPortraits[participant.id]}" alt="${participant.name} \uCD08\uC0C1">`}<b>${participant.name}</b><small>${participant.player ? "\uBCF4\uC720 \uC790\uC0B0" : "\uCD94\uC815 \uC790\uC0B0"}</small><strong>${money(participant.budget)}</strong></div>`).join("")}`;
+    document.querySelector("#auction-participants").innerHTML = `<h3>\uCC38\uAC00\uC790 \uBA85\uB2E8 (${participants.length} / 4)</h3>${participants.map((participant) => `<div class="participant ${participant.leader ? "is-leading" : ""}"><img class="competitor-portrait" src="${competitorPortraits[participant.id]}" alt="${participant.name} \uCD08\uC0C1"><b>${participant.name}</b><small>${participant.player ? "\uBCF4\uC720 \uC790\uC0B0" : "\uCD94\uC815 \uC790\uC0B0"}</small><strong>${money(participant.budget)}</strong></div>`).join("")}`;
     document.querySelector("#auction-lot-status").innerHTML = `<b>\uACBD\uB9E4 ${state.lotIndex + 1} / 8</b><span>${gradeLabel(lot.grade)}</span><strong>${money(state.auctionSession.currentPrice)}</strong>`;
     armActionTimer("#auction-timer", state.auctionSession.deadline, () => finishLot("pass"), formatAuctionTime);
   }
@@ -5251,7 +5257,13 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
     const art = relicArt[relic.id];
     document.querySelector("#relic-card").innerHTML = `<header><span>${RELIC_TIER_LABELS[tier] || tier} \uC720\uBB3C</span><b>${state.relicRound + 1} / 3\uD68C</b></header><h2>${relic.name}</h2>${art ? `<img data-relic-art="${relic.id}" src="./assets/relics/${encodeURIComponent(art)}" alt="">` : ""}<p>${relic.effect}</p><footer><small>\uD604\uC7AC \uD638\uAC00</small><strong>${money(session.currentPrice)}</strong></footer><em id="relic-timer" aria-label="\uB0A8\uC740 \uC2DC\uAC04"></em>`;
     const participants = [{ id: "player", name: "\uB2F9\uC2E0", budget: state.cash }, ...session.bots.map((bot) => ({ ...bot, budget: bot.maxBid }))];
-    document.querySelector("#relic-participants").innerHTML = `<h3>\uCD5C\uC885 \uACBD\uB9E4 \uCC38\uAC00\uC790</h3>${participants.map((participant, index) => `<div class="participant ${session.leader === participant.id ? "is-leading" : ""}"><span>${session.leader === participant.id ? "\uC120\uB450" : String(index + 1).padStart(2, "0")}</span><b>${participant.name}</b><small>\uC785\uCC30 \uD55C\uB3C4</small><strong>${money(participant.budget)}</strong></div>`).join("")}`;
+    const relicPortraits = {
+      player: "./assets/ui/auction/portraits/player-merchant.png",
+      "royal-1": "./assets/ui/auction/portraits/royal-agent.png",
+      "royal-2": "./assets/ui/auction/portraits/northern-merchant.png",
+      "royal-3": "./assets/ui/auction/portraits/foreign-collector.png"
+    };
+    document.querySelector("#relic-participants").innerHTML = `<h3>\uCD5C\uC885 \uACBD\uB9E4 \uCC38\uAC00\uC790</h3>${participants.map((participant, index) => `<div class="participant ${session.leader === participant.id ? "is-leading" : ""}"><img class="relic-participant-portrait" src="${relicPortraits[participant.id]}" alt="${participant.name} \uCD08\uC0C1"><span>${session.leader === participant.id ? "\uC120\uB450" : String(index + 1).padStart(2, "0")}</span><b>${participant.name}</b><small>\uC785\uCC30 \uD55C\uB3C4</small><strong>${money(participant.budget)}</strong></div>`).join("")}`;
     document.querySelector("#relic-feed").innerHTML = `<header><small>RELIC AUCTION</small><h3>\uC720\uBB3C \uACBD\uB9E4</h3><p><b>${state.relicRound + 1}</b><span>/ 3\uD68C</span></p><strong>${RELIC_TIER_LABELS[tier] || tier} \uB4F1\uAE09</strong></header><section><h4>\uC785\uCC30 \uAE30\uB85D</h4>${session.feed.slice(-4).map((line) => `<p>${line}</p>`).join("")}</section>`;
     const minimumBid = session.currentPrice + Math.max(1, Math.ceil(session.currentPrice * balance.auction.minRaiseRate));
     document.querySelectorAll("[data-relic-raise]").forEach((button) => {

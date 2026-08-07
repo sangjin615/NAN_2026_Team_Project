@@ -40,6 +40,13 @@ test('relic auction exposes the same bid controls as the normal auction', async 
   assert.match(relicScene, /id="skip-relic"/);
 });
 
+test('auction participant portraits include the player and all relic rivals', async () => {
+  const appSource = await readFile(new URL('../src/app.js', import.meta.url), 'utf8');
+  for (const portrait of ['player-merchant.png', 'royal-agent.png', 'northern-merchant.png', 'foreign-collector.png']) {
+    assert.match(appSource, new RegExp(portrait.replace('.', '\\.')));
+  }
+});
+
 test('creates a reproducible 12 day, 96 lot schedule from the 60 base items', () => {
   const first = createRunSchedule({ catalog, balance, seed: 'demo' });
   const second = createRunSchedule({ catalog, balance, seed: 'demo' });

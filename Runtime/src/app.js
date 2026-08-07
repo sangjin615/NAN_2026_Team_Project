@@ -682,11 +682,12 @@ function renderAuction() {
     ...state.auctionSession.bots.map((bot) => ({ id: bot.id, name: bot.name, budget: estimateBotDailyAssets({ state, balance })[bot.id]?.remaining || 0, leader: state.auctionSession.leader === bot.id })),
   ];
   const competitorPortraits = {
+    player: './assets/ui/auction/portraits/player-merchant.png',
     nemesis: './assets/ui/auction/competitors/galeo.png',
     'drifter-a': './assets/ui/auction/competitors/moira.png',
     'drifter-b': './assets/ui/auction/competitors/ines.png',
   };
-  document.querySelector('#auction-participants').innerHTML = `<h3>참가자 명단 (${participants.length} / 4)</h3>${participants.map((participant) => `<div class="participant ${participant.leader ? 'is-leading' : ''}">${participant.player ? '<span class="player-mark">나</span>' : `<img class="competitor-portrait" src="${competitorPortraits[participant.id]}" alt="${participant.name} 초상">`}<b>${participant.name}</b><small>${participant.player ? '보유 자산' : '추정 자산'}</small><strong>${money(participant.budget)}</strong></div>`).join('')}`;
+  document.querySelector('#auction-participants').innerHTML = `<h3>참가자 명단 (${participants.length} / 4)</h3>${participants.map((participant) => `<div class="participant ${participant.leader ? 'is-leading' : ''}"><img class="competitor-portrait" src="${competitorPortraits[participant.id]}" alt="${participant.name} 초상"><b>${participant.name}</b><small>${participant.player ? '보유 자산' : '추정 자산'}</small><strong>${money(participant.budget)}</strong></div>`).join('')}`;
   document.querySelector('#auction-lot-status').innerHTML = `<b>경매 ${state.lotIndex + 1} / 8</b><span>${gradeLabel(lot.grade)}</span><strong>${money(state.auctionSession.currentPrice)}</strong>`;
   armActionTimer('#auction-timer', state.auctionSession.deadline, () => finishLot('pass'), formatAuctionTime);
 }
@@ -790,7 +791,13 @@ function renderRelic() {
   const art = relicArt[relic.id];
   document.querySelector('#relic-card').innerHTML = `<header><span>${RELIC_TIER_LABELS[tier] || tier} 유물</span><b>${state.relicRound + 1} / 3회</b></header><h2>${relic.name}</h2>${art ? `<img data-relic-art="${relic.id}" src="./assets/relics/${encodeURIComponent(art)}" alt="">` : ''}<p>${relic.effect}</p><footer><small>현재 호가</small><strong>${money(session.currentPrice)}</strong></footer><em id="relic-timer" aria-label="남은 시간"></em>`;
   const participants = [{ id: 'player', name: '당신', budget: state.cash }, ...session.bots.map((bot) => ({ ...bot, budget: bot.maxBid }))];
-  document.querySelector('#relic-participants').innerHTML = `<h3>최종 경매 참가자</h3>${participants.map((participant, index) => `<div class="participant ${session.leader === participant.id ? 'is-leading' : ''}"><span>${session.leader === participant.id ? '선두' : String(index + 1).padStart(2, '0')}</span><b>${participant.name}</b><small>입찰 한도</small><strong>${money(participant.budget)}</strong></div>`).join('')}`;
+  const relicPortraits = {
+    player: './assets/ui/auction/portraits/player-merchant.png',
+    'royal-1': './assets/ui/auction/portraits/royal-agent.png',
+    'royal-2': './assets/ui/auction/portraits/northern-merchant.png',
+    'royal-3': './assets/ui/auction/portraits/foreign-collector.png',
+  };
+  document.querySelector('#relic-participants').innerHTML = `<h3>최종 경매 참가자</h3>${participants.map((participant, index) => `<div class="participant ${session.leader === participant.id ? 'is-leading' : ''}"><img class="relic-participant-portrait" src="${relicPortraits[participant.id]}" alt="${participant.name} 초상"><span>${session.leader === participant.id ? '선두' : String(index + 1).padStart(2, '0')}</span><b>${participant.name}</b><small>입찰 한도</small><strong>${money(participant.budget)}</strong></div>`).join('')}`;
   document.querySelector('#relic-feed').innerHTML = `<header><small>RELIC AUCTION</small><h3>유물 경매</h3><p><b>${state.relicRound + 1}</b><span>/ 3회</span></p><strong>${RELIC_TIER_LABELS[tier] || tier} 등급</strong></header><section><h4>입찰 기록</h4>${session.feed.slice(-4).map((line) => `<p>${line}</p>`).join('')}</section>`;
   const minimumBid = session.currentPrice + Math.max(1, Math.ceil(session.currentPrice * balance.auction.minRaiseRate));
   document.querySelectorAll('[data-relic-raise]').forEach((button) => { button.disabled = state.cash < Math.max(minimumBid, Math.ceil(session.currentPrice * Number(button.dataset.relicRaise))); });
