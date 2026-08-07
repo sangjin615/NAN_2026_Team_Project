@@ -5,6 +5,7 @@
   "scripts": {
     "start": "node dev-server.js",
     "start:generation": "node generation-server.js",
+    "start:router": "node tools/serve-generation-router.mjs",
     "build:standalone": "node tools/build-standalone.mjs",
     "test": "node --test test/*.test.js",
     "audit": "node tools/audit-runtime.mjs && node tools/audit-generation.mjs",

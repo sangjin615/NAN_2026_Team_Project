@@ -308,6 +308,39 @@ node tools/measure-generation-router.mjs --single
 선택지가 있다. 대신 웨이브 간 "이미 쓴 설명" 전달이 사라져 중복 위험이 커진다
 — 중복은 `dailyRepairIndices` 가 전체 복구로 잡는다.
 
+## 게임에 붙여 돌리는 법
+
+`tools/serve-generation-router.mjs` 가 라우터 핸들러를 로컬 HTTP 로 세운다.
+`generation-server.js` 와 **같은 자리**(`127.0.0.1:8787/generate`)라
+`data/api-config.json` 을 고칠 필요가 없다. 대신 둘 중 하나만 띄운다.
+
+```
+# 8787 을 쓰고 있으면 먼저 로컬 생성 서버를 내린다
+cd Runtime
+$env:LIVE_GENERATION_ENABLED="true"; $env:OPENAI_API_KEY="키"
+npm run start:router
+
+# 다른 터미널에서 (4173 은 team-loop 이 쓴다)
+$env:PORT="4199"; npm start
+# http://localhost:4199/Runtime/index.html
+```
+
+서버가 요청마다 한 줄씩 찍는다. 어느 공급자가 왜 떨어졌는지도 접어서 나온다.
+
+```
+run-blueprint  200 · 14.6초 · openai:gpt-4o-mini
+day 1          200 · 23.1초 · openai:gpt-5.6-luna
+     8회  openai:gpt-4o-mini · generation_daily_lot_retry · copy quality: ...
+```
+
+**측정 도구로는 안 보이는 것이 여기서 보인다.** 2026-08-07 배선 확인에서
+`run-blueprint` → `day 1` 뒤에 허브로 들어가자마자 `day 2` · `day 3` 이
+따라 나갔다. `GenerationBuffer.ensure` 의 선행 생성이다. 즉 **새 게임 한 번에
+일자 요청이 3건 더 붙는다** — rate limit 을 볼 때 이것까지 세어야 한다.
+
+키 없이 띄우면 전부 `static` 으로 답한다. 그것만으로도 게임의 요청이
+`validateInput` 을 통과하는지는 확인된다.
+
 ## 옮긴 뒤 확인하는 법
 
 라우터는 응답 헤더에 출처를 찍는다.
