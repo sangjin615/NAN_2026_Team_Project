@@ -133,7 +133,18 @@ export function deterministicFallback(request) {
 function providersFromEnv(env, request) {
   if (env.LIVE_GENERATION_ENABLED !== 'true') return [];
   return [
-    request.mode === 'daily-content' && env.GROQ_API_KEY && { name: 'groq', model: env.PRIMARY_MODEL || 'openai/gpt-oss-120b', apiKey: env.GROQ_API_KEY, timeoutMs: 7000, call: callGroq },
+    // groq 는 기본적으로 빠진다. 2026-08-07 실측에서 `gpt-oss-120b` 와
+    // `qwen3.6-27b` 가 **같은 조직 TPM 한도**에 걸렸다(429). 모델을 바꿔서
+    // 우회되는 문제가 아니다 — 쪼갠 요청이 호출마다 계약서 전문을 다시 실어
+    // 입력 토큰이 불어나는 구조가 원인이다. 일자 1건에 최대 17회 호출이다.
+    //
+    // 켜져 있던 동안 실제로 나온 것: 8 LOT 중 6개가 429 로 죽고 그 자리를 대체
+    // 문구가 메웠는데, 응답은 200 이고 계약 검증을 통과하고 헤더에는 groq 가
+    // 찍혔다. 빠른 것이 아니라 대부분을 포기한 것이었다.
+    //
+    // 요금제를 올리거나 DAILY_WAVE 를 낮춰 다시 붙일 수 있도록 경로는 남긴다.
+    // GROQ_API_KEY 만으로는 붙지 않는다. GROQ_DAILY_ENABLED=true 가 함께 필요하다.
+    env.GROQ_DAILY_ENABLED === 'true' && request.mode === 'daily-content' && env.GROQ_API_KEY && { name: 'groq', model: env.PRIMARY_MODEL || 'openai/gpt-oss-120b', apiKey: env.GROQ_API_KEY, timeoutMs: 7000, call: callGroq },
     env.OPENAI_API_KEY && { name: 'openai', model: env.SECONDARY_MODEL || 'gpt-4o-mini', apiKey: env.OPENAI_API_KEY, timeoutMs: 7000, call: callOpenAI },
     env.OPENAI_API_KEY && { name: 'openai', model: env.FALLBACK_MODEL || 'gpt-5.6-luna', apiKey: env.OPENAI_API_KEY, timeoutMs: 9000, call: callOpenAI },
   ].filter(Boolean);

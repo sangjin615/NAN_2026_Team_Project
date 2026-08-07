@@ -56,7 +56,7 @@ test('uses Groq first and stops after a valid result', async () => {
     const body = JSON.parse(options.body); models.push(body.model);
     return jsonResponse(groqPayload(dailyPartFromBody(body)));
   };
-  const response = await createHandler({ env: { LIVE_GENERATION_ENABLED: 'true', GROQ_API_KEY: 'test', OPENAI_API_KEY: 'test' }, fetchImpl, logger: {} })(event(dailyRequest));
+  const response = await createHandler({ env: { LIVE_GENERATION_ENABLED: 'true', GROQ_DAILY_ENABLED: 'true', GROQ_API_KEY: 'test', OPENAI_API_KEY: 'test' }, fetchImpl, logger: {} })(event(dailyRequest));
   assert.equal(response.statusCode, 200);
   assert.equal(response.headers['x-generation-source'], 'groq:openai/gpt-oss-120b');
   // 프레임 1회 + LOT 8회. 하나라도 다른 모델이 섞이면 폴스루가 일어난 것이다.
@@ -71,7 +71,7 @@ test('falls through Groq to gpt-4o-mini, then stops', async () => {
     if (url.includes('groq.com')) return jsonResponse({ error: { message: 'rate limited' } }, 429);
     return jsonResponse(openAiPayload(dailyPartFromBody(body)));
   };
-  const response = await createHandler({ env: { LIVE_GENERATION_ENABLED: 'true', GROQ_API_KEY: 'test', OPENAI_API_KEY: 'test' }, fetchImpl, logger: {} })(event(dailyRequest));
+  const response = await createHandler({ env: { LIVE_GENERATION_ENABLED: 'true', GROQ_DAILY_ENABLED: 'true', GROQ_API_KEY: 'test', OPENAI_API_KEY: 'test' }, fetchImpl, logger: {} })(event(dailyRequest));
   assert.equal(response.headers['x-generation-source'], 'openai:gpt-4o-mini');
   // groq 는 조각마다 429 를 받아 전부 떨어지고, 그제서야 다음 공급자로 넘어간다.
   assert.deepEqual([...new Set(models)], ['openai/gpt-oss-120b', 'gpt-4o-mini']);
@@ -87,7 +87,7 @@ test('uses Luna after two invalid candidates', async () => {
     }
     return jsonResponse(openAiPayload(dailyPartFromBody(body)));
   };
-  const response = await createHandler({ env: { LIVE_GENERATION_ENABLED: 'true', GROQ_API_KEY: 'test', OPENAI_API_KEY: 'test' }, fetchImpl, logger: {} })(event(dailyRequest));
+  const response = await createHandler({ env: { LIVE_GENERATION_ENABLED: 'true', GROQ_DAILY_ENABLED: 'true', GROQ_API_KEY: 'test', OPENAI_API_KEY: 'test' }, fetchImpl, logger: {} })(event(dailyRequest));
   assert.equal(response.headers['x-generation-source'], 'openai:gpt-5.6-luna');
   assert.deepEqual([...new Set(models)], ['openai/gpt-oss-120b', 'gpt-4o-mini', 'gpt-5.6-luna']);
 });
@@ -112,7 +112,7 @@ test('a lot that keeps failing falls back alone and the rest of the day survives
 
 test('returns validated static content when every provider fails', async () => {
   const fetchImpl = async () => { throw new Error('offline'); };
-  const response = await createHandler({ env: { LIVE_GENERATION_ENABLED: 'true', GROQ_API_KEY: 'test', OPENAI_API_KEY: 'test' }, fetchImpl, logger: {} })(event(dailyRequest));
+  const response = await createHandler({ env: { LIVE_GENERATION_ENABLED: 'true', GROQ_DAILY_ENABLED: 'true', GROQ_API_KEY: 'test', OPENAI_API_KEY: 'test' }, fetchImpl, logger: {} })(event(dailyRequest));
   assert.equal(response.statusCode, 200);
   assert.equal(response.headers['x-generation-source'], 'static');
   validateOutput(dailyRequest, JSON.parse(response.body));
@@ -132,13 +132,27 @@ test('keeps live providers disabled until explicitly enabled', async () => {
   assert.equal(called, false);
 });
 
+test('leaves Groq out of daily generation unless it is explicitly enabled', async () => {
+  // 키가 있어도 붙지 않는다. 2026-08-07 실측에서 gpt-oss-120b 와 qwen3.6-27b 가
+  // 같은 조직 TPM 한도에 걸렸고, 8 LOT 중 6개가 대체 문구로 채워진 응답에 groq
+  // 헤더가 찍혔다. 요금제나 웨이브 크기를 손보기 전에는 켜지 않는다.
+  const models = [];
+  const fetchImpl = async (url, options) => {
+    const body = JSON.parse(options.body); models.push(body.model);
+    return jsonResponse(openAiPayload(dailyPartFromBody(body)));
+  };
+  const response = await createHandler({ env: { LIVE_GENERATION_ENABLED: 'true', GROQ_API_KEY: 'test', OPENAI_API_KEY: 'test' }, fetchImpl, logger: {} })(event(dailyRequest));
+  assert.equal(response.headers['x-generation-source'], 'openai:gpt-4o-mini');
+  assert.ok(models.every((model) => model === 'gpt-4o-mini'), JSON.stringify([...new Set(models)]));
+});
+
 test('skips Groq for the blueprint that exceeds its free TPM budget', async () => {
   const models = [];
   const fetchImpl = async (url, options) => {
     const body = JSON.parse(options.body); models.push(body.model);
     return jsonResponse(openAiPayload(blueprintPartFromBody(body)));
   };
-  const response = await createHandler({ env: { LIVE_GENERATION_ENABLED: 'true', GROQ_API_KEY: 'test', OPENAI_API_KEY: 'test' }, fetchImpl, logger: {} })(event(blueprintRequest));
+  const response = await createHandler({ env: { LIVE_GENERATION_ENABLED: 'true', GROQ_DAILY_ENABLED: 'true', GROQ_API_KEY: 'test', OPENAI_API_KEY: 'test' }, fetchImpl, logger: {} })(event(blueprintRequest));
   assert.equal(response.headers['x-generation-source'], 'openai:gpt-4o-mini');
   assert.equal(models.length, 13);
   assert.ok(models.every((model) => model === 'gpt-4o-mini'));
@@ -180,7 +194,7 @@ test('repairs only the lots that break a whole-day rule', async () => {
     }
     return jsonResponse(groqPayload(dailyPartFromBody(body)));
   };
-  const response = await createHandler({ env: { LIVE_GENERATION_ENABLED: 'true', GROQ_API_KEY: 'test' }, fetchImpl, logger: {} })(event(dailyRequest));
+  const response = await createHandler({ env: { LIVE_GENERATION_ENABLED: 'true', GROQ_DAILY_ENABLED: 'true', GROQ_API_KEY: 'test' }, fetchImpl, logger: {} })(event(dailyRequest));
   assert.equal(response.headers['x-generation-source'], 'groq:openai/gpt-oss-120b');
   assert.ok(requestedRepairs.length > 0 && requestedRepairs.length < dailyRequest.lots.length, JSON.stringify(requestedRepairs));
   validateOutput(dailyRequest, JSON.parse(response.body));

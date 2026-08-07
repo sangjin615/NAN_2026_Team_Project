@@ -61,10 +61,15 @@ for (const key of ['OPENAI_API_KEY', 'GROQ_API_KEY']) {
   console.log(`${key}: ${env[key] ? '설정됨' : '없음'}`);
 }
 console.log(`LIVE_GENERATION_ENABLED: ${env.LIVE_GENERATION_ENABLED === 'true' ? 'true' : String(env.LIVE_GENERATION_ENABLED)}`);
+// groq 는 기본적으로 일자 생성에서 빠진다. 키가 있어도 안 붙으므로 여기서
+// 상태를 드러내지 않으면 "키를 넣었는데 왜 안 잡히나"를 또 겪게 된다.
+console.log(`GROQ_DAILY_ENABLED: ${env.GROQ_DAILY_ENABLED === 'true'
+  ? 'true — groq 를 1순위로 붙인다'
+  : `${String(env.GROQ_DAILY_ENABLED)} — groq 는 빠진다 (조직 TPM 한도)`}`);
 // 모델은 환경변수로만 정해진다. 안 주면 라우터의 기본값이 조용히 쓰인다.
 // 무엇으로 불렸는지 여기 찍지 않으면 "내가 바꾼 게 먹었나"를 확인할 길이 없다.
 for (const [key, fallback, note] of [
-  ['PRIMARY_MODEL', 'openai/gpt-oss-120b', 'groq · 일자 생성만'],
+  ['PRIMARY_MODEL', 'openai/gpt-oss-120b', 'groq · GROQ_DAILY_ENABLED 일 때만'],
   ['SECONDARY_MODEL', 'gpt-4o-mini', 'openai'],
   ['FALLBACK_MODEL', 'gpt-5.6-luna', 'openai'],
 ]) {
