@@ -1059,10 +1059,6 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
   background: transparent url("./assets/ui/skin-v1/panel-dark.png") center / 100% 100% no-repeat !important;
   color: #f6dfad; filter: drop-shadow(0 7px 8px #0009);
 }
-[data-scene="catalog"] #catalog-quests::before {
-  content: ""; position: absolute; left: -19%; top: 12%; width: 22%; height: 76%;
-  background: #7d521f; border: 1px solid #d3a14a; box-shadow: 0 3px 5px #0008;
-}
 [data-scene="catalog"] #catalog-quests img { width: 72%; height: 72%; object-fit: contain; filter: drop-shadow(0 3px 3px #0008); }
 [data-scene="catalog"] #catalog-quests span { font-size: clamp(13px,1.12vw,18px); font-weight: 900; }
 [data-scene="catalog"] #catalog-quest-count {
