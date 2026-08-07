@@ -521,8 +521,8 @@ function renderExchange(message = '') {
 
 function renderTavern(message = '') {
   clearActionTimer(); audio.playBgm('tavern'); state.phase = 'tavern'; adapter.showScene('tavern'); syncHeader();
-  const names = { forecast: '내일의 시세', catalog: '다음 날 경매품 정보', competitors: '경쟁자의 관심 경매품' };
-  const descriptions = { forecast: '여행 상인이 오늘과 비교한 내일의 계열별 시세 변동을 알려줍니다. 상회 단계에 따라 2개, 4개, 6개 계열이 공개됩니다.', catalog: '상회 단계에 따라 다음 날 경매품의 이름, 계열, 등급을 순차적으로 공개합니다.', competitors: '상회 단계에 따라 경쟁자 1명부터 최대 3명까지 관심 경매품을 공개합니다.' };
+  const names = { forecast: '내일의 시세', catalog: '다음 날 경매품 정보', competitors: '오늘 경쟁자가 원하는 물품' };
+  const descriptions = { forecast: '여행 상인이 오늘과 비교한 내일의 계열별 시세 변동을 알려줍니다. 상회 단계에 따라 2개, 4개, 6개 계열이 공개됩니다.', catalog: '상회 단계에 따라 다음 날 경매품의 이름, 계열, 등급을 순차적으로 공개합니다.', competitors: '바텐더가 당일 경매 참가자들을 살펴 경쟁자 1명부터 최대 3명까지 원하는 물품을 알려줍니다.' };
   const icons = { forecast: './assets/ui/tavern/demand-trend.png', catalog: './assets/ui/tavern/lot-specification.png', competitors: './assets/ui/tavern/competitor-budget.png' };
   document.querySelectorAll('[data-broker]').forEach((broker) => {
     const kind = broker.dataset.broker;
@@ -539,7 +539,7 @@ function renderTavern(message = '') {
     const stage = Math.max(1, Math.min(3, state.shopStage));
     const nextDayIndex = state.day;
     const nextLots = state.schedule.days[nextDayIndex]?.lots || [];
-    if (!nextLots.length) return '<p>마지막 날에는 다음 날 경매 정보가 없습니다.</p>';
+    if (!nextLots.length && kind !== 'competitors') return '<p>마지막 날에는 다음 날 경매 정보가 없습니다.</p>';
     if (kind === 'forecast') {
       const categoryOrder = ['CER', 'CLK', 'PNT', 'BOK', 'MET', 'JEW'];
       const visible = categoryOrder.slice(0, stage * 2);
@@ -558,9 +558,12 @@ function renderTavern(message = '') {
     if (kind === 'catalog') {
       return `<p><b>${nextDayIndex + 1}일차 경매품</b></p><ul>${nextLots.map((lot) => `<li><b>${escapeHtml(lot.content?.displayName || lot.baseName)}</b>${stage >= 2 ? ` · ${categoryNames[lot.category]}` : ''}${stage >= 3 ? ` · ${gradeLabel(lot.grade)}` : ''}</li>`).join('')}</ul>`;
     }
-    const estimates = nextLots.flatMap((lot) => botBidForLot({ lot, day: state.day + 1, balance, marketIndex: state.marketPath[lot.category][nextDayIndex], seed: state.seed }).map((bot) => ({ ...bot, lot })));
+    const currentDayIndex = Math.max(0, state.day - 1);
+    const currentLots = state.schedule.days[currentDayIndex]?.lots || [];
+    if (!currentLots.length) return '<p>오늘 확인할 경매품이 없습니다.</p>';
+    const estimates = currentLots.flatMap((lot) => botBidForLot({ lot, day: state.day, balance, marketIndex: state.marketPath[lot.category][currentDayIndex], seed: state.seed }).map((bot) => ({ ...bot, lot })));
     const interests = selectDistinctBotInterests(estimates);
-    return `<p><b>${stage}명 공개</b></p><ul>${interests.slice(0, stage).map(({ name, interest }) => `<li><b>${name}</b> · ${escapeHtml(interest.lot.content?.displayName || interest.lot.baseName)}</li>`).join('')}</ul>`;
+    return `<p><b>오늘의 관심 물품 · ${stage}명 공개</b></p><ul>${interests.slice(0, stage).map(({ name, interest }) => `<li><b>${name}</b> · ${escapeHtml(interest.lot.content?.displayName || interest.lot.baseName)}</li>`).join('')}</ul>`;
   };
   document.querySelector('#tavern-detail').innerHTML = `<h3>정보 상세</h3><div class="detail-heading"><img class="detail-symbol" src="${icons[selected]}" alt=""><div><h2>${names[selected]}</h2><small>상회 ${state.shopStage}단계 공개 정보</small></div></div><p>${descriptions[selected]}</p><section class="info-result tavern-live-result info-${selected}">${informationResult(selected)}</section>`;
   const effectiveStage = Math.max(1, Math.min(3, state.shopStage));

@@ -199,6 +199,14 @@ test('competitor information selects a different preferred lot for each competit
   assert.deepEqual(interests.map(({ interest }) => interest.lot.lotId), ['lot-a', 'lot-b', 'lot-c']);
 });
 
+test('bartender competitor information uses the current day auction lots', async () => {
+  const app = await readFile(new URL('../src/app.js', import.meta.url), 'utf8');
+  assert.match(app, /competitors: '오늘 경쟁자가 원하는 물품'/);
+  assert.match(app, /const currentDayIndex = Math\.max\(0, state\.day - 1\);/);
+  assert.match(app, /currentLots\.flatMap\(\(lot\) => botBidForLot\(\{ lot, day: state\.day,/);
+  assert.doesNotMatch(app, /nextLots\.flatMap\(\(lot\) => botBidForLot\(\{ lot, day: state\.day \+ 1,/);
+});
+
 test('repairs the first-day auction cursor after generated lot content changes', () => {
   const schedule = createRunSchedule({ catalog, balance, seed: 'auction-entry-repair' });
   const state = createInitialState({ schedule, sets: createSetGraph(schedule, 'auction-entry-repair'), balance });
