@@ -68,7 +68,8 @@
       { "selector": "#next-day", "vslActionId": "action-day-next" }
     ], "dataBindings": [{ "selector": "#settlement-summary", "vslDataPath": "run.dailySettlement" }] },
     { "runtimeSceneId": "relic", "vslSceneId": "scene-final-auction", "actions": [
-      { "selector": "#buy-relic", "vslActionId": "action-relic-bid" },
+      { "selector": "[data-relic-raise]", "vslActionId": "action-relic-bid" },
+      { "selector": "#direct-relic-bid", "vslActionId": "action-relic-bid" },
       { "selector": "#skip-relic", "vslActionId": "action-relic-pass" }
     ], "dataBindings": [{ "selector": "#relic-card", "vslDataPath": "relic.currentRound" }] },
     { "runtimeSceneId": "result", "vslSceneId": "scene-result", "actions": [
