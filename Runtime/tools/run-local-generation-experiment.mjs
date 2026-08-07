@@ -1,18 +1,41 @@
+// 로컬 모델로 생성 계약을 시험한다.
+//
+//   node tools/run-local-generation-experiment.mjs [model] [seed]
+//
+// 이 도구는 실험 기록만 남긴다. 정식 fixture(run-start-output.json,
+// day-1-output.json)는 건드리지 않는다. 통과한 쌍을 정식으로 올리는 것은
+// 별도 명령이다.
+//
+//   npm run experiment:promote
+//
+// 예전에는 이 파일이 request 를 제자리에 덮어쓰면서 output 은 -latest 로만
+// 써서, 실험을 돌릴 때마다 request 만 전진하고 output 은 멈춰 있었다. 짝이
+// 깨진 fixture 로 검증이 실패하는 것이 정상 동작이 되어 있었다.
+//
+// 계약과 검증기는 저장소 것을 쓴다. 사용자 홈의 스킬 자산을 운영 계약으로
+// 쓰면 다른 PC 나 제출 환경에서 재현되지 않는다.
 import { readFile, writeFile } from 'node:fs/promises';
 import { spawnSync } from 'node:child_process';
-import { resolve } from 'node:path';
-import { fileURLToPath, pathToFileURL } from 'node:url';
+import { fileURLToPath } from 'node:url';
+import { validateOutput } from '../generation-server.js';
 
 const model = process.argv[2] || 'qwen3:14b';
-const seed = process.argv[3] || `local-${Date.now()}`;
+const seed = process.argv[3];
+if (!seed) {
+  console.error('usage: run-local-generation-experiment.mjs [model] <seed>');
+  console.error('seed 를 생략하면 request 가 매번 달라져 결과를 비교할 수 없다.');
+  process.exit(2);
+}
 const runtimeRoot = new URL('../', import.meta.url);
 const reportRoot = new URL('./reports/local-model-experiment/', runtimeRoot);
-const validator = pathToFileURL(resolve(process.env.USERPROFILE, '.codex/skills/generate-auction-content/scripts/validate-output.mjs'));
-const contract = await readFile(resolve(process.env.USERPROFILE, '.codex/skills/generate-auction-content/assets/compact-contract.txt'), 'utf8');
+const contract = await readFile(new URL('./contracts/compact-generation-contract.txt', runtimeRoot), 'utf8');
 
 const prepared = spawnSync(process.execPath, [fileURLToPath(new URL('./tools/prepare-local-generation-experiment.js', runtimeRoot)), seed], { stdio: 'inherit' });
 if (prepared.status !== 0) process.exit(prepared.status || 1);
 
+// Ollama 의 제한 디코딩에 넘길 스키마. 계약서의 RUN/DAY 형태와 같아야 한다.
+// 합격 여부를 정하는 것은 아래 validateOutput 이지 이 스키마가 아니다 —
+// 여기에 계약에 없는 필드를 넣으면 모델이 그걸 만들어내고 검증에서 떨어진다.
 const text = { type: 'string', minLength: 1 };
 const fixedObject = (properties) => ({ type: 'object', properties, required: Object.keys(properties), additionalProperties: false });
 function outputSchema(request) {
@@ -23,17 +46,10 @@ function outputSchema(request) {
       setId: { const: setId }, title: text, sharedSecret: text, revealHint: text,
       incidentTitle: text, incidentSummary: text, newspaperLead: text,
     })), minItems: request.sets.length, maxItems: request.sets.length },
-    castVoices: { type: 'array', prefixItems: request.bots.map(({ botId }) => fixedObject({ botId: { const: botId }, speechStyle: text, intro: text })), minItems: request.bots.length, maxItems: request.bots.length },
-    relicLore: { type: 'array', prefixItems: request.relics.map(({ relicId }) => fixedObject({ relicId: { const: relicId }, displayName: text, lore: text })), minItems: request.relics.length, maxItems: request.relics.length },
-    endingFrames: fixedObject({ success: text, failure: text, bankruptcy: text }),
   });
   return fixedObject({
     schemaVersion: { const: '1.0' }, day: { const: request.day }, marketHeadline: text,
     lots: { type: 'array', prefixItems: request.lots.map(({ lotId }) => fixedObject({ lotId: { const: lotId }, displayName: text, description: text, rumor: text, setHint: text, npcReaction: text })), minItems: request.lots.length, maxItems: request.lots.length },
-    questCopy: { type: 'array', prefixItems: request.questOffers.map(({ questId }) => fixedObject({ questId: { const: questId }, title: text, flavor: text })), minItems: request.questOffers.length, maxItems: request.questOffers.length },
-    appraisalCopy: fixedObject({ intro: text, success: text, warning: text }),
-    auctionCopy: fixedObject({ opening: text, outbid: text, win: text, lose: text }),
-    settlementCopy: fixedObject({ summary: text }),
   });
 }
 
@@ -54,11 +70,12 @@ async function generate(requestName, outputName, extraContext = '') {
     let output;
     try { output = JSON.parse(raw.response); } catch { output = { invalidJson: raw.response }; }
     const artifact = { model, seed, attempt, temperature: attempt === 1 ? 0.3 : 0.1, latencyMs: Date.now() - startedAt, output };
-    const attemptUrl = new URL(`${outputName.replace('.json', '')}.${seed}.attempt-${attempt}.json`, reportRoot);
-    await writeFile(attemptUrl, JSON.stringify(artifact, null, 2));
-    const checked = spawnSync(process.execPath, [fileURLToPath(validator), fileURLToPath(requestUrl), fileURLToPath(attemptUrl)], { encoding: 'utf8' });
-    process.stdout.write(`${outputName} attempt ${attempt}: ${checked.stdout}`);
-    if (checked.status === 0) {
+    // 실패한 시도도 보존한다. 무엇이 왜 떨어졌는지가 다음 계약 수정의 근거다.
+    await writeFile(new URL(`${outputName.replace('.json', '')}.${seed}.attempt-${attempt}.json`, reportRoot), JSON.stringify(artifact, null, 2));
+    let failure = '';
+    try { validateOutput(requestObject, output); } catch (error) { failure = error.message; }
+    console.log(`${outputName} attempt ${attempt}: ${failure ? `invalid — ${failure}` : 'valid'}`);
+    if (!failure) {
       await writeFile(new URL(outputName, reportRoot), JSON.stringify(artifact, null, 2));
       return artifact;
     }
@@ -77,3 +94,4 @@ if (!daily) {
   process.exit(1);
 }
 console.log(JSON.stringify({ valid: true, model, seed, blueprintLatencyMs: blueprint.latencyMs, dailyLatencyMs: daily.latencyMs }));
+console.log('정식 fixture 로 올리려면: npm run experiment:promote');
