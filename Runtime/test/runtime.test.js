@@ -49,8 +49,10 @@ test('auction participant portraits include the player and all relic rivals', as
 
 test('successful result uses the full ending scene instead of the clear icon', async () => {
   const appSource = await readFile(new URL('../src/app.js', import.meta.url), 'utf8');
+  const cssSource = await readFile(new URL('../runtime-fixes.css', import.meta.url), 'utf8');
   assert.match(appSource, /ending-success-scene\.png/);
   assert.doesNotMatch(appSource, /action-icons\/clear\.png/);
+  assert.match(cssSource, /ending-success-background\.png/);
 });
 
 test('creates a reproducible 12 day, 96 lot schedule from the 60 base items', () => {
