@@ -847,8 +847,10 @@ function renderResult() {
   document.querySelector('#result-title').textContent = state.failure ? '여정 실패' : `${JOURNEY_DAYS}일 여정 완료`;
   const wonCount = state.history.filter((entry) => entry.won).length;
   const acquiredRelics = (state.relicChoices || []).map((id) => balance.relics.list.find((entry) => entry.id === id)?.name || id);
-  const resultIcon = state.failure ? 'restart.png' : 'clear.png';
-  document.querySelector('#run-summary').innerHTML = `<section class="result-ending"><small class="result-kicker">JOURNEY RESULT · ${state.day}일</small><img class="result-status-icon" src="./assets/ui/action-icons/${resultIcon}" alt=""><h3>${state.failure ? '여정 실패' : `상회 ${state.shopStage}단계 달성`}</h3>${state.failure ? `<p class="failure">${state.failure}</p>` : '<p>신중한 거래와 꾸준한 성장으로 여정을 마쳤습니다.</p>'}<strong>${state.failure ? '마감 조건을 다시 확인하세요.' : '완주 성공'}</strong></section><section class="result-stats"><h3>여정 요약</h3><p><span>완주 일수</span><b>${state.day}일</b></p><p><span>최종 상회 단계</span><b>${state.shopStage}단계</b></p><p><span>최종 자산</span><b>${money(state.cash + unsold)}</b></p><p><span>낙찰 / 완료 의뢰</span><b>${wonCount}건 / ${state.completedQuestCount}건</b></p><p><span>획득 유물</span><b>${acquiredRelics.join(', ') || '없음'}</b></p></section>`;
+  const resultVisual = state.failure
+    ? '<img class="result-status-icon" src="./assets/ui/action-icons/restart.png" alt="">'
+    : '<img class="result-scene-art" src="./assets/ui/ending/ending-success-scene.png" alt="성장한 상회와 항구를 바라보는 상회 주인">';
+  document.querySelector('#run-summary').innerHTML = `<section class="result-ending"><small class="result-kicker">JOURNEY RESULT · ${state.day}일</small>${resultVisual}<h3>${state.failure ? '여정 실패' : `상회 ${state.shopStage}단계 달성`}</h3>${state.failure ? `<p class="failure">${state.failure}</p>` : '<p>신중한 거래와 꾸준한 성장으로 여정을 마쳤습니다.</p>'}<strong>${state.failure ? '마감 조건을 다시 확인하세요.' : '완주 성공'}</strong></section><section class="result-stats"><h3>여정 요약</h3><p><span>완주 일수</span><b>${state.day}일</b></p><p><span>최종 상회 단계</span><b>${state.shopStage}단계</b></p><p><span>최종 자산</span><b>${money(state.cash + unsold)}</b></p><p><span>낙찰 / 완료 의뢰</span><b>${wonCount}건 / ${state.completedQuestCount}건</b></p><p><span>획득 유물</span><b>${acquiredRelics.join(', ') || '없음'}</b></p></section>`;
   if (state.failure) save();
   else store.clear(state.saveSlot);
 }

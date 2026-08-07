@@ -3350,12 +3350,15 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
 [data-scene="result"] > h2 { display: none; }
 [data-scene="result"]:not(.is-failure) #run-summary {
   left: 29%; top: 3%; width: 42%; height: 94%;
-  grid-template-rows: 41% 46%; align-content: start; padding: 13.5% 8% 12%;
+  grid-template-rows: 53% 34%; align-content: start; padding: 13.5% 8% 12%;
 }
 [data-scene="result"]:not(.is-failure) #run-summary > section { padding: 2% 6%; }
 [data-scene="result"] .result-kicker { color: #896431; font-size: clamp(8px,.68vw,11px); font-weight: 900; letter-spacing: .12em; }
-[data-scene="result"]:not(.is-failure) .result-ending { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2%; }
-[data-scene="result"]:not(.is-failure) .result-status-icon { width: clamp(48px,4.7vw,76px); height: clamp(48px,4.7vw,76px); margin: 1% auto; }
+[data-scene="result"]:not(.is-failure) .result-ending { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1.5%; }
+[data-scene="result"]:not(.is-failure) .result-scene-art {
+  width: 100%; aspect-ratio: 16 / 9; min-height: 0; margin: 1% auto; object-fit: cover; object-position: center;
+  border: 2px solid #9f825b; box-sizing: border-box; box-shadow: inset 0 0 0 1px #f4e4c8,0 4px 10px #5b422b55;
+}
 [data-scene="result"]:not(.is-failure) .result-ending h3 { margin: 0; font-size: clamp(20px,1.85vw,30px); text-align: center; }
 [data-scene="result"]:not(.is-failure) .result-ending p { margin: 1% 0; font-size: clamp(9px,.78vw,13px); text-align: center; }
 [data-scene="result"]:not(.is-failure) .result-ending strong { margin: 1% 0 0; font-size: clamp(16px,1.45vw,23px); }
@@ -5335,8 +5338,8 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
     document.querySelector("#result-title").textContent = state.failure ? "\uC5EC\uC815 \uC2E4\uD328" : `${JOURNEY_DAYS}\uC77C \uC5EC\uC815 \uC644\uB8CC`;
     const wonCount = state.history.filter((entry) => entry.won).length;
     const acquiredRelics = (state.relicChoices || []).map((id) => balance.relics.list.find((entry) => entry.id === id)?.name || id);
-    const resultIcon = state.failure ? "restart.png" : "clear.png";
-    document.querySelector("#run-summary").innerHTML = `<section class="result-ending"><small class="result-kicker">JOURNEY RESULT \xB7 ${state.day}\uC77C</small><img class="result-status-icon" src="./assets/ui/action-icons/${resultIcon}" alt=""><h3>${state.failure ? "\uC5EC\uC815 \uC2E4\uD328" : `\uC0C1\uD68C ${state.shopStage}\uB2E8\uACC4 \uB2EC\uC131`}</h3>${state.failure ? `<p class="failure">${state.failure}</p>` : "<p>\uC2E0\uC911\uD55C \uAC70\uB798\uC640 \uAFB8\uC900\uD55C \uC131\uC7A5\uC73C\uB85C \uC5EC\uC815\uC744 \uB9C8\uCCE4\uC2B5\uB2C8\uB2E4.</p>"}<strong>${state.failure ? "\uB9C8\uAC10 \uC870\uAC74\uC744 \uB2E4\uC2DC \uD655\uC778\uD558\uC138\uC694." : "\uC644\uC8FC \uC131\uACF5"}</strong></section><section class="result-stats"><h3>\uC5EC\uC815 \uC694\uC57D</h3><p><span>\uC644\uC8FC \uC77C\uC218</span><b>${state.day}\uC77C</b></p><p><span>\uCD5C\uC885 \uC0C1\uD68C \uB2E8\uACC4</span><b>${state.shopStage}\uB2E8\uACC4</b></p><p><span>\uCD5C\uC885 \uC790\uC0B0</span><b>${money(state.cash + unsold)}</b></p><p><span>\uB099\uCC30 / \uC644\uB8CC \uC758\uB8B0</span><b>${wonCount}\uAC74 / ${state.completedQuestCount}\uAC74</b></p><p><span>\uD68D\uB4DD \uC720\uBB3C</span><b>${acquiredRelics.join(", ") || "\uC5C6\uC74C"}</b></p></section>`;
+    const resultVisual = state.failure ? '<img class="result-status-icon" src="./assets/ui/action-icons/restart.png" alt="">' : '<img class="result-scene-art" src="./assets/ui/ending/ending-success-scene.png" alt="\uC131\uC7A5\uD55C \uC0C1\uD68C\uC640 \uD56D\uAD6C\uB97C \uBC14\uB77C\uBCF4\uB294 \uC0C1\uD68C \uC8FC\uC778">';
+    document.querySelector("#run-summary").innerHTML = `<section class="result-ending"><small class="result-kicker">JOURNEY RESULT \xB7 ${state.day}\uC77C</small>${resultVisual}<h3>${state.failure ? "\uC5EC\uC815 \uC2E4\uD328" : `\uC0C1\uD68C ${state.shopStage}\uB2E8\uACC4 \uB2EC\uC131`}</h3>${state.failure ? `<p class="failure">${state.failure}</p>` : "<p>\uC2E0\uC911\uD55C \uAC70\uB798\uC640 \uAFB8\uC900\uD55C \uC131\uC7A5\uC73C\uB85C \uC5EC\uC815\uC744 \uB9C8\uCCE4\uC2B5\uB2C8\uB2E4.</p>"}<strong>${state.failure ? "\uB9C8\uAC10 \uC870\uAC74\uC744 \uB2E4\uC2DC \uD655\uC778\uD558\uC138\uC694." : "\uC644\uC8FC \uC131\uACF5"}</strong></section><section class="result-stats"><h3>\uC5EC\uC815 \uC694\uC57D</h3><p><span>\uC644\uC8FC \uC77C\uC218</span><b>${state.day}\uC77C</b></p><p><span>\uCD5C\uC885 \uC0C1\uD68C \uB2E8\uACC4</span><b>${state.shopStage}\uB2E8\uACC4</b></p><p><span>\uCD5C\uC885 \uC790\uC0B0</span><b>${money(state.cash + unsold)}</b></p><p><span>\uB099\uCC30 / \uC644\uB8CC \uC758\uB8B0</span><b>${wonCount}\uAC74 / ${state.completedQuestCount}\uAC74</b></p><p><span>\uD68D\uB4DD \uC720\uBB3C</span><b>${acquiredRelics.join(", ") || "\uC5C6\uC74C"}</b></p></section>`;
     if (state.failure) save();
     else store.clear(state.saveSlot);
   }
