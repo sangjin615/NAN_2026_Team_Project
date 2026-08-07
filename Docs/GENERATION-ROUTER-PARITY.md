@@ -638,6 +638,48 @@ generation_candidate_failed  TimeoutError                                       
 
 이제 8판 모두 `openai:gpt-5.6-luna` 로 생성되고 전부 게이트웨이 30초 안이다.
 
+## 배포하는 법
+
+AWS CLI 가 설치·설정돼 있다(`nan-lambda-cli`, us-east-1). 함수는
+`nhn-generation-api` 다.
+
+```bash
+cd Runtime
+npm run build:lambda
+Compress-Archive -Path "dist\generation-lambda\*" -DestinationPath "dist\generation-lambda.zip" -Force
+aws lambda update-function-code --region us-east-1 --function-name nhn-generation-api \
+  --zip-file "fileb://<절대경로>\dist\generation-lambda.zip"
+aws lambda wait function-updated --region us-east-1 --function-name nhn-generation-api
+```
+
+배포 뒤에는 8판씩 재서 문서의 표 옆에 붙인다. 측정에 키가 필요 없다 —
+엔드포인트가 열려 있기 때문이다(아래 "남은 결정" 참조).
+
+**되돌리려면 이전 커밋에서 다시 빌드해 올린다.** 함수 버전을 발행하지 않으므로
+`$LATEST` 만 있다. 롤백은 코드에서 온다.
+
+## 남은 결정 (2026-08-07 시점)
+
+**1. 엔드포인트에 인증이 없다.** 키도 토큰도 없이 부르면 생성이 된다. 그리고 그
+URL 은 `api-config.json` 을 통해 독립 실행본 HTML 에 박힌다. **게임을 배포본에
+붙이기 전에 정해야 한다.** `AGENTS.md` 가 적어둔 "`GenerationApiProvider.request()`
+에 인증 토큰 실을 자리가 없다"가 같은 문제다.
+
+**2. 게임은 아직 배포본을 안 본다.** `api-config.json` 이 `127.0.0.1:8787` 이다.
+1번을 정한 뒤에 바꾼다.
+
+**3. Lambda 환경변수에 잔재가 있다.** `PRIMARY_PROVIDER` 와 `FALLBACK_PROVIDER`
+는 현재 코드가 읽지 않는다. `SECONDARY_MODEL` 은 없어서 기본값
+`gpt-4o-mini` 가 쓰이고, `GROQ_DAILY_ENABLED` 가 없어서 groq 는 빠진다 — 둘 다
+의도한 동작이다.
+
+**4. groq 를 되살리려면 요금제를 올려야 한다.** 무료 TPM 8,000 으로는 불가능하다.
+올린 뒤에는 `GROQ_DAILY_ENABLED=true` 한 줄이면 붙는다.
+
+**5. 라우터는 부분 대체를 드러내지 않는다.** 측정 도구는 항목 단위로 세지만
+`x-generation-source` 헤더는 한 항목만 생성돼도 공급자 이름을 찍는다. 임계값을
+둘지는 게임 체감과 비용을 함께 봐야 하는 판단이다.
+
 ## 게임에 붙여 돌리는 법
 
 `tools/serve-generation-router.mjs` 가 라우터 핸들러를 로컬 HTTP 로 세운다.

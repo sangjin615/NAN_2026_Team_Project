@@ -61,15 +61,18 @@ Docs/GENERATION-*.md
 무작위화와 로딩 취소 버튼(`#skip-generation`)이 최근 들어갔다. 게임 로직 수정과
 겹치므로 최신 tip 에서 시작한다.
 
-## 상태 사실 (2026-08-07)
+## 상태 사실 (2026-08-07 저녁 갱신)
 
 - `codex/vsl-runtime-core` 가 통합 브랜치다. `codex/api-integration` 은 완전히
   포함됐고, `codex/aws-generation-router` 는 `cb0fa5f` 에서 갈라져 낡았다
-- 기준선: `cd Runtime && npm test` 55/55, `npm run audit` 오류 0
-- `api-config.json` 이 `enabled: true` 다. 생성 서버 없이 게임을 켜면 즉시
-  fallback 으로 간다. 막히지 않고 빠르다
-- 로컬 생성을 쓰려면 `npm run start:generation` 이 필요하고 ollama 에 qwen3:14b 가
-  있어야 한다. blueprint 는 51~70초, 일자 생성은 16~29초 걸린다
+- 기준선: `cd Runtime && npm test` **82/82**, `npm run audit` 오류 0
+- `api-config.json` 이 `enabled: true` 이고 **`127.0.0.1:8787` 을 가리킨다.**
+  배포된 Lambda 가 아니라 로컬 서버를 본다
+- 8787 에 세울 수 있는 서버가 **둘**이다. 하나만 띄운다
+  - `npm run start:generation` — 로컬 ollama(qwen3:14b). 키가 필요 없다
+  - `npm run start:router` — 배포될 라우터 코드 그대로. 실제 공급자를 쓴다
+- **AWS CLI 가 설치·설정돼 있다.** 배포된 함수는 `nhn-generation-api`
+  (us-east-1). 로그·배포·설정 읽기 방법은 `Docs/GENERATION-ROUTER-PARITY.md`
 - 저장 슬롯은 `localStorage` 의
   `unknown-auction:vsl-runtime:save:v2:slot:N:current|backup`
 
@@ -79,11 +82,18 @@ Docs/GENERATION-*.md
 `npm run audit` 이 지금은 `[INFO] 새 게임 최악 대기가 180초다 / 로딩 화면의
 skip-generation 로 중단할 수 있다` 로 바르게 낸다.
 
-## 예고된 작업 — `src/app.js` (API·생성 담당)
+## `src/app.js` — 양쪽이 만진 곳 (2026-08-07)
 
-새 게임 첫 진입 38~58초를 줄이려고 **저장 슬롯 화면에서 blueprint 를 미리
-만드는** 작업을 예정하고 있다. 겹치는 지점은 `newRun` 과 `renderSaveSlots` 다.
+하루 사이에 양쪽이 이 파일을 만졌다. 다음에 여는 사람이 알아야 할 것.
 
-**아직 시작하지 않았다.** 다른 실행자가 `app.js` 를 들고 있어서 커밋된 뒤 최신
-tip 에서 시작하기로 했다. 근거와 설계, 기각한 대안은
-`Docs/GENERATION-STARTUP-LATENCY.md` 에 있다.
+- **저장 슬롯 화면 선행 생성** (API 쪽) — `openSlotScene('new')` 이 시드를 뽑고
+  그 시드로 blueprint 를 미리 만든다. `runPrefetch` 를 붙들고 있다가 **타이틀로
+  나갈 때만**(`#back-title`) 버린다. 슬롯 화면 왕복으로는 다시 만들지 않는다
+- **날짜 전환 즉시화** (API 쪽) — `nextDay` 가 `aheadDays: 0` 으로 들어갈 날만
+  기다리고 앞당김은 뒤로 돌린다
+- **런마다 새 `GenerationBuffer`** (API 쪽) — `readyDays` 가 날짜 번호로만 키를
+  잡아 두 번째 런이 1일차를 건너뛰던 버그
+- **로딩창 최소 표시 2초와 날짜 전환 로딩창** — `MIN_LOADING_VISIBLE_MS`,
+  `completeLoadingWindow()`
+
+근거와 기각한 대안은 `Docs/GENERATION-STARTUP-LATENCY.md` 에 있다.
