@@ -501,6 +501,61 @@ https://8tjqzce89j.execute-api.us-east-1.amazonaws.com/generate
 
 표본도 8판과 4판이라 낙하율 50% 대 25% 를 단정하면 안 된다.
 
+### CloudWatch 가 사유를 다 알려준다 (2026-08-07)
+
+배포된 함수는 `nhn-generation-api` (us-east-1, nodejs22.x, 512MB).
+로그 그룹은 `/aws/lambda/nhn-generation-api` 다.
+
+```bash
+aws logs filter-log-events --region us-east-1 \
+  --log-group-name "/aws/lambda/nhn-generation-api" --start-time <ms> \
+  --query "events[].message" --output text
+```
+
+**`lambda:GetFunctionConfiguration` 은 환경변수 값까지 돌려준다 — 거기 API 키가
+들어 있다.** 이름만 볼 때는 `--query "Environment.Variables | keys(@)"` 로 고른다.
+
+#### 한도와 상한
+
+| | 값 | 출처 |
+|---|---|---|
+| Lambda 타임아웃 | 60초 | 함수 설정 |
+| **API Gateway 통합 타임아웃** | **30초** | HTTP API 통합 |
+| 최대 사용 메모리 | 112MB / 512MB | REPORT 줄 |
+| **groq 무료 TPM** | **8,000 토큰/분** | 429 본문 |
+| 하루치 한 건의 토큰 | **4,251~5,948** | 429 본문 |
+
+**groq 는 요청 한 건이 분당 예산을 거의 다 쓴다.** 코드로 우회할 수 있는 문제가
+아니다. `GenerationBuffer` 가 3일치를 동시에 부르는 것만으로 확정적으로 넘는다.
+요금제를 올리지 않는 한 쓸 수 없다.
+
+#### static 4판의 실제 사유
+
+`aws-3` · `aws-4` · `aws-6` · `aws-7` 모두 같은 모양이었다.
+
+```
+groq          429 TPM          (0.06~0.4초)
+gpt-4o-mini   TimeoutError     (7.0초 — 타임아웃 7초)
+gpt-5.6-luna  TimeoutError     (9초)
+→ static
+```
+
+#### 그런데 luna 는 하루치를 6.8초에 해냈다
+
+```
+generation_succeeded { provider: 'openai', model: 'gpt-5.6-luna', latencyMs: 6795 }
+```
+
+**쪼개기의 전제가 흔들린다.** "하루치를 한 번에 요구하면 공급자 타임아웃 7~9초
+안에 못 들어온다"고 판단해 쪼갰는데, luna 는 들어온다 — 다만 **9초가 빠듯해서
+어떤 판은 되고 어떤 판은 안 된다.** 8판 중 4판이 그 경계에서 떨어졌다.
+
+쪼개기는 이 문제를 "요청을 작게 만들어" 풀었다. 그 대가가 호출 9~17건, 지연
+26~44초, groq TPM 초과, 그리고 여덟 설명이 서로 닮는 것이었다.
+
+**더 싼 답이 있다. 타임아웃을 올리는 것이다.** Lambda 는 60초, 게이트웨이는
+30초까지 준다. 지금 일자 생성에 9초만 주고 있다.
+
 ### 그래도 방향은 보인다
 
 로컬 `generation-server.js` 가 이미 쓰는 전략이 둘의 장점을 합친다 —
