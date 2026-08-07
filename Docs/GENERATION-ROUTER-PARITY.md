@@ -660,13 +660,52 @@ aws lambda wait function-updated --region us-east-1 --function-name nhn-generati
 
 ## 남은 결정 (2026-08-07 시점)
 
-**1. 엔드포인트에 인증이 없다.** 키도 토큰도 없이 부르면 생성이 된다. 그리고 그
-URL 은 `api-config.json` 을 통해 독립 실행본 HTML 에 박힌다. **게임을 배포본에
-붙이기 전에 정해야 한다.** `AGENTS.md` 가 적어둔 "`GenerationApiProvider.request()`
-에 인증 토큰 실을 자리가 없다"가 같은 문제다.
+**1. 엔드포인트에 인증이 없다 — 정했다 (2026-08-07). 붙이지 않고 가둔다.**
+
+먼저 전제 하나를 정정한다. `AGENTS.md` 가 적어둔 "`GenerationApiProvider.request()`
+에 인증 토큰 실을 자리가 없다"는 **틀렸다.** `generation-api-provider.js:29` 가
+`requestHeaders` 를 이미 펼쳐 넣는다.
+
+진짜 제약은 반대쪽이다. `generation-api-config.js:3` 의
+`assertPublicGenerationConfig` 가 `api-config.json` 에 `token`·`authorization`·
+`requestHeaders` 류 키가 있으면 **빌드를 실패시킨다.** 그리고 `build:standalone`
+은 그 파일을 독립 실행본에 그대로 박는다. 즉 **배포본은 어떤 비밀도 들 수 없다.**
+파일을 나눠 주는 순간 그 안의 토큰은 공개된다. 이건 실수가 아니라 설계다.
+
+그래서 클라이언트가 드는 자격 증명으로는 이 엔드포인트를 지킬 방법이 없다. CORS
+오리진 제한도 의미가 없다 — 배포본은 `file://` 에서 열리므로 `Origin` 이 `null`
+이고, 애초에 브라우저 밖에서는 안 걸린다.
+
+**결정: 인증을 포기하고 최악의 지출에 천장을 씌운다.** 누구나 부를 수 있다는
+사실은 그대로 둔다. 구현은 `aws/generation-router.mjs` 의 `createThrottle`.
+
+| 환경변수 | 기본값 | 뜻 |
+|---|---|---|
+| `GENERATION_RATE_PER_IP` | 40 | 창 하나에 한 IP 가 낼 수 있는 HTTP 요청 |
+| `GENERATION_RATE_WINDOW_MS` | 600,000 | 창 길이 (10분) |
+| `GENERATION_DAILY_CEILING` | 500 | 하루 HTTP 요청 총량 |
+
+셋 다 `0` 이면 꺼진다. 실측 도구를 길게 돌릴 때 쓴다.
+
+**단위가 HTTP 요청인 것에 주의한다.** 위의 비용 표대로 한 판은 HTTP 13건이지만
+공급자 호출은 121건이다. 요청 하나가 9배로 불어나므로 40·500 은 보이는 것보다
+큰 수다 — 500이면 약 38판, 공급자 호출로는 4,600건이다.
+
+상한을 넘긴 요청은 429 가 아니라 **200 + static** 으로 내려간다. 헤더는
+`x-generation-source: static:throttled:ip` 또는 `:daily` 다. 게임에는 검증을
+통과하는 static 경로가 이미 있으니 판이 끊기는 것보다 밋밋해지는 편이 낫다.
+실측 도구가 이걸 평소 `static` 과 구분할 수 있어야 해서 접미사를 붙였다.
+
+**이 천장이 지출의 하한선은 아니다.** 상태가 람다 컨테이너의 클로저에 살기 때문에
+컨테이너마다 따로 센다. 동시에 여러 개 뜨면 실제 총량은 이 값의 배수다. 코드로는
+여기까지가 한계이고, 진짜 경계는 둘이 더 필요하다 — **아직 안 걸었다:**
+
+- 람다 **예약 동시성**(reserved concurrency). 이것이 소진 속도의 진짜 상한이다
+- 공급자 대시보드의 **예산 상한**. 최종 방어선
 
 **2. 게임은 아직 배포본을 안 본다.** `api-config.json` 이 `127.0.0.1:8787` 이다.
-1번을 정한 뒤에 바꾼다.
+1번을 정했으므로 이제 바꿀 수 있다. 다만 바꾸는 순간 그 URL 이 배포되는 HTML
+모든 사본에 박힌다 — 위의 예약 동시성과 예산 상한을 먼저 건 뒤에 바꾼다.
 
 **3. Lambda 환경변수에 잔재가 있다.** `PRIMARY_PROVIDER` 와 `FALLBACK_PROVIDER`
 는 현재 코드가 읽지 않는다. `SECONDARY_MODEL` 은 없어서 기본값

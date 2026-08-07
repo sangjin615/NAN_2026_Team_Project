@@ -311,3 +311,72 @@ test('repairs only the lots that break a whole-day rule', async () => {
   assert.ok(requestedRepairs.length > 0 && requestedRepairs.length < dailyRequest.lots.length, JSON.stringify(requestedRepairs));
   validateOutput(dailyRequest, JSON.parse(response.body));
 });
+
+// --- 상한 ---
+//
+// 엔드포인트는 열려 있다. 인증을 붙일 수 없어서(배포본이 비밀을 못 든다) 대신
+// 최악의 지출을 가둔다. 아래 시험이 지키는 것은 두 가지다 — 상한을 넘기면 공급자
+// 호출이 실제로 멈추는가, 그리고 그때 게임이 계속 도는가.
+
+const eventFrom = (request, sourceIp) => ({ body: JSON.stringify(request), requestContext: { http: { method: 'POST', sourceIp } } });
+const liveEnv = { LIVE_GENERATION_ENABLED: 'true', OPENAI_API_KEY: 'test' };
+
+test('한 IP 가 상한을 넘기면 공급자를 부르지 않고 static 으로 내려간다', async () => {
+  let calls = 0;
+  const fetchImpl = async (url, options) => {
+    calls += 1;
+    return jsonResponse(openAiPayload(dailyPartFromBody(JSON.parse(options.body))));
+  };
+  const handler = createHandler({ env: { ...liveEnv, GENERATION_RATE_PER_IP: '2' }, fetchImpl, logger: {} });
+
+  assert.equal((await handler(eventFrom(dailyRequest, '1.1.1.1'))).headers['x-generation-source'], 'openai:gpt-5.6-luna');
+  assert.equal((await handler(eventFrom(dailyRequest, '1.1.1.1'))).headers['x-generation-source'], 'openai:gpt-5.6-luna');
+  const spent = calls;
+
+  const throttled = await handler(eventFrom(dailyRequest, '1.1.1.1'));
+  assert.equal(throttled.statusCode, 200);
+  assert.equal(throttled.headers['x-generation-source'], 'static:throttled:ip');
+  assert.equal(calls, spent, '상한을 넘긴 요청이 공급자까지 갔다');
+  // 막는 것이 목적이 아니라 가두는 것이 목적이다. 판은 계속 돌아야 한다.
+  validateOutput(dailyRequest, JSON.parse(throttled.body));
+});
+
+test('상한은 IP 마다 따로 센다', async () => {
+  const fetchImpl = async (url, options) => jsonResponse(openAiPayload(dailyPartFromBody(JSON.parse(options.body))));
+  const handler = createHandler({ env: { ...liveEnv, GENERATION_RATE_PER_IP: '1' }, fetchImpl, logger: {} });
+
+  await handler(eventFrom(dailyRequest, '1.1.1.1'));
+  assert.equal((await handler(eventFrom(dailyRequest, '1.1.1.1'))).headers['x-generation-source'], 'static:throttled:ip');
+  assert.equal((await handler(eventFrom(dailyRequest, '2.2.2.2'))).headers['x-generation-source'], 'openai:gpt-5.6-luna');
+});
+
+test('일일 천장은 IP 를 바꿔도 넘지 못한다', async () => {
+  // IP 는 얼마든지 바꿀 수 있다. 지출을 가두는 것은 이쪽이다.
+  const fetchImpl = async (url, options) => jsonResponse(openAiPayload(dailyPartFromBody(JSON.parse(options.body))));
+  const handler = createHandler({ env: { ...liveEnv, GENERATION_DAILY_CEILING: '2' }, fetchImpl, logger: {} });
+
+  await handler(eventFrom(dailyRequest, '1.1.1.1'));
+  await handler(eventFrom(dailyRequest, '2.2.2.2'));
+  const throttled = await handler(eventFrom(dailyRequest, '3.3.3.3'));
+  assert.equal(throttled.headers['x-generation-source'], 'static:throttled:daily');
+  validateOutput(dailyRequest, JSON.parse(throttled.body));
+});
+
+test('0 이면 상한을 끈다 — 실측 도구가 길게 돌 수 있어야 한다', async () => {
+  const fetchImpl = async (url, options) => jsonResponse(openAiPayload(dailyPartFromBody(JSON.parse(options.body))));
+  const handler = createHandler({ env: { ...liveEnv, GENERATION_RATE_PER_IP: '0', GENERATION_DAILY_CEILING: '0' }, fetchImpl, logger: {} });
+
+  for (let attempt = 0; attempt < 5; attempt += 1) {
+    assert.equal((await handler(eventFrom(dailyRequest, '1.1.1.1'))).headers['x-generation-source'], 'openai:gpt-5.6-luna');
+  }
+});
+
+test('형식이 틀린 요청은 할당량을 쓰지 않는다', async () => {
+  // 400 은 공급자까지 가지 않으므로 돈이 나가지 않는다. 이것으로 남의 할당량을
+  // 밀어낼 수 있으면 상한 자체가 공격 수단이 된다.
+  const fetchImpl = async (url, options) => jsonResponse(openAiPayload(dailyPartFromBody(JSON.parse(options.body))));
+  const handler = createHandler({ env: { ...liveEnv, GENERATION_RATE_PER_IP: '1' }, fetchImpl, logger: {} });
+
+  assert.equal((await handler({ body: '{}', requestContext: { http: { method: 'POST', sourceIp: '1.1.1.1' } } })).statusCode, 400);
+  assert.equal((await handler(eventFrom(dailyRequest, '1.1.1.1'))).headers['x-generation-source'], 'openai:gpt-5.6-luna');
+});

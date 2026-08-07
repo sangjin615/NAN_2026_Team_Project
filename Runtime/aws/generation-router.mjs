@@ -349,7 +349,59 @@ async function generateDaily(request, provider, fetchImpl, logger) {
   }
 }
 
+// 엔드포인트에는 인증이 없다. 붙일 수가 없다 — 배포본은 서버 없이 도는 HTML 한
+// 장이고, `assertPublicGenerationConfig` 가 `api-config.json` 에 비밀을 넣는 것을
+// 빌드 단계에서 막는다. 파일을 나눠 주는 순간 그 안의 토큰은 공개된다.
+//
+// 그래서 막는 대신 가둔다. 누구나 부를 수 있다는 사실은 그대로 두고, 최악의
+// 지출에 천장을 씌운다.
+//
+// 단위를 HTTP 요청으로 잡은 이유: 한 판은 HTTP 13건(blueprint 1 + 일자 12)이지만
+// 라우터가 프레임과 조각으로 펼치므로 공급자 호출은 121건이다. 요청 하나가 9배로
+// 불어난다. 그래서 아래 숫자는 작아 보여도 작지 않다.
+//
+//   perIp 40 / 10분   한 판이 13건이니 10분에 3판. 사람이 낼 수 있는 양이 아니다
+//   daily 500         약 38판. 공급자 호출로는 4,600건
+//
+// **이 천장은 컨테이너마다 따로 센다.** 람다가 동시에 여러 개 뜨면 실제 총량은
+// 이 값의 배수다. 지출의 진짜 하한선은 코드가 아니라 예약 동시성과 공급자
+// 대시보드의 예산 상한이다. 여기 있는 것은 순진한 남용을 끊는 1차 방어다.
+const THROTTLE_DEFAULTS = { windowMs: 600_000, perIp: 40, daily: 500 };
+
+function createThrottle(env) {
+  const windowMs = Number(env.GENERATION_RATE_WINDOW_MS ?? THROTTLE_DEFAULTS.windowMs);
+  const perIp = Number(env.GENERATION_RATE_PER_IP ?? THROTTLE_DEFAULTS.perIp);
+  const daily = Number(env.GENERATION_DAILY_CEILING ?? THROTTLE_DEFAULTS.daily);
+  const seen = new Map();
+  let dayStartedAt = 0;
+  let dayCount = 0;
+
+  // 0 이면 끈다. 실측 도구가 길게 돌 때 이 한 줄로 비켜 갈 수 있어야 한다.
+  return (ip, now) => {
+    if (daily > 0) {
+      if (now - dayStartedAt >= 86_400_000) { dayStartedAt = now; dayCount = 0; }
+      if (dayCount >= daily) return 'daily';
+    }
+    if (perIp > 0) {
+      // 창 밖으로 나간 기록은 여기서 버린다. 안 버리면 Map 이 컨테이너 수명만큼 자란다.
+      for (const [key, times] of seen) {
+        const live = times.filter((at) => now - at < windowMs);
+        if (live.length) seen.set(key, live); else seen.delete(key);
+      }
+      const times = seen.get(ip) || [];
+      if (times.length >= perIp) return 'ip';
+      seen.set(ip, [...times, now]);
+    }
+    if (daily > 0) dayCount += 1;
+    return null;
+  };
+}
+
 export function createHandler({ env = process.env, fetchImpl = fetch, logger = console } = {}) {
+  // 상태는 이 클로저에 산다. 람다는 컨테이너마다 handler 를 한 번 만들므로 따뜻한
+  // 컨테이너 안에서는 이어지고, 테스트는 createHandler 를 부를 때마다 새로 시작한다.
+  const throttle = createThrottle(env);
+
   return async (event) => {
     if (event?.requestContext?.http?.method === 'OPTIONS') return { statusCode: 204, headers: jsonHeaders, body: '' };
     let request;
@@ -358,6 +410,19 @@ export function createHandler({ env = process.env, fetchImpl = fetch, logger = c
       validateInput(request);
     } catch (error) {
       return { statusCode: 400, headers: jsonHeaders, body: JSON.stringify({ ok: false, error: 'invalid_request' }) };
+    }
+
+    // 형식이 틀린 요청은 위에서 이미 끊겼고 공급자까지 가지 않으므로 세지 않는다.
+    // 여기서부터가 돈이 나가는 경로다.
+    const sourceIp = event?.requestContext?.http?.sourceIp || 'unknown';
+    const throttled = throttle(sourceIp, Date.now());
+    if (throttled) {
+      // 429 를 주지 않는다. 게임에는 검증을 통과하는 static 경로가 이미 있고,
+      // 플레이어 입장에서는 생성이 밋밋해질 뿐 판이 끊기지 않는 편이 낫다.
+      const output = deterministicFallback(request);
+      validateOutput(request, output);
+      logger.warn?.('generation_throttled', { reason: throttled, mode: request.mode, runSeed: request.runSeed });
+      return { statusCode: 200, headers: { ...jsonHeaders, 'x-generation-source': `static:throttled:${throttled}` }, body: JSON.stringify(output) };
     }
 
     for (const provider of providersFromEnv(env, request)) {
