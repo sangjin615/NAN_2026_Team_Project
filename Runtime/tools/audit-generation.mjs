@@ -119,15 +119,18 @@ function measureLots(lots, label, bucket) {
   }
 }
 
-function reportLengths(bucket) {
+function reportLengths(bucket, { model = '' } = {}) {
   const rows = Object.entries(bucket).filter(([, list]) => list.length);
   if (!rows.length) return;
-  console.log('\n[문구 길이] 항목 · 표본 · 중앙 · p90 · 최대 · 상한');
+  console.log(`\n[문구 길이${model ? ` · ${model}` : ''}] 항목 · 표본 · 중앙 · p90 · 최대 · 상한`);
   for (const [field, list] of rows) {
     const over = list.filter((length) => length > (limits[field] ?? Infinity)).length;
     console.log(`  ${field.padEnd(12)} ${String(list.length).padStart(4)} ${String(percentile(list, 0.5)).padStart(5)} ${String(percentile(list, 0.9)).padStart(5)} ${String(Math.max(...list)).padStart(5)} ${String(limits[field] ?? '-').padStart(5)}${over ? `  초과 ${over}건` : ''}`);
     if (over && !live) {
-      add('warn', `${field} 가 상한 ${limits[field]}자를 넘긴 기록이 ${over}/${list.length}건 있다`, '서버 검증에 걸려 재시도나 fallback 이 된다');
+      // 모델별로 나눠 말한다. 옛 실험 기록과 지금 쓰는 모델을 한 덩어리로 세면
+      // 이미 해결된 문제가 계속 살아 있는 것처럼 보인다. 실제로 qwen3:14b 는
+      // 282 LOT 에서 초과가 0건인데, 옛 모델 기록에 섞여 경고가 남아 있었다.
+      add('warn', `${model ? `${model} 의 ` : ''}${field} 가 상한 ${limits[field]}자를 넘긴 기록이 ${over}/${list.length}건 있다`, '서버 검증에 걸려 재시도나 fallback 이 된다');
     }
   }
 }
@@ -143,7 +146,7 @@ if (!live) {
     const latencies = { blueprint: [], daily: [] };
     const errorCounts = {};
     let valid = 0;
-    const bucket = {};
+    const buckets = new Map();
     for (const name of names) {
       let entry;
       try { entry = JSON.parse(await read(`${reportDir}/${name}`)); } catch { continue; }
@@ -151,7 +154,11 @@ if (!live) {
       if (Number.isFinite(entry.latencyMs)) latencies[kind].push(entry.latencyMs);
       if (entry.valid) valid += 1;
       else errorCounts[String(entry.error).slice(0, 60)] = (errorCounts[String(entry.error).slice(0, 60)] || 0) + 1;
-      if (Array.isArray(entry.output?.lots)) measureLots(entry.output.lots, name, bucket);
+      if (Array.isArray(entry.output?.lots)) {
+        const model = entry.model || '(모델 미기록)';
+        if (!buckets.has(model)) buckets.set(model, {});
+        measureLots(entry.output.lots, name, buckets.get(model));
+      }
     }
     console.log(`\n[기존 리포트] ${names.length}건 · 성공 ${valid} (${((valid / names.length) * 100).toFixed(0)}%)`);
     for (const kind of ['blueprint', 'daily']) {
@@ -168,7 +175,10 @@ if (!live) {
       console.log('  실패 사유 상위');
       for (const [message, count] of topErrors) console.log(`    ${String(count).padStart(3)}회  ${message}`);
     }
-    reportLengths(bucket);
+    // 표본이 많은 모델부터 본다. 지금 쓰는 모델이 대개 위에 온다.
+    for (const [model, bucket] of [...buckets].sort((a, b) => Object.values(b[1]).flat().length - Object.values(a[1]).flat().length)) {
+      reportLengths(bucket, { model });
+    }
     add('info', '기존 리포트는 옛 스키마로 만들어졌을 수 있다', '연결 후 --live 기준선으로 대체할 것');
     Object.assign(summary, {
       source: 'reports/live-generation',
@@ -177,7 +187,9 @@ if (!live) {
       latency: Object.fromEntries(Object.entries(latencies).map(([kind, list]) => [kind, list.length
         ? { samples: list.length, p50: percentile(list, 0.5), p90: percentile(list, 0.9), max: Math.max(...list) } : null])),
       errorCounts,
-      lengths: bucket,
+      // 기준선도 모델별로 남긴다. 한 덩어리로 두면 옛 실험이 현재 모델의 기록을
+      // 오염시킨다.
+      lengthsByModel: Object.fromEntries(buckets),
     });
   }
 } else {
