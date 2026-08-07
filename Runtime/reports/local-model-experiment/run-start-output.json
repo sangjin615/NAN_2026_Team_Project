@@ -1,234 +1,182 @@
 {
-  "experiment": {
-    "model": "qwen3:14b",
-    "mode": "run-blueprint",
-    "profile": "skill",
-    "promptChars": 5411,
-    "promptEvalCount": 2730,
-    "latencyMs": 57284,
-    "createdAt": "2026-08-02T14:34:21.600Z",
-    "evalCount": 1340,
-    "attempts": [
-      {
-        "attempt": 1,
-        "errors": [
-          "relicIds must match exactly"
-        ]
-      },
-      {
-        "attempt": 2,
-        "errors": []
-      }
-    ]
-  },
+  "model": "qwen3:14b",
+  "seed": "newspaper-grounded-14b-20260806",
+  "latencyMs": 51084,
   "output": {
     "schemaVersion": "1.0",
-    "runSeed": "team-loop-local-001",
-    "premise": "19세기 말, 신비로운 경매 도시에서 유물과 비밀이 교차하는 이야기",
+    "runSeed": "newspaper-grounded-14b-20260806",
+    "premise": "19세기 말, 상업과 예술이 번영한 도시 '그라운드시티'는 매일 아침, 다양한 유물이 거래되는 경매장이 열린다. 이 도시는 풍부한 역사와 미스터리한 유물들로 유명하며, 거래되는 물건마다 뒤에 숨은 이야기가 있다. 유랑 상인들은 유물의 비밀을 파헤치며, 숙적은 그들의 움직임을 감시한다. 매일의 경매는 도시의 운명을 바꿀 수 있는 사건으로 이어진다.",
     "marketArc": [
       {
         "day": 1,
-        "headline": "금속 가격 급등",
-        "mood": "불안"
-      },
-      {
-        "day": 2,
-        "headline": "고대 서적 발견",
-        "mood": "흥분"
-      },
-      {
-        "day": 3,
-        "headline": "정원사의 비밀",
-        "mood": "의심"
-      },
-      {
-        "day": 4,
-        "headline": "천문대의 예언",
+        "headline": "고대 도자기 항아리, 비밀을 간직한 유물 발견",
         "mood": "경계"
       },
       {
+        "day": 2,
+        "headline": "손상된 시계, 이전 주인의 흔적 드러나",
+        "mood": "불안"
+      },
+      {
+        "day": 3,
+        "headline": "화폭 속 인물, 그림 속에 숨은 정체 드러나",
+        "mood": "경이"
+      },
+      {
+        "day": 4,
+        "headline": "고대 책의 표지, 손으로 새긴 비밀 발견",
+        "mood": "불확실"
+      },
+      {
         "day": 5,
-        "headline": "배우들의 음모",
-        "mood": "혼란"
+        "headline": "금속 조각, 이전 사용자의 손길이 느껴짐",
+        "mood": "의심"
       },
       {
         "day": 6,
-        "headline": "왕실 문서 유출",
-        "mood": "격정"
+        "headline": "보석 장식, 이전 주인의 이름 새겨짐",
+        "mood": "경계"
       },
       {
         "day": 7,
-        "headline": "해적의 유물",
-        "mood": "경악"
+        "headline": "유리돔 속의 시계, 이전 주인의 손길 드러나",
+        "mood": "불안"
       },
       {
         "day": 8,
-        "headline": "꽃의 비밀",
-        "mood": "놀라움"
+        "headline": "화폭의 테두리, 이전 주인의 손길 드러나",
+        "mood": "경이"
       },
       {
         "day": 9,
-        "headline": "사기꾼의 계략",
-        "mood": "불신"
+        "headline": "고대 책의 제본, 이전 주인의 손길 드러나",
+        "mood": "불확실"
       },
       {
         "day": 10,
-        "headline": "별의 예언",
-        "mood": "경외"
+        "headline": "금속 조각, 이전 주인의 손길 드러나",
+        "mood": "의심"
       },
       {
         "day": 11,
-        "headline": "연극의 끝",
-        "mood": "절망"
+        "headline": "보석 장식, 이전 주인의 이름 새겨짐",
+        "mood": "경계"
       },
       {
         "day": 12,
-        "headline": "최종 경매",
-        "mood": "긴장"
+        "headline": "도자기 항아리, 이전 주인의 손길 드러나",
+        "mood": "불안"
       }
     ],
     "sets": [
       {
         "setId": "set-01",
-        "title": "여정의 유물",
-        "sharedSecret": "해적의 지도가 숨겨져 있음",
-        "revealHint": "서양의 항해도에 비밀이 있음"
+        "title": "여행의 흔적",
+        "sharedSecret": "고대 항로의 비밀을 담은 물건들",
+        "revealHint": "해양 탐험과 관련된 사건이 숨겨져 있다.",
+        "incidentTitle": "해적의 유물과 예술가의 손길",
+        "incidentSummary": "1887년, 해적의 유물이 예술가의 작품으로 재탄생한 사건이 발생했다. 이 사건은 '진수 기념 대접'과 '붉은 장갑의 배우'라는 작품과 직접적으로 연결된다.",
+        "newspaperLead": "해적의 유물이 예술가의 손길을 거쳐 새로운 생명을 얻었다. 이 사건은 도시의 예술과 역사에 깊은 영향을 미쳤다."
       },
       {
         "setId": "set-02",
-        "title": "왕실의 유산",
-        "sharedSecret": "왕실 문서가 가짜임",
-        "revealHint": "서명이 위조됨"
+        "title": "왕실의 유산과 손길",
+        "sharedSecret": "이 세트의 모든 물건은 한 번의 사건으로 연결된다.",
+        "revealHint": "왕실의 유물과 예술가의 손길",
+        "incidentTitle": "왕실의 유물과 예술가의 손길",
+        "incidentSummary": "왕실의 예술가가 올리브문 쌍촛대와 쌍어문 청록 화병을 손수 수리하며 그의 유명한 작품으로 만들었다.",
+        "newspaperLead": "왕실의 예술가가 고대 유물과 화병을 손수 수리하며 그의 유명한 작품으로 만들었다."
       },
       {
         "setId": "set-03",
-        "title": "길드의 비밀",
-        "sharedSecret": "길드장이 사기꾼임",
-        "revealHint": "거래 기록이 부정확함"
+        "title": "공회의 은밀한 계약",
+        "sharedSecret": "폐쇄된 온실과 북문 거리 행렬은 서로의 비밀을 숨기고 있었다.",
+        "revealHint": "폐쇄된 온실의 문이 열린 날, 북문 거리 행렬이 멈췄다.",
+        "incidentTitle": "온실의 문과 행렬의 멈춤",
+        "incidentSummary": "폐쇄된 온실의 문이 갑작스럽게 열리자, 북문 거리 행렬이 그 자리에서 멈춰섰다. 이는 공회 내부의 은밀한 계약이 드러난 순간이었다.",
+        "newspaperLead": "폐쇄된 온실의 문이 열리자, 북문 거리의 행렬이 멈췄다. 이는 공회 내부의 은밀한 계약이 드러난 순간이었다."
       },
       {
         "setId": "set-04",
-        "title": "천문의 예언",
-        "sharedSecret": "별의 위치가 비밀임",
-        "revealHint": "천문대의 기록이 손상됨"
+        "title": "항해와 시간의 교차점",
+        "sharedSecret": "두 개의 항로문 금은 상감함이 같은 제작자에게서 나왔다.",
+        "revealHint": "두 개의 시계가 같은 시기의 기술을 반영하고 있다.",
+        "incidentTitle": "시계장의 비밀과 항로문의 유래",
+        "incidentSummary": "다층 천문시계와 직사각 점프아워 시계는 동일한 시계장의 작업실에서 제작되었으며, 항로문 금은 상감함의 두 개체는 같은 장인의 손에서 탄생했다.",
+        "newspaperLead": "시계장의 유명한 작품들이 한 장소에서 발견되며, 항로문의 유래에 대한 새로운 이야기가 등장했다."
       },
       {
         "setId": "set-05",
-        "title": "연극의 음모",
-        "sharedSecret": "배우들이 음모 중임",
-        "revealHint": "연극 대본에 비밀이 있음"
+        "title": "별자리와 조수력의 교차점",
+        "sharedSecret": "별자리의 예술과 조수력의 기록이 한 장소에서 만나게 된 비밀",
+        "revealHint": "별자리 팔찌와 조수력 도감의 연결",
+        "incidentTitle": "별자리 팔찌와 조수력 도감의 출현",
+        "incidentSummary": "별자리 사파이어 팔찌와 식물 채색 도감은 한 예술가의 작업실에서 발견되었다. 이 작업실은 오랜 시간 동안 다양한 예술 작품과 기록을 보관해 왔다.",
+        "newspaperLead": "예술가의 작업실에서 발견된 별자리 팔찌와 식물 도감이 주목을 받고 있다. 이 두 물품은 예술과 과학의 경계를 넘나드는 흥미로운 연결을 보여준다."
       },
       {
         "setId": "set-06",
-        "title": "꽃의 비밀",
-        "sharedSecret": "꽃이 유물임",
-        "revealHint": "꽃의 향기가 이상함"
+        "title": "항해의 기억과 예술의 흔적",
+        "sharedSecret": "등대와 선박 센터피스와 자동인형 시계는 같은 장인의 손에서 탄생했다.",
+        "revealHint": "등대와 선박 센터피스의 이음새가 자동인형 시계의 태엽과 연결된다.",
+        "incidentTitle": "등대의 빛과 시계의 틱",
+        "incidentSummary": "등대와 선박 센터피스의 제작자와 자동인형 시계의 장인이 동일한 작업실에서 일했던 것으로 밝혀졌다. 이들은 항해도와 시계 기술을 결합한 독특한 작품을 만들었다.",
+        "newspaperLead": "등대와 시계의 기술이 한 장소에서 만나다. 항해의 역사와 시간의 흐름이 하나로 연결된 이야기가 드러났다."
       },
       {
         "setId": "set-07",
-        "title": "다시 여정",
-        "sharedSecret": "해적의 유물이 진짜임",
-        "revealHint": "도장이 진짜임"
+        "title": "해양의 유물과 예술의 흔적",
+        "sharedSecret": "해양의 유물과 예술의 흔적",
+        "revealHint": "해양의 유물과 예술의 흔적",
+        "incidentTitle": "등대 창가의 가족과 선실용 모래시계의 비밀",
+        "incidentSummary": "등대 창가의 가족은 선실용 모래시계를 통해 항해자의 일기를 발견했고, 이로 인해 항로와 관련된 기억을 되살렸다.",
+        "newspaperLead": "등대 창가의 가족이 선실용 모래시계를 통해 잊혀진 항로의 기억을 되찾았다."
       },
       {
         "setId": "set-08",
-        "title": "왕실의 끝",
-        "sharedSecret": "왕실 문서가 사라짐",
-        "revealHint": "서랍이 비어 있음"
+        "title": "왕실의 유물과 예술가의 손길",
+        "sharedSecret": "두 개의 유물이 한 명의 예술가의 손을 통해 연결되었다.",
+        "revealHint": "예술가의 손길이 두 유물의 운명을 바꾸었다.",
+        "incidentTitle": "예술가의 손길과 유물의 만남",
+        "incidentSummary": "산호구슬 귀걸이와 창가의 재봉사는 예술가의 손을 통해 한 번의 만남을 가졌다.",
+        "newspaperLead": "예술가의 손길이 두 유물의 운명을 바꾸었다. 그의 작품은 지금도 도시의 중심에 남아 있다."
       },
       {
         "setId": "set-09",
-        "title": "길드의 끝",
-        "sharedSecret": "길드가 해체됨",
-        "revealHint": "회장이 사라짐"
+        "title": "개항 시대의 유물과 예술가의 손길",
+        "sharedSecret": "해양 도시의 개항기와 예술가의 창작을 연결하는 비밀스러운 유물",
+        "revealHint": "파도와 문장이 숨겨진 과거를 드러낸다",
+        "incidentTitle": "파도문과 제비문의 비밀",
+        "incidentSummary": "1880년대, 예술가가 '개항 파노라마'와 '제비문 은 브로치'를 함께 작업하며 도시의 개항기와 예술의 교차점을 기록했다",
+        "newspaperLead": "예술가의 손길로 흐려진 과거, 파도문과 제비문의 비밀이 드러났다"
       },
       {
         "setId": "set-10",
-        "title": "별의 끝",
-        "sharedSecret": "별이 사라짐",
-        "revealHint": "천문대가 폐쇄됨"
+        "title": "항해의 유물과 예술의 흔적",
+        "sharedSecret": "해양과 예술의 교차점에서 남은 흔적",
+        "revealHint": "두 개의 유물이 한 시대를 연결한다",
+        "incidentTitle": "크로노미터와 항해 초상의 만남",
+        "incidentSummary": "갑판 크로노미터와 여왕의 항해 초상은 한 해양 박물관에서 발견된 것으로, 이 두 유물은 같은 항해사의 소유였던 것으로 밝혀졌다.",
+        "newspaperLead": "해양 박물관에서 발견된 항해 초상과 크로노미터가 같은 항해사의 유물로 밝혀져 주목을 받고 있다."
       },
       {
         "setId": "set-11",
-        "title": "연극의 끝",
-        "sharedSecret": "배우들이 도망감",
-        "revealHint": "무대가 무너짐"
+        "title": "극장의 유물과 예술가의 손길",
+        "sharedSecret": "이 세트는 한 번의 연극 제작을 위한 예술가들의 협업을 기록하고 있다.",
+        "revealHint": "이 물건들은 한 번의 연극 제작을 위한 예술가들의 협업을 기록하고 있다.",
+        "incidentTitle": "연극 제작을 위한 예술가들의 협업",
+        "incidentSummary": "건국항로 해도집과 약초 처방집은 한 번의 연극 제작을 위해 예술가들이 협업한 증거로 남아 있다.",
+        "newspaperLead": "극장의 한 번의 연극 제작을 위해 예술가들이 협업한 흔적이 발견되었다. 이는 예술과 역사의 교차점에서 중요한 순간이다."
       },
       {
         "setId": "set-12",
-        "title": "꽃의 끝",
-        "sharedSecret": "꽃이 죽음",
-        "revealHint": "꽃이 마르고 있음"
+        "title": "푸른 예배당 예행연습과 예술가의 손길",
+        "sharedSecret": "푸른 예배당 예행연습의 화폭에 새겨진 그림이 카메오 펜던트의 장식과 유사하다.",
+        "revealHint": "푸른 예배당 예행연습의 그림 속 인물이 카메오 펜던트의 장식에 등장한다.",
+        "incidentTitle": "푸른 예배당의 그림과 카메오 펜던트의 만남",
+        "incidentSummary": "푸른 예배당 예행연습의 화폭에 그려진 인물이 카메오 펜던트의 장식에 등장해, 두 작품이 같은 예술가의 손길로 만들어졌음을 밝혀냈다.",
+        "newspaperLead": "푸른 예배당의 그림과 카메오 펜던트가 같은 예술가의 작품이라는 사실이 드러났다. 두 작품은 예술가의 유명한 시기 작품으로 알려져 있다."
       }
-    ],
-    "castVoices": [
-      {
-        "botId": "nemesis",
-        "speechStyle": "냉소적",
-        "intro": "당신의 실패가 기쁨이 될 것이다"
-      },
-      {
-        "botId": "drifter-a",
-        "speechStyle": "경쾌한",
-        "intro": "이 유물은 당신의 운명이 될 것이다"
-      },
-      {
-        "botId": "drifter-b",
-        "speechStyle": "모호한",
-        "intro": "모든 것이 비밀로 가득 차 있다"
-      }
-    ],
-    "relicLore": [
-      {
-        "relicId": "old-scale",
-        "displayName": "고대 척도",
-        "lore": "19세기 항해사들이 사용한 척도로, 비밀 지도가 숨겨져 있음"
-      },
-      {
-        "relicId": "leather-ledger",
-        "displayName": "가죽 장부",
-        "lore": "왕실의 거래 기록이 담긴 장부로, 위조된 서명이 있음"
-      },
-      {
-        "relicId": "worn-seal",
-        "displayName": "마모된 도장",
-        "lore": "길드의 공식 도장으로, 거래 기록이 손상됨"
-      },
-      {
-        "relicId": "magnifier",
-        "displayName": "확대경",
-        "lore": "천문대에서 사용한 확대경으로, 별의 위치가 비밀임"
-      },
-      {
-        "relicId": "compass",
-        "displayName": "방위계",
-        "lore": "해적들이 사용한 방위계로, 도장이 진짜임"
-      },
-      {
-        "relicId": "broker-card",
-        "displayName": "중개인 카드",
-        "lore": "연극 배우들이 사용한 카드로, 대본에 비밀이 있음"
-      },
-      {
-        "relicId": "royal-charter",
-        "displayName": "왕실 문서",
-        "lore": "왕실의 공식 문서로, 서명이 위조됨"
-      },
-      {
-        "relicId": "house-crest",
-        "displayName": "가문 문장",
-        "lore": "꽃의 비밀을 담은 문장으로, 향기가 이상함"
-      },
-      {
-        "relicId": "merchant-safe",
-        "displayName": "상인 금고",
-        "lore": "길드의 금고로, 회장이 사라짐"
-      }
-    ],
-    "endingFrames": {
-      "success": "모든 유물을 수집하여 도시의 비밀을 밝혀냈다",
-      "failure": "유물의 비밀을 알지 못하고 도시에서 쫓겨났다",
-      "bankruptcy": "자금을 모두 잃고 도시에서 쫓겨났다"
-    }
+    ]
   }
 }

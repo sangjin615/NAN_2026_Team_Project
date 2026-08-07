@@ -230,7 +230,10 @@ async function generateBlueprint(request) {
   return merged;
 }
 
-async function generate(request) {
+// 실험 도구도 이 경로를 그대로 쓴다. blueprint 는 세트 단위로, 일자 생성은
+// 실패한 LOT 만 골라 다시 만든다. 도구가 자기 방식으로 한 번에 생성하면
+// 운영과 다른 것을 측정하게 된다.
+export async function generate(request) {
   if (request.mode === 'run-blueprint') return generateBlueprint(request);
   const startedAt = Date.now();
   let output; let firstError;

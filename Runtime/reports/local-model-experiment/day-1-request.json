@@ -33,8 +33,8 @@
       "baseName": "흑진주 리본 목걸이",
       "category": "JEW",
       "grade": "EPIC",
-      "basePrice": 12000,
-      "trueValue": 16200,
+      "basePrice": 6000,
+      "trueValue": 8100,
       "quality": {
         "label": "수려",
         "multiplier": 1.35
@@ -47,8 +47,8 @@
       "baseName": "구리 종 벽시계",
       "category": "CLK",
       "grade": "COMMON",
-      "basePrice": 1500,
-      "trueValue": 2025,
+      "basePrice": 800,
+      "trueValue": 1080,
       "quality": {
         "label": "수려",
         "multiplier": 1.35
@@ -61,8 +61,8 @@
       "baseName": "가면문 알림시계",
       "category": "CLK",
       "grade": "RARE",
-      "basePrice": 4000,
-      "trueValue": 3600,
+      "basePrice": 2000,
+      "trueValue": 1800,
       "quality": {
         "label": "보통",
         "multiplier": 0.9
@@ -75,8 +75,8 @@
       "baseName": "접이식 탁상시계",
       "category": "CLK",
       "grade": "COMMON",
-      "basePrice": 1500,
-      "trueValue": 1350,
+      "basePrice": 800,
+      "trueValue": 720,
       "quality": {
         "label": "보통",
         "multiplier": 0.9
@@ -89,8 +89,8 @@
       "baseName": "파도문 은제 티포트",
       "category": "MET",
       "grade": "COMMON",
-      "basePrice": 1500,
-      "trueValue": 900,
+      "basePrice": 800,
+      "trueValue": 480,
       "quality": {
         "label": "손상",
         "multiplier": 0.6
@@ -103,8 +103,8 @@
       "baseName": "삼색 사자손잡이 용기",
       "category": "CER",
       "grade": "LEGENDARY",
-      "basePrice": 25000,
-      "trueValue": 27500,
+      "basePrice": 12500,
+      "trueValue": 13750,
       "quality": {
         "label": "양호",
         "multiplier": 1.1
@@ -117,8 +117,8 @@
       "baseName": "다층 천문시계",
       "category": "CLK",
       "grade": "COMMON",
-      "basePrice": 1500,
-      "trueValue": 1650,
+      "basePrice": 800,
+      "trueValue": 880,
       "quality": {
         "label": "양호",
         "multiplier": 1.1
@@ -131,8 +131,8 @@
       "baseName": "달과 파도 조수력",
       "category": "BOK",
       "grade": "RARE",
-      "basePrice": 4000,
-      "trueValue": 4400,
+      "basePrice": 2000,
+      "trueValue": 2200,
       "quality": {
         "label": "양호",
         "multiplier": 1.1
