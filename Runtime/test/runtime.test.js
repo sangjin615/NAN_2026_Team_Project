@@ -78,7 +78,9 @@ test('run start and every day transition keep the painted loading scene visible 
 
 test('guild artwork keeps its native ratio inside the 16:9 canvas', async () => {
   const css = await readFile(new URL('../runtime-fixes.css', import.meta.url), 'utf8');
-  assert.match(css, /\[data-scene="guild"\]::before\s*\{[\s\S]*?inset: -1px;[\s\S]*?background-size: cover;/);
+  assert.match(css, /\[data-scene="guild"\]::before\s*\{[\s\S]*?inset: 0;[\s\S]*?background-size: 100% 100%;/);
+  assert.match(css, /\[data-scene="guild"\] \.guild-heading\s*\{\s*display: none;/);
+  assert.match(css, /#guild-collateral-list\s*\{[\s\S]*?top: 16\.5%;/);
 });
 
 test('the 16:9 canvas can grow beyond 1600 by 900', async () => {
