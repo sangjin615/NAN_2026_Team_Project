@@ -169,6 +169,20 @@ for (const id of playedBgm) if (!audioMap.bgm?.[id]) add('error', '오디오', `
 for (const id of Object.keys(audioMap.sfx || {})) if (!playedSfx.has(id)) add('info', '오디오', `sfx "${id}" 를 재생하는 코드가 없다`, '잔재 후보');
 for (const id of Object.keys(audioMap.bgm || {})) if (!playedBgm.has(id)) add('info', '오디오', `bgm "${id}" 를 재생하는 코드가 없다`, '잔재 후보');
 
+// ------------------------------------------------- 독립 실행본이 소스와 맞는가
+// src 나 data 를 고치고 build:standalone 을 빠뜨리면, 서버 없이 실행하는 사람이
+// 옛 빌드를 본다. 런타임에는 아무 신호가 없어서 규칙을 적어두는 것만으로는 계속
+// 새어 나갔다 — 한 번의 UI 작업에서 세 번 빠졌다. 그래서 검사로 만든다.
+// 판정은 build-standalone.mjs 의 빌드 함수를 그대로 불러서 한다. 규칙을 여기서
+// 다시 구현하면 갈라진다.
+const { standaloneIsCurrent, STANDALONE_FILE } = await import('./build-standalone.mjs');
+const standalone = await standaloneIsCurrent();
+if (standalone.missing) {
+  add('error', '빌드', `${STANDALONE_FILE} 이 없다`, 'npm run build:standalone');
+} else if (!standalone.current) {
+  add('error', '빌드', `${STANDALONE_FILE} 이 현재 소스와 다르다`, 'src 나 data 를 고친 뒤 npm run build:standalone 을 돌리지 않았다');
+}
+
 // ----------------------------------------------------------------- 결과 출력
 const order = { error: 0, warn: 1, info: 2 };
 const mark = { error: 'ERROR', warn: 'WARN ', info: 'INFO ' };
