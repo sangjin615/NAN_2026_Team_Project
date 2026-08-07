@@ -5,7 +5,7 @@ import { createRunSchedule, normalizeVisualEffects, validateSchedule, VISUAL_EFF
 import { createSetGraph } from '../src/set-graph.js';
 import { FallbackContentProvider, GenerationBuffer } from '../src/generation-buffer.js';
 import { createInitialState, resolveLot, advanceDay, prepareAuctionEntry } from '../src/game-state.js';
-import { resolveAuction, sellAll, sellItems, quoteItemsSale, bestSetMultiplier, acceptQuest, takeLoan, botBidForLot, estimateBotDailyAssets, openingBotBid, missedDeadline, isBankrupt, deliverQuestItem, questCompletionBonus, refreshDailyQuestOffers, repayLoanEarly, selectDistinctBotInterests } from '../src/systems.js';
+import { resolveAuction, sellAll, sellItems, quoteItemsSale, bestSetMultiplier, acceptQuest, takeLoan, botBidForLot, estimateBotDailyAssets, openingBotBid, missedDeadline, isBankrupt, deliverQuestItem, questCompletionBonus, refreshDailyQuestOffers, repayLoanEarly, selectDistinctBotInterests, createMarketPath } from '../src/systems.js';
 import { recordEvent, runMetrics } from '../src/telemetry.js';
 import { GenerationApiProvider } from '../src/generation-api-provider.js';
 import { assertPublicGenerationConfig, resolveGenerationApiConfig } from '../src/generation-api-config.js';
@@ -393,6 +393,45 @@ test('individual inventory actions and telemetry are ready for place scenes', ()
 test('disabled generation API fails fast so the two-day buffer can use fallback', async () => {
   const provider = new GenerationApiProvider({ enabled: false });
   await assert.rejects(() => provider.generateDay({ day: 1, lots: [], sets: [] }), /disabled/);
+});
+
+test('cancelling generation aborts the request in flight and the buffer falls back', async () => {
+  // 블루프린트는 최악 120초까지 기다린다. 로딩 화면의 취소 수단이 이 경로를 쓴다.
+  let aborted = false;
+  const hang = (url, options) => new Promise((resolve, reject) => {
+    options.signal.addEventListener('abort', () => { aborted = true; reject(new Error('aborted')); });
+  });
+  const provider = new GenerationApiProvider({ enabled: true, endpoint: '/generate', timeoutMs: 120000 });
+  const globalFetch = globalThis.fetch;
+  globalThis.fetch = hang;
+  try {
+    const pending = provider.request({ mode: 'daily-content' });
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    provider.cancel();
+    await assert.rejects(() => pending, /cancelled/);
+    assert.equal(aborted, true);
+    // 취소한 뒤에는 새 요청도 즉시 실패해야 한다. 그래야 남은 날짜에서 다시 멈추지 않는다.
+    await assert.rejects(() => provider.request({ mode: 'daily-content' }), /cancelled/);
+    // 다음 런에서는 다시 살아나야 한다.
+    provider.reset();
+    assert.equal(provider.cancelled, false);
+  } finally {
+    globalThis.fetch = globalFetch;
+  }
+});
+
+test('a cancelled provider lets the buffer serve local fallback content', async () => {
+  const provider = new GenerationApiProvider({ enabled: true, endpoint: '/generate' });
+  provider.cancel();
+  const buffer = new GenerationBuffer({ provider });
+  const schedule = createRunSchedule({ catalog, balance, seed: 'cancel-fallback' });
+  const sets = createSetGraph(schedule, 'cancel-fallback');
+  assert.equal(await buffer.prepareRun({ runSeed: 'cancel-fallback', sets, schedule, market: createMarketPath(balance, 'cancel-fallback') }), null);
+  const result = await buffer.ensure({ currentDay: 1, schedule, sets, aheadDays: 0 });
+  const lots = schedule.days[0].lots;
+  assert.equal(lots.every((lot) => lot.content?.description), true);
+  assert.equal(lots[0].content.provenance, 'local-fallback');
+  assert.equal(result.failures.some(({ message }) => /cancelled/.test(message)), true);
 });
 
 test('exchange quote matches the actual bundle sale without mutating inventory', () => {

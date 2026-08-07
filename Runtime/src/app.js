@@ -25,6 +25,7 @@ const store = new SaveStore();
 const audio = new AudioBus();
 audio.setEnabled(localStorage.getItem('unknown-auction:sound') !== 'off');
 let generation = new GenerationBuffer();
+let generationProvider = null;
 let state;
 let catalog;
 let balance;
@@ -178,7 +179,8 @@ async function boot() {
   try {
     await adapter.loadContract();
     const publicApiConfig = await fetch('./data/api-config.json').then((response) => response.json());
-    generation = new GenerationBuffer({ provider: new GenerationApiProvider(resolveGenerationApiConfig(publicApiConfig)) });
+    generationProvider = new GenerationApiProvider(resolveGenerationApiConfig(publicApiConfig));
+    generation = new GenerationBuffer({ provider: generationProvider });
     [catalog, balance] = await Promise.all([
       loadCatalog(),
       fetch('./data/balance.json').then((response) => response.json()),
@@ -193,6 +195,10 @@ async function boot() {
 
 async function newRun(seed) {
   const loadingStartedAt = performance.now();
+  generationProvider?.reset();
+  const skip = document.querySelector('#skip-generation');
+  skip.disabled = false;
+  skip.textContent = '기다리지 않고 시작';
   adapter.showScene('loading');
   updateRunLoading(6, '저장 슬롯과 새 여정을 준비하고 있습니다.', [], 'schedule');
   await waitForPaint();
@@ -857,6 +863,13 @@ document.querySelector('#new-run').onclick = async () => {
 document.querySelector('#open-new-slots').onclick = () => { audio.playBgm('title'); openSlotScene('new'); };
 document.querySelector('#open-continue-slots').onclick = () => { audio.playBgm('title'); openSlotScene('continue'); };
 document.querySelector('#back-title').onclick = () => adapter.showScene('title');
+// 생성을 중단하면 진행 중인 요청이 즉시 실패하고 GenerationBuffer 가 로컬 대체
+// 문구로 넘어간다. 게임은 그대로 시작된다 — 문구만 생성본이 아니게 된다.
+document.querySelector('#skip-generation').onclick = (event) => {
+  event.currentTarget.disabled = true;
+  event.currentTarget.textContent = '대체 문구로 시작합니다';
+  generationProvider?.cancel();
+};
 document.querySelector('#save-settings').onclick = () => document.querySelector('#settings-dialog').showModal();
 document.querySelector('#delete-save').onclick = () => {
   const slot = store.list().find((entry) => entry.slot === selectedSlot);

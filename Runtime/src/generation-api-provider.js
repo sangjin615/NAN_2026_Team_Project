@@ -1,5 +1,17 @@
 export class GenerationApiProvider {
-  constructor(config) { this.config = config; }
+  constructor(config) { this.config = config; this.cancelled = false; this.active = new Set(); }
+
+  // 로딩 화면의 취소 수단이 이걸 부른다. 블루프린트는 최악 120초까지 기다리므로
+  // 중단할 방법이 없으면 플레이어가 그동안 아무것도 못 한다. 중단하면 요청이
+  // 즉시 실패하고, GenerationBuffer 가 로컬 대체 문구로 게임을 계속 진행한다.
+  cancel() {
+    this.cancelled = true;
+    for (const controller of this.active) controller.abort();
+    this.active.clear();
+  }
+
+  // 새 런을 시작할 때 되돌린다. 지난 런에서 취소했다고 다음 런까지 막히면 안 된다.
+  reset() { this.cancelled = false; }
   timeoutFor(mode) {
     if (mode === 'run-blueprint') return this.config.blueprintTimeoutMs ?? this.config.timeoutMs ?? 8000;
     if (mode === 'daily-content') return this.config.dayTimeoutMs ?? this.config.timeoutMs ?? 8000;
@@ -7,14 +19,17 @@ export class GenerationApiProvider {
   }
   async request(body, timeoutMs = this.config.timeoutMs || 8000) {
     if (!this.config?.enabled || !this.config.endpoint) throw new Error('generation API is disabled');
+    if (this.cancelled) throw new Error('generation cancelled');
     let lastError;
     for (let attempt = 0; attempt <= (this.config.retries || 0); attempt += 1) {
+      if (this.cancelled) throw new Error('generation cancelled');
       const controller = new AbortController(); const timer = setTimeout(() => controller.abort(), timeoutMs);
+      this.active.add(controller);
       try {
         const response = await fetch(this.config.endpoint, { method: 'POST', headers: { 'content-type': 'application/json', ...(this.config.requestHeaders || {}) }, body: JSON.stringify(body), signal: controller.signal });
         if (!response.ok) throw new Error(`generation API ${response.status}`);
         return await response.json();
-      } catch (error) { lastError = error; } finally { clearTimeout(timer); }
+      } catch (error) { lastError = this.cancelled ? new Error('generation cancelled') : error; } finally { clearTimeout(timer); this.active.delete(controller); }
     }
     throw lastError;
   }

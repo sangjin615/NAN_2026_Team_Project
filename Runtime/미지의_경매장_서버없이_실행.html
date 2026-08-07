@@ -3334,6 +3334,7 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
       <div class="loading-progress" role="progressbar" aria-label="새 런 생성 진행률" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span id="loading-progress-fill"></span></div><strong id="loading-percent">0%</strong>
       <ul class="loading-steps" aria-label="준비 단계"><li data-loading-step="schedule">12일 경매 일정 구성</li><li data-loading-step="sets">세트와 시장 정보 연결</li><li data-loading-step="content">첫날 콘텐츠 생성</li><li data-loading-step="save">저장 슬롯 기록</li></ul>
       <p class="loading-tip"><b>TIP</b> 정보는 승리를 보장하지 않지만, 정보가 없는 경매는 언제나 불리합니다.</p>
+      <button id="skip-generation" type="button" class="secondary">기다리지 않고 시작</button>
     </div>
   </section>
   <section class="scene save-select" data-scene="save" hidden>
@@ -3663,6 +3664,20 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
   var GenerationApiProvider = class {
     constructor(config) {
       this.config = config;
+      this.cancelled = false;
+      this.active = /* @__PURE__ */ new Set();
+    }
+    // 로딩 화면의 취소 수단이 이걸 부른다. 블루프린트는 최악 120초까지 기다리므로
+    // 중단할 방법이 없으면 플레이어가 그동안 아무것도 못 한다. 중단하면 요청이
+    // 즉시 실패하고, GenerationBuffer 가 로컬 대체 문구로 게임을 계속 진행한다.
+    cancel() {
+      this.cancelled = true;
+      for (const controller of this.active) controller.abort();
+      this.active.clear();
+    }
+    // 새 런을 시작할 때 되돌린다. 지난 런에서 취소했다고 다음 런까지 막히면 안 된다.
+    reset() {
+      this.cancelled = false;
     }
     timeoutFor(mode) {
       if (mode === "run-blueprint") return this.config.blueprintTimeoutMs ?? this.config.timeoutMs ?? 8e3;
@@ -3671,18 +3686,22 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
     }
     async request(body, timeoutMs = this.config.timeoutMs || 8e3) {
       if (!this.config?.enabled || !this.config.endpoint) throw new Error("generation API is disabled");
+      if (this.cancelled) throw new Error("generation cancelled");
       let lastError;
       for (let attempt = 0; attempt <= (this.config.retries || 0); attempt += 1) {
+        if (this.cancelled) throw new Error("generation cancelled");
         const controller = new AbortController();
         const timer = setTimeout(() => controller.abort(), timeoutMs);
+        this.active.add(controller);
         try {
           const response = await fetch(this.config.endpoint, { method: "POST", headers: { "content-type": "application/json", ...this.config.requestHeaders || {} }, body: JSON.stringify(body), signal: controller.signal });
           if (!response.ok) throw new Error(`generation API ${response.status}`);
           return await response.json();
         } catch (error) {
-          lastError = error;
+          lastError = this.cancelled ? new Error("generation cancelled") : error;
         } finally {
           clearTimeout(timer);
+          this.active.delete(controller);
         }
       }
       throw lastError;
@@ -4302,6 +4321,7 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
   var audio = new AudioBus();
   audio.setEnabled(localStorage.getItem("unknown-auction:sound") !== "off");
   var generation = new GenerationBuffer();
+  var generationProvider = null;
   var state;
   var catalog;
   var balance;
@@ -4458,7 +4478,8 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
     try {
       await adapter.loadContract();
       const publicApiConfig = await fetch("./data/api-config.json").then((response) => response.json());
-      generation = new GenerationBuffer({ provider: new GenerationApiProvider(resolveGenerationApiConfig(publicApiConfig)) });
+      generationProvider = new GenerationApiProvider(resolveGenerationApiConfig(publicApiConfig));
+      generation = new GenerationBuffer({ provider: generationProvider });
       [catalog, balance] = await Promise.all([
         loadCatalog(),
         fetch("./data/balance.json").then((response) => response.json()),
@@ -4472,6 +4493,10 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
   }
   async function newRun(seed) {
     const loadingStartedAt = performance.now();
+    generationProvider?.reset();
+    const skip = document.querySelector("#skip-generation");
+    skip.disabled = false;
+    skip.textContent = "\uAE30\uB2E4\uB9AC\uC9C0 \uC54A\uACE0 \uC2DC\uC791";
     adapter.showScene("loading");
     updateRunLoading(6, "\uC800\uC7A5 \uC2AC\uB86F\uACFC \uC0C8 \uC5EC\uC815\uC744 \uC900\uBE44\uD558\uACE0 \uC788\uC2B5\uB2C8\uB2E4.", [], "schedule");
     await waitForPaint();
@@ -5240,6 +5265,11 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
     openSlotScene("continue");
   };
   document.querySelector("#back-title").onclick = () => adapter.showScene("title");
+  document.querySelector("#skip-generation").onclick = (event) => {
+    event.currentTarget.disabled = true;
+    event.currentTarget.textContent = "\uB300\uCCB4 \uBB38\uAD6C\uB85C \uC2DC\uC791\uD569\uB2C8\uB2E4";
+    generationProvider?.cancel();
+  };
   document.querySelector("#save-settings").onclick = () => document.querySelector("#settings-dialog").showModal();
   document.querySelector("#delete-save").onclick = () => {
     const slot = store.list().find((entry) => entry.slot === selectedSlot);
