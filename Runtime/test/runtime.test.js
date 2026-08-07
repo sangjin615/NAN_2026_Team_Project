@@ -126,6 +126,28 @@ test('the 16:9 canvas can grow beyond 1600 by 900', async () => {
   assert.doesNotMatch(sceneRule, /--design-height/);
 });
 
+test('정의되지 않은 --design-* 를 쓰는 규칙이 하나도 없다', async () => {
+  // 이 가드는 원래 `.scene` 만 봤고 [data-scene="loading"] 이 빠져 있었다. 그래서
+  // 로딩 씬만 --design-width 를 계속 불렀고, 무효한 var() 가 min() 전체를 무효로
+  // 만들어 width 가 auto 로 떨어졌다. 그 씬은 흐름 안 자식이 없어서(foot-mask 는
+  // display:none, panel 은 absolute) 0 으로 접혔고, 패널의 47.5% 가 0 이 되어
+  // 3px 조각만 남았다 — 생성이 끝날 때까지 화면이 검었다. 2026-08-07 실측.
+  //
+  // 규칙 하나가 아니라 파일 전체를 본다. 다음에 어느 씬에서 되살아나도 걸린다.
+  const css = await readFile(new URL('../runtime-fixes.css', import.meta.url), 'utf8');
+  const declarations = css.replace(/\/\*[\s\S]*?\*\//g, '');
+  assert.doesNotMatch(declarations, /var\(--design-width\)/);
+  assert.doesNotMatch(declarations, /var\(--design-height\)/);
+});
+
+test('로딩 씬이 다른 씬과 같은 크기 변수를 쓴다', async () => {
+  // 크기를 잃으면 로딩창이 안 보이고, 게임은 안 죽으므로 조용히 지나간다.
+  const css = await readFile(new URL('../runtime-fixes.css', import.meta.url), 'utf8');
+  const rule = css.match(/\[data-scene="loading"\]\s*\{[\s\S]*?\n\}/)?.[0] || '';
+  assert.match(rule, /width: min\(var\(--layout-viewport-width\)/);
+  assert.match(rule, /height: min\(var\(--layout-viewport-height\)/);
+});
+
 test('catalog exposes active quests in a dedicated side popup', async () => {
   const [html, app] = await Promise.all([
     readFile(new URL('../index.html', import.meta.url), 'utf8'),

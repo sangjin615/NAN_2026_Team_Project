@@ -441,10 +441,17 @@ button.secondary:disabled { background-image: url("./assets/ui/skin-v1/button-se
 }
 
 /* New run flow: title -> save slot -> loading -> city. */
+/* 크기는 다른 씬과 같은 변수를 쓴다. 예전에는 --design-width/--design-height 를
+   불렀는데 그 둘은 어디에도 정의돼 있지 않다. 무효한 var() 하나가 min() 전체를
+   무효로 만들고 width 가 auto 로 떨어지는데, 이 씬은 흐름 안 자식이 없어서
+   (.loading-foot-mask 는 display:none, .loading-panel 은 absolute) 0 으로 접혔다.
+   그러면 패널의 width:47.5% 가 0 이 되어 3px 짜리 조각만 남는다 — 화면은 검고,
+   생성이 끝날 때까지 플레이어는 아무것도 못 본다.
+   2026-08-07 브라우저 실측으로 잡았다. 고친 뒤 씬 1658x933, 패널 788x457. */
 [data-scene="loading"] {
   position: relative;
-  width: min(100vw, calc(100vh * 16 / 9), calc(var(--design-width) * 1px));
-  height: min(100vh, calc(100vw * 9 / 16), calc(var(--design-height) * 1px));
+  width: min(var(--layout-viewport-width), calc(var(--layout-viewport-height) * 16 / 9));
+  height: min(var(--layout-viewport-height), calc(var(--layout-viewport-width) * 9 / 16));
   margin: auto;
   padding: 0;
   overflow: hidden;
