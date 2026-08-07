@@ -244,4 +244,4 @@ for (const { severity, message, detail } of findings) {
 if (!findings.length) console.log('문제 없음');
 console.log(`\n오류 ${counts.error} · 경고 ${counts.warn} · 참고 ${counts.info}`);
 
-process.exit(counts.error > 0 ? 1 : 0);
+process.exitCode = counts.error > 0 ? 1 : 0;

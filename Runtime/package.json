@@ -15,7 +15,8 @@
     "measure:project": "node tools/measure-project.js",
     "experiment:prepare": "node tools/prepare-local-generation-experiment.js",
     "experiment:run": "node tools/run-local-generation-experiment.mjs",
-    "experiment:promote": "node tools/promote-generation-fixture.mjs"
+    "experiment:promote": "node tools/promote-generation-fixture.mjs",
+    "build:lambda": "node tools/build-generation-lambda.mjs"
   },
   "devDependencies": {
     "esbuild": "^0.25.8"

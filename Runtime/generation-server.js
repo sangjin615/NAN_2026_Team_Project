@@ -7,7 +7,12 @@ const runtimeRoot = path.dirname(fileURLToPath(import.meta.url));
 const port = Number(process.env.GENERATION_PORT || 8787);
 const ollamaEndpoint = process.env.OLLAMA_ENDPOINT || 'http://127.0.0.1:11434/api/generate';
 const model = process.env.OLLAMA_MODEL || 'qwen3:14b';
-const contract = await readFile(path.join(runtimeRoot, 'contracts', 'compact-generation-contract.txt'), 'utf8');
+// Lambda 번들에는 contracts/ 가 함께 들어가지 않는다. build:lambda 가 esbuild
+// define 으로 계약서를 박아 넣고, 로컬 실행에서는 평소대로 파일을 읽는다.
+const contract = typeof __BUNDLED_GENERATION_CONTRACT__ === 'string'
+  ? __BUNDLED_GENERATION_CONTRACT__
+  : await readFile(path.join(runtimeRoot, 'contracts', 'compact-generation-contract.txt'), 'utf8');
+export const generationContract = contract;
 const reportRoot = path.join(runtimeRoot, 'reports', 'live-generation');
 
 const text = { type: 'string', minLength: 1 };
@@ -15,7 +20,7 @@ const boundedText = (maxLength) => ({ type: 'string', minLength: 1, maxLength })
 const fixedObject = (properties) => ({ type: 'object', properties, required: Object.keys(properties), additionalProperties: false });
 const dailyLotSchema = ({ lotId }) => fixedObject({ lotId: { const: lotId }, displayName: boundedText(20), description: boundedText(70), rumor: boundedText(45), setHint: boundedText(25), npcReaction: boundedText(45) });
 
-function outputSchema(request) {
+export function outputSchema(request) {
   if (request.mode === 'run-blueprint') return fixedObject({
     schemaVersion: { const: '1.0' }, runSeed: { const: request.runSeed }, premise: text,
     marketArc: { type: 'array', minItems: 12, maxItems: 12, items: fixedObject({ day: { type: 'integer' }, headline: text, mood: text }) },
@@ -40,7 +45,7 @@ const setIncidentSchema = ({ setId }) => fixedObject({
   incidentTitle: text, incidentSummary: text, newspaperLead: text,
 });
 
-function validateInput(request) {
+export function validateInput(request) {
   if (request?.schemaVersion !== '1.0') throw new Error('unsupported schemaVersion');
   if (request.mode === 'run-blueprint') {
     if (!request.runSeed || request.sets?.length !== 12 || request.marketSignals?.length !== 12) throw new Error('invalid run-blueprint request');
