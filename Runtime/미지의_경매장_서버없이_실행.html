@@ -53,8 +53,8 @@ body {
 .scene {
   --mockup: none;
   position: relative;
-  width: min(100vw, calc(100vh * 16 / 9));
-  height: min(100vh, calc(100vw * 9 / 16));
+  width: min(100vw, calc(100vh * 16 / 9), calc(var(--design-width) * 1px));
+  height: min(100vh, calc(100vw * 9 / 16), calc(var(--design-height) * 1px));
   min-height: 0;
   box-sizing: border-box;
   aspect-ratio: auto;
@@ -73,8 +73,8 @@ body {
   html, body, #app { width: 100dvw; height: 100dvh; min-height: 100dvh; }
   .scene,
   [data-scene="loading"] {
-    width: min(100dvw, calc(100dvh * 16 / 9));
-    height: min(100dvh, calc(100dvw * 9 / 16));
+    width: min(100dvw, calc(100dvh * 16 / 9), calc(var(--design-width) * 1px));
+    height: min(100dvh, calc(100dvw * 9 / 16), calc(var(--design-height) * 1px));
   }
 }
 
@@ -436,8 +436,8 @@ button.secondary:disabled { background-image: url("./assets/ui/skin-v1/button-se
 /* New run flow: title -> save slot -> loading -> city. */
 [data-scene="loading"] {
   position: relative;
-  width: min(100vw, calc(100vh * 16 / 9));
-  height: min(100vh, calc(100vw * 9 / 16));
+  width: min(100vw, calc(100vh * 16 / 9), calc(var(--design-width) * 1px));
+  height: min(100vh, calc(100vw * 9 / 16), calc(var(--design-height) * 1px));
   margin: auto;
   padding: 0;
   overflow: hidden;
@@ -3285,6 +3285,79 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
   filter: drop-shadow(0 2px 2px #0008);
 }
 
+/* Final relic auction: use every painted panel and keep live information legible. */
+[data-scene="relic"] #relic-feed {
+  left: 5.1%; top: 4.5%; width: 15.6%; height: 88%; padding: 0;
+  border: 0; background: transparent; color: #2d2116; overflow: visible;
+}
+[data-scene="relic"] #relic-feed > header {
+  position: absolute; inset: 0 0 auto; height: 46%; box-sizing: border-box;
+  display: grid; place-content: center; justify-items: center; gap: 4%; padding: 22% 8% 8%; text-align: center;
+}
+[data-scene="relic"] #relic-feed > header small { color: #9d6d20; font-size: clamp(8px,.65vw,11px); font-weight: 800; letter-spacing: .12em; }
+[data-scene="relic"] #relic-feed > header h3 { margin: 0; font: 800 clamp(17px,1.6vw,26px) Georgia,"Noto Serif KR",serif; }
+[data-scene="relic"] #relic-feed > header p { display: flex; align-items: baseline; gap: 4px; margin: 5% 0 0; }
+[data-scene="relic"] #relic-feed > header p b { color: #8b5517; font-size: clamp(30px,3.1vw,50px); line-height: 1; }
+[data-scene="relic"] #relic-feed > header p span { font-size: clamp(10px,.9vw,14px); }
+[data-scene="relic"] #relic-feed > header strong { padding: 5px 12px; border: 1px solid #a98655; background: #dfcda966; font-size: clamp(10px,.8vw,13px); }
+[data-scene="relic"] #relic-feed > section {
+  position: absolute; inset: auto 0 0; height: 40%; box-sizing: border-box; padding: 18% 8% 6%; color: #f3e6cf; text-align: left;
+}
+[data-scene="relic"] #relic-feed > section h4 { position: absolute; left: 8%; top: 8%; margin: 0; color: #deb65d; font-size: clamp(11px,1vw,16px); }
+[data-scene="relic"] #relic-feed > section p { margin: 0; padding: 3.5% 0; border-bottom: 1px solid #725d3d; font-size: clamp(9px,.78vw,13px); line-height: 1.25; }
+
+[data-scene="relic"] #relic-card {
+  left: 40.5%; top: 39%; width: 19%; height: 44%; box-sizing: border-box; padding: 1.3% 1.5% 1.2%;
+  display: grid; grid-template-rows: auto auto minmax(0,1fr) auto auto; justify-items: center; gap: 1.2%;
+  border: 4px double #8e6a34; border-radius: 3px; background: #eadcc8f2; box-shadow: 0 9px 22px #0008; color: #2c2117;
+}
+[data-scene="relic"] #relic-card > header { display: flex; justify-content: space-between; width: 100%; color: #76501d; font-size: clamp(8px,.68vw,11px); }
+[data-scene="relic"] #relic-card h2 { margin: 0; font-size: clamp(16px,1.45vw,23px); }
+[data-scene="relic"] #relic-card img { width: 62%; height: 100%; min-height: 0; margin: 0; }
+[data-scene="relic"] #relic-card > p { align-self: center; margin: 0; font-size: clamp(9px,.76vw,12px); line-height: 1.35; text-align: center; }
+[data-scene="relic"] #relic-card > footer { display: flex; align-items: baseline; justify-content: center; gap: 7px; width: 100%; }
+[data-scene="relic"] #relic-card > footer small { color: #765f43; font-size: clamp(8px,.68vw,11px); }
+[data-scene="relic"] #relic-card > footer strong { color: #7f351b; font-size: clamp(13px,1.15vw,18px); }
+[data-scene="relic"] #relic-card #relic-timer {
+  position: absolute; left: 50%; top: calc(100% + 8px); transform: translateX(-50%);
+  display: grid; place-items: center; min-width: 58px; height: 34px; padding: 0 12px;
+  border: 1px solid #b47a29; background: #24160e; color: #fff0c4; font-size: clamp(14px,1.35vw,22px); font-style: normal; font-weight: 900;
+}
+
+[data-scene="relic"] #relic-participants { left: 79.2%; top: 11%; width: 16.5%; height: 66%; padding: 7.5% 1.3% 2%; }
+[data-scene="relic"] #relic-participants h3 { top: 2%; font-size: clamp(12px,1.12vw,18px); }
+[data-scene="relic"] #relic-participants .participant {
+  position: relative; display: grid; grid-template-columns: auto 1fr; grid-template-rows: auto auto; gap: 2px 8px; align-items: center;
+  min-height: 20%; padding: 5% 4% 5% 13%;
+}
+[data-scene="relic"] #relic-participants .participant > span { position: absolute; left: 2%; top: 50%; transform: translateY(-50%); color: #9a7b51; font-size: clamp(8px,.64vw,10px); font-weight: 900; }
+[data-scene="relic"] #relic-participants .participant > b { font-size: clamp(11px,1vw,16px); }
+[data-scene="relic"] #relic-participants .participant > small { color: #806c52; font-size: clamp(7px,.6vw,10px); }
+[data-scene="relic"] #relic-participants .participant > strong { grid-row: 1 / 3; grid-column: 2; justify-self: end; font-size: clamp(10px,.9vw,15px); }
+[data-scene="relic"] #relic-participants .participant.is-leading { background: #e4c77c55; }
+[data-scene="relic"] #relic-participants .participant.is-leading > span { color: #9b381f; }
+[data-scene="relic"] > .actions { left: 24%; bottom: 1.8%; width: 54%; height: 15%; }
+
+/* Ending: a single centered parchment with a non-overlapping hero, stats and action. */
+[data-scene="result"] > h2 { display: none; }
+[data-scene="result"]:not(.is-failure) #run-summary {
+  left: 29%; top: 3%; width: 42%; height: 94%;
+  grid-template-rows: 41% 46%; align-content: start; padding: 13.5% 8% 12%;
+}
+[data-scene="result"]:not(.is-failure) #run-summary > section { padding: 2% 6%; }
+[data-scene="result"] .result-kicker { color: #896431; font-size: clamp(8px,.68vw,11px); font-weight: 900; letter-spacing: .12em; }
+[data-scene="result"]:not(.is-failure) .result-ending { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2%; }
+[data-scene="result"]:not(.is-failure) .result-status-icon { width: clamp(48px,4.7vw,76px); height: clamp(48px,4.7vw,76px); margin: 1% auto; }
+[data-scene="result"]:not(.is-failure) .result-ending h3 { margin: 0; font-size: clamp(20px,1.85vw,30px); text-align: center; }
+[data-scene="result"]:not(.is-failure) .result-ending p { margin: 1% 0; font-size: clamp(9px,.78vw,13px); text-align: center; }
+[data-scene="result"]:not(.is-failure) .result-ending strong { margin: 1% 0 0; font-size: clamp(16px,1.45vw,23px); }
+[data-scene="result"]:not(.is-failure) .result-stats { display: grid; grid-template-rows: auto repeat(5,minmax(0,1fr)); min-height: 0; padding-top: 2%; }
+[data-scene="result"]:not(.is-failure) .result-stats h3 { align-self: center; margin: 0; font-size: clamp(17px,1.5vw,24px); }
+[data-scene="result"]:not(.is-failure) .result-stats p { align-items: center; min-height: 0; padding: 0 2%; font-size: clamp(9px,.78vw,13px); }
+[data-scene="result"]:not(.is-failure) .result-stats p:last-child { align-items: flex-start; padding-top: 2.5%; }
+[data-scene="result"]:not(.is-failure) .result-stats p:last-child b { max-width: 62%; line-height: 1.25; }
+[data-scene="result"]:not(.is-failure) #return-title { left: 39.5%; bottom: 2.4%; width: 21%; height: 7%; z-index: 4; }
+
 /* HUD hierarchy: day and cash are primary; storage, stage and loan are compact support data. */
 [data-scene="hub"] > header {
   left: 2.8%; width: 34%; grid-template-columns: 1.05fr 1.25fr; gap: .5%;
@@ -3899,6 +3972,7 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
     return Number.isFinite(value) ? value : 1;
   }
   function refreshDailyQuestOffers(state2, balance2, relics = []) {
+    expireQuestsBeforeAuction(state2);
     state2.questOffers = createDailyQuestOffers(balance2, state2.day, state2.seed, relics);
     return state2.questOffers;
   }
@@ -5172,10 +5246,10 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
     }
     const session = state.relicSession;
     const art = relicArt[relic.id];
-    document.querySelector("#relic-card").innerHTML = `<p>${RELIC_TIER_LABELS[tier] || tier} \xB7 ${state.relicRound + 1}/3\uD68C</p><h2>${relic.name}</h2>${art ? `<img data-relic-art="${relic.id}" src="./assets/relics/${encodeURIComponent(art)}" alt="">` : ""}<p>${relic.effect}</p><strong>\uD604\uC7AC \uD638\uAC00 ${money(session.currentPrice)}</strong><em id="relic-timer" aria-label="\uB0A8\uC740 \uC2DC\uAC04"></em>`;
+    document.querySelector("#relic-card").innerHTML = `<header><span>${RELIC_TIER_LABELS[tier] || tier} \uC720\uBB3C</span><b>${state.relicRound + 1} / 3\uD68C</b></header><h2>${relic.name}</h2>${art ? `<img data-relic-art="${relic.id}" src="./assets/relics/${encodeURIComponent(art)}" alt="">` : ""}<p>${relic.effect}</p><footer><small>\uD604\uC7AC \uD638\uAC00</small><strong>${money(session.currentPrice)}</strong></footer><em id="relic-timer" aria-label="\uB0A8\uC740 \uC2DC\uAC04"></em>`;
     const participants = [{ id: "player", name: "\uB2F9\uC2E0", budget: state.cash }, ...session.bots.map((bot) => ({ ...bot, budget: bot.maxBid }))];
-    document.querySelector("#relic-participants").innerHTML = `<h3>\uCD5C\uC885 \uACBD\uB9E4 \uCC38\uAC00\uC790</h3>${participants.map((participant) => `<div class="participant ${session.leader === participant.id ? "is-leading" : ""}"><b>${participant.name}</b><strong>${money(participant.budget)}</strong></div>`).join("")}`;
-    document.querySelector("#relic-feed").innerHTML = session.feed.slice(-4).map((line) => `<p>${line}</p>`).join("");
+    document.querySelector("#relic-participants").innerHTML = `<h3>\uCD5C\uC885 \uACBD\uB9E4 \uCC38\uAC00\uC790</h3>${participants.map((participant, index) => `<div class="participant ${session.leader === participant.id ? "is-leading" : ""}"><span>${session.leader === participant.id ? "\uC120\uB450" : String(index + 1).padStart(2, "0")}</span><b>${participant.name}</b><small>\uC785\uCC30 \uD55C\uB3C4</small><strong>${money(participant.budget)}</strong></div>`).join("")}`;
+    document.querySelector("#relic-feed").innerHTML = `<header><small>RELIC AUCTION</small><h3>\uC720\uBB3C \uACBD\uB9E4</h3><p><b>${state.relicRound + 1}</b><span>/ 3\uD68C</span></p><strong>${RELIC_TIER_LABELS[tier] || tier} \uB4F1\uAE09</strong></header><section><h4>\uC785\uCC30 \uAE30\uB85D</h4>${session.feed.slice(-4).map((line) => `<p>${line}</p>`).join("")}</section>`;
     document.querySelector("#buy-relic").innerHTML = `<img src="./assets/ui/action-icons/bid.png" alt=""><span>10% \uC778\uC0C1 \uC785\uCC30</span>`;
     document.querySelector("#skip-relic").innerHTML = `<img src="./assets/ui/action-icons/pass.png" alt=""><span>\uBB3C\uB7EC\uB098\uAE30</span>`;
     document.querySelector("#buy-relic").disabled = state.cash < Math.ceil(session.currentPrice * 1.1);
@@ -5237,7 +5311,7 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
     const wonCount = state.history.filter((entry) => entry.won).length;
     const acquiredRelics = (state.relicChoices || []).map((id) => balance.relics.list.find((entry) => entry.id === id)?.name || id);
     const resultIcon = state.failure ? "restart.png" : "clear.png";
-    document.querySelector("#run-summary").innerHTML = `<section class="result-ending"><img class="result-status-icon" src="./assets/ui/action-icons/${resultIcon}" alt=""><h3>${state.failure ? "\uC5EC\uC815 \uC2E4\uD328" : `\uC0C1\uD68C ${state.shopStage}\uB2E8\uACC4 \uB2EC\uC131`}</h3>${state.failure ? `<p class="failure">${state.failure}</p>` : "<p>\uC2E0\uC911\uD55C \uAC70\uB798\uC640 \uAFB8\uC900\uD55C \uC131\uC7A5\uC73C\uB85C \uC5EC\uC815\uC744 \uB9C8\uCCE4\uC2B5\uB2C8\uB2E4.</p>"}<strong>${state.failure ? "\uB9C8\uAC10 \uC870\uAC74\uC744 \uB2E4\uC2DC \uD655\uC778\uD558\uC138\uC694." : "\uC644\uC8FC \uC131\uACF5"}</strong></section><section class="result-stats"><h3>\uC5EC\uC815 \uC694\uC57D</h3><p><span>\uC644\uC8FC \uC77C\uC218</span><b>${state.day}\uC77C</b></p><p><span>\uCD5C\uC885 \uC0C1\uD68C \uB2E8\uACC4</span><b>${state.shopStage}\uB2E8\uACC4</b></p><p><span>\uCD5C\uC885 \uC790\uC0B0</span><b>${money(state.cash + unsold)}</b></p><p><span>\uB099\uCC30 / \uC644\uB8CC \uC758\uB8B0</span><b>${wonCount}\uAC74 / ${state.completedQuestCount}\uAC74</b></p><p><span>\uD68D\uB4DD \uC720\uBB3C</span><b>${acquiredRelics.join(", ") || "\uC5C6\uC74C"}</b></p></section>`;
+    document.querySelector("#run-summary").innerHTML = `<section class="result-ending"><small class="result-kicker">JOURNEY RESULT \xB7 ${state.day}\uC77C</small><img class="result-status-icon" src="./assets/ui/action-icons/${resultIcon}" alt=""><h3>${state.failure ? "\uC5EC\uC815 \uC2E4\uD328" : `\uC0C1\uD68C ${state.shopStage}\uB2E8\uACC4 \uB2EC\uC131`}</h3>${state.failure ? `<p class="failure">${state.failure}</p>` : "<p>\uC2E0\uC911\uD55C \uAC70\uB798\uC640 \uAFB8\uC900\uD55C \uC131\uC7A5\uC73C\uB85C \uC5EC\uC815\uC744 \uB9C8\uCCE4\uC2B5\uB2C8\uB2E4.</p>"}<strong>${state.failure ? "\uB9C8\uAC10 \uC870\uAC74\uC744 \uB2E4\uC2DC \uD655\uC778\uD558\uC138\uC694." : "\uC644\uC8FC \uC131\uACF5"}</strong></section><section class="result-stats"><h3>\uC5EC\uC815 \uC694\uC57D</h3><p><span>\uC644\uC8FC \uC77C\uC218</span><b>${state.day}\uC77C</b></p><p><span>\uCD5C\uC885 \uC0C1\uD68C \uB2E8\uACC4</span><b>${state.shopStage}\uB2E8\uACC4</b></p><p><span>\uCD5C\uC885 \uC790\uC0B0</span><b>${money(state.cash + unsold)}</b></p><p><span>\uB099\uCC30 / \uC644\uB8CC \uC758\uB8B0</span><b>${wonCount}\uAC74 / ${state.completedQuestCount}\uAC74</b></p><p><span>\uD68D\uB4DD \uC720\uBB3C</span><b>${acquiredRelics.join(", ") || "\uC5C6\uC74C"}</b></p></section>`;
     if (state.failure) save();
     else store.clear(state.saveSlot);
   }
