@@ -1,0 +1,88 @@
+{
+  "runId": "targeted-repair-day2-short-complete-20260807",
+  "measuredAt": "2026-08-06T17:15:59.019Z",
+  "sourceRequestPath": "C:\\NHN Project\\NAN_2026_Team_Project-api\\Runtime\\reports\\live-generation\\api-html-minimal-v3-daily-content-d2-attempt-1.json",
+  "requestDay": 2,
+  "rules": {
+    "fullTemperature": 0.3,
+    "repairTemperature": 0.1,
+    "maxRepairRounds": 1,
+    "fallbackAfterRepairFailure": true,
+    "timeoutMs": 120000
+  },
+  "combinations": [
+    {
+      "model": "qwen3:14b",
+      "harness": "runtime-schema-selective-lot-repair",
+      "trials": 5,
+      "passes": 5,
+      "passRate": 1,
+      "fallbackCount": 0,
+      "averageRepairedLots": 1,
+      "averageLatencyMs": 18322,
+      "averageEvalCount": 1343
+    }
+  ],
+  "observations": [
+    {
+      "model": "qwen3:14b",
+      "trial": 1,
+      "passed": true,
+      "fallbackRequired": false,
+      "errors": [],
+      "skillValidatorPassed": true,
+      "repairedLots": 4,
+      "totalLatencyMs": 23503,
+      "totalEvalCount": 1714,
+      "artifact": "targeted-repair-day2-short-complete-20260807-qwen3-14b-t1-final.json"
+    },
+    {
+      "model": "qwen3:14b",
+      "trial": 2,
+      "passed": true,
+      "fallbackRequired": false,
+      "errors": [],
+      "skillValidatorPassed": true,
+      "repairedLots": 0,
+      "totalLatencyMs": 16074,
+      "totalEvalCount": 1151,
+      "artifact": "targeted-repair-day2-short-complete-20260807-qwen3-14b-t2-final.json"
+    },
+    {
+      "model": "qwen3:14b",
+      "trial": 3,
+      "passed": true,
+      "fallbackRequired": false,
+      "errors": [],
+      "skillValidatorPassed": true,
+      "repairedLots": 0,
+      "totalLatencyMs": 17337,
+      "totalEvalCount": 1293,
+      "artifact": "targeted-repair-day2-short-complete-20260807-qwen3-14b-t3-final.json"
+    },
+    {
+      "model": "qwen3:14b",
+      "trial": 4,
+      "passed": true,
+      "fallbackRequired": false,
+      "errors": [],
+      "skillValidatorPassed": true,
+      "repairedLots": 1,
+      "totalLatencyMs": 18273,
+      "totalEvalCount": 1348,
+      "artifact": "targeted-repair-day2-short-complete-20260807-qwen3-14b-t4-final.json"
+    },
+    {
+      "model": "qwen3:14b",
+      "trial": 5,
+      "passed": true,
+      "fallbackRequired": false,
+      "errors": [],
+      "skillValidatorPassed": true,
+      "repairedLots": 0,
+      "totalLatencyMs": 16423,
+      "totalEvalCount": 1211,
+      "artifact": "targeted-repair-day2-short-complete-20260807-qwen3-14b-t5-final.json"
+    }
+  ]
+}

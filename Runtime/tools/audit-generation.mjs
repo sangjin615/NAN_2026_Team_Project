@@ -53,7 +53,7 @@ console.log(`생성 API 감사 — ${live ? '라이브' : '오프라인'} 모드
 
 // ------------------------------------------------------------- 1) 설정 점검
 const blueprintTimeout = apiConfig.blueprintTimeoutMs ?? apiConfig.timeoutMs ?? 8000;
-const dayTimeout = apiConfig.timeoutMs ?? 8000;
+const dayTimeout = apiConfig.dayTimeoutMs ?? apiConfig.timeoutMs ?? 8000;
 console.log('[설정]');
 console.log(`  enabled=${apiConfig.enabled} endpoint=${apiConfig.endpoint}`);
 console.log(`  블루프린트 타임아웃 ${blueprintTimeout}ms · 일자 타임아웃 ${dayTimeout}ms · 재시도 ${apiConfig.retries ?? 0}회`);

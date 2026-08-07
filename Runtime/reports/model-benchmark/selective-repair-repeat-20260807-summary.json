@@ -1,0 +1,115 @@
+{
+  "runId": "selective-repair-repeat-20260807",
+  "measuredAt": "2026-08-06T16:52:58.627Z",
+  "rules": {
+    "fullTemperature": 0.3,
+    "repairTemperature": 0.1,
+    "maxRepairRounds": 1,
+    "fallbackAfterRepairFailure": true,
+    "timeoutMs": 120000
+  },
+  "combinations": [
+    {
+      "model": "qwen3.5:9b",
+      "harness": "runtime-schema-selective-lot-repair",
+      "trials": 3,
+      "passes": 0,
+      "passRate": 0,
+      "fallbackCount": 3,
+      "averageRepairedLots": 5.666666666666667,
+      "averageLatencyMs": 22343,
+      "averageEvalCount": 1848
+    },
+    {
+      "model": "qwen3:14b",
+      "harness": "runtime-schema-selective-lot-repair",
+      "trials": 3,
+      "passes": 3,
+      "passRate": 1,
+      "fallbackCount": 0,
+      "averageRepairedLots": 0.3333333333333333,
+      "averageLatencyMs": 18155,
+      "averageEvalCount": 1149
+    }
+  ],
+  "observations": [
+    {
+      "model": "qwen3.5:9b",
+      "trial": 1,
+      "passed": false,
+      "fallbackRequired": true,
+      "errors": [
+        "copy quality: lot 2 description does not match category CLK; lot 3 description has unsafe ending"
+      ],
+      "skillValidatorPassed": true,
+      "repairedLots": 6,
+      "totalLatencyMs": 28921,
+      "totalEvalCount": 1859,
+      "artifact": "selective-repair-repeat-20260807-qwen3.5-9b-t1-final.json"
+    },
+    {
+      "model": "qwen3.5:9b",
+      "trial": 2,
+      "passed": false,
+      "fallbackRequired": true,
+      "errors": [
+        "copy quality: lot 1 setHint exceeds 25 chars; lot 6 banned phrase 세련된; lot 6 setHint exceeds 25 chars; lot 8 description has unsafe ending"
+      ],
+      "skillValidatorPassed": true,
+      "repairedLots": 5,
+      "totalLatencyMs": 18530,
+      "totalEvalCount": 1807,
+      "artifact": "selective-repair-repeat-20260807-qwen3.5-9b-t2-final.json"
+    },
+    {
+      "model": "qwen3.5:9b",
+      "trial": 3,
+      "passed": false,
+      "fallbackRequired": true,
+      "errors": [
+        "copy quality: lot 2 description does not match category CLK"
+      ],
+      "skillValidatorPassed": true,
+      "repairedLots": 6,
+      "totalLatencyMs": 19578,
+      "totalEvalCount": 1879,
+      "artifact": "selective-repair-repeat-20260807-qwen3.5-9b-t3-final.json"
+    },
+    {
+      "model": "qwen3:14b",
+      "trial": 1,
+      "passed": true,
+      "fallbackRequired": false,
+      "errors": [],
+      "skillValidatorPassed": true,
+      "repairedLots": 1,
+      "totalLatencyMs": 24031,
+      "totalEvalCount": 1262,
+      "artifact": "selective-repair-repeat-20260807-qwen3-14b-t1-final.json"
+    },
+    {
+      "model": "qwen3:14b",
+      "trial": 2,
+      "passed": true,
+      "fallbackRequired": false,
+      "errors": [],
+      "skillValidatorPassed": true,
+      "repairedLots": 0,
+      "totalLatencyMs": 15555,
+      "totalEvalCount": 1112,
+      "artifact": "selective-repair-repeat-20260807-qwen3-14b-t2-final.json"
+    },
+    {
+      "model": "qwen3:14b",
+      "trial": 3,
+      "passed": true,
+      "fallbackRequired": false,
+      "errors": [],
+      "skillValidatorPassed": true,
+      "repairedLots": 0,
+      "totalLatencyMs": 14880,
+      "totalEvalCount": 1073,
+      "artifact": "selective-repair-repeat-20260807-qwen3-14b-t3-final.json"
+    }
+  ]
+}

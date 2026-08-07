@@ -2,6 +2,7 @@ import { build } from 'esbuild';
 import { readFile, writeFile } from 'node:fs/promises';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { assertPublicGenerationConfig } from '../src/generation-api-config.js';
 
 const runtimeDir = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const read = (path) => readFile(resolve(runtimeDir, path), 'utf8');
@@ -29,7 +30,7 @@ const bundle = await build({
 
 const embedded = {
   './contracts/vsl-map.template.json': JSON.parse(contract),
-  './data/api-config.json': JSON.parse(apiConfig),
+  './data/api-config.json': assertPublicGenerationConfig(JSON.parse(apiConfig)),
   './data/balance.json': JSON.parse(balance),
   './assets/items/catalog.json': JSON.parse(catalog),
   './data/audio-map.json': JSON.parse(audioMap),
