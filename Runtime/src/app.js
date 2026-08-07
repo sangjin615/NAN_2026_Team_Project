@@ -792,17 +792,19 @@ function renderRelic() {
   const participants = [{ id: 'player', name: '당신', budget: state.cash }, ...session.bots.map((bot) => ({ ...bot, budget: bot.maxBid }))];
   document.querySelector('#relic-participants').innerHTML = `<h3>최종 경매 참가자</h3>${participants.map((participant, index) => `<div class="participant ${session.leader === participant.id ? 'is-leading' : ''}"><span>${session.leader === participant.id ? '선두' : String(index + 1).padStart(2, '0')}</span><b>${participant.name}</b><small>입찰 한도</small><strong>${money(participant.budget)}</strong></div>`).join('')}`;
   document.querySelector('#relic-feed').innerHTML = `<header><small>RELIC AUCTION</small><h3>유물 경매</h3><p><b>${state.relicRound + 1}</b><span>/ 3회</span></p><strong>${RELIC_TIER_LABELS[tier] || tier} 등급</strong></header><section><h4>입찰 기록</h4>${session.feed.slice(-4).map((line) => `<p>${line}</p>`).join('')}</section>`;
-  document.querySelector('#buy-relic').innerHTML = `<img src="./assets/ui/action-icons/bid.png" alt=""><span>10% 인상 입찰</span>`;
-  document.querySelector('#skip-relic').innerHTML = `<img src="./assets/ui/action-icons/pass.png" alt=""><span>물러나기</span>`;
-  document.querySelector('#buy-relic').disabled = state.cash < Math.ceil(session.currentPrice * 1.1);
-  armActionTimer('#relic-timer', session.deadline, () => finishRelic(false));
+  const minimumBid = session.currentPrice + Math.max(1, Math.ceil(session.currentPrice * balance.auction.minRaiseRate));
+  document.querySelectorAll('[data-relic-raise]').forEach((button) => { button.disabled = state.cash < Math.max(minimumBid, Math.ceil(session.currentPrice * Number(button.dataset.relicRaise))); });
+  document.querySelector('#direct-relic-bid').disabled = state.cash < minimumBid;
+  armActionTimer('#relic-timer', session.deadline, () => finishRelic('pass'));
 }
 
-function finishRelic(bid) {
+function finishRelic(action, multiplier = 1, directPrice = null) {
   clearActionTimer(); const session = state.relicSession;
-  if (bid) {
-    const price = Math.ceil(session.currentPrice * 1.1);
-    if (state.cash < price) return renderRelic();
+  if (action === 'bid') {
+    const minimumBid = session.currentPrice + Math.max(1, Math.ceil(session.currentPrice * balance.auction.minRaiseRate));
+    const price = directPrice === null ? Math.max(minimumBid, Math.ceil(session.currentPrice * multiplier)) : directPrice;
+    if (!Number.isInteger(price) || price < minimumBid) { session.feed.push(`최소 입찰 금액은 ${money(minimumBid)}입니다.`); return renderRelic(); }
+    if (state.cash < price) { session.feed.push('보유 자금이 부족합니다.'); return renderRelic(); }
     session.currentPrice = price; session.leader = 'player'; session.feed.push(`당신 ${money(price)}`); audio.playSfx('relic-bid');
     session.deadline = Date.now() + 15000;
     const challenger = [...session.bots].filter((bot) => bot.maxBid > price).sort((a, b) => b.maxBid - a.maxBid)[0];
@@ -902,7 +904,17 @@ document.querySelector('#direct-bid').onclick = () => {
   finishLot('bid', 1, proposed);
 };
 document.querySelector('#pass').onclick = () => finishLot('pass'); document.querySelector('#next-day').onclick = nextDay;
-document.querySelector('#buy-relic').onclick = () => finishRelic(true); document.querySelector('#skip-relic').onclick = () => finishRelic(false);
+document.querySelectorAll('[data-relic-raise]').forEach((button) => button.onclick = () => finishRelic('bid', Number(button.dataset.relicRaise)));
+document.querySelector('#direct-relic-bid').onclick = () => {
+  const session = state.relicSession;
+  if (!session) return;
+  const minimumBid = session.currentPrice + Math.max(1, Math.ceil(session.currentPrice * balance.auction.minRaiseRate));
+  const input = window.prompt('입찰 금액을 입력하세요.', String(minimumBid));
+  if (input === null) return;
+  const proposed = Number(input.replace(/[^0-9]/g, ''));
+  finishRelic('bid', 1, proposed);
+};
+document.querySelector('#skip-relic').onclick = () => finishRelic('pass');
 document.querySelector('#return-title').onclick = () => adapter.showScene('title');
 document.querySelector('#title-museum').onclick = () => renderMuseum('title');
 document.querySelector('#museum-back').onclick = () => museumReturn === 'title' ? adapter.showScene('title') : renderHub();

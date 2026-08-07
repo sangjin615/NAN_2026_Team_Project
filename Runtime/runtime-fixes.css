@@ -3329,6 +3329,8 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
 [data-scene="relic"] #relic-participants .participant.is-leading { background: #e4c77c55; }
 [data-scene="relic"] #relic-participants .participant.is-leading > span { color: #9b381f; }
 [data-scene="relic"] > .actions { left: 24%; bottom: 1.8%; width: 54%; height: 15%; }
+[data-scene="relic"] > .actions button { min-width: 0; padding: 7px 9px; font-size: clamp(11px,1.08vw,17px); }
+[data-scene="relic"] > .actions button img { width: clamp(20px,2vw,32px); height: clamp(20px,2vw,32px); }
 
 /* Ending: a single centered parchment with a non-overlapping hero, stats and action. */
 [data-scene="result"] > h2 { display: none; }

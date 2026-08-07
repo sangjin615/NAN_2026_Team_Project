@@ -32,6 +32,14 @@ test('auction bids add three seconds and the clock shows tenths', () => {
   assert.equal(formatAuctionTime(0), '0.0초');
 });
 
+test('relic auction exposes the same bid controls as the normal auction', async () => {
+  const html = await readFile(new URL('../index.html', import.meta.url), 'utf8');
+  const relicScene = html.match(/<section class="scene relic"[\s\S]*?<\/section>/)?.[0] || '';
+  assert.deepEqual([...relicScene.matchAll(/data-relic-raise="([^"]+)"/g)].map((match) => match[1]), ['1.05', '1.1', '1.2']);
+  assert.match(relicScene, /id="direct-relic-bid"/);
+  assert.match(relicScene, /id="skip-relic"/);
+});
+
 test('creates a reproducible 12 day, 96 lot schedule from the 60 base items', () => {
   const first = createRunSchedule({ catalog, balance, seed: 'demo' });
   const second = createRunSchedule({ catalog, balance, seed: 'demo' });
