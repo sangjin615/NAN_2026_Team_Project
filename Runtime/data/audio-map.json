@@ -8,14 +8,14 @@
     "city": { "file": "./assets/audio/bgm/bgm-02-city__loop.wav", "volume": 0.72, "loop": true },
     "workplace": { "file": "./assets/audio/bgm/bgm-07-loading-workshop__loop.wav", "volume": 0.68, "loop": true },
     "office": { "file": "./assets/audio/bgm/bgm-10-office-appraisal__loop.wav", "volume": 0.68, "loop": true },
-    "exchange": { "file": "./assets/audio/bgm/bgm-14-merchant-workshop__loop.wav", "volume": 0.68, "loop": true },
-    "merchant": { "file": "./assets/audio/bgm/bgm-06-archive__loop.wav", "volume": 0.68, "loop": true },
+    "exchange": { "file": "./assets/audio/bgm/bgm-12-exchange-ledger__loop.wav", "volume": 0.68, "loop": true },
+    "merchant": { "file": "./assets/audio/bgm/bgm-06-merchant-reprise__loop.wav", "volume": 0.68, "loop": true },
     "guild": { "file": "./assets/audio/bgm/bgm-13-guild-vault__loop.wav", "volume": 0.68, "loop": true },
     "tavern": { "file": "./assets/audio/bgm/bgm-11-tavern-whispers__loop.wav", "volume": 0.68, "loop": true },
     "auction": { "file": "./assets/audio/bgm/bgm-03-auction__L1.wav", "volume": 0.74, "loop": true },
     "relic": { "file": "./assets/audio/bgm/bgm-04-relic__L1.wav", "volume": 0.76, "loop": true },
     "settlement": { "file": "./assets/audio/bgm/bgm-05-settlement__L1.wav", "volume": 0.7, "loop": true },
-    "museum": { "file": "./assets/audio/bgm/bgm-21-museum-memory__loop.wav", "volume": 0.66, "loop": true }
+    "museum": { "file": "./assets/audio/bgm/bgm-21-museum-settlement-result__loop.wav", "volume": 0.66, "loop": true }
   },
   "sfx": {
     "navigate": { "file": "./assets/audio/sfx/sfx-venue-enter.wav", "volume": 0.72 },
