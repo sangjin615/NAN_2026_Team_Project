@@ -219,7 +219,10 @@ async function newRun(seed) {
   await generation.ensure({ currentDay: 1, schedule, sets, aheadDays: 0 });
   updateRunLoading(88, `SLOT ${selectedSlot}에 새 여정을 저장하고 있습니다.`, ['schedule', 'sets', 'content'], 'save');
   save();
-  const remainingMs = 900 - (performance.now() - loadingStartedAt);
+  // 로딩창 최소 표시 시간. 생성이 즉시 끝나는 경우가 있다 — 공급자가 static
+  // 으로 답하거나, 앞으로 넣을 선행 생성이 이미 끝나 있는 경우다. 그때 화면이
+  // 한순간 떴다 사라지면 준비가 된 것이 아니라 무언가 잘못된 것처럼 보인다.
+  const remainingMs = 2000 - (performance.now() - loadingStartedAt);
   if (remainingMs > 0) await new Promise((resolve) => window.setTimeout(resolve, remainingMs));
   updateRunLoading(100, '준비가 완료되었습니다. 도시로 이동합니다.', ['schedule', 'sets', 'content', 'save']);
   await waitForPaint();
