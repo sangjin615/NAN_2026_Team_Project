@@ -64,7 +64,7 @@ test('browser zoom is inversely compensated while preserving the 16:9 layout vie
   assert.match(app, /outerWidth \/ viewportWidth/);
   assert.match(app, /--browser-zoom-inverse/);
   assert.match(app, /visualViewport\?\.addEventListener\('resize'/);
-  assert.match(css, /transform: scale\(var\(--browser-zoom-inverse\)\)/);
+  assert.match(css, /#app\s*\{[\s\S]*?position: fixed; left: 0; top: 0;[\s\S]*?transform: scale\(var\(--browser-zoom-inverse\)\); transform-origin: top left;/);
   assert.match(css, /width: min\(var\(--layout-viewport-width\)/);
 });
 
