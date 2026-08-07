@@ -1,7 +1,10 @@
 import { createRng, shuffle } from './rng.js';
 import { RELIC_AUCTION_DAY, RUN_DAYS } from './constants.js';
 
-const QUEST_IDS = ['designated', 'multi', 'bargain', 'restraint', 'block'];
+const QUEST_IDS = [
+  'grade-COMMON', 'grade-RARE', 'grade-EPIC', 'grade-LEGENDARY',
+  'category-CER', 'category-CLK', 'category-PNT', 'category-BOK', 'category-MET', 'category-JEW',
+];
 const GRADE_BETA = { COMMON: 0.27, RARE: 1, EPIC: 2.09, LEGENDARY: 3.64 };
 
 export function createMarketPath(balance, seed) {
@@ -25,17 +28,22 @@ export function createDailyQuestOffers(balance, day, seed, relics = []) {
   const count = Math.min(5, relics.includes('royal-charter') ? 5 : balance.quests?.offering?.perDay || 3);
   const enabledQuestIds = QUEST_IDS.filter((id) => balance.quests[id]?.enabled !== false);
   const rewardPolicy = balance.quests?.rewardPolicy || {};
-  const families = shuffle(['CER', 'CLK', 'PNT', 'BOK', 'MET', 'JEW'], createRng(`${seed}:quest-targets:${day}`));
   const shuffledIds = shuffle(enabledQuestIds, createRng(`${seed}:quests:${day}`));
   const dailyIds = Array.from({ length: count }, (_, index) => shuffledIds[index % shuffledIds.length]);
-  return dailyIds.map((id, index) => ({
+  return dailyIds.map((id, index) => {
+    const definition = balance.quests[id] || balance.quests.submissionDefaults || {};
+    const [kind, target] = id.split('-');
+    return ({
     offerId: `day-${day}-${id}-${index + 1}`, offeredDay: day, acceptDeadlineDay: Math.min(12, day + 1),
-    id, fee: balance.quests[id].fee, reward: balance.quests[id].reward,
+    id, fee: definition.fee || 0, reward: definition.reward || 0,
     rewardMode: rewardPolicy.mode, completionBonus: rewardPolicy.completionBonus,
     completionBonusByStage: rewardPolicy.completionBonusByStage,
-    rule: balance.quests[id].rule, accepted: false, completed: false,
-    targetCategory: families[index % families.length], acceptedDay: null, deadlineDay: null
-  }));
+    rule: definition.rule, accepted: false, completed: false,
+    targetCategory: kind === 'category' ? target : null,
+    targetGrade: kind === 'grade' ? target : null,
+    acceptedDay: null, deadlineDay: null
+  });
+  });
 }
 
 export function marketIndexForDay(path, day) {
@@ -189,6 +197,8 @@ export function acceptQuest(state, questId, balance) {
 
 export function questMatchesItem(quest, item) {
   if (!quest || !item || item.sold || item.collateral || item.delivered) return false;
+  if (quest.id?.startsWith('grade-')) return item.grade === quest.targetGrade;
+  if (quest.id?.startsWith('category-')) return item.category === quest.targetCategory;
   if (quest.id === 'designated') return item.category === quest.targetCategory;
   if (quest.id === 'multi') return ['RARE', 'EPIC', 'LEGENDARY'].includes(item.grade);
   if (quest.id === 'bargain') return item.paid <= item.basePrice * 0.85;

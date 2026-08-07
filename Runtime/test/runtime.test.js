@@ -5,7 +5,7 @@ import { createRunSchedule, normalizeVisualEffects, validateSchedule, VISUAL_EFF
 import { createSetGraph } from '../src/set-graph.js';
 import { FallbackContentProvider, GenerationBuffer } from '../src/generation-buffer.js';
 import { createInitialState, resolveLot, advanceDay, prepareAuctionEntry } from '../src/game-state.js';
-import { resolveAuction, sellAll, sellItems, quoteItemsSale, bestSetMultiplier, acceptQuest, takeLoan, botBidForLot, estimateBotDailyAssets, nextBotBid, openingBotBid, missedDeadline, isBankrupt, deliverQuestItem, questCompletionBonus, refreshDailyQuestOffers, repayLoanEarly, selectDistinctBotInterests, createMarketPath } from '../src/systems.js';
+import { resolveAuction, sellAll, sellItems, quoteItemsSale, bestSetMultiplier, acceptQuest, takeLoan, botBidForLot, estimateBotDailyAssets, nextBotBid, openingBotBid, missedDeadline, isBankrupt, deliverQuestItem, questCompletionBonus, refreshDailyQuestOffers, repayLoanEarly, selectDistinctBotInterests, createMarketPath, createDailyQuestOffers, questMatchesItem } from '../src/systems.js';
 import { recordEvent, runMetrics } from '../src/telemetry.js';
 import { GenerationApiProvider } from '../src/generation-api-provider.js';
 import { assertPublicGenerationConfig, resolveGenerationApiConfig } from '../src/generation-api-config.js';
@@ -410,6 +410,21 @@ test('daily quest refresh replaces yesterday offers with three new offers', () =
   assert.equal(state.questOffers.every((quest) => quest.offeredDay === 2), true);
   assert.equal(state.questOffers.some((quest) => quest.offerId === first.offerId || quest.offerId === second.offerId), false);
   assert.equal(new Set(state.questOffers.map((quest) => quest.offerId)).size, state.questOffers.length);
+});
+
+test('daily quests draw from four grades and six categories', async () => {
+  const ids = new Set();
+  for (let day = 1; day <= 40; day += 1) {
+    createDailyQuestOffers(balance, day, `ten-quest-types-${day}`).forEach((quest) => ids.add(quest.id));
+  }
+  assert.deepEqual([...ids].sort(), [
+    'category-BOK', 'category-CER', 'category-CLK', 'category-JEW', 'category-MET', 'category-PNT',
+    'grade-COMMON', 'grade-EPIC', 'grade-LEGENDARY', 'grade-RARE',
+  ]);
+  assert.equal(questMatchesItem({ id: 'grade-EPIC', targetGrade: 'EPIC' }, { grade: 'EPIC', category: 'CER' }), true);
+  assert.equal(questMatchesItem({ id: 'category-JEW', targetCategory: 'JEW' }, { grade: 'COMMON', category: 'JEW' }), true);
+  const app = await readFile(new URL('../src/app.js', import.meta.url), 'utf8');
+  assert.match(app, /startsWith\('category-'\)\) return categoryIconUrl\(quest\.targetCategory\)/);
 });
 
 test('daily quest refresh removes active quests after their deadline', () => {
