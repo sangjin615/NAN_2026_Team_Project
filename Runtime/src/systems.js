@@ -215,6 +215,14 @@ export function questCompletionBonus(quest, shopStage) {
   return quest?.completionBonusByStage?.[shopStage] ?? quest?.completionBonus ?? 0;
 }
 
+export function questDeliveryReward(quest, item, shopStage, shopBonus = 0) {
+  const completionBonus = questCompletionBonus(quest, shopStage);
+  if (quest.rewardMode === 'fixedSubmissionTable' || quest.id?.startsWith('grade-') || quest.id?.startsWith('category-')) return completionBonus;
+  if (quest.rewardMode === 'deliveredBasePlusBonus') return item.basePrice + completionBonus;
+  if (quest.rewardMode === 'deliveredBasePlusFeePlusBonus') return item.basePrice + quest.fee + completionBonus;
+  return Math.round(quest.reward * (1 + shopBonus));
+}
+
 export function deliverQuestItem(state, questId, lotId) {
   const quest = state.activeQuests.find((entry) => (entry.offerId === questId || entry.id === questId) && !entry.completed);
   const item = state.inventory.find((entry) => entry.lotId === lotId);
@@ -222,12 +230,7 @@ export function deliverQuestItem(state, questId, lotId) {
   item.delivered = true; item.sold = true; item.salePrice = 0;
   quest.completed = true; quest.deliveredLotId = lotId; quest.completedDay = state.day;
   const shopBonus = state.balanceQuestBonus?.[state.shopStage] ?? 0;
-  const completionBonus = questCompletionBonus(quest, state.shopStage);
-  const reward = quest.rewardMode === 'deliveredBasePlusBonus'
-    ? item.basePrice + completionBonus
-    : quest.rewardMode === 'deliveredBasePlusFeePlusBonus'
-    ? item.basePrice + quest.fee + completionBonus
-    : Math.round(quest.reward * (1 + shopBonus));
+  const reward = questDeliveryReward(quest, item, state.shopStage, shopBonus);
   quest.paidReward = reward;
   state.cash += reward; state.completedQuestCount += 1;
   return true;

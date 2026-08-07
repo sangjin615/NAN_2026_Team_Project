@@ -494,7 +494,7 @@ test('submission quest bonuses follow type and shop stage without an acceptance 
     'grade-EPIC': [0, 2200, 3300, 4400, 5700],
     'grade-LEGENDARY': [0, 3000, 4500, 6000, 7500],
   };
-  assert.equal(balance.quests.rewardPolicy.mode, 'deliveredBasePlusBonus');
+  assert.equal(balance.quests.rewardPolicy.mode, 'fixedSubmissionTable');
   assert.equal(balance.quests.rewardPolicy.refundAcceptanceFee, false);
   assert.deepEqual(balance.quests.rewardPolicy.completionBonusByType, expected);
   const offers = Array.from({ length: 40 }, (_, day) => createDailyQuestOffers(balance, day + 1, 'quest-reward-table')).flat();
@@ -511,21 +511,27 @@ test('submission quest UI does not show an acceptance fee', async () => {
   const app = await readFile(new URL('../src/app.js', import.meta.url), 'utf8');
   assert.doesNotMatch(html, /id="quest-detail-fee"/);
   assert.doesNotMatch(app, /<span>수주비 \$\{money\(quest\.fee\)\}/);
-  assert.match(app, /<span>보상 \$\{questRewardLabel\(quest\)\}<\/span>/);
+  assert.match(app, /<span>총 보상 \$\{questRewardLabel\(quest\)\}<\/span>/);
+  assert.match(app, /총 보상 \$\{money\(questDeliveryReward\(quest, item, state\.shopStage\)\)\}/);
 });
 
-test('new submission rewards pay base price plus the table bonus only', () => {
+test('epic and legendary submission quests use the swapped icons', async () => {
+  const app = await readFile(new URL('../src/app.js', import.meta.url), 'utf8');
+  assert.match(app, /'grade-EPIC': 'designated', 'grade-LEGENDARY': 'block'/);
+});
+
+test('new submission rewards use the table total including the item base price', () => {
   const schedule = createRunSchedule({ catalog, balance, seed: 'submission-reward-no-fee' });
   const state = createInitialState({ schedule, sets: createSetGraph(schedule, 'submission-reward-no-fee'), balance, startCash: 1000000 });
   const lot = schedule.days[0].lots[0];
   state.shopStage = 2;
   state.inventory.push({ lotId: lot.lotId, name: lot.baseName, paid: 1, basePrice: 4000, category: lot.category, grade: lot.grade, sold: false, collateral: false });
-  state.questOffers = [{ id: 'category-test', fee: 999, rewardMode: 'deliveredBasePlusBonus', completionBonusByStage: [0, 1700, 2600, 3500, 4500], accepted: false, targetCategory: lot.category }];
+  state.questOffers = [{ id: 'category-test', fee: 999, rewardMode: 'fixedSubmissionTable', completionBonusByStage: [0, 1700, 2600, 3500, 4500], accepted: false, targetCategory: lot.category }];
   assert.equal(acceptQuest(state, 'category-test', balance), true);
   const beforeDelivery = state.cash;
   assert.equal(deliverQuestItem(state, 'category-test', lot.lotId), true);
-  assert.equal(state.cash - beforeDelivery, 6600);
-  assert.equal(state.activeQuests[0].paidReward, 6600);
+  assert.equal(state.cash - beforeDelivery, 2600);
+  assert.equal(state.activeQuests[0].paidReward, 2600);
 });
 
 test('daily quest refresh removes active quests after their deadline', () => {

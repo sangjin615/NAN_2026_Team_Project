@@ -10,7 +10,7 @@ import { VslRuntimeAdapter } from './vsl-adapter.js';
 import {
   acceptQuest, botBidForLot, createMarketPath, estimateBotDailyAssets, nextBotBid, openingBotBid, selectDistinctBotInterests,
   deliverQuestItem, effectiveQuestDeadline, expireQuestsBeforeAuction, missedDeadline, questMatchesItem,
-  marketIndexForDay, questCompletionBonus, quoteItemsSale, refreshDailyQuestOffers, repayLoanEarly, sellItems, settleLoan, settleQuests, takeLoan, upgradeShop,
+  marketIndexForDay, questCompletionBonus, questDeliveryReward, quoteItemsSale, refreshDailyQuestOffers, repayLoanEarly, sellItems, settleLoan, settleQuests, takeLoan, upgradeShop,
 } from './systems.js';
 import { downloadRunLog, recordEvent } from './telemetry.js';
 import { AudioBus } from './audio-bus.js';
@@ -406,7 +406,7 @@ function questRequirement(quest) {
 function questIconUrl(quest) {
   if (quest.id?.startsWith('category-')) return categoryIconUrl(quest.targetCategory);
   const icon = {
-    'grade-COMMON': 'restraint', 'grade-RARE': 'multi', 'grade-EPIC': 'block', 'grade-LEGENDARY': 'designated',
+    'grade-COMMON': 'restraint', 'grade-RARE': 'multi', 'grade-EPIC': 'designated', 'grade-LEGENDARY': 'block',
     designated: 'designated', multi: 'multi', bargain: 'bargain',
     restraint: 'restraint', block: 'block',
   }[quest.id] || 'quest-board';
@@ -414,7 +414,9 @@ function questIconUrl(quest) {
 }
 
 function questRewardLabel(quest) {
-  return quest.rewardMode === 'deliveredBasePlusBonus'
+  return quest.rewardMode === 'fixedSubmissionTable' || quest.id?.startsWith('grade-') || quest.id?.startsWith('category-')
+    ? money(questCompletionBonus(quest, state.shopStage))
+    : quest.rewardMode === 'deliveredBasePlusBonus'
     ? `물품 기준가 + ${money(questCompletionBonus(quest, state.shopStage))}`
     : quest.rewardMode === 'deliveredBasePlusFeePlusBonus'
     ? `물품 기준가 + 수주비 + ${money(questCompletionBonus(quest, state.shopStage))}`
@@ -444,13 +446,13 @@ function renderQuestOffice(message = '') {
   clearActionTimer(); audio.playBgm('workplace'); state.phase = 'quests'; adapter.showScene('quests'); syncHeader();
   const visibleQuestOffers = state.questOffers.filter((quest) => balance.quests[quest.id]?.enabled !== false);
   document.querySelector('#quest-offers').innerHTML = visibleQuestOffers.map((quest) => `
-    <article><img class="quest-icon" src="${questIconUrl(quest)}" alt=""><b>${questTitle(quest)}</b><small>${questRequirement(quest)}</small><span>보상 ${questRewardLabel(quest)}</span>
+    <article><img class="quest-icon" src="${questIconUrl(quest)}" alt=""><b>${questTitle(quest)}</b><small>${questRequirement(quest)}</small><span>총 보상 ${questRewardLabel(quest)}</span>
     <button data-quest="${quest.offerId || quest.id}" ${quest.accepted ? 'disabled' : ''}>${quest.accepted ? '수주 완료' : '수주'}</button></article>`).join('');
   const active = state.activeQuests.filter((quest) => !quest.completed);
   const activeMarkup = active.length ? active.map((quest) => {
     const candidates = ownedItems().filter((item) => questMatchesItem(quest, item));
     return `<article class="accepted-quest" data-active-quest="${quest.offerId || quest.id}" tabindex="0" role="button" aria-label="${questTitle(quest)} 상세 보기"><img class="quest-icon" src="${questIconUrl(quest)}" alt=""><b>${questTitle(quest)}</b><span>${effectiveQuestDeadline(quest)}일차 경매 전까지</span>
-      <select data-delivery-select="${quest.offerId || quest.id}"><option value="">제출할 물품 선택</option>${candidates.map((item) => `<option value="${item.lotId}">${item.name} · ${gradeLabel(item.grade)}</option>`).join('')}</select>
+      <select data-delivery-select="${quest.offerId || quest.id}"><option value="">제출할 물품 선택</option>${candidates.map((item) => `<option value="${item.lotId}">${item.name} · ${gradeLabel(item.grade)} · 총 보상 ${money(questDeliveryReward(quest, item, state.shopStage))}</option>`).join('')}</select>
       <button data-deliver-quest="${quest.offerId || quest.id}" ${candidates.length ? '' : 'disabled'}>물품 제출</button></article>`;
   }).join('') : '<p class="empty-note">수주한 의뢰가 없습니다.</p>';
   document.querySelector('#active-quests').innerHTML = `
@@ -735,7 +737,7 @@ function openCatalogQuestDialog() {
   const active = state.activeQuests.filter((quest) => !quest.completed);
   document.querySelector('#catalog-quest-list').innerHTML = active.length ? active.map((quest) => `
     <article class="${effectiveQuestDeadline(quest) <= state.day ? 'is-urgent' : ''}">
-      <img src="${questIconUrl(quest)}" alt=""><div><small>${effectiveQuestDeadline(quest)}일차 경매 전까지</small><h3>${questTitle(quest)}</h3><p>${questRequirement(quest)}</p><strong>보상 · ${questRewardLabel(quest)}</strong></div>
+      <img src="${questIconUrl(quest)}" alt=""><div><small>${effectiveQuestDeadline(quest)}일차 경매 전까지</small><h3>${questTitle(quest)}</h3><p>${questRequirement(quest)}</p><strong>총 보상 · ${questRewardLabel(quest)}</strong></div>
     </article>`).join('') : '<div class="catalog-quest-empty"><img src="./assets/ui/quest-icons/quest-board.png" alt=""><b>수주한 의뢰가 없습니다.</b><span>도시의 의뢰소에서 오늘의 의뢰를 확인할 수 있습니다.</span></div>';
   document.querySelector('#catalog-quest-dialog').showModal();
 }
