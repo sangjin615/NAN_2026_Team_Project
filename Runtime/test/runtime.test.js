@@ -56,6 +56,14 @@ test('relic auction renders a three-lot guide with effects and auction states', 
   assert.match(app, /대기 중/);
 });
 
+test('final relic auction values stay around two hundred to two hundred fifty thousand gold', async () => {
+  const app = await readFile(new URL('../src/app.js', import.meta.url), 'utf8');
+  assert.deepEqual(balance.relicAuction.startBid, [200000, 210000, 220000]);
+  assert.deepEqual(balance.relicAuction.valueRange, [200000, 250000]);
+  assert.equal(balance.relicAuction.botMaxBid, 227000);
+  assert.match(app, /balance\.relicAuction\.botMaxBid/);
+});
+
 test('browser zoom is inversely compensated while preserving the 16:9 layout viewport', async () => {
   const [app, css] = await Promise.all([
     readFile(new URL('../src/app.js', import.meta.url), 'utf8'),

@@ -886,7 +886,8 @@ function renderRelic() {
     const rng = createRng(`${state.seed}:relic:${state.relicRound}`);
     const bands = [[.6,.85],[.85,1.1],[1.1,1.4]];
     const names = ['왕실 대리인', '북부 대상인', '해외 수집가'];
-    const bots = bands.map(([low, high], index) => ({ id: `royal-${index + 1}`, name: names[index], maxBid: Math.max(opening, Math.min(opening * 2, Math.round(state.cash * (low + rng() * (high - low))))) }));
+    const botMaxBid = balance.relicAuction.botMaxBid || Math.round((balance.relicAuction.valueRange?.[1] || opening * 2) / 1.1);
+    const bots = bands.map(([low, high], index) => ({ id: `royal-${index + 1}`, name: names[index], maxBid: Math.max(opening, Math.min(botMaxBid, Math.round(state.cash * (low + rng() * (high - low))))) }));
     state.relicSession = { round: state.relicRound, currentPrice: opening, leader: null, bots, deadline: Date.now() + 15000, feed: ['최종 유물 경매가 시작되었습니다.'] };
   }
   const session = state.relicSession;
