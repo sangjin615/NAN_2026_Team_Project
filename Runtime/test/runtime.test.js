@@ -100,6 +100,11 @@ test('catalog quest title uses the painted popup title bar without a duplicate p
   assert.match(css, /#catalog-quest-dialog #close-catalog-quests[^\{]*\{[\s\S]*?border-image: none !important;/);
 });
 
+test('accepted quest label sits centered below the quest office heading', async () => {
+  const css = await readFile(new URL('../runtime-fixes.css', import.meta.url), 'utf8');
+  assert.match(css, /#active-quests \.accepted-quests > h4\s*\{[\s\S]*?left: 50%;[\s\S]*?transform: translateX\(-50%\); text-align: center;/);
+});
+
 test('auction merchandise has no repeating movement effects', async () => {
   const css = await readFile(new URL('../runtime-fixes.css', import.meta.url), 'utf8');
   assert.match(css, /\.mini-sprite\.vfx-focus-pulse img,[\s\S]*?animation: none !important;/);
