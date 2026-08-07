@@ -145,7 +145,7 @@ export function sellAll(state, balance) {
   let revenue = 0;
   for (const item of state.inventory.filter((entry) => !entry.sold && !entry.collateral)) {
     const marketIndex = marketIndexForDay(state.marketPath[item.category], state.day);
-    const calculatedSale = Math.round(item.trueValue * marketIndex * setMultiplier * (1 - fee));
+    const calculatedSale = Math.round(item.basePrice * marketIndex * setMultiplier * (1 - fee));
     const sale = Number.isFinite(calculatedSale) ? calculatedSale : 0;
     item.sold = true;
     item.salePrice = sale;
@@ -173,7 +173,7 @@ export function quoteItemsSale(state, balance, lotIds) {
   const multiplier = bestSetMultiplier(items, balance, state.metaRelics, state.shopStage);
   const sales = Object.fromEntries(items.map((item) => {
     const marketIndex = marketIndexForDay(state.marketPath[item.category], state.day);
-    const calculatedSale = Math.round(item.trueValue * marketIndex * multiplier * (1 - fee));
+    const calculatedSale = Math.round(item.basePrice * marketIndex * multiplier * (1 - fee));
     return [item.lotId, Number.isFinite(calculatedSale) ? calculatedSale : 0];
   }));
   return { count: items.length, multiplier, revenue: Object.values(sales).reduce((sum, sale) => sum + sale, 0), sales };

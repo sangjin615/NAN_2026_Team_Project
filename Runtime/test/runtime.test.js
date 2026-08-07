@@ -75,6 +75,22 @@ test('final relic auction values stay around two hundred to two hundred fifty th
   assert.match(app, /balance\.relicAuction\.botMaxBid/);
 });
 
+test('auction lots use their public base price without hidden quality values', () => {
+  const schedule = createRunSchedule({ catalog, balance, seed: 'no-hidden-quality' });
+  const lots = schedule.days.flatMap((day) => day.lots);
+  assert.equal(lots.every((lot) => !('quality' in lot)), true);
+  assert.equal(lots.every((lot) => !('trueValue' in lot.pricing)), true);
+});
+
+test('sales ignore legacy hidden values and settle from the public base price', () => {
+  const schedule = createRunSchedule({ catalog, balance, seed: 'legacy-hidden-quality' });
+  const state = createInitialState({ schedule, sets: [], balance, startCash: 0 });
+  state.shopStage = 4;
+  state.marketPath.CER = Array(12).fill(1);
+  state.inventory.push({ lotId: 'legacy', basePrice: 1500, trueValue: 1200, category: 'CER', grade: 'COMMON', sold: false, collateral: false });
+  assert.equal(quoteItemsSale(state, balance, ['legacy']).revenue, 1500);
+});
+
 test('browser zoom is inversely compensated while preserving the 16:9 layout viewport', async () => {
   const [app, css] = await Promise.all([
     readFile(new URL('../src/app.js', import.meta.url), 'utf8'),

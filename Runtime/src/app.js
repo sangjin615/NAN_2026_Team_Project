@@ -945,7 +945,7 @@ function renderResult() {
   }
   clearActionTimer(); audio.playBgm('settlement'); state.completed = true; state.phase = 'result'; adapter.showScene('result');
   document.querySelector('[data-scene="result"]').classList.toggle('is-failure', Boolean(state.failure));
-  const unsold = ownedItems().reduce((sum, item) => sum + item.trueValue, 0);
+  const unsold = ownedItems().reduce((sum, item) => sum + item.basePrice, 0);
   const relics = ownedRelicIds(); localStorage.setItem('unknown-auction:relics', JSON.stringify(relics));
   document.querySelector('#result-title').textContent = state.failure ? '여정 실패' : `${JOURNEY_DAYS}일 여정 완료`;
   const wonCount = state.history.filter((entry) => entry.won).length;
