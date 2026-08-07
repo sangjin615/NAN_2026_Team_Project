@@ -148,6 +148,13 @@ test('guild artwork keeps its native ratio inside the 16:9 canvas', async () => 
   assert.match(css, /#guild-collateral-list\s*\{[\s\S]*?top: 16\.5%;/);
 });
 
+test('guild loan controls are vertically balanced inside the painted panels', async () => {
+  const css = await readFile(new URL('../runtime-fixes.css', import.meta.url), 'utf8');
+  assert.match(css, /\[data-scene="guild"\] #guild-detail\s*\{\s*padding: 62px 24px 12px;/);
+  assert.match(css, /\[data-scene="guild"\] \.actions\s*\{\s*top: 60\.5%; height: 14\.5%; align-items: center;/);
+  assert.match(css, /\[data-scene="guild"\] #guild-message\s*\{\s*left: 8\.7%; top: 75\.8%; width: 53\.4%; height: 8\.8%;/);
+});
+
 test('the 16:9 canvas can grow beyond 1600 by 900', async () => {
   const css = await readFile(new URL('../runtime-fixes.css', import.meta.url), 'utf8');
   const sceneRule = css.match(/\.scene\s*\{[\s\S]*?\n\}/)?.[0] || '';
