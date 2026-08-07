@@ -740,7 +740,7 @@ BadRequestException: Invalid format for origin null
 `access-control-allow-origin: *` 는 `null` 오리진에도 유효하다 — 자격 증명을 안
 쓰기 때문이다. 게이트웨이가 덮어쓰는 것이 문제였으니 덮개를 치운다.
 
-람다 쪽은 했다 (`preflightHeaders`). 게이트웨이 쪽 세 줄이 남았고 순서가 있다 —
+**셋 다 걸었고 통과했다 (2026-08-07).** 아래는 그때 쓴 명령이다. 순서가 있다 —
 라우트를 먼저 만들어야 CORS 를 걷어낸 순간 OPTIONS 가 404 로 떨어지지 않는다.
 
 ```bash
@@ -772,6 +772,22 @@ curl -s -i -X OPTIONS "https://8tjqzce89j.execute-api.us-east-1.amazonaws.com/ge
   -H "Origin: null" -H "Access-Control-Request-Method: POST" \
   -H "Access-Control-Request-Headers: content-type" | grep -i access-control
 ```
+
+### 걷어낸 뒤 실측 (2026-08-07)
+
+| 확인 | 결과 |
+|---|---|
+| 게이트웨이 `CorsConfiguration` | `null` (걷어냄) |
+| 프리플라이트 · `Origin: null` | 204 + `allow-origin: *`, `allow-headers: content-type`, `max-age: 600` |
+| 프리플라이트 · `Origin: https://example.com` | 위와 동일 |
+| 본 요청 · `Origin: null` | 200, `allow-origin: *`, `openai:gpt-5.6-luna`, 8 LOT, 13,716ms |
+
+**`file://` 에서 생성이 닿는다.** 게이트웨이 CORS 를 걷어냈어도 일반 오리진이
+같이 통과하는 것도 확인했다 — 람다가 양쪽을 다 답한다.
+
+주의: 이제 `access-control-allow-origin` 은 람다에서만 나온다. `jsonHeaders` 나
+`preflightHeaders` 에서 이 헤더를 지우면 배포본이 조용히 static 으로 떨어진다.
+게이트웨이가 받쳐주지 않는다.
 
 **서버에 올려서 http(s) 로 열 거라면 이 문제는 없다.** 일반 오리진은 이미
 통과한다.
