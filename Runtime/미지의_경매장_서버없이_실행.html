@@ -5019,8 +5019,8 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
     state.phase = "tavern";
     adapter.showScene("tavern");
     syncHeader();
-    const names = { forecast: "\uB0B4\uC77C\uC758 \uC2DC\uC138", catalog: "\uB2E4\uC74C \uB0A0 \uACBD\uB9E4\uD488 \uC815\uBCF4", competitors: "\uACBD\uC7C1\uC790\uC758 \uAD00\uC2EC \uACBD\uB9E4\uD488" };
-    const descriptions = { forecast: "\uC5EC\uD589 \uC0C1\uC778\uC774 \uC624\uB298\uACFC \uBE44\uAD50\uD55C \uB0B4\uC77C\uC758 \uACC4\uC5F4\uBCC4 \uC2DC\uC138 \uBCC0\uB3D9\uC744 \uC54C\uB824\uC90D\uB2C8\uB2E4. \uC0C1\uD68C \uB2E8\uACC4\uC5D0 \uB530\uB77C 2\uAC1C, 4\uAC1C, 6\uAC1C \uACC4\uC5F4\uC774 \uACF5\uAC1C\uB429\uB2C8\uB2E4.", catalog: "\uC0C1\uD68C \uB2E8\uACC4\uC5D0 \uB530\uB77C \uB2E4\uC74C \uB0A0 \uACBD\uB9E4\uD488\uC758 \uC774\uB984, \uACC4\uC5F4, \uB4F1\uAE09\uC744 \uC21C\uCC28\uC801\uC73C\uB85C \uACF5\uAC1C\uD569\uB2C8\uB2E4.", competitors: "\uC0C1\uD68C \uB2E8\uACC4\uC5D0 \uB530\uB77C \uACBD\uC7C1\uC790 1\uBA85\uBD80\uD130 \uCD5C\uB300 3\uBA85\uAE4C\uC9C0 \uAD00\uC2EC \uACBD\uB9E4\uD488\uC744 \uACF5\uAC1C\uD569\uB2C8\uB2E4." };
+    const names = { forecast: "\uB0B4\uC77C\uC758 \uC2DC\uC138", catalog: "\uB2E4\uC74C \uB0A0 \uACBD\uB9E4\uD488 \uC815\uBCF4", competitors: "\uC624\uB298 \uACBD\uC7C1\uC790\uAC00 \uC6D0\uD558\uB294 \uBB3C\uD488" };
+    const descriptions = { forecast: "\uC5EC\uD589 \uC0C1\uC778\uC774 \uC624\uB298\uACFC \uBE44\uAD50\uD55C \uB0B4\uC77C\uC758 \uACC4\uC5F4\uBCC4 \uC2DC\uC138 \uBCC0\uB3D9\uC744 \uC54C\uB824\uC90D\uB2C8\uB2E4. \uC0C1\uD68C \uB2E8\uACC4\uC5D0 \uB530\uB77C 2\uAC1C, 4\uAC1C, 6\uAC1C \uACC4\uC5F4\uC774 \uACF5\uAC1C\uB429\uB2C8\uB2E4.", catalog: "\uC0C1\uD68C \uB2E8\uACC4\uC5D0 \uB530\uB77C \uB2E4\uC74C \uB0A0 \uACBD\uB9E4\uD488\uC758 \uC774\uB984, \uACC4\uC5F4, \uB4F1\uAE09\uC744 \uC21C\uCC28\uC801\uC73C\uB85C \uACF5\uAC1C\uD569\uB2C8\uB2E4.", competitors: "\uBC14\uD150\uB354\uAC00 \uB2F9\uC77C \uACBD\uB9E4 \uCC38\uAC00\uC790\uB4E4\uC744 \uC0B4\uD3B4 \uACBD\uC7C1\uC790 1\uBA85\uBD80\uD130 \uCD5C\uB300 3\uBA85\uAE4C\uC9C0 \uC6D0\uD558\uB294 \uBB3C\uD488\uC744 \uC54C\uB824\uC90D\uB2C8\uB2E4." };
     const icons = { forecast: "./assets/ui/tavern/demand-trend.png", catalog: "./assets/ui/tavern/lot-specification.png", competitors: "./assets/ui/tavern/competitor-budget.png" };
     document.querySelectorAll("[data-broker]").forEach((broker) => {
       const kind = broker.dataset.broker;
@@ -5045,7 +5045,7 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
       const stage = Math.max(1, Math.min(3, state.shopStage));
       const nextDayIndex = state.day;
       const nextLots = state.schedule.days[nextDayIndex]?.lots || [];
-      if (!nextLots.length) return "<p>\uB9C8\uC9C0\uB9C9 \uB0A0\uC5D0\uB294 \uB2E4\uC74C \uB0A0 \uACBD\uB9E4 \uC815\uBCF4\uAC00 \uC5C6\uC2B5\uB2C8\uB2E4.</p>";
+      if (!nextLots.length && kind !== "competitors") return "<p>\uB9C8\uC9C0\uB9C9 \uB0A0\uC5D0\uB294 \uB2E4\uC74C \uB0A0 \uACBD\uB9E4 \uC815\uBCF4\uAC00 \uC5C6\uC2B5\uB2C8\uB2E4.</p>";
       if (kind === "forecast") {
         const categoryOrder = ["CER", "CLK", "PNT", "BOK", "MET", "JEW"];
         const visible = categoryOrder.slice(0, stage * 2);
@@ -5064,9 +5064,12 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
       if (kind === "catalog") {
         return `<p><b>${nextDayIndex + 1}\uC77C\uCC28 \uACBD\uB9E4\uD488</b></p><ul>${nextLots.map((lot) => `<li><b>${escapeHtml(lot.content?.displayName || lot.baseName)}</b>${stage >= 2 ? ` \xB7 ${categoryNames[lot.category]}` : ""}${stage >= 3 ? ` \xB7 ${gradeLabel(lot.grade)}` : ""}</li>`).join("")}</ul>`;
       }
-      const estimates = nextLots.flatMap((lot) => botBidForLot({ lot, day: state.day + 1, balance, marketIndex: state.marketPath[lot.category][nextDayIndex], seed: state.seed }).map((bot) => ({ ...bot, lot })));
+      const currentDayIndex = Math.max(0, state.day - 1);
+      const currentLots = state.schedule.days[currentDayIndex]?.lots || [];
+      if (!currentLots.length) return "<p>\uC624\uB298 \uD655\uC778\uD560 \uACBD\uB9E4\uD488\uC774 \uC5C6\uC2B5\uB2C8\uB2E4.</p>";
+      const estimates = currentLots.flatMap((lot) => botBidForLot({ lot, day: state.day, balance, marketIndex: state.marketPath[lot.category][currentDayIndex], seed: state.seed }).map((bot) => ({ ...bot, lot })));
       const interests = selectDistinctBotInterests(estimates);
-      return `<p><b>${stage}\uBA85 \uACF5\uAC1C</b></p><ul>${interests.slice(0, stage).map(({ name, interest }) => `<li><b>${name}</b> \xB7 ${escapeHtml(interest.lot.content?.displayName || interest.lot.baseName)}</li>`).join("")}</ul>`;
+      return `<p><b>\uC624\uB298\uC758 \uAD00\uC2EC \uBB3C\uD488 \xB7 ${stage}\uBA85 \uACF5\uAC1C</b></p><ul>${interests.slice(0, stage).map(({ name, interest }) => `<li><b>${name}</b> \xB7 ${escapeHtml(interest.lot.content?.displayName || interest.lot.baseName)}</li>`).join("")}</ul>`;
     };
     document.querySelector("#tavern-detail").innerHTML = `<h3>\uC815\uBCF4 \uC0C1\uC138</h3><div class="detail-heading"><img class="detail-symbol" src="${icons[selected]}" alt=""><div><h2>${names[selected]}</h2><small>\uC0C1\uD68C ${state.shopStage}\uB2E8\uACC4 \uACF5\uAC1C \uC815\uBCF4</small></div></div><p>${descriptions[selected]}</p><section class="info-result tavern-live-result info-${selected}">${informationResult(selected)}</section>`;
     const effectiveStage = Math.max(1, Math.min(3, state.shopStage));
