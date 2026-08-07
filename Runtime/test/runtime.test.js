@@ -186,14 +186,17 @@ test('catalog exposes active quests in a dedicated side popup', async () => {
   assert.match(html, /id="catalog-quests"[^>]*aria-controls="catalog-quest-dialog"/);
   assert.match(html, /id="catalog-quest-dialog"/);
   assert.match(app, /function openCatalogQuestDialog\(\)/);
-  assert.match(app, /state\.activeQuests\.filter\(\(quest\) => !quest\.completed\)/);
+  assert.match(app, /function activeCatalogQuests\(\)/);
+  assert.match(app, /state\.questOffers \|\| \[\]\)\.filter\(\(quest\) => quest\.accepted\)/);
+  assert.match(app, /const active = activeCatalogQuests\(\)/);
   assert.match(app, /#catalog-quest-dialog'\)\.showModal\(\)/);
 });
 
 test('catalog quest title uses the painted popup title bar without a duplicate panel', async () => {
   const css = await readFile(new URL('../runtime-fixes.css', import.meta.url), 'utf8');
-  assert.match(css, /#catalog-quest-dialog > header\s*\{[\s\S]*?left: 25%; right: 20\.5%; top: 5%; height: 13\.5%;[\s\S]*?grid-template-columns: 48px minmax\(0,max-content\);[\s\S]*?justify-content: center;[\s\S]*?background: transparent;/);
-  assert.match(css, /#catalog-quest-dialog > header > div\s*\{[\s\S]*?position: static;[\s\S]*?text-align: left;/);
+  assert.match(css, /#catalog-quest-dialog > header\s*\{[\s\S]*?left: 25%; right: 20\.5%; top: 5%; height: 13\.5%;[\s\S]*?display: block;[\s\S]*?background: transparent;/);
+  assert.match(css, /#catalog-quest-dialog > header > img\s*\{[\s\S]*?position: absolute; left: 8%;[\s\S]*?transform: translateY\(-50%\);/);
+  assert.match(css, /#catalog-quest-dialog > header > div\s*\{[\s\S]*?position: absolute; inset: 50% 14% auto;[\s\S]*?text-align: center;/);
   assert.match(css, /#catalog-quest-dialog > header h2[^\{]*\{[^\}]*overflow: hidden;[^\}]*color: #f0dfc1;[^\}]*white-space: nowrap;/);
   assert.match(css, /#catalog-quest-dialog #close-catalog-quests[^\{]*\{[\s\S]*?right: -33%;[\s\S]*?border-image: none !important;/);
 });
@@ -201,8 +204,8 @@ test('catalog quest title uses the painted popup title bar without a duplicate p
 test('catalog quest list stays inside the painted parchment area', async () => {
   const css = await readFile(new URL('../runtime-fixes.css', import.meta.url), 'utf8');
   assert.match(css, /#catalog-quest-dialog\s*\{[^\}]*aspect-ratio: 730 \/ 565;[^\}]*overflow: hidden;/);
-  assert.match(css, /#catalog-quest-dialog\[open\]\s*\{[^\}]*display: flex;[^\}]*flex-direction: column;/);
-  assert.match(css, /#catalog-quest-list\s*\{[^\}]*flex: 1 1 auto;[^\}]*min-height: 0;[^\}]*overflow-y: auto;/);
+  assert.match(css, /#catalog-quest-dialog\[open\]\s*\{[^\}]*display: block;/);
+  assert.match(css, /#catalog-quest-list\s*\{[^\}]*position: absolute; left: 9\.5%; right: 9\.5%; top: 21%; bottom: 11%;[^\}]*overflow-y: auto;/);
 });
 
 test('accepted quest label sits centered below the quest office heading', async () => {
