@@ -84,6 +84,15 @@ export function openingBotBid(bots, openingPrice) {
   return { bidder, price: Math.max(1, Math.min(openingPrice, bidder.maxBid)) };
 }
 
+export function nextBotBid({ bots, currentPrice, leader, minRaiseRate }) {
+  const raise = Math.max(1, Math.ceil(currentPrice * minRaiseRate));
+  const nextPrice = currentPrice + raise;
+  const bidder = [...bots]
+    .filter((bot) => bot.id !== leader && bot.maxBid >= nextPrice)
+    .sort((a, b) => a.maxBid - b.maxBid)[0];
+  return bidder ? { bidder, price: nextPrice } : null;
+}
+
 export function estimateBotDailyAssets({ state, balance, day = state.day }) {
   const capitalStage = Math.max(1, Math.min(4, state.shopStage || 1));
   const initial = balance.bots.capitalByStage?.[capitalStage] ?? 0;

@@ -8,7 +8,7 @@ import { SaveStore } from './save-store.js';
 import { advanceDay, createInitialState, prepareAuctionEntry, resolveLot } from './game-state.js';
 import { VslRuntimeAdapter } from './vsl-adapter.js';
 import {
-  acceptQuest, botBidForLot, createMarketPath, estimateBotDailyAssets, openingBotBid, selectDistinctBotInterests,
+  acceptQuest, botBidForLot, createMarketPath, estimateBotDailyAssets, nextBotBid, openingBotBid, selectDistinctBotInterests,
   deliverQuestItem, effectiveQuestDeadline, expireQuestsBeforeAuction, missedDeadline, questMatchesItem,
   marketIndexForDay, questCompletionBonus, quoteItemsSale, refreshDailyQuestOffers, repayLoanEarly, sellItems, settleLoan, settleQuests, takeLoan, upgradeShop,
 } from './systems.js';
@@ -54,19 +54,19 @@ function clearActionTimer() {
   auctionBotTimer = null;
 }
 
-function queueAuctionBotResponse(lotId, playerPrice) {
+function queueAuctionBotResponse(lotId, expectedLeader, expectedPrice) {
   if (auctionBotTimer) window.clearTimeout(auctionBotTimer);
   const delay = 1000 + Math.floor(Math.random() * 1001);
   auctionBotTimer = window.setTimeout(() => {
     auctionBotTimer = null;
     const session = state.auctionSession;
-    if (!session || session.lotId !== lotId || session.leader !== 'player' || session.currentPrice !== playerPrice) return;
-    const raise = Math.max(1, Math.ceil(session.currentPrice * balance.auction.minRaiseRate));
-    const challenger = [...session.bots].filter((bot) => bot.maxBid > session.currentPrice).sort((a, b) => b.maxBid - a.maxBid)[0];
-    if (!challenger) { finishLot('pass'); return; }
-    session.currentPrice = Math.min(challenger.maxBid, session.currentPrice + raise);
-    session.leader = challenger.id;
-    session.feed.push(`${challenger.name} ${money(session.currentPrice)}`);
+    if (!session || session.lotId !== lotId || session.leader !== expectedLeader || session.currentPrice !== expectedPrice) return;
+    const next = nextBotBid({ bots: session.bots, currentPrice: session.currentPrice, leader: session.leader, minRaiseRate: balance.auction.minRaiseRate });
+    if (!next) { if (session.leader === 'player') finishLot('pass'); return; }
+    session.currentPrice = next.price;
+    session.leader = next.bidder.id;
+    session.autoBidStreak = (session.autoBidStreak || 0) + 1;
+    session.feed.push(`${next.bidder.name} ${money(session.currentPrice)}`);
     session.deadline = extendAuctionDeadline(session.deadline);
     audio.playSfx('bot-bid');
     renderAuction();
@@ -726,7 +726,7 @@ function renderAuction() {
     const bots = botBidForLot({ lot, day: state.day, shopStage: state.shopStage, balance, marketIndex, seed: state.seed }).map((bot) => ({ ...bot, maxBid: Math.min(bot.maxBid, dailyAssets[bot.id]?.remaining || 0) }));
     const opening = openingBotBid(bots, Math.max(1, Math.round(lot.pricing.basePrice * balance.auction.startBidRatio)));
     const openingFeed = opening ? [`${opening.bidder.name} ${money(opening.price)}`] : ['입찰 가능한 상대가 없습니다.'];
-    state.auctionSession = { lotId: lot.lotId, currentPrice: opening?.price || 1, leader: opening?.bidder.id || null, bots, deadline: Date.now() + AUCTION_INITIAL_TIME_MS, feed: [...(expired ? [`기한이 지난 의뢰 ${expired}건이 만료됐습니다.`] : ['경매가 시작되었습니다.']), ...generatedFeed, ...openingFeed] };
+    state.auctionSession = { lotId: lot.lotId, currentPrice: opening?.price || 1, leader: opening?.bidder.id || null, bots, autoBidStreak: opening ? 1 : 0, deadline: Date.now() + AUCTION_INITIAL_TIME_MS, feed: [...(expired ? [`기한이 지난 의뢰 ${expired}건이 만료됐습니다.`] : ['경매가 시작되었습니다.']), ...generatedFeed, ...openingFeed] };
   }
   state.auctionSession.deadline ||= Date.now() + AUCTION_INITIAL_TIME_MS;
   adapter.showScene('auction');
@@ -751,6 +751,7 @@ function renderAuction() {
   document.querySelector('#auction-participants').innerHTML = `<h3>참가자 명단 (${participants.length} / 4)</h3>${participants.map((participant) => `<div class="participant ${participant.leader ? 'is-leading' : ''}"><img class="competitor-portrait" src="${competitorPortraits[participant.id]}" alt="${participant.name} 초상"><b>${participant.name}</b><small>${participant.player ? '보유 자산' : '추정 자산'}</small><strong>${money(participant.budget)}</strong></div>`).join('')}`;
   document.querySelector('#auction-lot-status').innerHTML = `<b>경매 ${state.lotIndex + 1} / 8</b><span>${gradeLabel(lot.grade)}</span><strong>${money(state.auctionSession.currentPrice)}</strong>`;
   armActionTimer('#auction-timer', state.auctionSession.deadline, () => finishLot('pass'), formatAuctionTime);
+  if (state.auctionSession.leader && (state.auctionSession.autoBidStreak || 0) < 4) queueAuctionBotResponse(lot.lotId, state.auctionSession.leader, state.auctionSession.currentPrice);
 }
 
 function finishLot(action, multiplier = 1, directPrice = null) {
@@ -763,13 +764,12 @@ function finishLot(action, multiplier = 1, directPrice = null) {
     if (!Number.isInteger(proposed) || proposed < minimumBid) { session.feed.push(`최소 입찰 금액은 ${money(minimumBid)}입니다.`); return renderAuction(); }
     if (proposed > state.cash) { session.feed.push('보유 자금이 부족합니다.'); return renderAuction(); }
     if (ownedItems().length >= state.storage) { session.feed.push('보관칸이 가득 찼습니다.'); return renderAuction(); }
-    session.currentPrice = proposed; session.leader = 'player'; session.feed.push(`플레이어 ${money(proposed)}`); audio.playSfx('bid');
+    session.currentPrice = proposed; session.leader = 'player'; session.autoBidStreak = 0; session.feed.push(`플레이어 ${money(proposed)}`); audio.playSfx('bid');
     session.deadline = extendAuctionDeadline(session.deadline);
     renderAuction();
-    queueAuctionBotResponse(lot.lotId, proposed);
     return;
   } else {
-    const leader = [...session.bots].sort((a, b) => b.maxBid - a.maxBid)[0];
+    const leader = session.bots.find((bot) => bot.id === session.leader) || [...session.bots].sort((a, b) => b.maxBid - a.maxBid)[0];
     result = session.leader === 'player' ? { winner: 'player', price: session.currentPrice, bots: session.bots } : { winner: leader.id, price: Math.max(1, session.currentPrice), bots: session.bots };
   }
   resolveLot(state, { action, playerBid: session.currentPrice, auctionResult: result });

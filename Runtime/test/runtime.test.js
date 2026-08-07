@@ -5,7 +5,7 @@ import { createRunSchedule, normalizeVisualEffects, validateSchedule, VISUAL_EFF
 import { createSetGraph } from '../src/set-graph.js';
 import { FallbackContentProvider, GenerationBuffer } from '../src/generation-buffer.js';
 import { createInitialState, resolveLot, advanceDay, prepareAuctionEntry } from '../src/game-state.js';
-import { resolveAuction, sellAll, sellItems, quoteItemsSale, bestSetMultiplier, acceptQuest, takeLoan, botBidForLot, estimateBotDailyAssets, openingBotBid, missedDeadline, isBankrupt, deliverQuestItem, questCompletionBonus, refreshDailyQuestOffers, repayLoanEarly, selectDistinctBotInterests, createMarketPath } from '../src/systems.js';
+import { resolveAuction, sellAll, sellItems, quoteItemsSale, bestSetMultiplier, acceptQuest, takeLoan, botBidForLot, estimateBotDailyAssets, nextBotBid, openingBotBid, missedDeadline, isBankrupt, deliverQuestItem, questCompletionBonus, refreshDailyQuestOffers, repayLoanEarly, selectDistinctBotInterests, createMarketPath } from '../src/systems.js';
 import { recordEvent, runMetrics } from '../src/telemetry.js';
 import { GenerationApiProvider } from '../src/generation-api-provider.js';
 import { assertPublicGenerationConfig, resolveGenerationApiConfig } from '../src/generation-api-config.js';
@@ -614,6 +614,18 @@ test('an opponent places the opening bid without exceeding its budget', () => {
   assert.deepEqual(openingBotBid(bots, 1000), { bidder: bots[1], price: 1000 });
   assert.deepEqual(openingBotBid(bots, 1800), { bidder: bots[1], price: 1400 });
   assert.equal(openingBotBid([{ id: 'a', maxBid: 0 }], 1000), null);
+});
+
+test('different opponents can raise against the current auction leader', () => {
+  const bots = [
+    { id: 'a', maxBid: 1800 },
+    { id: 'b', maxBid: 1300 },
+    { id: 'c', maxBid: 1600 },
+  ];
+  const first = nextBotBid({ bots, currentPrice: 1000, leader: 'a', minRaiseRate: 0.1 });
+  assert.deepEqual(first, { bidder: bots[1], price: 1100 });
+  const second = nextBotBid({ bots, currentPrice: first.price, leader: first.bidder.id, minRaiseRate: 0.1 });
+  assert.deepEqual(second, { bidder: bots[2], price: 1210 });
 });
 
 test('generation API sends only narrative identifiers and accepts fixed-order content', async () => {
