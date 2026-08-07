@@ -19,7 +19,9 @@ import { createMarketPath } from '../src/systems.js';
 import { createHandler, deterministicFallback } from '../aws/generation-router.mjs';
 import { validateOutput } from '../generation-server.js';
 
-const seed = process.argv[2] || 'router-measure';
+// 플래그를 시드로 먹지 않는다. `--single` 만 주면 argv[2] 가 그것이라 시드가
+// 문자열 '--single' 이 되어 LOT ID 까지 그 이름으로 나온다.
+const seed = process.argv.slice(2).find((arg) => !arg.startsWith('--')) || 'router-measure';
 const catalog = JSON.parse(await readFile(new URL('../assets/items/catalog.json', import.meta.url), 'utf8'));
 const balance = JSON.parse(await readFile(new URL('../data/balance.json', import.meta.url), 'utf8'));
 
@@ -67,13 +69,24 @@ const handler = createHandler({
   logger: { info() {}, warn(name, detail) { events.push({ name, ...detail }); } },
 });
 
+// 라우터의 cleanError 는 { name, message } 객체를 남긴다. 그대로 문자열에 이어
+// 붙이면 `[object Object]` 가 되어 사유가 사라진다. 실제로 그래서 "groq 가 왜
+// 떨어지나"를 이 도구로 답할 수 없었다.
+function describeReason(value) {
+  if (!value) return '';
+  if (typeof value === 'string') return value;
+  if (Array.isArray(value)) return value.map(describeReason).filter(Boolean).join('; ');
+  if (value.name || value.message) return [value.name, value.message].filter(Boolean).join(': ');
+  return JSON.stringify(value);
+}
+
 function reportProviderFailures(label) {
   const mine = events.splice(0, events.length);
   if (!mine.length) return;
   const bucket = new Map();
   for (const { name, provider, model, error, errors, lotId, setId } of mine) {
     const who = model ? `${provider}:${model}` : provider || '-';
-    const why = error || (Array.isArray(errors) ? errors.join('; ') : errors) || name;
+    const why = describeReason(error) || describeReason(errors) || name;
     const key = `${who} · ${name} · ${String(why).slice(0, 90)}`;
     const entry = bucket.get(key) || { count: 0, where: [] };
     entry.count += 1;

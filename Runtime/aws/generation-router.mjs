@@ -241,7 +241,7 @@ async function generateDaily(request, provider, fetchImpl, logger) {
       if (frame.day !== request.day) throw new Error('daily frame shape mismatch');
       return frame;
     } catch (error) {
-      logger?.warn?.('generation_daily_frame_fallback', { provider: provider.name, error: cleanError(error) });
+      logger?.warn?.('generation_daily_frame_fallback', { provider: provider.name, model: provider.model, error: cleanError(error) });
       const { lots, ...frame } = deterministicFallback(request);
       return frame;
     }
@@ -268,6 +268,10 @@ async function generateDaily(request, provider, fetchImpl, logger) {
       const index = start + offset;
       let lot = candidates[offset];
       if (lot?.__error) {
+        // 첫 시도 사유를 여기서 남긴다. 재시도가 성공하면 아래 catch 가 돌지 않아
+        // 이 사유가 어디에도 남지 않는다 — 공급자가 매번 한 번씩 태우고 있어도
+        // 기록에는 보이지 않는다.
+        logger?.warn?.('generation_daily_lot_retry', { provider: provider.name, model: provider.model, lotId: wave[offset].lotId, error: cleanError(lot.__error) });
         try {
           lot = await provider.call({
             request,
@@ -276,7 +280,9 @@ async function generateDaily(request, provider, fetchImpl, logger) {
             prompt: `RETRY_ERRORS:\n${lot.__error.message}\nGenerate exactly one corrected LOT record for lot ${index + 1}.\nINPUT LOT:\n${JSON.stringify(wave[offset])}`,
           }, provider, fetchImpl);
         } catch (error) {
-          logger?.warn?.('generation_daily_lot_fallback', { provider: provider.name, lotId: wave[offset].lotId, error: cleanError(error) });
+          // model 을 함께 남긴다. openai 공급자가 둘(gpt-4o-mini, gpt-5.6-luna)이라
+          // 이름만으로는 어느 쪽이 떨어졌는지 구분되지 않는다.
+          logger?.warn?.('generation_daily_lot_fallback', { provider: provider.name, model: provider.model, lotId: wave[offset].lotId, error: cleanError(error) });
           lot = fallbackLots[index];
           lastError = error;
           fellBack += 1;
