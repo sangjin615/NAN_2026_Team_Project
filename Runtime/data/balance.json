@@ -687,8 +687,7 @@
   "publicPriceVariation": {
     "min": -0.1,
     "max": 0.1,
-    "gradeStep": 0.05,
-    "note": "공개 기준가는 실제 기본 가치다. 품목별 ±10% 범위에 등급 단계마다 +5%를 더한다."
+    "note": "공개 기준가는 실제 기본 가치다. 모든 등급의 품목별 가격을 중심값의 ±10% 범위에서 정한다."
   },
   "gradeBaseNote": "등급별 가격 중심값. 계열은 같은 값을 쓰고, 실제 공개 가격은 일차 배율과 publicPriceVariation으로 정한다.",
   "measurementPolicy": {
