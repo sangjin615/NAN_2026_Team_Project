@@ -703,9 +703,45 @@ aws lambda wait function-updated --region us-east-1 --function-name nhn-generati
 - 람다 **예약 동시성**(reserved concurrency). 이것이 소진 속도의 진짜 상한이다
 - 공급자 대시보드의 **예산 상한**. 최종 방어선
 
-**2. 게임은 아직 배포본을 안 본다.** `api-config.json` 이 `127.0.0.1:8787` 이다.
-1번을 정했으므로 이제 바꿀 수 있다. 다만 바꾸는 순간 그 URL 이 배포되는 HTML
-모든 사본에 박힌다 — 위의 예약 동시성과 예산 상한을 먼저 건 뒤에 바꾼다.
+**2. 배포본이 실서버를 본다 — 바꿨다. 다만 `file://` 에서는 아직 안 닿는다
+(2026-08-07).**
+
+`api-config.json` 의 엔드포인트를 `127.0.0.1:8787` 에서
+`https://8tjqzce89j.execute-api.us-east-1.amazonaws.com/generate` 로 바꾸고
+`build:standalone` 을 다시 돌렸다. 독립 실행본에 새 URL 이 박혔고 localhost
+참조는 0건, 키 패턴도 0건이다.
+
+**그런데 파일을 더블클릭해서 열면 생성이 안 된다.** 게이트웨이 CORS 문제다.
+실측으로 갈렸다.
+
+| 요청의 `Origin` | 프리플라이트 응답 |
+|---|---|
+| `https://example.com` | `allow-origin: *`, `allow-methods`, `allow-headers` 전부 옴 |
+| `null` | **CORS 헤더가 하나도 안 옴** |
+
+API Gateway 의 `AllowOrigins: ["*"]` 는 **리터럴 `null` 오리진을 매칭하지 않는다.**
+`file://` 에서 연 페이지는 `Origin: null` 을 보내므로 브라우저가 요청을 막는다.
+게임은 죽지 않고 조용히 static 으로 떨어진다 — 그래서 알아채기 어렵다.
+
+**람다 코드로는 못 고친다.** 게이트웨이 CORS 가 켜져 있으면 람다가 붙인
+`access-control-allow-origin` 까지 덮어쓴다. 400 응답에도 CORS 헤더가 없는 것으로
+확인했다. 고칠 자리는 게이트웨이뿐이다.
+
+고치는 법은 `AllowOrigins` 에 `null` 을 더하는 것 하나다. 람다 재배포는 필요 없다.
+
+```bash
+aws apigatewayv2 update-api --api-id 8tjqzce89j --region us-east-1 \
+  --cors-configuration '{"AllowCredentials":false,"AllowHeaders":["content-type"],"AllowMethods":["POST","OPTIONS"],"AllowOrigins":["*","null"],"MaxAge":0}'
+```
+
+**`nan-lambda-cli` 로는 안 된다.** `apigateway:PATCH` 권한이 없어서
+`AccessDeniedException` 이 난다. 콘솔에서 하거나 그 권한을 붙여야 한다.
+
+`null` 허용은 일반적으로 권장되지 않지만(샌드박스 iframe 도 `null` 을 보낸다) 이
+엔드포인트는 이미 인증 없이 열려 있어서 새로 잃는 것이 없다.
+
+**서버에 올려서 http(s) 로 열 거라면 이 문제는 없다.** 일반 오리진은 이미
+통과한다.
 
 **3. Lambda 환경변수에 잔재가 있다.** `PRIMARY_PROVIDER` 와 `FALLBACK_PROVIDER`
 는 현재 코드가 읽지 않는다. `SECONDARY_MODEL` 은 없어서 기본값

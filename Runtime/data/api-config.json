@@ -1,1 +1,1 @@
-{"enabled":true,"endpoint":"http://127.0.0.1:8787/generate","timeoutMs":15000,"blueprintTimeoutMs":120000,"dayTimeoutMs":60000,"retries":0,"schemaVersion":"1.0"}
+{"enabled":true,"endpoint":"https://8tjqzce89j.execute-api.us-east-1.amazonaws.com/generate","timeoutMs":15000,"blueprintTimeoutMs":120000,"dayTimeoutMs":60000,"retries":0,"schemaVersion":"1.0"}
