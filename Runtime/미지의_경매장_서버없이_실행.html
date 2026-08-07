@@ -4135,6 +4135,12 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
     if (!bidder) return null;
     return { bidder, price: Math.max(1, Math.min(openingPrice, bidder.maxBid)) };
   }
+  function nextBotBid({ bots, currentPrice, leader, minRaiseRate }) {
+    const raise = Math.max(1, Math.ceil(currentPrice * minRaiseRate));
+    const nextPrice = currentPrice + raise;
+    const bidder = [...bots].filter((bot) => bot.id !== leader && bot.maxBid >= nextPrice).sort((a, b) => a.maxBid - b.maxBid)[0];
+    return bidder ? { bidder, price: nextPrice } : null;
+  }
   function estimateBotDailyAssets({ state: state2, balance: balance2, day = state2.day }) {
     const capitalStage = Math.max(1, Math.min(4, state2.shopStage || 1));
     const initial = balance2.bots.capitalByStage?.[capitalStage] ?? 0;
@@ -4554,22 +4560,22 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
     actionTimer = null;
     auctionBotTimer = null;
   }
-  function queueAuctionBotResponse(lotId, playerPrice) {
+  function queueAuctionBotResponse(lotId, expectedLeader, expectedPrice) {
     if (auctionBotTimer) window.clearTimeout(auctionBotTimer);
     const delay = 1e3 + Math.floor(Math.random() * 1001);
     auctionBotTimer = window.setTimeout(() => {
       auctionBotTimer = null;
       const session = state.auctionSession;
-      if (!session || session.lotId !== lotId || session.leader !== "player" || session.currentPrice !== playerPrice) return;
-      const raise = Math.max(1, Math.ceil(session.currentPrice * balance.auction.minRaiseRate));
-      const challenger = [...session.bots].filter((bot) => bot.maxBid > session.currentPrice).sort((a, b) => b.maxBid - a.maxBid)[0];
-      if (!challenger) {
-        finishLot("pass");
+      if (!session || session.lotId !== lotId || session.leader !== expectedLeader || session.currentPrice !== expectedPrice) return;
+      const next = nextBotBid({ bots: session.bots, currentPrice: session.currentPrice, leader: session.leader, minRaiseRate: balance.auction.minRaiseRate });
+      if (!next) {
+        if (session.leader === "player") finishLot("pass");
         return;
       }
-      session.currentPrice = Math.min(challenger.maxBid, session.currentPrice + raise);
-      session.leader = challenger.id;
-      session.feed.push(`${challenger.name} ${money(session.currentPrice)}`);
+      session.currentPrice = next.price;
+      session.leader = next.bidder.id;
+      session.autoBidStreak = (session.autoBidStreak || 0) + 1;
+      session.feed.push(`${next.bidder.name} ${money(session.currentPrice)}`);
       session.deadline = extendAuctionDeadline(session.deadline);
       audio.playSfx("bot-bid");
       renderAuction();
@@ -5249,7 +5255,7 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
       const bots = botBidForLot({ lot, day: state.day, shopStage: state.shopStage, balance, marketIndex, seed: state.seed }).map((bot) => ({ ...bot, maxBid: Math.min(bot.maxBid, dailyAssets[bot.id]?.remaining || 0) }));
       const opening = openingBotBid(bots, Math.max(1, Math.round(lot.pricing.basePrice * balance.auction.startBidRatio)));
       const openingFeed = opening ? [`${opening.bidder.name} ${money(opening.price)}`] : ["\uC785\uCC30 \uAC00\uB2A5\uD55C \uC0C1\uB300\uAC00 \uC5C6\uC2B5\uB2C8\uB2E4."];
-      state.auctionSession = { lotId: lot.lotId, currentPrice: opening?.price || 1, leader: opening?.bidder.id || null, bots, deadline: Date.now() + AUCTION_INITIAL_TIME_MS, feed: [...expired ? [`\uAE30\uD55C\uC774 \uC9C0\uB09C \uC758\uB8B0 ${expired}\uAC74\uC774 \uB9CC\uB8CC\uB410\uC2B5\uB2C8\uB2E4.`] : ["\uACBD\uB9E4\uAC00 \uC2DC\uC791\uB418\uC5C8\uC2B5\uB2C8\uB2E4."], ...generatedFeed, ...openingFeed] };
+      state.auctionSession = { lotId: lot.lotId, currentPrice: opening?.price || 1, leader: opening?.bidder.id || null, bots, autoBidStreak: opening ? 1 : 0, deadline: Date.now() + AUCTION_INITIAL_TIME_MS, feed: [...expired ? [`\uAE30\uD55C\uC774 \uC9C0\uB09C \uC758\uB8B0 ${expired}\uAC74\uC774 \uB9CC\uB8CC\uB410\uC2B5\uB2C8\uB2E4.`] : ["\uACBD\uB9E4\uAC00 \uC2DC\uC791\uB418\uC5C8\uC2B5\uB2C8\uB2E4."], ...generatedFeed, ...openingFeed] };
     }
     state.auctionSession.deadline ||= Date.now() + AUCTION_INITIAL_TIME_MS;
     adapter.showScene("auction");
@@ -5285,6 +5291,7 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
     document.querySelector("#auction-participants").innerHTML = `<h3>\uCC38\uAC00\uC790 \uBA85\uB2E8 (${participants.length} / 4)</h3>${participants.map((participant) => `<div class="participant ${participant.leader ? "is-leading" : ""}"><img class="competitor-portrait" src="${competitorPortraits[participant.id]}" alt="${participant.name} \uCD08\uC0C1"><b>${participant.name}</b><small>${participant.player ? "\uBCF4\uC720 \uC790\uC0B0" : "\uCD94\uC815 \uC790\uC0B0"}</small><strong>${money(participant.budget)}</strong></div>`).join("")}`;
     document.querySelector("#auction-lot-status").innerHTML = `<b>\uACBD\uB9E4 ${state.lotIndex + 1} / 8</b><span>${gradeLabel(lot.grade)}</span><strong>${money(state.auctionSession.currentPrice)}</strong>`;
     armActionTimer("#auction-timer", state.auctionSession.deadline, () => finishLot("pass"), formatAuctionTime);
+    if (state.auctionSession.leader && (state.auctionSession.autoBidStreak || 0) < 4) queueAuctionBotResponse(lot.lotId, state.auctionSession.leader, state.auctionSession.currentPrice);
   }
   function finishLot(action, multiplier = 1, directPrice = null) {
     clearActionTimer();
@@ -5309,14 +5316,14 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
       }
       session.currentPrice = proposed;
       session.leader = "player";
+      session.autoBidStreak = 0;
       session.feed.push(`\uD50C\uB808\uC774\uC5B4 ${money(proposed)}`);
       audio.playSfx("bid");
       session.deadline = extendAuctionDeadline(session.deadline);
       renderAuction();
-      queueAuctionBotResponse(lot.lotId, proposed);
       return;
     } else {
-      const leader = [...session.bots].sort((a, b) => b.maxBid - a.maxBid)[0];
+      const leader = session.bots.find((bot) => bot.id === session.leader) || [...session.bots].sort((a, b) => b.maxBid - a.maxBid)[0];
       result = session.leader === "player" ? { winner: "player", price: session.currentPrice, bots: session.bots } : { winner: leader.id, price: Math.max(1, session.currentPrice), bots: session.bots };
     }
     resolveLot(state, { action, playerBid: session.currentPrice, auctionResult: result });
