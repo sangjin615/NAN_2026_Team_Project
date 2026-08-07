@@ -12,6 +12,7 @@
 // 요청을 게임이 보낸다는 것뿐이다 — 버퍼 선행 호출, 동시 3일, 취소 버튼처럼
 // 도구로는 재현하지 않는 모양이 여기서 드러난다.
 import { createServer } from 'node:http';
+import { AsyncLocalStorage } from 'node:async_hooks';
 import { createHandler } from '../aws/generation-router.mjs';
 
 const port = Number(process.env.GENERATION_PORT || 8787);
@@ -23,10 +24,15 @@ if (env.LIVE_GENERATION_ENABLED !== 'true') {
 
 // 라우터가 실패할 때마다 남기는 사유를 한 줄로 접어 찍는다. 게임을 돌리는 동안
 // 어느 공급자가 왜 떨어지는지 실시간으로 보인다.
-const events = [];
+//
+// **요청마다 따로 모아야 한다.** GenerationBuffer 가 일자 3건을 동시에 부르므로
+// 배열 하나를 공유하면 남의 실패가 내 요약에 붙는다. 실제로 그렇게 찍혀서
+// `run-blueprint` 머리말 아래 일자 생성 실패가 나왔고, 그걸 보고 원인을 잘못
+// 짚을 뻔했다.
+const requestEvents = new AsyncLocalStorage();
 const logger = {
   info() {},
-  warn(name, detail = {}) { events.push({ name, ...detail }); },
+  warn(name, detail = {}) { requestEvents.getStore()?.push({ name, ...detail }); },
 };
 
 const reasonOf = ({ error, errors, name }) => {
@@ -64,8 +70,8 @@ createServer(async (request, response) => {
 
   const body = await readBody(request);
   const startedAt = Date.now();
-  events.length = 0;
-  const result = await handler({ body, requestContext: { http: { method: 'POST' } } });
+  const events = [];
+  const result = await requestEvents.run(events, () => handler({ body, requestContext: { http: { method: 'POST' } } }));
   const elapsed = Date.now() - startedAt;
 
   let label = 'unknown';

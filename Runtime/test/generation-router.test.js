@@ -64,18 +64,18 @@ test('the mode contract keeps every rule and drops the other mode', () => {
   assert.ok(day.length < generationContract.length, 'daily 절이 전문보다 짧아야 한다');
 });
 
-test('each lot gets a different thing to look at and a different ending', () => {
-  // 여덟 호출이 서로를 못 보므로 자리마다 미리 갈라 준다. 목록이 계약서와
-  // 검증기에서 나오므로, 계약서 문장이나 어미 정규식이 바뀌면 여기서 먼저 깨진다.
+test('each lot gets a different thing to look at', () => {
+  // 여덟 호출이 서로를 못 보므로 자리마다 미리 갈라 준다. 목록이 계약서에서
+  // 나오므로 계약서 문장이 바뀌면 여기서 먼저 깨진다.
   const hints = Array.from({ length: 8 }, (_, index) => lotWritingHint(index));
   assert.ok(hints.every(Boolean), `힌트가 비었다: ${JSON.stringify(hints)}`);
   const facets = new Set(hints.map((hint) => hint.match(/Focus this description on ([^.]+)\./)[1]));
-  const endings = new Set(hints.map((hint) => hint.match(/End the description with "([^"]+)"/)[1]));
   assert.equal(facets.size, 6, `볼 곳이 ${facets.size}가지다. 계약서의 Describe only 목록을 확인할 것`);
   // 목록 마지막이 `, or wear` 로 와서 `or wear` 가 그대로 남은 적이 있다.
   // 개수만 세면 통과한다. 값도 본다.
   for (const facet of facets) assert.doesNotMatch(facet, /^(or|and)\s/, `잘라내다 만 값: "${facet}"`);
-  assert.equal(endings.size, 5, `어미가 ${endings.size}가지다. safeDescriptionEnding 을 확인할 것`);
+  // 어미는 배정하지 않는다. 억지로 맞추려다 문장이 휘고 unsafe ending 이 늘었다.
+  for (const hint of hints) assert.doesNotMatch(hint, /End the description/, '어미 배정이 되살아났다');
   // 같은 자리에는 늘 같은 지시가 가야 재현이 된다.
   assert.equal(lotWritingHint(0), hints[0]);
 });

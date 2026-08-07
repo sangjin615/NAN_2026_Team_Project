@@ -102,21 +102,24 @@ const safeDescriptionEnding = /(남아 있다|보인다|확인된다|이어진�
 // 검증기도 이것을 못 잡는다. 완전히 같은 문장(`duplicate descriptions`)과 3회
 // 이상 반복되는 어절(`repeated clause`)만 거르기 때문이다.
 //
-// 자리마다 볼 곳과 맺을 어미를 정해 주면 호출을 늘리지도 순차로 돌리지도 않고
-// 갈라진다. **목록은 계약서와 검증기에서 끌어온다.** 여기에 새로 적으면 계약서와
-// 갈라진다 — 이 저장소가 반복해서 당한 사고다.
+// 자리마다 볼 곳을 정해 주면 호출을 늘리지도 순차로 돌리지도 않고 갈라진다.
+// **목록은 계약서에서 끌어온다.** 여기에 새로 적으면 계약서와 갈라진다 —
+// 이 저장소가 반복해서 당한 사고다.
 // 목록 마지막이 `, or wear` 처럼 온다. 쉼표로만 끊으면 `or wear` 가 남는다.
 const observationFacets = (contract.match(/Describe only ([^.]+)\./)?.[1] || '')
   .split(/,\s*|\s+or\s+/).map((facet) => facet.trim().replace(/^or\s+/, '')).filter(Boolean);
-const descriptionEndings = safeDescriptionEnding.source.match(/\(([^)]+)\)/)?.[1].split('|') ?? [];
 
+// **어미는 배정하지 않는다.** 2026-08-07 에 어미까지 자리마다 정해 봤는데 문장이
+// 휘었다 — `케이스에 복원된 부분이 보여 이어진다.` 처럼 어미를 맞추려고 억지로
+// 이어붙인 문장이 나왔고, 검증기의 `description has unsafe ending` 도 늘었다.
+// 볼 곳만 갈라 줘도 어미는 따라서 갈라진다. 다섯 어미 중 하나라는 규칙은
+// 계약서가 이미 말하고 있으니 그 이상을 지시하지 않는다.
+//
 // 하루치를 한 번에 만드는 경로(로컬 서버)에는 필요 없다. 모델이 여덟을 다 보므로
 // 계약서 규칙이 그대로 작동한다. 쪼개서 부르는 쪽만 이것을 쓴다.
 export function lotWritingHint(index) {
   const facet = observationFacets[index % observationFacets.length];
-  const ending = descriptionEndings[index % descriptionEndings.length];
-  if (!facet || !ending) return '';
-  return `Focus this description on ${facet}. End the description with "${ending}.".`;
+  return facet ? `Focus this description on ${facet}.` : '';
 }
 const categoryTerms = {
   CER: /유약|굽|몸체|손잡이|뚜껑|항아리|도자/, CLK: /문자판|바늘|태엽|케이스|시계|크로노미터|유리돔|골격/,
