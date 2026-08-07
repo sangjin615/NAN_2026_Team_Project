@@ -62,6 +62,14 @@ test('relic auction delays rival responses like the normal auction', async () =>
   assert.doesNotMatch(app, /const challenger = \[\.\.\.session\.bots\]/);
 });
 
+test('relic bid status follows the normal auction information hierarchy', async () => {
+  const css = await readFile(new URL('../runtime-fixes.css', import.meta.url), 'utf8');
+  assert.match(css, /#relic-lot-status\s*\{[^}]*display: grid;[^}]*align-content: center;[^}]*text-align: left;/);
+  assert.match(css, /#relic-lot-status > \*\s*\{[^}]*display: block;/);
+  assert.match(css, /#relic-lot-status strong\s*\{[^}]*font-size: clamp\(17px,1\.7vw,27px\);/);
+  assert.match(css, /> #relic-timer\s*\{[^}]*left: 44\.5%;[^}]*width: 11%; height: 4\.6%;/);
+});
+
 test('auction participant portraits include the player and all relic rivals', async () => {
   const appSource = await readFile(new URL('../src/app.js', import.meta.url), 'utf8');
   for (const portrait of ['player-merchant.png', 'royal-agent.png', 'northern-merchant.png', 'foreign-collector.png']) {
