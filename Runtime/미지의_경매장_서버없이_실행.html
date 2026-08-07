@@ -2174,6 +2174,10 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
 [data-scene="quests"] #active-quests > .accepted-quests {
   padding: 8% 3% 3%;
 }
+[data-scene="quests"] #active-quests .accepted-quests > h4 {
+  left: 50%; width: max-content; max-width: 92%;
+  transform: translateX(-50%); text-align: center;
+}
 [data-scene="quests"] #active-quests .accepted-quests > article {
   grid-template-columns: minmax(0, 1.2fr) minmax(78px, .62fr) minmax(150px, 1fr) minmax(82px, .48fr);
   gap: 1.5%; min-height: 58px; margin-top: 8px; padding: 8px 2% 8px 11%;
