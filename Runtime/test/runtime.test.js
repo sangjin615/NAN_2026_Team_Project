@@ -98,6 +98,9 @@ test('relic auction side panels fill their painted frames', async () => {
 test('successful ending content fills the inner parchment without a dead lower section', async () => {
   const css = await readFile(new URL('../runtime-fixes.css', import.meta.url), 'utf8');
   assert.match(css, /grid-template-rows: 50% 45%; gap: 1%;[\s\S]*?padding: 15% 7% 7%;/);
+  assert.match(css, /\[data-scene="result"\] > h2\s*\{[\s\S]*?display: grid; place-items: center;/);
+  assert.match(css, /\.result-scene-art\s*\{[\s\S]*?flex: 0 0 auto;[\s\S]*?aspect-ratio: 16 \/ 9;/);
+  assert.match(css, /#return-title\s*\{ left: 39\.5%; bottom: 3\.4%; width: 21%; height: 6\.4%;/);
 });
 
 test('final relic auction values stay around two hundred to two hundred fifty thousand gold', async () => {

@@ -3493,7 +3493,11 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
 [data-scene="relic"] > .actions button img { width: clamp(20px,2vw,32px); height: clamp(20px,2vw,32px); }
 
 /* Ending: a single centered parchment with a non-overlapping hero, stats and action. */
-[data-scene="result"] > h2 { display: none; }
+[data-scene="result"] > h2 {
+  left: 36%; top: 7%; width: 28%; height: 7%;
+  display: grid; place-items: center; margin: 0; padding: 0;
+  color: #ead9b9; font-size: clamp(18px,1.75vw,28px); text-shadow: 0 2px 2px #160d08;
+}
 [data-scene="result"]:not(.is-failure) #run-summary {
   left: 29%; top: 3%; width: 42%; height: 94%;
   grid-template-rows: 50% 45%; gap: 1%; align-content: start; padding: 15% 7% 7%;
@@ -3502,7 +3506,7 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
 [data-scene="result"] .result-kicker { color: #896431; font-size: clamp(8px,.68vw,11px); font-weight: 900; letter-spacing: .12em; }
 [data-scene="result"]:not(.is-failure) .result-ending { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1.5%; }
 [data-scene="result"]:not(.is-failure) .result-scene-art {
-  width: 100%; aspect-ratio: 16 / 9; min-height: 0; margin: 1% auto; object-fit: cover; object-position: center;
+  flex: 0 0 auto; width: 100%; height: auto; aspect-ratio: 16 / 9; min-height: 0; margin: 1% auto; object-fit: cover; object-position: center;
   border: 2px solid #9f825b; box-sizing: border-box; box-shadow: inset 0 0 0 1px #f4e4c8,0 4px 10px #5b422b55;
 }
 [data-scene="result"]:not(.is-failure) .result-ending h3 { margin: 0; font-size: clamp(20px,1.85vw,30px); text-align: center; }
@@ -3513,7 +3517,7 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
 [data-scene="result"]:not(.is-failure) .result-stats p { align-items: center; min-height: 0; padding: 0 2%; font-size: clamp(9px,.78vw,13px); }
 [data-scene="result"]:not(.is-failure) .result-stats p:last-child { align-items: flex-start; padding-top: 2.5%; }
 [data-scene="result"]:not(.is-failure) .result-stats p:last-child b { max-width: 62%; line-height: 1.25; }
-[data-scene="result"]:not(.is-failure) #return-title { left: 39.5%; bottom: 2.4%; width: 21%; height: 7%; z-index: 4; }
+[data-scene="result"]:not(.is-failure) #return-title { left: 39.5%; bottom: 3.4%; width: 21%; height: 6.4%; z-index: 4; }
 
 /* HUD hierarchy: day and cash are primary; storage, stage and loan are compact support data. */
 [data-scene="hub"] > header {
