@@ -4760,7 +4760,7 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
       resolve();
     }));
   });
-  var MIN_LOADING_VISIBLE_MS = 2e3;
+  var MIN_LOADING_VISIBLE_MS = 500;
   async function completeLoadingWindow(visibleSince, message) {
     const remainingMs = MIN_LOADING_VISIBLE_MS - (performance.now() - visibleSince);
     if (remainingMs > 0) await new Promise((resolve) => window.setTimeout(resolve, remainingMs));

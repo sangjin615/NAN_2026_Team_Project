@@ -191,7 +191,7 @@ const waitForPaint = () => new Promise((resolve) => {
   }));
 });
 
-const MIN_LOADING_VISIBLE_MS = 2000;
+const MIN_LOADING_VISIBLE_MS = 500;
 
 async function completeLoadingWindow(visibleSince, message) {
   const remainingMs = MIN_LOADING_VISIBLE_MS - (performance.now() - visibleSince);

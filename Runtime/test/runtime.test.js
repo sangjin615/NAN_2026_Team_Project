@@ -139,9 +139,9 @@ test('browser zoom is inversely compensated while preserving the 16:9 layout vie
   assert.match(css, /width: min\(var\(--layout-viewport-width\)/);
 });
 
-test('run start and every day transition keep the painted loading scene visible for two seconds', async () => {
+test('run start and every day transition keep the painted loading scene visible for half a second', async () => {
   const app = await readFile(new URL('../src/app.js', import.meta.url), 'utf8');
-  assert.match(app, /const MIN_LOADING_VISIBLE_MS = 2000;/);
+  assert.match(app, /const MIN_LOADING_VISIBLE_MS = 500;/);
   assert.match(app, /await waitForPaint\(\);\r?\n  const loadingVisibleSince = performance\.now\(\);/);
   assert.match(app, /async function nextDay\(\)[\s\S]*?adapter\.showScene\('loading'\);[\s\S]*?completeLoadingWindow\(loadingVisibleSince/);
   assert.match(app, /MIN_LOADING_VISIBLE_MS - \(performance\.now\(\) - visibleSince\)/);
