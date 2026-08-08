@@ -415,7 +415,7 @@ function questIconUrl(quest) {
 
 function questRewardLabel(quest) {
   return quest.rewardMode === 'fixedSubmissionTable' || quest.id?.startsWith('grade-') || quest.id?.startsWith('category-')
-    ? money(questCompletionBonus(quest, state.shopStage))
+    ? `물품 가치 + ${money(questCompletionBonus(quest, state.shopStage))}`
     : quest.rewardMode === 'deliveredBasePlusBonus'
     ? `물품 기준가 + ${money(questCompletionBonus(quest, state.shopStage))}`
     : quest.rewardMode === 'deliveredBasePlusFeePlusBonus'

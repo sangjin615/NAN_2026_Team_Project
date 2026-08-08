@@ -217,7 +217,7 @@ export function questCompletionBonus(quest, shopStage) {
 
 export function questDeliveryReward(quest, item, shopStage, shopBonus = 0) {
   const completionBonus = questCompletionBonus(quest, shopStage);
-  if (quest.rewardMode === 'fixedSubmissionTable' || quest.id?.startsWith('grade-') || quest.id?.startsWith('category-')) return completionBonus;
+  if (quest.rewardMode === 'fixedSubmissionTable' || quest.id?.startsWith('grade-') || quest.id?.startsWith('category-')) return item.basePrice + completionBonus;
   if (quest.rewardMode === 'deliveredBasePlusBonus') return item.basePrice + completionBonus;
   if (quest.rewardMode === 'deliveredBasePlusFeePlusBonus') return item.basePrice + quest.fee + completionBonus;
   return Math.round(quest.reward * (1 + shopBonus));

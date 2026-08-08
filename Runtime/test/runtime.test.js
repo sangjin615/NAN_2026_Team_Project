@@ -529,6 +529,7 @@ test('submission quest UI does not show an acceptance fee', async () => {
   assert.doesNotMatch(html, /id="quest-detail-fee"/);
   assert.doesNotMatch(app, /<span>수주비 \$\{money\(quest\.fee\)\}/);
   assert.match(app, /<span>총 보상 \$\{questRewardLabel\(quest\)\}<\/span>/);
+  assert.match(app, /`물품 가치 \+ \$\{money\(questCompletionBonus\(quest, state\.shopStage\)\)\}`/);
   assert.match(app, /총 보상 \$\{money\(questDeliveryReward\(quest, item, state\.shopStage\)\)\}/);
 });
 
@@ -537,7 +538,7 @@ test('epic and legendary submission quests use the swapped icons', async () => {
   assert.match(app, /'grade-EPIC': 'designated', 'grade-LEGENDARY': 'block'/);
 });
 
-test('new submission rewards use the table total including the item base price', () => {
+test('new submission rewards add the table bonus to the delivered item value', () => {
   const schedule = createRunSchedule({ catalog, balance, seed: 'submission-reward-no-fee' });
   const state = createInitialState({ schedule, sets: createSetGraph(schedule, 'submission-reward-no-fee'), balance, startCash: 1000000 });
   const lot = schedule.days[0].lots[0];
@@ -547,8 +548,8 @@ test('new submission rewards use the table total including the item base price',
   assert.equal(acceptQuest(state, 'category-test', balance), true);
   const beforeDelivery = state.cash;
   assert.equal(deliverQuestItem(state, 'category-test', lot.lotId), true);
-  assert.equal(state.cash - beforeDelivery, 2600);
-  assert.equal(state.activeQuests[0].paidReward, 2600);
+  assert.equal(state.cash - beforeDelivery, 6600);
+  assert.equal(state.activeQuests[0].paidReward, 6600);
 });
 
 test('daily quest refresh removes active quests after their deadline', () => {
