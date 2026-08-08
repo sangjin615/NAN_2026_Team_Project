@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>미지의 경매장</title>
+<meta name="description" content="12일 동안 경매품의 숨은 연결을 읽고, 입찰·판매·의뢰로 상회를 키워 최종 유물 경매에 도전하는 추론 경매 시뮬레이션">
+<!-- 게임 본체는 Runtime/ 안에 있다. 저장소 루트를 그대로 배포하면 주소가
+     길어지므로 여기서 넘긴다. 스크립트가 막힌 환경도 있어 meta refresh 를
+     함께 두고, 둘 다 안 되면 아래 버튼이 남는다. -->
+<meta http-equiv="refresh" content="0; url=./Runtime/">
+<link rel="canonical" href="./Runtime/">
+<style>
+  html, body { height: 100%; margin: 0; }
+  body {
+    display: grid; place-items: center; gap: 0;
+    background: radial-gradient(120% 90% at 50% 25%, #2a2018 0%, #14100c 60%, #0b0906 100%);
+    color: #f4ead3;
+    font-family: Batang, "Apple SD Gothic Neo", "Noto Serif KR", serif;
+    text-align: center; padding: 24px;
+  }
+  .mark { color: #d5a44e; font-size: 22px; letter-spacing: .4em; margin: 0 0 14px; }
+  h1 { margin: 0 0 10px; font-size: clamp(26px, 5vw, 40px); letter-spacing: .03em; font-weight: 800; }
+  .rule { width: min(320px, 70vw); border: 0; border-top: 2px solid #9f6d21; margin: 0 auto 4px; }
+  .rule + .rule { border-top: 1px solid #c9a765; margin-bottom: 18px; }
+  p { margin: 0 0 22px; color: #cbbfa6; font-size: clamp(13px, 2vw, 15px); line-height: 1.7; }
+  a.enter {
+    display: inline-block; padding: 12px 26px; text-decoration: none;
+    color: #f4ead3; background: linear-gradient(180deg, #2a2419, #191510);
+    border: 2px solid #9f6d21; box-shadow: inset 0 0 0 2px #2a2419;
+    font-size: 15px; letter-spacing: .04em;
+  }
+  a.enter:hover { border-color: #d5a44e; color: #ffeec4; }
+  .note { margin-top: 20px; font-size: 12px; color: #7d7161; }
+</style>
+</head>
+<body>
+  <main>
+    <p class="mark">◆</p>
+    <h1>미지의 경매장</h1>
+    <hr class="rule"><hr class="rule">
+    <p>12일 동안 경매품의 숨은 연결을 읽고,<br>입찰과 거래로 상회를 키워 최종 유물 경매에 도전합니다.</p>
+    <a class="enter" href="./Runtime/">여정 시작</a>
+    <p class="note">자동으로 이동하지 않으면 위를 누르세요.</p>
+  </main>
+  <script>location.replace('./Runtime/');</script>
+</body>
+</html>
