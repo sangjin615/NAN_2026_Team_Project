@@ -66,8 +66,8 @@ test('relic bid status follows the normal auction information hierarchy', async 
   const css = await readFile(new URL('../runtime-fixes.css', import.meta.url), 'utf8');
   assert.match(css, /#relic-lot-status\s*\{[^}]*display: grid;[^}]*align-content: center;[^}]*text-align: left;/);
   assert.match(css, /#relic-lot-status > \*\s*\{[^}]*display: block;/);
-  assert.match(css, /#relic-lot-status strong\s*\{[^}]*font-size: clamp\(17px,1\.7vw,27px\);/);
-  assert.match(css, /> #relic-timer\s*\{[^}]*left: 44\.5%;[^}]*width: 11%; height: 4\.6%;/);
+  assert.match(css, /#relic-lot-status strong\s*\{[^}]*grid-row: 1 \/ 3;[^}]*font-size: clamp\(15px,1\.35vw,22px\);/);
+  assert.match(css, /> #relic-timer\s*\{[^}]*left: 44\.5%; top: 34%;[^}]*width: 11%; height: 4\.6%;/);
 });
 
 test('auction participant portraits include the player and all relic rivals', async () => {
@@ -90,6 +90,9 @@ test('relic auction side panels fill their painted frames', async () => {
   const css = await readFile(new URL('../runtime-fixes.css', import.meta.url), 'utf8');
   assert.match(css, /#relic-feed\s*\{[\s\S]*?top: \.5%;[\s\S]*?height: 98%;/);
   assert.match(css, /#relic-participants h3\s*\{[\s\S]*?place-items: center;/);
+  assert.match(css, /#relic-participants h3\s*\{\s*top: 4\.2%; height: 8%;/);
+  assert.match(css, /#relic-card > header\s*\{[\s\S]*?margin: 0; padding: 0; border: 0; background: transparent;/);
+  assert.match(css, /\.relic-lot-list > li\.relic-lot-waiting\s*\{ filter: saturate\(\.78\); opacity: \.88;/);
 });
 
 test('successful ending content fills the inner parchment without a dead lower section', async () => {
