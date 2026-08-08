@@ -20,7 +20,16 @@ const catalog = JSON.parse(await readFile(RT + 'assets/items/catalog.json', 'utf
 const itemNames = catalog.items.map((i) => i.item_name_ko).filter(Boolean).sort((a, b) => b.length - a.length);
 // 품목 이름의 머리 명사. "청록 뚜껑 소금단지" → "소금단지".
 const headNouns = [...new Set(itemNames.map((n) => n.trim().split(/\s+/).pop()))].sort((a, b) => b.length - a.length);
-const namesItem = (t) => itemNames.some((n) => t.includes(n));
+// 카탈로그에 없는데 특정 사물을 지칭하는 명사. 모델이 지어낸 것들이라 머리
+// 명사 목록으로는 안 걸린다. 실측에서 청자 항아리에 "제비문이 **찻잔**의
+// 손잡이에 새겨져 있고" 가 붙은 것을 보고 추가했다.
+//
+// 조사가 붙은 형태로만 본다. 그냥 포함으로 보면 `잔금`·`함께` 같은 말이 걸린다.
+// 새로 발견되면 여기에 더한다 — 목록이 곧 지금까지 본 사례의 기록이다.
+const strayObjectNouns = ['찻잔', '상자', '접시', '컵', '거울', '부채', '서랍', '신발', '모자', '우산'];
+const strayNoun = new RegExp(`(?:${strayObjectNouns.join('|')})(?=[의에은는이가을를과와로도만\\s])`);
+
+const namesItem = (t) => itemNames.some((n) => t.includes(n)) || strayNoun.test(t);
 const stemOf = (t) => { const e = ENDINGS.find((x) => t.endsWith(x)); return e ? t.slice(0, -e.length).trim() : t; };
 
 // --- 1. 걷기 ---
