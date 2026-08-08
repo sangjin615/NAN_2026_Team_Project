@@ -778,6 +778,16 @@ test('exchange applies only the highest matching set bonus', () => {
   assert.equal(bestSetMultiplier(allCategories, balance, [], 0), 1.5);
 });
 
+test('stage one gives a small early set bonus without changing later stages', () => {
+  const pair = [
+    { category: 'CER', grade: 'COMMON', sold: false, collateral: false },
+    { category: 'CER', grade: 'RARE', sold: false, collateral: false },
+  ];
+  assert.ok(Math.abs(bestSetMultiplier(pair, balance, [], 1) - 1.38) < 1e-9);
+  assert.ok(Math.abs(bestSetMultiplier(pair, balance, [], 2) - 1.44) < 1e-9);
+  assert.deepEqual(balance.shop.setBonus, [0, 0.15, 0.2, 0.3, 0.4]);
+});
+
 test('an opponent places the opening bid without exceeding its budget', () => {
   const bots = [{ id: 'a', name: 'A', maxBid: 900 }, { id: 'b', name: 'B', maxBid: 1400 }];
   assert.deepEqual(openingBotBid(bots, 1000), { bidder: bots[1], price: 1000 });
