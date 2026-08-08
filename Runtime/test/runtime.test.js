@@ -152,7 +152,7 @@ test('guild loan controls are vertically balanced inside the painted panels', as
   const css = await readFile(new URL('../runtime-fixes.css', import.meta.url), 'utf8');
   assert.match(css, /\[data-scene="guild"\] #guild-detail\s*\{\s*padding: 62px 24px 12px;/);
   assert.match(css, /\[data-scene="guild"\] \.actions\s*\{\s*top: 60\.5%; height: 14\.5%; align-items: center;/);
-  assert.match(css, /\[data-scene="guild"\] #guild-message\s*\{\s*left: 8\.7%; top: 75\.8%; width: 53\.4%; height: 8\.8%;/);
+  assert.match(css, /\[data-scene="guild"\] #guild-message\s*\{\s*left: 8\.7%; top: 75\.8%; width: 53\.4%; height: 8\.8%;\s*max-width: none;/);
 });
 
 test('the 16:9 canvas can grow beyond 1600 by 900', async () => {
