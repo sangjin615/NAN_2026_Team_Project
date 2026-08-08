@@ -33,7 +33,12 @@ function inline(text) {
   out = escape(out);
   out = out.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
   out = out.replace(/~~([^~]+)~~/g, '<del>$1</del>');
-  out = out.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, '<img alt="$1" src="$2">');
+  // 결과는 print/ 안에 생기므로 상대 경로 이미지는 한 단계 올려준다.
+  // 이걸 빼먹으면 01 의 대표 화면 4장이 통째로 빠진 채 PDF 가 나온다.
+  out = out.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, (_, alt, src) => {
+    const target = /^(https?:|data:|\/)/.test(src) ? src : '../' + src;
+    return '<img alt="' + alt + '" src="' + target + '">';
+  });
   out = out.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>');
   return out.replace(MARK_RE, (_, i) => '<code>' + escape(codes[Number(i)]) + '</code>');
 }
