@@ -163,11 +163,17 @@ const style = [
   '  --parch: #f7f3ea; --parch-deep: #efe8d8; --line: #d9cfba;',
   '  --ink: #1b1815; --muted: #5a5148; }',
   '* { box-sizing: border-box; }',
+  // 헤드리스 인쇄는 기본적으로 배경을 빼고 찍는다. 표 머리와 코드블록 음영이
+  // 사라지면 표가 읽기 어려워지므로 강제한다.
+  '*, *::before, *::after { -webkit-print-color-adjust: exact; print-color-adjust: exact; }',
   'body { margin: 0; color: var(--ink); background: #fff;',
   '  font-family: "Malgun Gothic", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;',
   '  font-size: 10.8pt; line-height: 1.7; word-break: keep-all; overflow-wrap: anywhere; }',
   // 표제는 게임 타이틀과 같은 명조 계열로 둔다.
-  'h1, h2, h3, .toc-title { font-family: Batang, "Apple SD Gothic Neo", "Noto Serif KR", serif; }',
+  // 제목도 본문과 같은 폰트를 쓴다. 명조로 두면 브라우저 인쇄에서는 바탕이,
+  // 헤드리스 인쇄에서는 고딕이 나와 같은 스크립트가 두 결과를 낸다. 굵기와
+  // 크기로 구분하고, 게임 느낌은 황동·양피지 색이 맡는다.
+  'h1, h2, h3, .toc-title { font-family: inherit; }',
   'h1 { font-size: 24pt; font-weight: 800; letter-spacing: .02em; margin: 0 0 2.5mm; text-align: center; }',
   'h1 + p { margin: 0 0 6mm; text-align: center; color: var(--muted); font-size: 10pt; }',
   '.rule { border: 0; border-top: 3px solid var(--brass); margin: 0 0 1.4mm; }',
