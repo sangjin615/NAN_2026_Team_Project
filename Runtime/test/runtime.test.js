@@ -163,6 +163,13 @@ test('the 16:9 canvas can grow beyond 1600 by 900', async () => {
   assert.doesNotMatch(sceneRule, /--design-height/);
 });
 
+test('every city return button uses the same label', async () => {
+  const html = await readFile(new URL('../index.html', import.meta.url), 'utf8');
+  const labels = [...html.matchAll(/<button[^>]*data-place="city"[^>]*>([^<]+)<\/button>/g)].map((match) => match[1]);
+  assert.equal(labels.length, 6);
+  assert.ok(labels.every((label) => label === '도시로 돌아가기'));
+});
+
 test('정의되지 않은 --design-* 를 쓰는 규칙이 하나도 없다', async () => {
   // 이 가드는 원래 `.scene` 만 봤고 [data-scene="loading"] 이 빠져 있었다. 그래서
   // 로딩 씬만 --design-width 를 계속 불렀고, 무효한 var() 가 min() 전체를 무효로
