@@ -5,7 +5,7 @@ import { createRunSchedule, normalizeVisualEffects, validateSchedule, VISUAL_EFF
 import { createSetGraph } from '../src/set-graph.js';
 import { FallbackContentProvider, GenerationBuffer } from '../src/generation-buffer.js';
 import { createInitialState, resolveLot, advanceDay, prepareAuctionEntry } from '../src/game-state.js';
-import { resolveAuction, sellAll, sellItems, quoteItemsSale, bestSetMultiplier, acceptQuest, takeLoan, botBidForLot, estimateBotDailyAssets, nextBotBid, openingBotBid, missedDeadline, isBankrupt, deliverQuestItem, questCompletionBonus, refreshDailyQuestOffers, repayLoanEarly, selectDistinctBotInterests, createMarketPath, createDailyQuestOffers, questMatchesItem } from '../src/systems.js';
+import { adjustMarketChange, resolveAuction, sellAll, sellItems, quoteItemsSale, bestSetMultiplier, acceptQuest, takeLoan, botBidForLot, estimateBotDailyAssets, nextBotBid, openingBotBid, missedDeadline, isBankrupt, deliverQuestItem, questCompletionBonus, refreshDailyQuestOffers, repayLoanEarly, selectDistinctBotInterests, createMarketPath, createDailyQuestOffers, questMatchesItem, startingCashForRelics, upgradeShop } from '../src/systems.js';
 import { recordEvent, runMetrics } from '../src/telemetry.js';
 import { GenerationApiProvider } from '../src/generation-api-provider.js';
 import { assertPublicGenerationConfig, resolveGenerationApiConfig } from '../src/generation-api-config.js';
@@ -571,13 +571,47 @@ test('daily quest refresh removes active quests after their deadline', () => {
   assert.equal(state.activeQuests.length, 0);
 });
 
-test('royal charter expands the refreshed daily quest offers from three to five', () => {
+test('broker card and royal charter each add one daily quest offer', () => {
   const schedule = createRunSchedule({ catalog, balance, seed: 'quest-royal-charter' });
   const state = createInitialState({ schedule, sets: createSetGraph(schedule, 'quest-royal-charter'), balance, startCash: 100000 });
+  assert.equal(state.questOffers.length, 3);
   state.metaRelics = ['royal-charter'];
+  refreshDailyQuestOffers(state, balance, state.metaRelics);
+  assert.equal(state.questOffers.length, 4);
+  state.metaRelics = ['broker-card', 'royal-charter'];
   refreshDailyQuestOffers(state, balance, state.metaRelics);
   assert.equal(state.questOffers.length, 5);
   assert.equal(state.questOffers.every((quest) => quest.offeredDay === state.day), true);
+});
+
+test('all nine relic effects are connected to gameplay rules', () => {
+  assert.equal(startingCashForRelics(balance, []), 20000);
+  assert.equal(startingCashForRelics(balance, ['old-scale']), 25000);
+
+  const schedule = createRunSchedule({ catalog, balance, seed: 'all-relic-effects' });
+  const state = createInitialState({ schedule, sets: createSetGraph(schedule, 'all-relic-effects'), balance, startCash: 0, metaRelics: ['leather-ledger', 'worn-seal'] });
+  const offer = state.questOffers[0];
+  assert.equal(acceptQuest(state, offer.offerId, balance), true);
+  assert.equal(state.activeQuests[0].deadlineDay, state.day + 3);
+  state.completedQuestCount = balance.shop.questRequirement[1];
+  assert.equal(upgradeShop(state, balance), true);
+  assert.equal(state.shopStage, 2);
+  assert.equal(state.cash, 0);
+
+  assert.ok(Math.abs(adjustMarketChange(1, 1.1, ['magnifier'], balance) - 1.15) < 1e-9);
+  assert.ok(Math.abs(adjustMarketChange(1, 0.9, ['compass'], balance) - 0.95) < 1e-9);
+  assert.equal(createDailyQuestOffers(balance, 1, 'broker-only', ['broker-card']).length, 4);
+
+  const setItems = [
+    { lotId: 'set-a', category: 'CER', grade: 'COMMON', sold: false, collateral: false },
+    { lotId: 'set-b', category: 'CER', grade: 'RARE', sold: false, collateral: false },
+  ];
+  assert.ok(Math.abs(bestSetMultiplier(setItems, balance, ['house-crest'], 1) - 1.58) < 1e-9);
+
+  const saleState = createInitialState({ schedule, sets: [], balance, startCash: 0, metaRelics: ['merchant-safe'] });
+  saleState.marketPath.CER = Array(12).fill(1);
+  saleState.inventory.push({ lotId: 'safe-sale', basePrice: 1000, category: 'CER', grade: 'COMMON', sold: false, collateral: false });
+  assert.equal(quoteItemsSale(saleState, balance, ['safe-sale']).revenue, 1000);
 });
 
 test('disabled bargain quests are not generated or carried into a new day', () => {

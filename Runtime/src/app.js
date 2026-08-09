@@ -10,7 +10,7 @@ import { VslRuntimeAdapter } from './vsl-adapter.js';
 import {
   acceptQuest, botBidForLot, createMarketPath, estimateBotDailyAssets, nextBotBid, openingBotBid, selectDistinctBotInterests,
   deliverQuestItem, effectiveQuestDeadline, expireQuestsBeforeAuction, missedDeadline, questMatchesItem,
-  marketIndexForDay, questCompletionBonus, questDeliveryReward, quoteItemsSale, refreshDailyQuestOffers, repayLoanEarly, sellItems, settleLoan, settleQuests, takeLoan, upgradeShop,
+  marketIndexForDay, questCompletionBonus, questDeliveryReward, quoteItemsSale, refreshDailyQuestOffers, repayLoanEarly, sellItems, settleLoan, settleQuests, startingCashForRelics, takeLoan, upgradeShop,
 } from './systems.js';
 import { downloadRunLog, recordEvent } from './telemetry.js';
 import { AudioBus } from './audio-bus.js';
@@ -269,7 +269,9 @@ async function newRun(seed) {
   if (!validateSchedule(schedule).valid) throw new Error('96 LOT 생성 실패');
   updateRunLoading(38, '품목 세트와 시장 흐름을 연결하고 있습니다.', ['schedule'], 'sets');
   const sets = createSetGraph(schedule, seed);
-  state = createInitialState({ schedule, sets, balance, startCash: balance.run.startCash, metaRelics: loadMeta() });
+  const meta = loadMeta();
+  const startCash = startingCashForRelics(balance, meta);
+  state = createInitialState({ schedule, sets, balance, startCash, metaRelics: meta });
   state.saveSlot = selectedSlot;
   state.version = 2;
   recordEvent(state, 'run-start', { saveSlot: selectedSlot });
@@ -614,14 +616,17 @@ function renderTavern(message = '') {
 function renderShop(message = '') {
   clearActionTimer(); audio.playBgm('workplace'); state.phase = 'shop'; adapter.showScene('shop'); syncHeader();
   const next = Math.min(4, state.shopStage + 1); const maxed = state.shopStage >= 4;
-  const cost = maxed ? 0 : balance.shop.upgradeCost[next - 1];
+  const freeStage = balance.relicEffects?.['worn-seal']?.freeUpgradeToStage ?? 2;
+  const waived = next === freeStage && (state.metaRelics || []).includes('worn-seal');
+  const cost = (maxed || waived) ? 0 : balance.shop.upgradeCost[next - 1];
   const required = maxed ? 0 : balance.shop.questRequirement[next - 1];
   const nextStorage = maxed ? state.storage : balance.shop.storage[next];
   const benefitStage = maxed ? state.shopStage : next;
   const visibleCompetitors = Math.min(3, benefitStage);
   const visiblePrices = Math.min(6, benefitStage * 2);
   const catalogScope = benefitStage === 1 ? '이름' : benefitStage === 2 ? '이름 · 계열' : '이름 · 계열 · 등급';
-  const auctionFee = Math.round((balance.shop.auctionFee?.[benefitStage] || 0) * 100);
+  const feeWaived = (state.metaRelics || []).includes('merchant-safe') && (balance.relicEffects?.['merchant-safe']?.feeWaived ?? true);
+  const auctionFee = feeWaived ? 0 : Math.round((balance.shop.auctionFee?.[benefitStage] || 0) * 100);
   const maxStorage = Math.max(...balance.shop.storage);
   const inventory = ownedItems();
   const slots = Array.from({ length: maxStorage }, (_, index) => {

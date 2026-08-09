@@ -7,6 +7,17 @@
     "growth": 1,
     "growthNote": "시뮬레이션은 기저가가 고정이다. 난이도는 물가가 아니라 봇 자본 곡선이 만든다"
   },
+  "relicEffects": {
+    "old-scale": { "startCash": 25000 },
+    "leather-ledger": { "questDeadlineDays": 3 },
+    "worn-seal": { "freeUpgradeToStage": 2 },
+    "magnifier": { "marketRiseMultiplier": 1.5 },
+    "compass": { "marketFallMultiplier": 0.5 },
+    "broker-card": { "questOffersBonus": 1 },
+    "royal-charter": { "questOffersBonus": 1 },
+    "house-crest": { "setMultiplierBonus": 0.2 },
+    "merchant-safe": { "feeWaived": true }
+  },
   "gradeBeta": {
     "common": 0.27,
     "rare": 1,
@@ -589,7 +600,7 @@
         "id": "old-scale",
         "tier": "low",
         "name": "낡은 저울",
-        "effect": "다음 여정 시작 자금 +10%",
+        "effect": "여정 시작 자금 25,000 G",
         "measuredValue": 35930,
         "previousEffect": "다음 여정 기본 시작 자금 +40%"
       },
@@ -597,7 +608,7 @@
         "id": "leather-ledger",
         "tier": "low",
         "name": "가죽 장부",
-        "effect": "1단계 보관칸만 +1",
+        "effect": "수주한 의뢰의 기한이 하루 늘어난다",
         "measuredValue": 2170,
         "previousEffect": "보관칸 전 단계 +1"
       },
@@ -605,7 +616,7 @@
         "id": "worn-seal",
         "tier": "low",
         "name": "닳은 인장",
-        "effect": "1->2단계 승급 조건 면제",
+        "effect": "2단계 승급 비용을 내지 않는다",
         "measuredValue": 4600,
         "previousEffect": "1->2단계 승급 조건 면제"
       },
@@ -613,7 +624,7 @@
         "id": "magnifier",
         "tier": "mid",
         "name": "감정사의 확대경",
-        "effect": "매일 경쟁자 예산 채널 무료",
+        "effect": "시세 상승량 +50%",
         "redefinedAt": "2026-07-30",
         "why": "약식만 빼면 그대로 성립한다. 정밀 하나뿐이므로 문구만 고쳤다",
         "measuredValue": 15810,
@@ -623,7 +634,7 @@
         "id": "compass",
         "tier": "mid",
         "name": "뱃사람의 나침반",
-        "effect": "매일 수요 동향 채널 무료",
+        "effect": "시세 하락량 -50%",
         "measuredValue": 7070,
         "previousEffect": "매일 시장 예보 1종 무료"
       },
@@ -631,7 +642,7 @@
         "id": "broker-card",
         "tier": "mid",
         "name": "거간꾼의 명함",
-        "effect": "매일 출품 목록 채널 무료",
+        "effect": "매일 제시되는 의뢰가 한 건 늘어난다",
         "redefinedAt": "2026-07-30",
         "why": "중급의 역할이 무료 정보다. 나침반(시장 예보 무료)과 짝이 된다. 값어치 약 5,400",
         "rejected": "족보 배수 +0.2 (값어치 +85,610 - 중급 하나가 상급 전부보다 세진다) · 보관칸 +1 (가죽 장부와 중복)",
@@ -642,7 +653,7 @@
         "id": "royal-charter",
         "tier": "high",
         "name": "왕실 인가장",
-        "effect": "의뢰 5종 전부 제시",
+        "effect": "매일 제시되는 의뢰가 한 건 늘어난다",
         "measuredValue": 73640,
         "previousEffect": "의뢰 매일 5종 전부 제시"
       },
@@ -665,7 +676,7 @@
         "id": "merchant-safe",
         "tier": "high",
         "name": "대상인의 금고",
-        "effect": "이월률 40 -> 45%",
+        "effect": "판매 수수료를 내지 않는다",
         "measuredValue": 64900,
         "previousEffect": "이월률 40% -> 60%"
       }

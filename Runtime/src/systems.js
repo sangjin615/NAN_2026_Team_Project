@@ -7,7 +7,21 @@ const QUEST_IDS = [
 ];
 const GRADE_BETA = { COMMON: 0.27, RARE: 1, EPIC: 2.09, LEGENDARY: 3.64 };
 
-export function createMarketPath(balance, seed) {
+export function startingCashForRelics(balance, relics = []) {
+  return relics.includes('old-scale') ? (balance.relicEffects?.['old-scale']?.startCash ?? 25000) : balance.run.startCash;
+}
+
+export function adjustMarketChange(current, next, relics = [], balance = {}) {
+  const delta = next - current;
+  const changeMultiplier = delta > 0 && relics.includes('magnifier')
+    ? (balance.relicEffects?.magnifier?.marketRiseMultiplier ?? 1.5)
+    : delta < 0 && relics.includes('compass')
+      ? (balance.relicEffects?.compass?.marketFallMultiplier ?? 0.5)
+      : 1;
+  return Math.max(0.6, Math.min(1.6, current + delta * changeMultiplier));
+}
+
+export function createMarketPath(balance, seed, relics = []) {
   const rng = createRng(`${seed}:market`);
   const families = ['CER', 'CLK', 'PNT', 'BOK', 'MET', 'JEW'];
   const phi = balance.market?.phi ?? 0.7;
@@ -17,7 +31,8 @@ export function createMarketPath(balance, seed) {
     let index = 1;
     path[family] = Array.from({ length: 12 }, () => {
       const noise = (rng() + rng() + rng() + rng() - 2) * shock * 1.7;
-      index = Math.max(0.6, Math.min(1.6, 1 + phi * (index - 1) + noise));
+      const next = Math.max(0.6, Math.min(1.6, 1 + phi * (index - 1) + noise));
+      index = adjustMarketChange(index, next, relics, balance);
       return Number(index.toFixed(4));
     });
   }
@@ -25,7 +40,9 @@ export function createMarketPath(balance, seed) {
 }
 
 export function createDailyQuestOffers(balance, day, seed, relics = []) {
-  const count = Math.min(5, relics.includes('royal-charter') ? 5 : balance.quests?.offering?.perDay || 3);
+  const bonus = (relics.includes('broker-card') ? (balance.relicEffects?.['broker-card']?.questOffersBonus ?? 1) : 0)
+    + (relics.includes('royal-charter') ? (balance.relicEffects?.['royal-charter']?.questOffersBonus ?? 1) : 0);
+  const count = Math.min(5, (balance.quests?.offering?.perDay || 3) + bonus);
   const enabledQuestIds = QUEST_IDS.filter((id) => balance.quests[id]?.enabled !== false);
   const rewardPolicy = balance.quests?.rewardPolicy || {};
   const shuffledIds = shuffle(enabledQuestIds, createRng(`${seed}:quests:${day}`));
@@ -145,11 +162,12 @@ export function bestSetMultiplier(inventory, balance, relics = [], shopStage = 1
     if (matches) multiplier = Math.max(multiplier, bonus);
   }
   if (multiplier > 1) multiplier *= 1 + (balance.shop.setBonus?.[shopStage] ?? 0);
-  return multiplier + (relics.includes('house-crest') && multiplier > 1 ? 0.2 : 0);
+  return multiplier + (relics.includes('house-crest') && multiplier > 1 ? (balance.relicEffects?.['house-crest']?.setMultiplierBonus ?? 0.2) : 0);
 }
 
 export function sellAll(state, balance) {
-  const fee = balance.shop.auctionFee[state.shopStage] ?? 0.05;
+  const feeWaived = (state.metaRelics || []).includes('merchant-safe') && (balance.relicEffects?.['merchant-safe']?.feeWaived ?? true);
+  const fee = feeWaived ? 0 : (balance.shop.auctionFee[state.shopStage] ?? 0.05);
   const setMultiplier = bestSetMultiplier(state.inventory, balance, state.metaRelics, state.shopStage);
   let revenue = 0;
   for (const item of state.inventory.filter((entry) => !entry.sold && !entry.collateral)) {
@@ -177,7 +195,8 @@ export function sellItems(state, balance, lotIds) {
 
 export function quoteItemsSale(state, balance, lotIds) {
   const selected = new Set(lotIds);
-  const fee = balance.shop.auctionFee[state.shopStage] ?? 0.05;
+  const feeWaived = (state.metaRelics || []).includes('merchant-safe') && (balance.relicEffects?.['merchant-safe']?.feeWaived ?? true);
+  const fee = feeWaived ? 0 : (balance.shop.auctionFee[state.shopStage] ?? 0.05);
   const items = state.inventory.filter((entry) => selected.has(entry.lotId) && !entry.sold && !entry.collateral);
   const multiplier = bestSetMultiplier(items, balance, state.metaRelics, state.shopStage);
   const sales = Object.fromEntries(items.map((item) => {
@@ -192,7 +211,8 @@ export function acceptQuest(state, questId, balance) {
   const quest = state.questOffers.find((entry) => (entry.offerId === questId || entry.id === questId) && !entry.accepted);
   if (!quest || state.day > RUN_DAYS || balance.quests[quest.id]?.enabled === false || state.cash < quest.fee) return false;
   state.cash -= quest.fee; quest.accepted = true;
-  state.activeQuests.push({ ...quest, acceptedDay: state.day, deadlineDay: Math.min(RELIC_AUCTION_DAY, state.day + 2) });
+  const span = (state.metaRelics || []).includes('leather-ledger') ? (balance.relicEffects?.['leather-ledger']?.questDeadlineDays ?? 3) : 2;
+  state.activeQuests.push({ ...quest, acceptedDay: state.day, deadlineDay: Math.min(RELIC_AUCTION_DAY, state.day + span) });
   return true;
 }
 
@@ -251,7 +271,9 @@ export function settleQuests(state) {
 export function upgradeShop(state, balance) {
   if (state.shopStage >= 4) return false;
   const next = state.shopStage + 1;
-  const cost = balance.shop.upgradeCost[next - 1] || 0;
+  const freeStage = balance.relicEffects?.['worn-seal']?.freeUpgradeToStage ?? 2;
+  const waived = next === freeStage && (state.metaRelics || []).includes('worn-seal');
+  const cost = waived ? 0 : (balance.shop.upgradeCost[next - 1] || 0);
   const required = balance.shop.questRequirement[next - 1] || 0;
   if (state.cash < cost || state.completedQuestCount < required) return false;
   state.cash -= cost; state.shopStage = next; state.storage = balance.shop.storage[next];
