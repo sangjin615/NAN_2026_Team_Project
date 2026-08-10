@@ -1,0 +1,467 @@
+{
+  "id": "scene-city",
+  "type": "scene",
+  "title": "도시 페이즈",
+  "groupId": "g-city",
+  "x": 760,
+  "y": 190,
+  "description": "의뢰소·술집·경매장·거래소·조합·상회·유물 전시관을 순회하는 하루 허브.",
+  "requirements": [
+    "거점 7종",
+    "조합 2단계 해금",
+    "전시관 3단계 해금",
+    "거점 이용 횟수 제한 없음",
+    "오늘 경매 완료 상태"
+  ],
+  "referencePath": "V5 §5.3, §13",
+  "image": "assets/reference/scene-mockups/city.png",
+  "annotations": [
+    {
+      "id": "scene-city-topbar",
+      "type": "area",
+      "xPercent": 50,
+      "yPercent": 5,
+      "coordinateSpace": "image",
+      "title": "[공통] 여정 상태 표시",
+      "requirement": "현재 일차·자금·상회 단계·보관칸을 표시한다. 대출 활성 시 만기 잔여 일수·상환 총액·담보 처분가 합계를 함께 표시한다.",
+      "acceptanceCriteria": [
+        "일차는 현재 값과 12일을 함께 표시한다.",
+        "플레이어 자금은 예산이라고 부르지 않는다.",
+        "대출이 없으면 대출 관련 값은 숨긴다."
+      ],
+      "refType": "data",
+      "actionRef": "",
+      "dataRefs": [
+        "run.day",
+        "run.totalDays",
+        "player.cash",
+        "shop.stage",
+        "player.inventory",
+        "player.storageCapacity",
+        "loan.dueDay",
+        "loan.repay",
+        "loan.collateralDisposalValue"
+      ],
+      "navTargetSceneId": "",
+      "modalName": "",
+      "commonKey": "global-topbar",
+      "failureSlot": false,
+      "sourceBasis": "V5 §0.5.2, §5, §12",
+      "implementationStatus": "implemented",
+      "widthPercent": 92,
+      "heightPercent": 8
+    },
+    {
+      "id": "city-event",
+      "type": "area",
+      "xPercent": 50,
+      "yPercent": 16,
+      "coordinateSpace": "image",
+      "title": "오늘 시장 사건",
+      "requirement": "오늘 반영된 계열 사건과 방향을 표시한다.",
+      "acceptanceCriteria": [
+        "사건 방향은 확정 정보다.",
+        "숨은 적정가나 추천가는 표시하지 않는다."
+      ],
+      "refType": "data",
+      "actionRef": "",
+      "dataRefs": [
+        "daily.event",
+        "market.indexByFamily"
+      ],
+      "navTargetSceneId": "",
+      "modalName": "",
+      "commonKey": "",
+      "failureSlot": false,
+      "sourceBasis": "V5 §7, §9.2",
+      "implementationStatus": "implemented",
+      "widthPercent": 65,
+      "heightPercent": 10
+    },
+    {
+      "id": "city-office",
+      "type": "pin",
+      "xPercent": 15,
+      "yPercent": 34,
+      "coordinateSpace": "image",
+      "title": "의뢰소",
+      "requirement": "의뢰 수주와 감정 화면으로 이동한다.",
+      "acceptanceCriteria": [
+        "1단계부터 입장 가능하다."
+      ],
+      "refType": "action",
+      "actionRef": "act-enter-office",
+      "dataRefs": [
+        "daily.phase"
+      ],
+      "navTargetSceneId": "scene-office",
+      "modalName": "",
+      "commonKey": "",
+      "failureSlot": false,
+      "sourceBasis": "V5 §13",
+      "implementationStatus": "implemented",
+      "soundCue": "sfx-venue-enter"
+    },
+    {
+      "id": "city-tavern",
+      "type": "pin",
+      "xPercent": 36,
+      "yPercent": 34,
+      "coordinateSpace": "image",
+      "title": "술집",
+      "requirement": "정보 4채널 화면으로 이동한다.",
+      "acceptanceCriteria": [
+        "1단계부터 입장 가능하다."
+      ],
+      "refType": "action",
+      "actionRef": "act-enter-tavern",
+      "dataRefs": [
+        "daily.phase"
+      ],
+      "navTargetSceneId": "scene-tavern",
+      "modalName": "",
+      "commonKey": "",
+      "failureSlot": false,
+      "sourceBasis": "V5 §9.4, §13",
+      "implementationStatus": "implemented",
+      "soundCue": "sfx-venue-enter"
+    },
+    {
+      "id": "city-auction",
+      "type": "pin",
+      "xPercent": 57,
+      "yPercent": 34,
+      "coordinateSpace": "image",
+      "title": "경매장",
+      "requirement": "오늘 8출품 경매를 시작한다.",
+      "acceptanceCriteria": [
+        "오늘 경매 완료 후 재입장할 수 없다."
+      ],
+      "refType": "action",
+      "actionRef": "act-enter-auction",
+      "dataRefs": [
+        "daily.lots",
+        "daily.phase"
+      ],
+      "navTargetSceneId": "scene-auction",
+      "modalName": "",
+      "commonKey": "",
+      "failureSlot": false,
+      "sourceBasis": "V5 §8, §13",
+      "implementationStatus": "implemented",
+      "soundCue": "sfx-scene-in"
+    },
+    {
+      "id": "city-exchange",
+      "type": "pin",
+      "xPercent": 78,
+      "yPercent": 34,
+      "coordinateSpace": "image",
+      "title": "거래소",
+      "requirement": "즉시 처분·족보 판매·시세판을 연다.",
+      "acceptanceCriteria": [
+        "1단계부터 입장 가능하다."
+      ],
+      "refType": "action",
+      "actionRef": "act-enter-exchange",
+      "dataRefs": [
+        "daily.phase"
+      ],
+      "navTargetSceneId": "scene-exchange",
+      "modalName": "",
+      "commonKey": "",
+      "failureSlot": false,
+      "sourceBasis": "V5 §11, §13",
+      "implementationStatus": "implemented",
+      "soundCue": "sfx-venue-enter"
+    },
+    {
+      "id": "city-guild",
+      "type": "pin",
+      "xPercent": 25,
+      "yPercent": 64,
+      "coordinateSpace": "image",
+      "title": "조합",
+      "requirement": "담보 대출 화면을 연다.",
+      "acceptanceCriteria": [
+        "2단계 전에는 잠금 사유를 표시한다."
+      ],
+      "refType": "action",
+      "actionRef": "act-enter-guild",
+      "dataRefs": [
+        "daily.phase",
+        "loan.guildLocked"
+      ],
+      "navTargetSceneId": "scene-guild",
+      "modalName": "",
+      "commonKey": "",
+      "failureSlot": false,
+      "sourceBasis": "V5 §12, §13",
+      "implementationStatus": "implemented",
+      "soundCue": "sfx-venue-enter"
+    },
+    {
+      "id": "city-merchant",
+      "type": "pin",
+      "xPercent": 50,
+      "yPercent": 64,
+      "coordinateSpace": "image",
+      "title": "상회",
+      "requirement": "승급과 보유품 관리 화면을 연다.",
+      "acceptanceCriteria": [
+        "1단계부터 입장 가능하다."
+      ],
+      "refType": "action",
+      "actionRef": "act-enter-merchant",
+      "dataRefs": [
+        "daily.phase"
+      ],
+      "navTargetSceneId": "scene-merchant",
+      "modalName": "",
+      "commonKey": "",
+      "failureSlot": false,
+      "sourceBasis": "V5 §14",
+      "implementationStatus": "implemented",
+      "soundCue": "sfx-venue-enter"
+    },
+    {
+      "id": "city-museum",
+      "type": "pin",
+      "xPercent": 75,
+      "yPercent": 64,
+      "coordinateSpace": "image",
+      "title": "유물 전시관",
+      "requirement": "영구 유물 전시관을 연다.",
+      "acceptanceCriteria": [
+        "3단계 전에는 잠금 사유를 표시한다."
+      ],
+      "refType": "action",
+      "actionRef": "act-enter-museum",
+      "dataRefs": [
+        "meta.relics"
+      ],
+      "navTargetSceneId": "scene-museum",
+      "modalName": "",
+      "commonKey": "",
+      "failureSlot": false,
+      "sourceBasis": "V5 §13, §16",
+      "implementationStatus": "implemented",
+      "soundCue": "sfx-venue-enter"
+    },
+    {
+      "id": "city-prep",
+      "type": "area",
+      "xPercent": 50,
+      "yPercent": 82,
+      "coordinateSpace": "image",
+      "title": "오늘 준비 상태",
+      "requirement": "수주 의뢰·감정 완료·정보 구매·판매 가능 보유품 수를 표시한다.",
+      "acceptanceCriteria": [
+        "각 값은 현재 하루 상태와 일치한다."
+      ],
+      "refType": "data",
+      "actionRef": "",
+      "dataRefs": [
+        "daily.acceptedQuests",
+        "daily.appraisals",
+        "daily.info",
+        "player.inventory"
+      ],
+      "navTargetSceneId": "",
+      "modalName": "",
+      "commonKey": "",
+      "failureSlot": false,
+      "sourceBasis": "V5 §5.3",
+      "implementationStatus": "implemented",
+      "widthPercent": 75,
+      "heightPercent": 12
+    }
+  ],
+  "actionRefs": [
+    "act-enter-office",
+    "act-enter-tavern",
+    "act-enter-exchange",
+    "act-enter-guild",
+    "act-enter-merchant",
+    "act-enter-auction",
+    "act-enter-museum",
+    "act-save-game",
+    "act-open-settings"
+  ],
+  "implementationStatus": "implemented",
+  "referenceImage": "assets/reference/scene-mockups/city.png",
+  "runtimeBackground": "assets/reference/scene-mockups/city.png",
+  "imageRole": "reference-mockup",
+  "assetStatus": "reference-mockup-only",
+  "uiRequirements": [
+    {
+      "id": "city-topbar",
+      "name": "일차·자금·상회 단계·대출/마감 상태",
+      "kind": "global-status",
+      "priority": "A",
+      "implementationStatus": "implemented",
+      "dataRefs": [
+        "run.day",
+        "player.cash",
+        "shop.stage",
+        "loan.dueDay"
+      ],
+      "actionRefs": [],
+      "notes": ""
+    },
+    {
+      "id": "city-office",
+      "name": "의뢰소 거점 버튼",
+      "kind": "location-button",
+      "priority": "A",
+      "implementationStatus": "implemented",
+      "dataRefs": [],
+      "actionRefs": [],
+      "notes": ""
+    },
+    {
+      "id": "city-tavern",
+      "name": "술집 거점 버튼",
+      "kind": "location-button",
+      "priority": "A",
+      "implementationStatus": "implemented",
+      "dataRefs": [],
+      "actionRefs": [],
+      "notes": ""
+    },
+    {
+      "id": "city-auction",
+      "name": "경매장 거점 버튼",
+      "kind": "location-button",
+      "priority": "A",
+      "implementationStatus": "implemented",
+      "dataRefs": [],
+      "actionRefs": [],
+      "notes": ""
+    },
+    {
+      "id": "city-exchange",
+      "name": "거래소 거점 버튼",
+      "kind": "location-button",
+      "priority": "A",
+      "implementationStatus": "implemented",
+      "dataRefs": [],
+      "actionRefs": [],
+      "notes": ""
+    },
+    {
+      "id": "city-guild",
+      "name": "조합 거점 버튼",
+      "kind": "location-button",
+      "priority": "A",
+      "implementationStatus": "implemented",
+      "dataRefs": [],
+      "actionRefs": [],
+      "notes": ""
+    },
+    {
+      "id": "city-merchant",
+      "name": "상회 거점 버튼",
+      "kind": "location-button",
+      "priority": "A",
+      "implementationStatus": "implemented",
+      "dataRefs": [],
+      "actionRefs": [],
+      "notes": ""
+    },
+    {
+      "id": "city-museum",
+      "name": "유물 전시관 거점 버튼",
+      "kind": "location-button",
+      "priority": "A",
+      "implementationStatus": "implemented",
+      "dataRefs": [],
+      "actionRefs": [],
+      "notes": ""
+    },
+    {
+      "id": "city-lock-state",
+      "name": "거점 잠금·해금·오늘 이용 가능 상태",
+      "kind": "state-badge",
+      "priority": "A",
+      "implementationStatus": "implemented",
+      "dataRefs": [],
+      "actionRefs": [],
+      "notes": ""
+    },
+    {
+      "id": "city-legend",
+      "name": "거점 상태 범례",
+      "kind": "legend",
+      "priority": "B",
+      "implementationStatus": "spec-only",
+      "dataRefs": [],
+      "actionRefs": [],
+      "notes": ""
+    },
+    {
+      "id": "city-settings",
+      "name": "설정 버튼",
+      "kind": "button",
+      "priority": "A",
+      "implementationStatus": "implemented",
+      "dataRefs": [],
+      "actionRefs": [],
+      "notes": ""
+    }
+  ],
+  "popupRefs": [
+    "tutorial-first-day",
+    "modal-settings",
+    "toast-global",
+    "popup-global-failure"
+  ],
+  "mockupCorrections": [
+    "목업의 명성 영역은 삭제한다.",
+    "상단 남는 영역은 대출 만기 또는 다음 승급 마감 경고로 사용한다.",
+    "도시 목업은 참고 이미지 전용이며 순수 배경이 없어 런타임 배경으로 사용하지 않는다."
+  ],
+  "backgroundPolicy": {
+    "source": "reference-temporary",
+    "path": "assets/reference/scene-mockups/city.png",
+    "fit": "contain",
+    "temporaryRuntimeUse": true,
+    "onMissingAsset": "show-error-placeholder",
+    "contentRect": {
+      "x": 0.0,
+      "y": 79.77,
+      "width": 1536.0,
+      "height": 864.459,
+      "xPercent": 0.0,
+      "yPercent": 7.790072,
+      "widthPercent": 100.0,
+      "heightPercent": 84.419856
+    },
+    "sourceImageSize": {
+      "width": 1672,
+      "height": 941
+    },
+    "sceneTransform": {
+      "scale": 1.0,
+      "offsetXPercent": 0.0,
+      "offsetYPercent": 0.0,
+      "anchor": "center",
+      "appliesTo": "background-and-scene-ui",
+      "editable": true
+    }
+  },
+  "runtimeBackgroundSource": "reference-temporary",
+  "temporaryRuntimeUse": true,
+  "layoutCanvas": {
+    "width": 1536,
+    "height": 1024
+  },
+  "failureFeedbackRef": "popup-global-failure",
+  "failureFeedbackPolicy": "global-popup",
+  "sound": {
+    "bgm": "bgm-02-city",
+    "layers": null,
+    "layersOnSuccess": null,
+    "restart": true
+  }
+}

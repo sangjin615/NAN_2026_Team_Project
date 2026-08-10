@@ -1,0 +1,38 @@
+{
+  "id": "popup-campaign-complete",
+  "type": "ending-popup",
+  "scope": "scenes",
+  "global": false,
+  "title": "완전한 결말",
+  "description": "3여정 모두 상급 유물을 낙찰한 경우에만 표시한다.",
+  "hostSceneIds": [
+    "scene-result"
+  ],
+  "bindings": [],
+  "returnMode": "opener",
+  "blocksInput": true,
+  "closeOnBackdrop": false,
+  "closeOnEscape": false,
+  "reusable": false,
+  "referencePath": "V5 씬별 UI 정리 v1.5",
+  "image": "",
+  "referenceImage": "",
+  "imageRole": "none",
+  "runtimeBackground": "",
+  "requirements": [
+    "3여정 성공 기록",
+    "상급 유물 3개",
+    "완전한 결말 문구",
+    "전시관",
+    "타이틀"
+  ],
+  "implementationStatus": "spec-only",
+  "priority": "B",
+  "annotations": [],
+  "openActionRef": "act-open-campaign-complete",
+  "confirmActionRef": "",
+  "cancelActionRef": "",
+  "closeActionRef": "",
+  "actionContractMode": "explicit",
+  "dismissPolicy": "explicit-navigation"
+}

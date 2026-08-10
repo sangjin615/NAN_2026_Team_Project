@@ -1,0 +1,67 @@
+{
+  "id": "state-result-bankruptcy",
+  "type": "state",
+  "scope": "scenes",
+  "global": false,
+  "title": "여정 결과 — 파산",
+  "description": "자금 0 + 보유품 0 + 대출 불가의 즉시 실패 결과 상태.",
+  "hostSceneIds": [
+    "scene-result"
+  ],
+  "bindings": [
+    {
+      "hostSceneId": "scene-result",
+      "trigger": "파산 조건 충족",
+      "triggerFeatureId": "",
+      "condition": "자금 0 + 보유품 0 + 대출 불가"
+    }
+  ],
+  "returnMode": "host-state",
+  "blocksInput": false,
+  "closeOnBackdrop": false,
+  "closeOnEscape": false,
+  "reusable": false,
+  "referencePath": "V5 §5.6",
+  "image": "assets/reference/scene-mockups/bankruptcy.png",
+  "requirements": [
+    "실패 원인 표시",
+    "유물 영구 보존"
+  ],
+  "annotations": [
+    {
+      "id": "bankruptcy-reason",
+      "type": "area",
+      "xPercent": 50,
+      "yPercent": 50,
+      "coordinateSpace": "image",
+      "title": "파산 사유",
+      "requirement": "파산 판정 원인과 최종 상태를 표시한다.",
+      "acceptanceCriteria": [
+        "회복 경로가 전부 막힌 상태임을 설명한다."
+      ],
+      "refType": "data",
+      "actionRef": "",
+      "dataRefs": [
+        "run.ending.type",
+        "run.ending.reason"
+      ],
+      "navTargetSceneId": "",
+      "modalName": "",
+      "commonKey": "",
+      "failureSlot": false,
+      "sourceBasis": "V5 §5.6",
+      "implementationStatus": "implemented",
+      "widthPercent": 70,
+      "heightPercent": 45
+    }
+  ],
+  "referenceImage": "assets/reference/scene-mockups/bankruptcy.png",
+  "imageRole": "reference-mockup",
+  "runtimeBackground": "",
+  "openActionRef": "act-open-result-bankruptcy",
+  "confirmActionRef": "act-return-title-from-bankruptcy",
+  "cancelActionRef": "",
+  "closeActionRef": "",
+  "actionContractMode": "explicit",
+  "dismissPolicy": "confirm-only"
+}

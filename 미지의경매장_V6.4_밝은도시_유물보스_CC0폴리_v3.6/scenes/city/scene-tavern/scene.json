@@ -1,0 +1,347 @@
+{
+  "id": "scene-tavern",
+  "type": "scene",
+  "title": "술집",
+  "groupId": "g-city",
+  "x": 1080,
+  "y": 560,
+  "description": "수요 동향·출품 목록·경쟁자 예산을 판매하는 정보 거점. 유물 정보는 판매하지 않는다.",
+  "requirements": [
+    "수요 동향",
+    "출품 목록",
+    "경쟁자 예산",
+    "확보한 정보"
+  ],
+  "referencePath": "V5 §8.3, §9, §17.4",
+  "image": "assets/reference/scene-mockups/tavern.png",
+  "annotations": [
+    {
+      "id": "scene-tavern-topbar",
+      "type": "area",
+      "xPercent": 50,
+      "yPercent": 5,
+      "coordinateSpace": "image",
+      "title": "[공통] 여정 상태 표시",
+      "requirement": "현재 일차·자금·상회 단계·보관칸을 표시한다. 대출 활성 시 만기 잔여 일수·상환 총액·담보 처분가 합계를 함께 표시한다.",
+      "acceptanceCriteria": [
+        "일차는 현재 값과 12일을 함께 표시한다.",
+        "플레이어 자금은 예산이라고 부르지 않는다.",
+        "대출이 없으면 대출 관련 값은 숨긴다."
+      ],
+      "refType": "data",
+      "actionRef": "",
+      "dataRefs": [
+        "run.day",
+        "run.totalDays",
+        "player.cash",
+        "shop.stage",
+        "player.inventory",
+        "player.storageCapacity",
+        "loan.dueDay",
+        "loan.repay",
+        "loan.collateralDisposalValue"
+      ],
+      "navTargetSceneId": "",
+      "modalName": "",
+      "commonKey": "global-topbar",
+      "failureSlot": false,
+      "sourceBasis": "V5 §0.5.2, §5, §12",
+      "implementationStatus": "implemented",
+      "widthPercent": 92,
+      "heightPercent": 8
+    },
+    {
+      "id": "tavern-info-cards",
+      "type": "area",
+      "xPercent": 50,
+      "yPercent": 42,
+      "coordinateSpace": "image",
+      "title": "정보 상품 4채널",
+      "requirement": "항구 서기·경매장 잡부·빚쟁이·떠돌이 서기의 상품과 가격을 표시한다.",
+      "acceptanceCriteria": [
+        "가격은 일차 기준과 정보 브랜치 할인을 반영한다.",
+        "구매 전 숨은 결과를 표시하지 않는다."
+      ],
+      "refType": "data",
+      "actionRef": "",
+      "dataRefs": [
+        "daily.info",
+        "player.cash"
+      ],
+      "navTargetSceneId": "",
+      "modalName": "",
+      "commonKey": "",
+      "failureSlot": false,
+      "sourceBasis": "V5 §9, §17.4",
+      "implementationStatus": "implemented",
+      "widthPercent": 86,
+      "heightPercent": 48
+    },
+    {
+      "id": "tavern-forecast",
+      "type": "pin",
+      "xPercent": 17,
+      "yPercent": 66,
+      "coordinateSpace": "image",
+      "title": "수요 동향 구매",
+      "requirement": "향후 시장 사건 방향을 구매한다.",
+      "acceptanceCriteria": [
+        "진폭과 정점은 공개하지 않는다."
+      ],
+      "refType": "action",
+      "actionRef": "act-buy-market-forecast",
+      "dataRefs": [
+        "daily.lots",
+        "player.cash",
+        "shop.stage"
+      ],
+      "navTargetSceneId": "",
+      "modalName": "",
+      "commonKey": "",
+      "failureSlot": false,
+      "sourceBasis": "V5 §9.2",
+      "implementationStatus": "implemented",
+      "soundCue": "sfx-info-buy"
+    },
+    {
+      "id": "tavern-order",
+      "type": "pin",
+      "xPercent": 38,
+      "yPercent": 66,
+      "coordinateSpace": "image",
+      "title": "출품 목록 구매",
+      "requirement": "오늘 출품 목록를 구매한다.",
+      "acceptanceCriteria": [
+        "8출품의 순서를 확정 공개한다."
+      ],
+      "refType": "action",
+      "actionRef": "act-buy-lot-catalog",
+      "dataRefs": [
+        "daily.lots",
+        "player.cash",
+        "shop.stage"
+      ],
+      "navTargetSceneId": "",
+      "modalName": "",
+      "commonKey": "",
+      "failureSlot": false,
+      "sourceBasis": "V5 §9",
+      "implementationStatus": "implemented",
+      "soundCue": "sfx-info-buy"
+    },
+    {
+      "id": "tavern-competitor",
+      "type": "pin",
+      "xPercent": 61,
+      "yPercent": 66,
+      "coordinateSpace": "image",
+      "title": "경쟁자 정보 구매",
+      "requirement": "당일 경쟁자 예산 범위와 표적을 구매한다.",
+      "acceptanceCriteria": [
+        "플레이어의 망설임은 정보에 사용하지 않는다."
+      ],
+      "refType": "action",
+      "actionRef": "act-buy-competitor-info",
+      "dataRefs": [
+        "auction.bots",
+        "daily.lots",
+        "player.cash",
+        "shop.stage"
+      ],
+      "navTargetSceneId": "",
+      "modalName": "",
+      "commonKey": "",
+      "failureSlot": false,
+      "sourceBasis": "V5 §8.3, §9",
+      "implementationStatus": "implemented",
+      "soundCue": "sfx-info-buy"
+    },
+    {
+      "id": "tavern-owned",
+      "type": "area",
+      "xPercent": 50,
+      "yPercent": 82,
+      "coordinateSpace": "image",
+      "title": "확보한 정보·숙적 소문",
+      "requirement": "구매 정보와 베넷의 공표된 성장 상태를 표시한다.",
+      "acceptanceCriteria": [
+        "베넷의 안목·자본·의지 성장은 소문으로 확인 가능하다."
+      ],
+      "refType": "data",
+      "actionRef": "",
+      "dataRefs": [
+        "information.marketForecast",
+        "information.lotCatalog",
+        "information.competitors",
+        "competitor.bennettRumor"
+      ],
+      "navTargetSceneId": "",
+      "modalName": "",
+      "commonKey": "",
+      "failureSlot": false,
+      "sourceBasis": "V5 §8.3, §9",
+      "implementationStatus": "implemented",
+      "widthPercent": 82,
+      "heightPercent": 15
+    },
+    {
+      "id": "tavern-back",
+      "type": "pin",
+      "xPercent": 8,
+      "yPercent": 9,
+      "coordinateSpace": "image",
+      "title": "도시로",
+      "requirement": "구매 정보 상태를 유지하고 도시로 돌아간다.",
+      "acceptanceCriteria": [
+        "구매 정보와 자금이 유지된다."
+      ],
+      "refType": "action",
+      "actionRef": "act-return-city",
+      "dataRefs": [],
+      "navTargetSceneId": "scene-city",
+      "modalName": "",
+      "commonKey": "return-city",
+      "failureSlot": false,
+      "sourceBasis": "V5 §5.3",
+      "implementationStatus": "implemented",
+      "soundCue": "sfx-ui-back"
+    }
+  ],
+  "actionRefs": [
+    "act-buy-market-forecast",
+    "act-buy-lot-catalog",
+    "act-buy-competitor-info",
+    "act-return-city",
+    "act-save-game",
+    "act-open-settings"
+  ],
+  "implementationStatus": "implemented",
+  "referenceImage": "assets/reference/scene-mockups/tavern.png",
+  "runtimeBackground": "assets/runtime/backgrounds/tavern.png",
+  "imageRole": "reference-mockup",
+  "assetStatus": "pure-background-and-mockup",
+  "uiRequirements": [
+    {
+      "id": "tavern-topbar",
+      "name": "일차·자금·상회 단계",
+      "kind": "global-status",
+      "priority": "A",
+      "implementationStatus": "implemented",
+      "dataRefs": [],
+      "actionRefs": [],
+      "notes": ""
+    },
+    {
+      "id": "tavern-npc-list",
+      "name": "정보상/NPC 목록",
+      "kind": "list",
+      "priority": "B",
+      "implementationStatus": "partial",
+      "dataRefs": [],
+      "actionRefs": [],
+      "notes": ""
+    },
+    {
+      "id": "tavern-detail",
+      "name": "선택 정보의 범위·가격·구매 상태",
+      "kind": "detail-panel",
+      "priority": "A",
+      "implementationStatus": "implemented",
+      "dataRefs": [],
+      "actionRefs": [],
+      "notes": ""
+    },
+    {
+      "id": "tavern-buy",
+      "name": "정보 구매 버튼",
+      "kind": "button",
+      "priority": "A",
+      "implementationStatus": "implemented",
+      "dataRefs": [],
+      "actionRefs": [],
+      "notes": ""
+    },
+    {
+      "id": "tavern-owned",
+      "name": "오늘 확보한 정보",
+      "kind": "summary-panel",
+      "priority": "A",
+      "implementationStatus": "implemented",
+      "dataRefs": [],
+      "actionRefs": [],
+      "notes": ""
+    },
+    {
+      "id": "tavern-bennet-rumor",
+      "name": "숙적 베넷 성장 소문",
+      "kind": "notice",
+      "priority": "A",
+      "implementationStatus": "partial",
+      "dataRefs": [],
+      "actionRefs": [],
+      "notes": ""
+    },
+    {
+      "id": "tavern-back",
+      "name": "도시 복귀 버튼",
+      "kind": "button",
+      "priority": "A",
+      "implementationStatus": "implemented",
+      "dataRefs": [],
+      "actionRefs": [],
+      "notes": ""
+    }
+  ],
+  "popupRefs": [
+    "popup-information-result",
+    "toast-global",
+    "modal-settings",
+    "popup-global-failure"
+  ],
+  "mockupCorrections": [
+    "정보 채널은 수요 동향·출품 목록·경쟁자 예산 3종만 사용한다.",
+    "수요 동향은 사건 방향만 공개하고 진폭은 공개하지 않는다."
+  ],
+  "backgroundPolicy": {
+    "source": "runtime",
+    "path": "assets/runtime/backgrounds/tavern.png",
+    "fit": "contain",
+    "contentRect": {
+      "x": 0.0,
+      "y": 79.77,
+      "width": 1536.0,
+      "height": 864.459,
+      "xPercent": 0.0,
+      "yPercent": 7.790072,
+      "widthPercent": 100.0,
+      "heightPercent": 84.419856
+    },
+    "sourceImageSize": {
+      "width": 1672,
+      "height": 941
+    },
+    "sceneTransform": {
+      "scale": 1.0,
+      "offsetXPercent": 0.0,
+      "offsetYPercent": 0.0,
+      "anchor": "center",
+      "appliesTo": "background-and-scene-ui",
+      "editable": true
+    },
+    "onMissingAsset": "show-error-placeholder"
+  },
+  "runtimeBackgroundSource": "runtime",
+  "temporaryRuntimeUse": false,
+  "layoutCanvas": {
+    "width": 1536,
+    "height": 1024
+  },
+  "failureFeedbackRef": "popup-global-failure",
+  "failureFeedbackPolicy": "global-popup",
+  "sound": {
+    "bgm": "bgm-02-city",
+    "layers": null,
+    "layersOnSuccess": null,
+    "restart": false
+  }
+}

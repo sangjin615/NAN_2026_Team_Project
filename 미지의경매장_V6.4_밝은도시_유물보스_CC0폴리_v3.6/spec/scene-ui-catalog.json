@@ -1,0 +1,1891 @@
+{
+  "schemaVersion": "scene-ui-catalog-1.0",
+  "project": "미지의 경매장 V6",
+  "version": "1.6",
+  "sourceAssets": "이미지 (3).zip",
+  "sourceRules": [
+    "씬 목업은 배치·재질·크기 참고 전용이다.",
+    "순수 배경만 런타임 background로 사용한다.",
+    "팝업·오버레이·탭 상태는 부모 씬 위 UI 상태로 관리한다.",
+    "V5와 충돌하는 명성·출품 명세·점핑 비드·예상 가치 자동 표시는 제거한다.",
+    "v6.3: 일반 행동 실패는 popup-global-failure, 성공·정보는 toast-global, 여정 종료 실패는 결과 상태로 표시"
+  ],
+  "priorityLegend": {
+    "A": "플레이 가능한 V5에 필수",
+    "B": "완성도와 피드백을 위해 필요",
+    "C": "기획 미결 또는 선택 사항"
+  },
+  "scenes": {
+    "scene-title": {
+      "title": "타이틀",
+      "mockup": "assets/reference/scene-mockups/title.png",
+      "runtimeBackground": "assets/runtime/backgrounds/title.png",
+      "ui": [
+        {
+          "id": "title-logo",
+          "name": "게임 타이틀 로고",
+          "kind": "display",
+          "priority": "A",
+          "implementationStatus": "asset-available",
+          "dataRefs": [],
+          "actionRefs": [],
+          "notes": ""
+        },
+        {
+          "id": "title-new",
+          "name": "새 여정 버튼",
+          "kind": "button",
+          "priority": "A",
+          "implementationStatus": "implemented",
+          "dataRefs": [],
+          "actionRefs": [
+            "act-start-new-run"
+          ],
+          "notes": ""
+        },
+        {
+          "id": "title-continue",
+          "name": "이어하기 버튼",
+          "kind": "button",
+          "priority": "A",
+          "implementationStatus": "implemented",
+          "dataRefs": [],
+          "actionRefs": [
+            "act-open-continue"
+          ],
+          "notes": ""
+        },
+        {
+          "id": "title-museum",
+          "name": "유물 전시관 버튼",
+          "kind": "button",
+          "priority": "A",
+          "implementationStatus": "implemented",
+          "dataRefs": [],
+          "actionRefs": [
+            "act-enter-museum"
+          ],
+          "notes": ""
+        },
+        {
+          "id": "title-exit",
+          "name": "게임 종료 버튼",
+          "kind": "button",
+          "priority": "B",
+          "implementationStatus": "implemented",
+          "dataRefs": [],
+          "actionRefs": [
+            "act-exit-game"
+          ],
+          "notes": ""
+        },
+        {
+          "id": "title-settings",
+          "name": "설정 버튼",
+          "kind": "button",
+          "priority": "A",
+          "implementationStatus": "implemented",
+          "dataRefs": [],
+          "actionRefs": [
+            "act-open-settings"
+          ],
+          "notes": ""
+        }
+      ],
+      "popupRefs": [
+        "modal-settings",
+        "modal-confirm"
+      ],
+      "mockupCorrections": [
+        "목업 구조를 그대로 사용해도 V5와 충돌하지 않는다.",
+        "새 여정 버튼이 기존 슬롯을 덮어쓰는 경우 공통 확인 팝업을 사용한다."
+      ]
+    },
+    "scene-continue": {
+      "title": "이어하기",
+      "mockup": "assets/reference/scene-mockups/continue.png",
+      "runtimeBackground": "assets/runtime/backgrounds/continue.png",
+      "ui": [
+        {
+          "id": "continue-title",
+          "name": "화면 제목",
+          "kind": "display",
+          "priority": "A",
+          "implementationStatus": "asset-available",
+          "dataRefs": [],
+          "actionRefs": [],
+          "notes": ""
+        },
+        {
+          "id": "continue-slots",
+          "name": "저장 슬롯 3개",
+          "kind": "list",
+          "priority": "A",
+          "implementationStatus": "implemented",
+          "dataRefs": [
+            "run.slot",
+            "run.day",
+            "player.cash",
+            "shop.stage"
+          ],
+          "actionRefs": [],
+          "notes": ""
+        },
+        {
+          "id": "continue-selected",
+          "name": "선택 슬롯 강조",
+          "kind": "state",
+          "priority": "A",
+          "implementationStatus": "partial",
+          "dataRefs": [],
+          "actionRefs": [],
+          "notes": ""
+        },
+        {
+          "id": "continue-load",
+          "name": "이어하기 버튼",
+          "kind": "button",
+          "priority": "A",
+          "implementationStatus": "implemented",
+          "dataRefs": [],
+          "actionRefs": [
+            "act-load-save"
+          ],
+          "notes": ""
+        },
+        {
+          "id": "continue-delete",
+          "name": "저장 삭제 버튼",
+          "kind": "button",
+          "priority": "A",
+          "implementationStatus": "implemented",
+          "dataRefs": [],
+          "actionRefs": [
+            "act-delete-save"
+          ],
+          "notes": ""
+        },
+        {
+          "id": "continue-back",
+          "name": "타이틀 복귀 버튼",
+          "kind": "button",
+          "priority": "A",
+          "implementationStatus": "implemented",
+          "dataRefs": [],
+          "actionRefs": [],
+          "notes": ""
+        },
+        {
+          "id": "continue-settings",
+          "name": "설정 버튼",
+          "kind": "button",
+          "priority": "B",
+          "implementationStatus": "implemented",
+          "dataRefs": [],
+          "actionRefs": [
+            "act-open-settings"
+          ],
+          "notes": ""
+        },
+        {
+          "id": "continue-help",
+          "name": "선택 안내 문구",
+          "kind": "notice",
+          "priority": "B",
+          "implementationStatus": "implemented",
+          "dataRefs": [],
+          "actionRefs": [],
+          "notes": ""
+        }
+      ],
+      "popupRefs": [
+        "modal-confirm",
+        "modal-settings"
+      ],
+      "mockupCorrections": [
+        "저장 슬롯에는 명성 대신 일차·자금·상회 단계·마지막 저장을 표시한다.",
+        "빈 슬롯은 새 여정 생성 진입점으로 사용할 수 있으나 이어하기 버튼과는 구분한다."
+      ]
+    },
+    "scene-loading": {
+      "title": "여정 생성",
+      "mockup": "assets/reference/scene-mockups/loading.png",
+      "runtimeBackground": "assets/runtime/backgrounds/loading.png",
+      "ui": [
+        {
+          "id": "loading-title",
+          "name": "생성 상태 제목",
+          "kind": "display",
+          "priority": "A",
+          "implementationStatus": "asset-available",
+          "dataRefs": [],
+          "actionRefs": [],
+          "notes": ""
+        },
+        {
+          "id": "loading-progress",
+          "name": "진행률 막대와 숫자",
+          "kind": "progress",
+          "priority": "A",
+          "implementationStatus": "implemented",
+          "dataRefs": [],
+          "actionRefs": [],
+          "notes": ""
+        },
+        {
+          "id": "loading-steps",
+          "name": "생성 단계 체크 목록",
+          "kind": "list",
+          "priority": "A",
+          "implementationStatus": "implemented",
+          "dataRefs": [],
+          "actionRefs": [],
+          "notes": ""
+        },
+        {
+          "id": "loading-tip",
+          "name": "게임 팁 영역",
+          "kind": "notice",
+          "priority": "B",
+          "implementationStatus": "partial",
+          "dataRefs": [],
+          "actionRefs": [],
+          "notes": ""
+        },
+        {
+          "id": "loading-fallback",
+          "name": "폴백 적용 안내",
+          "kind": "notice",
+          "priority": "A",
+          "implementationStatus": "partial",
+          "dataRefs": [],
+          "actionRefs": [],
+          "notes": ""
+        },
+        {
+          "id": "loading-retry",
+          "name": "다시 시도 버튼",
+          "kind": "button",
+          "priority": "B",
+          "implementationStatus": "spec-only",
+          "dataRefs": [],
+          "actionRefs": [],
+          "notes": ""
+        }
+      ],
+      "popupRefs": [
+        "modal-confirm",
+        "toast-global"
+      ],
+      "mockupCorrections": [
+        "생성 모델이 실패해도 고정 엔진과 사전 생성 폴백으로 완주 가능해야 한다.",
+        "로딩 문구에서 수치 판정을 AI가 한다고 표현하지 않는다."
+      ]
+    },
+    "scene-city": {
+      "title": "도시 페이즈",
+      "mockup": "assets/reference/scene-mockups/city.png",
+      "runtimeBackground": "",
+      "ui": [
+        {
+          "id": "city-topbar",
+          "name": "일차·자금·상회 단계·대출/마감 상태",
+          "kind": "global-status",
+          "priority": "A",
+          "implementationStatus": "implemented",
+          "dataRefs": [
+            "run.day",
+            "player.cash",
+            "shop.stage",
+            "loan.dueDay"
+          ],
+          "actionRefs": [],
+          "notes": ""
+        },
+        {
+          "id": "city-office",
+          "name": "의뢰소 거점 버튼",
+          "kind": "location-button",
+          "priority": "A",
+          "implementationStatus": "implemented",
+          "dataRefs": [],
+          "actionRefs": [],
+          "notes": ""
+        },
+        {
+          "id": "city-tavern",
+          "name": "술집 거점 버튼",
+          "kind": "location-button",
+          "priority": "A",
+          "implementationStatus": "implemented",
+          "dataRefs": [],
+          "actionRefs": [],
+          "notes": ""
+        },
+        {
+          "id": "city-auction",
+          "name": "경매장 거점 버튼",
+          "kind": "location-button",
+          "priority": "A",
+          "implementationStatus": "implemented",
+          "dataRefs": [],
+          "actionRefs": [],
+          "notes": ""
+        },
+        {
+          "id": "city-exchange",
+          "name": "거래소 거점 버튼",
+          "kind": "location-button",
+          "priority": "A",
+          "implementationStatus": "implemented",
+          "dataRefs": [],
+          "actionRefs": [],
+          "notes": ""
+        },
+        {
+          "id": "city-guild",
+          "name": "조합 거점 버튼",
+          "kind": "location-button",
+          "priority": "A",
+          "implementationStatus": "implemented",
+          "dataRefs": [],
+          "actionRefs": [],
+          "notes": ""
+        },
+        {
+          "id": "city-merchant",
+          "name": "상회 거점 버튼",
+          "kind": "location-button",
+          "priority": "A",
+          "implementationStatus": "implemented",
+          "dataRefs": [],
+          "actionRefs": [],
+          "notes": ""
+        },
+        {
+          "id": "city-museum",
+          "name": "유물 전시관 거점 버튼",
+          "kind": "location-button",
+          "priority": "A",
+          "implementationStatus": "implemented",
+          "dataRefs": [],
+          "actionRefs": [],
+          "notes": ""
+        },
+        {
+          "id": "city-lock-state",
+          "name": "거점 잠금·해금·오늘 이용 가능 상태",
+          "kind": "state-badge",
+          "priority": "A",
+          "implementationStatus": "implemented",
+          "dataRefs": [],
+          "actionRefs": [],
+          "notes": ""
+        },
+        {
+          "id": "city-legend",
+          "name": "거점 상태 범례",
+          "kind": "legend",
+          "priority": "B",
+          "implementationStatus": "spec-only",
+          "dataRefs": [],
+          "actionRefs": [],
+          "notes": ""
+        },
+        {
+          "id": "city-settings",
+          "name": "설정 버튼",
+          "kind": "button",
+          "priority": "A",
+          "implementationStatus": "implemented",
+          "dataRefs": [],
+          "actionRefs": [],
+          "notes": ""
+        }
+      ],
+      "popupRefs": [
+        "tutorial-first-day",
+        "modal-settings",
+        "toast-global"
+      ],
+      "mockupCorrections": [
+        "목업의 명성 영역은 삭제한다.",
+        "상단 남는 영역은 대출 만기 또는 다음 승급 마감 경고로 사용한다.",
+        "도시 목업은 참고 이미지 전용이며 순수 배경이 없어 런타임 배경으로 사용하지 않는다."
+      ]
+    },
+    "scene-office": {
+      "title": "의뢰소",
+      "mockup": "assets/reference/scene-mockups/office.png",
+      "runtimeBackground": "",
+      "ui": [
+        {
+          "id": "office-topbar",
+          "name": "일차·자금·상회 단계",
+          "kind": "global-status",
+          "priority": "A",
+          "implementationStatus": "implemented",
+          "dataRefs": [],
+          "actionRefs": [],
+          "notes": ""
+        },
+        {
+          "id": "office-tabs",
+          "name": "의뢰/감정 탭",
+          "kind": "tabs",
+          "priority": "A",
+          "implementationStatus": "implemented",
+          "dataRefs": [],
+          "actionRefs": [],
+          "notes": ""
+        },
+        {
+          "id": "office-quest-list",
+          "name": "오늘의 의뢰 제시 목록",
+          "kind": "list",
+          "priority": "A",
+          "implementationStatus": "implemented",
+          "dataRefs": [
+            "quests.available",
+            "daily.acceptedQuests"
+          ],
+          "actionRefs": [],
+          "notes": ""
+        },
+        {
+          "id": "office-quest-detail",
+          "name": "의뢰 조건·수주비·보상·현재 진행",
+          "kind": "detail-panel",
+          "priority": "A",
+          "implementationStatus": "partial",
+          "dataRefs": [],
+          "actionRefs": [],
+          "notes": ""
+        },
+        {
+          "id": "office-accept",
+          "name": "의뢰 수주 버튼",
+          "kind": "button",
+          "priority": "A",
+          "implementationStatus": "implemented",
+          "dataRefs": [],
+          "actionRefs": [
+            "act-accept-quest"
+          ],
+          "notes": ""
+        },
+        {
+          "id": "office-appraisal-list",
+          "name": "감정 대상 목록",
+          "kind": "list",
+          "priority": "A",
+          "implementationStatus": "implemented",
+          "dataRefs": [
+            "daily.lots",
+            "daily.appraisals"
+          ],
+          "actionRefs": [],
+          "notes": ""
+        },
+        {
+          "id": "office-appraisal-detail",
+          "name": "약식/정밀 가격·정밀도·대상 정보",
+          "kind": "detail-panel",
+          "priority": "A",
+          "implementationStatus": "implemented",
+          "dataRefs": [],
+          "actionRefs": [],
+          "notes": ""
+        },
+        {
+          "id": "office-appraise",
+          "name": "감정 구매 버튼",
+          "kind": "button",
+          "priority": "A",
+          "implementationStatus": "implemented",
+          "dataRefs": [],
+          "actionRefs": [
+            "act-appraise-lot"
+          ],
+          "notes": ""
+        },
+        {
+          "id": "office-back",
+          "name": "도시 복귀 버튼",
+          "kind": "button",
+          "priority": "A",
+          "implementationStatus": "implemented",
+          "dataRefs": [],
+          "actionRefs": [],
+          "notes": ""
+        }
+      ],
+      "popupRefs": [
+        "popup-appraisal-result",
+        "toast-global",
+        "modal-settings"
+      ],
+      "mockupCorrections": [
+        "순수 배경은 제공되지 않았으므로 목업을 런타임 배경으로 사용하지 않는다.",
+        "감정소가 아니라 V5 용어인 의뢰소를 사용한다.",
+        "의뢰는 납품 목록이 아니라 이번 경매의 규칙 변형으로 설명한다."
+      ]
+    },
+    "scene-tavern": {
+      "title": "술집",
+      "mockup": "assets/reference/scene-mockups/tavern.png",
+      "runtimeBackground": "assets/runtime/backgrounds/tavern.png",
+      "ui": [
+        {
+          "id": "tavern-topbar",
+          "name": "일차·자금·상회 단계",
+          "kind": "global-status",
+          "priority": "A",
+          "implementationStatus": "implemented",
+          "dataRefs": [],
+          "actionRefs": [],
+          "notes": ""
+        },
+        {
+          "id": "tavern-npc-list",
+          "name": "정보상/NPC 목록",
+          "kind": "list",
+          "priority": "B",
+          "implementationStatus": "partial",
+          "dataRefs": [],
+          "actionRefs": [],
+          "notes": ""
+        },
+        {
+          "id": "tavern-detail",
+          "name": "선택 정보의 범위·가격·구매 상태",
+          "kind": "detail-panel",
+          "priority": "A",
+          "implementationStatus": "implemented",
+          "dataRefs": [],
+          "actionRefs": [],
+          "notes": ""
+        },
+        {
+          "id": "tavern-buy",
+          "name": "정보 구매 버튼",
+          "kind": "button",
+          "priority": "A",
+          "implementationStatus": "implemented",
+          "dataRefs": [],
+          "actionRefs": [],
+          "notes": ""
+        },
+        {
+          "id": "tavern-owned",
+          "name": "오늘 확보한 정보",
+          "kind": "summary-panel",
+          "priority": "A",
+          "implementationStatus": "implemented",
+          "dataRefs": [],
+          "actionRefs": [],
+          "notes": ""
+        },
+        {
+          "id": "tavern-bennet-rumor",
+          "name": "숙적 베넷 성장 소문",
+          "kind": "notice",
+          "priority": "A",
+          "implementationStatus": "partial",
+          "dataRefs": [],
+          "actionRefs": [],
+          "notes": ""
+        },
+        {
+          "id": "tavern-back",
+          "name": "도시 복귀 버튼",
+          "kind": "button",
+          "priority": "A",
+          "implementationStatus": "implemented",
+          "dataRefs": [],
+          "actionRefs": [],
+          "notes": ""
+        }
+      ],
+      "popupRefs": [
+        "popup-information-result",
+        "toast-global",
+        "modal-settings"
+      ],
+      "mockupCorrections": [
+        "목업의 명성 표시를 삭제한다.",
+        "NPC 1명당 하루 1회 제한을 적용하지 않는다. 비용과 하루 구매 한도만 사용한다.",
+        "수요 동향는 사건 방향만 확정하고 진폭은 공개하지 않는다."
+      ]
+    },
+    "scene-exchange": {
+      "title": "거래소",
+      "mockup": "assets/reference/scene-mockups/exchange.png",
+      "runtimeBackground": "assets/runtime/backgrounds/exchange.png",
+      "ui": [
+        {
+          "id": "exchange-topbar",
+          "name": "일차·자금·상회 단계",
+          "kind": "global-status",
+          "priority": "A",
+          "implementationStatus": "implemented",
+          "dataRefs": [],
+          "actionRefs": [],
+          "notes": ""
+        },
+        {
+          "id": "exchange-tabs",
+          "name": "즉시 처분/족보 판매/시세판 탭",
+          "kind": "tabs",
+          "priority": "A",
+          "implementationStatus": "implemented",
+          "dataRefs": [],
+          "actionRefs": [],
+          "notes": ""
+        },
+        {
+          "id": "exchange-inventory",
+          "name": "판매 가능 보유품 그리드",
+          "kind": "inventory-grid",
+          "priority": "A",
+          "implementationStatus": "implemented",
+          "dataRefs": [],
+          "actionRefs": [],
+          "notes": ""
+        },
+        {
+          "id": "exchange-item-detail",
+          "name": "선택품 취득가·당일 처분가",
+          "kind": "detail-panel",
+          "priority": "A",
+          "implementationStatus": "implemented",
+          "dataRefs": [],
+          "actionRefs": [],
+          "notes": ""
+        },
+        {
+          "id": "exchange-sell",
+          "name": "즉시 처분 버튼",
+          "kind": "button",
+          "priority": "A",
+          "implementationStatus": "implemented",
+          "dataRefs": [],
+          "actionRefs": [],
+          "notes": ""
+        },
+        {
+          "id": "exchange-contract-offers",
+          "name": "오늘의 족보 판매 제시",
+          "kind": "card-list",
+          "priority": "A",
+          "implementationStatus": "implemented",
+          "dataRefs": [],
+          "actionRefs": [],
+          "notes": ""
+        },
+        {
+          "id": "exchange-active-contracts",
+          "name": "진행 중 계약·기한·조건",
+          "kind": "list",
+          "priority": "A",
+          "implementationStatus": "implemented",
+          "dataRefs": [],
+          "actionRefs": [],
+          "notes": ""
+        },
+        {
+          "id": "exchange-market-chart",
+          "name": "6계열 과거 시세 그래프",
+          "kind": "chart",
+          "priority": "A",
+          "implementationStatus": "partial",
+          "dataRefs": [],
+          "actionRefs": [],
+          "notes": ""
+        },
+        {
+          "id": "exchange-forecast-band",
+          "name": "구매한 수요 동향 밴드",
+          "kind": "chart-overlay",
+          "priority": "B",
+          "implementationStatus": "spec-only",
+          "dataRefs": [],
+          "actionRefs": [],
+          "notes": ""
+        },
+        {
+          "id": "exchange-settlement",
+          "name": "12일차 정산 종료 버튼",
+          "kind": "button",
+          "priority": "A",
+          "implementationStatus": "implemented",
+          "dataRefs": [],
+          "actionRefs": [],
+          "notes": ""
+        },
+        {
+          "id": "exchange-back",
+          "name": "도시 복귀 버튼",
+          "kind": "button",
+          "priority": "A",
+          "implementationStatus": "implemented",
+          "dataRefs": [],
+          "actionRefs": [],
+          "notes": ""
+        }
+      ],
+      "popupRefs": [
+        "modal-confirm",
+        "popup-hanbo-result",
+        "state-exchange-settlement",
+        "toast-global"
+      ],
+      "mockupCorrections": [
+        "목업의 명성 표시를 삭제한다.",
+        "등급별 평균 시세 표를 6계열 과거 지수 그래프로 교체한다.",
+        "현재 적정가·추천가·손익분기선은 표시하지 않는다.",
+        "세트 예약이 아니라 족보 판매 용어를 사용하고 별도 탭으로 둔다."
+      ]
+    },
+    "scene-guild": {
+      "title": "조합",
+      "mockup": "assets/reference/scene-mockups/guild.png",
+      "runtimeBackground": "assets/runtime/backgrounds/guild.png",
+      "ui": [
+        {
+          "id": "guild-topbar",
+          "name": "일차·자금·상회 단계·대출 만기",
+          "kind": "global-status",
+          "priority": "A",
+          "implementationStatus": "implemented",
+          "dataRefs": [],
+          "actionRefs": [],
+          "notes": ""
+        },
+        {
+          "id": "guild-loan-status",
+          "name": "활성 대출 원금·상환액·만기·담보",
+          "kind": "status-panel",
+          "priority": "A",
+          "implementationStatus": "implemented",
+          "dataRefs": [],
+          "actionRefs": [],
+          "notes": ""
+        },
+        {
+          "id": "guild-collateral-list",
+          "name": "담보 가능 보유품 목록",
+          "kind": "list",
+          "priority": "A",
+          "implementationStatus": "implemented",
+          "dataRefs": [],
+          "actionRefs": [],
+          "notes": ""
+        },
+        {
+          "id": "guild-selected",
+          "name": "선택 담보와 처분가",
+          "kind": "detail-panel",
+          "priority": "A",
+          "implementationStatus": "implemented",
+          "dataRefs": [],
+          "actionRefs": [],
+          "notes": ""
+        },
+        {
+          "id": "guild-limit",
+          "name": "처분가 45%·상환 x1.90·2일 만기",
+          "kind": "terms-panel",
+          "priority": "A",
+          "implementationStatus": "implemented",
+          "dataRefs": [],
+          "actionRefs": [],
+          "notes": ""
+        },
+        {
+          "id": "guild-take",
+          "name": "대출 실행 버튼",
+          "kind": "button",
+          "priority": "A",
+          "implementationStatus": "implemented",
+          "dataRefs": [],
+          "actionRefs": [],
+          "notes": ""
+        },
+        {
+          "id": "guild-repay",
+          "name": "대출 상환 버튼",
+          "kind": "button",
+          "priority": "A",
+          "implementationStatus": "implemented",
+          "dataRefs": [],
+          "actionRefs": [],
+          "notes": ""
+        },
+        {
+          "id": "guild-locked",
+          "name": "조합 거래 제한 상태",
+          "kind": "state",
+          "priority": "A",
+          "implementationStatus": "implemented",
+          "dataRefs": [],
+          "actionRefs": [],
+          "notes": ""
+        },
+        {
+          "id": "guild-back",
+          "name": "도시 복귀 버튼",
+          "kind": "button",
+          "priority": "A",
+          "implementationStatus": "implemented",
+          "dataRefs": [],
+          "actionRefs": [],
+          "notes": ""
+        }
+      ],
+      "popupRefs": [
+        "modal-confirm",
+        "popup-loan-overdue",
+        "toast-global"
+      ],
+      "mockupCorrections": [
+        "채권이라는 용어를 담보 대출로 교체한다.",
+        "청산가치는 처분가로 교체한다.",
+        "동시 대출은 1건이며 현재 HTML 기준 담보는 1점을 선택한다.",
+        "명성 표시를 삭제한다."
+      ]
+    },
+    "scene-merchant": {
+      "title": "상회",
+      "mockup": "assets/reference/scene-mockups/merchant.png",
+      "runtimeBackground": "assets/runtime/backgrounds/merchant.png",
+      "ui": [
+        {
+          "id": "merchant-topbar",
+          "name": "일차·자금·상회 단계·마감",
+          "kind": "global-status",
+          "priority": "A",
+          "implementationStatus": "implemented",
+          "dataRefs": [],
+          "actionRefs": [],
+          "notes": ""
+        },
+        {
+          "id": "merchant-stage",
+          "name": "현재/다음 상회 단계",
+          "kind": "display",
+          "priority": "A",
+          "implementationStatus": "implemented",
+          "dataRefs": [],
+          "actionRefs": [],
+          "notes": ""
+        },
+        {
+          "id": "merchant-requirements",
+          "name": "누적 의뢰 조건·승급비·마감 일차",
+          "kind": "requirements",
+          "priority": "A",
+          "implementationStatus": "implemented",
+          "dataRefs": [],
+          "actionRefs": [],
+          "notes": ""
+        },
+        {
+          "id": "merchant-upgrade",
+          "name": "즉시 승급 버튼",
+          "kind": "button",
+          "priority": "A",
+          "implementationStatus": "implemented",
+          "dataRefs": [],
+          "actionRefs": [],
+          "notes": ""
+        },
+        {
+          "id": "merchant-branches",
+          "name": "정보·거래·보관·연줄 자동 성장 효과",
+          "kind": "effect-grid",
+          "priority": "A",
+          "implementationStatus": "implemented",
+          "dataRefs": [],
+          "actionRefs": [],
+          "notes": ""
+        },
+        {
+          "id": "merchant-inventory",
+          "name": "보유품·담보 잠금·보관칸",
+          "kind": "inventory-grid",
+          "priority": "A",
+          "implementationStatus": "implemented",
+          "dataRefs": [],
+          "actionRefs": [],
+          "notes": ""
+        },
+        {
+          "id": "merchant-back",
+          "name": "도시 복귀 버튼",
+          "kind": "button",
+          "priority": "A",
+          "implementationStatus": "implemented",
+          "dataRefs": [],
+          "actionRefs": [],
+          "notes": ""
+        }
+      ],
+      "popupRefs": [
+        "modal-confirm",
+        "popup-upgrade-result",
+        "toast-global"
+      ],
+      "mockupCorrections": [
+        "목업의 명성 점수·감정 전문 지식·총자산 조건을 삭제한다.",
+        "승급 조건은 V5의 누적 의뢰 조건과 승급비로 교체한다.",
+        "4개 성장 브랜치는 선택형 카드가 아니라 상회 단계에서 자동 파생되는 효과로 표시한다.",
+        "보관칸은 4/5/6/7을 사용한다."
+      ]
+    },
+    "scene-auction": {
+      "title": "경매 세션",
+      "mockup": "assets/reference/scene-mockups/auction.png",
+      "runtimeBackground": "assets/runtime/backgrounds/auction.png",
+      "ui": [
+        {
+          "id": "auction-topbar",
+          "name": "일차·자금·상회 단계·보관칸",
+          "kind": "global-status",
+          "priority": "A",
+          "implementationStatus": "implemented",
+          "dataRefs": [],
+          "actionRefs": [],
+          "notes": ""
+        },
+        {
+          "id": "auction-progress",
+          "name": "현재 출품 순번 1/8",
+          "kind": "progress",
+          "priority": "A",
+          "implementationStatus": "implemented",
+          "dataRefs": [],
+          "actionRefs": [],
+          "notes": ""
+        },
+        {
+          "id": "auction-current-bid",
+          "name": "현재 호가·최소 인상폭",
+          "kind": "display",
+          "priority": "A",
+          "implementationStatus": "implemented",
+          "dataRefs": [],
+          "actionRefs": [],
+          "notes": ""
+        },
+        {
+          "id": "auction-lot-card",
+          "name": "계열·등급·기준가·감정 범위",
+          "kind": "item-card",
+          "priority": "A",
+          "implementationStatus": "implemented",
+          "dataRefs": [],
+          "actionRefs": [],
+          "notes": ""
+        },
+        {
+          "id": "auction-participants",
+          "name": "플레이어+경쟁자 3인 상태",
+          "kind": "participant-list",
+          "priority": "A",
+          "implementationStatus": "implemented",
+          "dataRefs": [],
+          "actionRefs": [],
+          "notes": ""
+        },
+        {
+          "id": "auction-bid-log",
+          "name": "공개 호가 기록",
+          "kind": "log",
+          "priority": "A",
+          "implementationStatus": "implemented",
+          "dataRefs": [],
+          "actionRefs": [],
+          "notes": ""
+        },
+        {
+          "id": "auction-order",
+          "name": "구매한 출품 목록",
+          "kind": "info-panel",
+          "priority": "B",
+          "implementationStatus": "implemented",
+          "dataRefs": [],
+          "actionRefs": [],
+          "notes": ""
+        },
+        {
+          "id": "auction-quest-tracker",
+          "name": "경매 중 의뢰 진행 트래커",
+          "kind": "tracker",
+          "priority": "A",
+          "implementationStatus": "spec-only",
+          "dataRefs": [],
+          "actionRefs": [],
+          "notes": ""
+        },
+        {
+          "id": "auction-bid-input",
+          "name": "직접 호가 입력",
+          "kind": "input",
+          "priority": "A",
+          "implementationStatus": "implemented",
+          "dataRefs": [],
+          "actionRefs": [],
+          "notes": ""
+        },
+        {
+          "id": "auction-bid",
+          "name": "입찰 버튼",
+          "kind": "button",
+          "priority": "A",
+          "implementationStatus": "implemented",
+          "dataRefs": [],
+          "actionRefs": [],
+          "notes": ""
+        },
+        {
+          "id": "auction-pass",
+          "name": "물러나기 버튼",
+          "kind": "button",
+          "priority": "A",
+          "implementationStatus": "implemented",
+          "dataRefs": [],
+          "actionRefs": [],
+          "notes": ""
+        },
+        {
+          "id": "auction-storage-warning",
+          "name": "보관칸 부족 경고",
+          "kind": "notice",
+          "priority": "A",
+          "implementationStatus": "implemented",
+          "dataRefs": [],
+          "actionRefs": [],
+          "notes": ""
+        },
+        {
+          "id": "auction-timer",
+          "name": "출품 제한 시간",
+          "kind": "timer",
+          "priority": "C",
+          "implementationStatus": "pending-design",
+          "dataRefs": [],
+          "actionRefs": [],
+          "notes": "V5에서 정확한 제한 시간이 미결이므로 확정 UI로 고정하지 않는다."
+        }
+      ],
+      "popupRefs": [
+        "popup-lot-result",
+        "toast-global",
+        "modal-settings"
+      ],
+      "mockupCorrections": [
+        "목업의 명성 표시를 삭제한다.",
+        "자동 예상 가치 표시는 숨은 값을 자동 평가하므로 삭제한다.",
+        "점핑 비드는 V5에서 기각됐으므로 삭제한다.",
+        "+100/+500/+1,000/+5,000 버튼은 필수 기능이 아니다. 직접 입력과 최소 인상 검증을 원본으로 둔다.",
+        "PASS 표시는 물러나기로 변경한다."
+      ]
+    },
+    "scene-summary": {
+      "title": "하루 결산",
+      "mockup": "assets/reference/scene-mockups/summary.png",
+      "runtimeBackground": "assets/runtime/backgrounds/summary.png",
+      "ui": [
+        {
+          "id": "summary-topbar",
+          "name": "일차·자금·상회 단계",
+          "kind": "global-status",
+          "priority": "A",
+          "implementationStatus": "implemented",
+          "dataRefs": [],
+          "actionRefs": [],
+          "notes": ""
+        },
+        {
+          "id": "summary-lot-results",
+          "name": "8출품 낙찰/유찰 결과",
+          "kind": "result-list",
+          "priority": "A",
+          "implementationStatus": "implemented",
+          "dataRefs": [],
+          "actionRefs": [],
+          "notes": ""
+        },
+        {
+          "id": "summary-acquired",
+          "name": "획득 물품 목록",
+          "kind": "item-list",
+          "priority": "A",
+          "implementationStatus": "implemented",
+          "dataRefs": [],
+          "actionRefs": [],
+          "notes": ""
+        },
+        {
+          "id": "summary-money",
+          "name": "입찰·수수료·판매·정보·의뢰·순손익",
+          "kind": "ledger",
+          "priority": "A",
+          "implementationStatus": "partial",
+          "dataRefs": [],
+          "actionRefs": [],
+          "notes": ""
+        },
+        {
+          "id": "summary-quests",
+          "name": "의뢰 성공·실패·보상",
+          "kind": "result-list",
+          "priority": "A",
+          "implementationStatus": "implemented",
+          "dataRefs": [],
+          "actionRefs": [],
+          "notes": ""
+        },
+        {
+          "id": "summary-market",
+          "name": "6계열 시세 변화",
+          "kind": "chart",
+          "priority": "A",
+          "implementationStatus": "partial",
+          "dataRefs": [],
+          "actionRefs": [],
+          "notes": ""
+        },
+        {
+          "id": "summary-deadline",
+          "name": "다음 승급 마감 경고",
+          "kind": "warning",
+          "priority": "A",
+          "implementationStatus": "implemented",
+          "dataRefs": [],
+          "actionRefs": [],
+          "notes": ""
+        },
+        {
+          "id": "summary-next",
+          "name": "다음 날/12일차 정산 버튼",
+          "kind": "button",
+          "priority": "A",
+          "implementationStatus": "implemented",
+          "dataRefs": [],
+          "actionRefs": [],
+          "notes": ""
+        }
+      ],
+      "popupRefs": [
+        "modal-settings",
+        "toast-global"
+      ],
+      "mockupCorrections": [
+        "명성 변화 영역을 삭제하고 의뢰 결과와 승급 마감 상태로 교체한다.",
+        "점핑 비드 사용액을 별도 지출로 표시하지 않는다.",
+        "계열별 시세는 등급 평균가가 아니라 계열 지수 변화로 표시한다."
+      ]
+    },
+    "scene-ending": {
+      "title": "12일 여정 판정",
+      "mockup": "assets/reference/scene-mockups/qualification.png",
+      "runtimeBackground": "assets/runtime/backgrounds/ending.png",
+      "ui": [
+        {
+          "id": "ending-title",
+          "name": "12일 여정 종료 제목",
+          "kind": "display",
+          "priority": "A",
+          "implementationStatus": "asset-available",
+          "dataRefs": [],
+          "actionRefs": [],
+          "notes": ""
+        },
+        {
+          "id": "ending-stage",
+          "name": "최종 상회 단계",
+          "kind": "display",
+          "priority": "A",
+          "implementationStatus": "implemented",
+          "dataRefs": [],
+          "actionRefs": [],
+          "notes": ""
+        },
+        {
+          "id": "ending-cash",
+          "name": "정산 후 자금",
+          "kind": "display",
+          "priority": "A",
+          "implementationStatus": "implemented",
+          "dataRefs": [],
+          "actionRefs": [],
+          "notes": ""
+        },
+        {
+          "id": "ending-qualification",
+          "name": "유물 경매 자격 결과",
+          "kind": "result-panel",
+          "priority": "A",
+          "implementationStatus": "implemented",
+          "dataRefs": [],
+          "actionRefs": [],
+          "notes": ""
+        },
+        {
+          "id": "ending-enter-final",
+          "name": "유물 경매 입장 버튼",
+          "kind": "button",
+          "priority": "A",
+          "implementationStatus": "implemented",
+          "dataRefs": [],
+          "actionRefs": [],
+          "notes": ""
+        },
+        {
+          "id": "ending-result",
+          "name": "여정 결과로 진행 버튼",
+          "kind": "button",
+          "priority": "A",
+          "implementationStatus": "implemented",
+          "dataRefs": [],
+          "actionRefs": [],
+          "notes": ""
+        }
+      ],
+      "popupRefs": [
+        "modal-confirm",
+        "toast-global"
+      ],
+      "mockupCorrections": [
+        "중상회 엔딩 등 운영 방식별 엔딩을 삭제한다.",
+        "명성·순자산 엔딩 판정을 삭제한다.",
+        "상회 4단계 자격과 유물 경매 진입 여부만 판정한다."
+      ]
+    },
+    "scene-final": {
+      "title": "유물 경매",
+      "mockup": "assets/reference/scene-mockups/final-auction.png",
+      "runtimeBackground": "",
+      "ui": [
+        {
+          "id": "final-topbar",
+          "name": "일차·자금·상회 단계",
+          "kind": "global-status",
+          "priority": "A",
+          "implementationStatus": "implemented",
+          "dataRefs": [],
+          "actionRefs": [],
+          "notes": ""
+        },
+        {
+          "id": "final-round",
+          "name": "하급/중급/상급 3라운드 진행",
+          "kind": "progress",
+          "priority": "A",
+          "implementationStatus": "implemented",
+          "dataRefs": [],
+          "actionRefs": [],
+          "notes": ""
+        },
+        {
+          "id": "final-relic-card",
+          "name": "현재 유물 이름·티어·영구 효과",
+          "kind": "relic-card",
+          "priority": "A",
+          "implementationStatus": "implemented",
+          "dataRefs": [],
+          "actionRefs": [],
+          "notes": ""
+        },
+        {
+          "id": "final-current-bid",
+          "name": "현재 호가·최소 인상폭",
+          "kind": "display",
+          "priority": "A",
+          "implementationStatus": "implemented",
+          "dataRefs": [],
+          "actionRefs": [],
+          "notes": ""
+        },
+        {
+          "id": "final-tycoons",
+          "name": "거물 3인 상태",
+          "kind": "participant-list",
+          "priority": "A",
+          "implementationStatus": "implemented",
+          "dataRefs": [],
+          "actionRefs": [],
+          "notes": ""
+        },
+        {
+          "id": "final-clues",
+          "name": "구매한 자금·의중·배분 정보",
+          "kind": "info-panel",
+          "priority": "A",
+          "implementationStatus": "implemented",
+          "dataRefs": [],
+          "actionRefs": [],
+          "notes": ""
+        },
+        {
+          "id": "final-log",
+          "name": "유물 공개 호가 기록",
+          "kind": "log",
+          "priority": "A",
+          "implementationStatus": "implemented",
+          "dataRefs": [],
+          "actionRefs": [],
+          "notes": ""
+        },
+        {
+          "id": "final-bid-input",
+          "name": "직접 호가 입력",
+          "kind": "input",
+          "priority": "A",
+          "implementationStatus": "implemented",
+          "dataRefs": [],
+          "actionRefs": [],
+          "notes": ""
+        },
+        {
+          "id": "final-bid",
+          "name": "입찰 버튼",
+          "kind": "button",
+          "priority": "A",
+          "implementationStatus": "implemented",
+          "dataRefs": [],
+          "actionRefs": [],
+          "notes": ""
+        },
+        {
+          "id": "final-pass",
+          "name": "물러나기 버튼",
+          "kind": "button",
+          "priority": "A",
+          "implementationStatus": "implemented",
+          "dataRefs": [],
+          "actionRefs": [],
+          "notes": ""
+        }
+      ],
+      "popupRefs": [
+        "popup-relic-round-result",
+        "toast-global",
+        "modal-settings"
+      ],
+      "mockupCorrections": [
+        "목업의 명성 표시를 삭제한다.",
+        "예상 가치 범위를 자동으로 표시하지 않는다.",
+        "점핑 비드는 사용하지 않는다.",
+        "1회 최종 경매 표시를 하급·중급·상급 3라운드 진행 표시로 변경한다.",
+        "거물 자금은 플레이어 자금과 독립된 절대 데이터다."
+      ]
+    },
+    "scene-result": {
+      "title": "여정 결과",
+      "mockup": "assets/reference/scene-mockups/result.png",
+      "runtimeBackground": "",
+      "ui": [
+        {
+          "id": "result-outcome",
+          "name": "성공/마감/파산/빈손 결과",
+          "kind": "result-panel",
+          "priority": "A",
+          "implementationStatus": "implemented",
+          "dataRefs": [],
+          "actionRefs": [],
+          "notes": ""
+        },
+        {
+          "id": "result-stage",
+          "name": "최종 상회 단계",
+          "kind": "display",
+          "priority": "A",
+          "implementationStatus": "implemented",
+          "dataRefs": [],
+          "actionRefs": [],
+          "notes": ""
+        },
+        {
+          "id": "result-cash",
+          "name": "최종 자금·증감",
+          "kind": "display",
+          "priority": "A",
+          "implementationStatus": "implemented",
+          "dataRefs": [],
+          "actionRefs": [],
+          "notes": ""
+        },
+        {
+          "id": "result-relic",
+          "name": "획득 영구 유물",
+          "kind": "relic-card",
+          "priority": "A",
+          "implementationStatus": "implemented",
+          "dataRefs": [],
+          "actionRefs": [],
+          "notes": ""
+        },
+        {
+          "id": "result-review",
+          "name": "주요 판단 복기 타임라인",
+          "kind": "timeline",
+          "priority": "A",
+          "implementationStatus": "partial",
+          "dataRefs": [],
+          "actionRefs": [],
+          "notes": ""
+        },
+        {
+          "id": "result-failure",
+          "name": "실패 원인과 판정 근거",
+          "kind": "notice",
+          "priority": "A",
+          "implementationStatus": "implemented",
+          "dataRefs": [],
+          "actionRefs": [],
+          "notes": ""
+        },
+        {
+          "id": "result-museum",
+          "name": "유물 전시관 버튼",
+          "kind": "button",
+          "priority": "A",
+          "implementationStatus": "implemented",
+          "dataRefs": [],
+          "actionRefs": [],
+          "notes": ""
+        },
+        {
+          "id": "result-title",
+          "name": "타이틀 복귀 버튼",
+          "kind": "button",
+          "priority": "A",
+          "implementationStatus": "implemented",
+          "dataRefs": [],
+          "actionRefs": [],
+          "notes": ""
+        },
+        {
+          "id": "result-next-run",
+          "name": "다음 여정 버튼",
+          "kind": "button",
+          "priority": "B",
+          "implementationStatus": "partial",
+          "dataRefs": [],
+          "actionRefs": [],
+          "notes": ""
+        },
+        {
+          "id": "result-campaign",
+          "name": "3여정 캠페인 진행",
+          "kind": "progress",
+          "priority": "B",
+          "implementationStatus": "spec-only",
+          "dataRefs": [],
+          "actionRefs": [],
+          "notes": ""
+        }
+      ],
+      "popupRefs": [
+        "popup-campaign-complete",
+        "toast-global"
+      ],
+      "mockupCorrections": [
+        "운영 방식별 다중 엔딩 문구를 사용하지 않는다.",
+        "성공·실패·완전한 결말의 단순 구조를 사용한다.",
+        "복기 타임라인에는 구매 정보, 과지불, 포기한 출품의 결과를 포함한다.",
+        "순수 결과 배경이 제공되지 않아 목업은 참고 전용이다."
+      ]
+    },
+    "scene-museum": {
+      "title": "유물 전시관",
+      "mockup": "assets/reference/scene-mockups/museum.png",
+      "runtimeBackground": "",
+      "ui": [
+        {
+          "id": "museum-topbar",
+          "name": "영구 유물 수·이월 자금·캠페인 상태",
+          "kind": "global-status",
+          "priority": "B",
+          "implementationStatus": "partial",
+          "dataRefs": [],
+          "actionRefs": [],
+          "notes": ""
+        },
+        {
+          "id": "museum-grid",
+          "name": "유물 9종 전시 그리드",
+          "kind": "relic-grid",
+          "priority": "A",
+          "implementationStatus": "implemented",
+          "dataRefs": [],
+          "actionRefs": [],
+          "notes": ""
+        },
+        {
+          "id": "museum-locked",
+          "name": "미획득 유물 잠금 상태",
+          "kind": "state",
+          "priority": "A",
+          "implementationStatus": "implemented",
+          "dataRefs": [],
+          "actionRefs": [],
+          "notes": ""
+        },
+        {
+          "id": "museum-detail",
+          "name": "선택 유물 상세",
+          "kind": "detail-panel",
+          "priority": "A",
+          "implementationStatus": "partial",
+          "dataRefs": [],
+          "actionRefs": [],
+          "notes": ""
+        },
+        {
+          "id": "museum-effect",
+          "name": "영구 효과와 적용 시점",
+          "kind": "effect-panel",
+          "priority": "A",
+          "implementationStatus": "partial",
+          "dataRefs": [],
+          "actionRefs": [],
+          "notes": ""
+        },
+        {
+          "id": "museum-back",
+          "name": "타이틀/도시 복귀 버튼",
+          "kind": "button",
+          "priority": "A",
+          "implementationStatus": "implemented",
+          "dataRefs": [],
+          "actionRefs": [],
+          "notes": ""
+        }
+      ],
+      "popupRefs": [
+        "popup-relic-detail",
+        "toast-global"
+      ],
+      "mockupCorrections": [
+        "명성·상회 단계 헤더가 필요하지 않은 메타 화면에서는 영구 유물 수와 캠페인 상태로 교체한다.",
+        "순수 배경이 제공되지 않아 목업은 참고 전용이다."
+      ]
+    }
+  },
+  "popupsAndStates": [
+    {
+      "id": "modal-settings",
+      "name": "설정",
+      "type": "global-modal",
+      "priority": "A",
+      "hostScenes": [
+        "*"
+      ],
+      "mockup": "assets/reference/popup-mockups/settings.png",
+      "implementationStatus": "partial",
+      "requiredUi": [
+        "닫기",
+        "마스터/BGM/SFX 음량",
+        "전체 화면/창 모드",
+        "해상도",
+        "텍스트 속도",
+        "기본값 복원",
+        "적용"
+      ],
+      "notes": "현재 HTML의 고대비·글자 크기·QA·튜토리얼 설정과 목업 항목이 다르다. 실제 지원 기능만 노출해야 한다."
+    },
+    {
+      "id": "modal-confirm",
+      "name": "공통 확인",
+      "type": "global-modal",
+      "priority": "A",
+      "hostScenes": [
+        "scene-title",
+        "scene-continue",
+        "scene-exchange",
+        "scene-guild",
+        "scene-merchant",
+        "scene-ending"
+      ],
+      "mockup": "assets/reference/popup-mockups/confirm.png",
+      "implementationStatus": "implemented",
+      "requiredUi": [
+        "제목",
+        "경고 아이콘",
+        "행동 설명",
+        "비용/결과 요약",
+        "취소",
+        "확인"
+      ],
+      "notes": "저장 삭제·새 여정 덮어쓰기·고액 판매·대출·승급·유물 경매 입장처럼 되돌리기 어려운 행동에 재사용한다."
+    },
+    {
+      "id": "tutorial-first-day",
+      "name": "첫 여정 튜토리얼",
+      "type": "overlay",
+      "priority": "B",
+      "hostScenes": [
+        "scene-city"
+      ],
+      "mockup": "assets/reference/popup-mockups/tutorial.png",
+      "implementationStatus": "partial",
+      "requiredUi": [
+        "단계 수",
+        "설명",
+        "예시 이미지",
+        "이전",
+        "다음",
+        "닫기",
+        "다시 보지 않기"
+      ],
+      "notes": "V5 용어와 거점 7종에 맞춰 감정소→의뢰소, 중개인 조합→조합으로 교체한다."
+    },
+    {
+      "id": "popup-lot-result",
+      "name": "출품 결과",
+      "type": "blocking-popup",
+      "priority": "A",
+      "hostScenes": [
+        "scene-auction"
+      ],
+      "mockup": "assets/reference/popup-mockups/lot-result.png",
+      "implementationStatus": "implemented",
+      "requiredUi": [
+        "출품 번호",
+        "출품 카드",
+        "낙찰/유찰 상태",
+        "낙찰자",
+        "낙찰가",
+        "수수료",
+        "총 지출",
+        "다음 출품"
+      ],
+      "notes": "LOT은 화면에서 출품으로 변경한다. 자동 시간 경과보다 확인 버튼으로 다음 출품 진행이 명확하다."
+    },
+    {
+      "id": "popup-appraisal-result",
+      "name": "감정 결과",
+      "type": "information-popup",
+      "priority": "A",
+      "hostScenes": [
+        "scene-office"
+      ],
+      "mockup": "",
+      "implementationStatus": "spec-only",
+      "requiredUi": [
+        "대상 출품",
+        "감정 종류",
+        "품질 범위",
+        "감정비",
+        "확인"
+      ],
+      "notes": "실가치·추천 입찰가는 표시하지 않는다."
+    },
+    {
+      "id": "popup-hanbo-result",
+      "name": "족보 판매 완료",
+      "type": "result-popup",
+      "priority": "B",
+      "hostScenes": [
+        "scene-exchange"
+      ],
+      "mockup": "",
+      "implementationStatus": "spec-only",
+      "requiredUi": [
+        "계약명",
+        "판매한 보유품",
+        "기본 처분가",
+        "계약 배수",
+        "상회 보너스",
+        "최종 수령액"
+      ],
+      "notes": "단순 판매 완료는 토스트로 처리하고, 족보 판매만 결과 팝업으로 강조한다."
+    },
+    {
+      "id": "popup-loan-overdue",
+      "name": "대출 만기·담보 압류",
+      "type": "blocking-popup",
+      "priority": "A",
+      "hostScenes": [
+        "scene-city",
+        "scene-guild",
+        "scene-summary"
+      ],
+      "mockup": "",
+      "implementationStatus": "spec-only",
+      "requiredUi": [
+        "미상환 금액",
+        "압류 담보",
+        "조합 거래 제한",
+        "확인"
+      ],
+      "notes": "다음 날 개시 시 자동 판정하며 닫기 전 원인을 확인하게 한다."
+    },
+    {
+      "id": "popup-upgrade-result",
+      "name": "상회 승급 결과",
+      "type": "result-popup",
+      "priority": "A",
+      "hostScenes": [
+        "scene-merchant"
+      ],
+      "mockup": "",
+      "implementationStatus": "spec-only",
+      "requiredUi": [
+        "새 상회 단계",
+        "보관칸 변화",
+        "새 거점 해금",
+        "정보/거래/보관/연줄 효과 변화",
+        "확인"
+      ],
+      "notes": "별도 브랜치 선택 화면은 만들지 않는다."
+    },
+    {
+      "id": "popup-relic-round-result",
+      "name": "유물 라운드 결과",
+      "type": "blocking-popup",
+      "priority": "A",
+      "hostScenes": [
+        "scene-final"
+      ],
+      "mockup": "",
+      "implementationStatus": "spec-only",
+      "requiredUi": [
+        "유물 티어",
+        "유물",
+        "낙찰자",
+        "낙찰가",
+        "남은 자금",
+        "다음 라운드"
+      ],
+      "notes": "하급·중급·상급 라운드 사이의 결과와 자금 소모를 명확히 보여준다."
+    },
+    {
+      "id": "popup-relic-detail",
+      "name": "유물 상세",
+      "type": "detail-popup",
+      "priority": "A",
+      "hostScenes": [
+        "scene-museum"
+      ],
+      "mockup": "",
+      "implementationStatus": "spec-only",
+      "requiredUi": [
+        "유물 이름",
+        "티어",
+        "이미지",
+        "영구 효과",
+        "적용 시점",
+        "획득 여정",
+        "닫기"
+      ],
+      "notes": "유물의 수치 효과는 고정 템플릿 데이터에서 읽는다."
+    },
+    {
+      "id": "popup-campaign-complete",
+      "name": "완전한 결말",
+      "type": "ending-popup",
+      "priority": "B",
+      "hostScenes": [
+        "scene-result"
+      ],
+      "mockup": "",
+      "implementationStatus": "spec-only",
+      "requiredUi": [
+        "3여정 성공 기록",
+        "상급 유물 3개",
+        "완전한 결말 문구",
+        "전시관",
+        "타이틀"
+      ],
+      "notes": "3여정 모두 상급 유물을 낙찰한 경우에만 표시한다."
+    },
+    {
+      "id": "popup-global-failure",
+      "name": "행동 실패 안내",
+      "type": "modal",
+      "priority": "A",
+      "hostScenes": [
+        "*"
+      ],
+      "mockup": "",
+      "implementationStatus": "implemented",
+      "requiredUi": [
+        "안내 제목",
+        "실패 원인",
+        "확인 버튼"
+      ],
+      "notes": "자금 부족·잠금·보관칸 부족·저장 오류 등 여정을 종료하지 않는 실패에 사용한다. 파산·마감 실패는 결과 상태로 처리한다.",
+      "actionContract": {
+        "openActionRef": "act-show-failure-popup",
+        "confirmActionRef": "act-close-failure-popup",
+        "cancelActionRef": "",
+        "closeActionRef": "act-close-failure-popup"
+      },
+      "dismissPolicy": "confirm-or-escape",
+      "messageDataRef": "ui.lastMessage",
+      "presentationRole": "non-ending-action-failure"
+    },
+    {
+      "id": "toast-global",
+      "name": "전역 토스트",
+      "type": "toast",
+      "priority": "A",
+      "hostScenes": [
+        "*"
+      ],
+      "mockup": "",
+      "implementationStatus": "implemented",
+      "requiredUi": [
+        "성공/정보 아이콘",
+        "한 줄 설명",
+        "자동 닫힘"
+      ],
+      "notes": "저장 완료·획득 완료·일반 정보처럼 흐름을 막지 않는 성공·정보 결과에 사용한다.",
+      "presentationRole": "success-or-information"
+    },
+    {
+      "id": "state-exchange-settlement",
+      "name": "12일차 거래소 정산 상태",
+      "type": "scene-state",
+      "priority": "A",
+      "hostScenes": [
+        "scene-exchange"
+      ],
+      "mockup": "",
+      "implementationStatus": "implemented",
+      "requiredUi": [
+        "정산 상태 배지",
+        "당일 낙찰품 판매 가능 표시",
+        "정산 종료 버튼"
+      ],
+      "notes": "팝업이 아니라 거래소 씬의 상태 변형이다."
+    },
+    {
+      "id": "state-result-bankruptcy",
+      "name": "파산 결과 상태",
+      "type": "scene-state",
+      "priority": "A",
+      "hostScenes": [
+        "scene-result"
+      ],
+      "mockup": "assets/reference/scene-mockups/bankruptcy.png",
+      "implementationStatus": "implemented",
+      "requiredUi": [
+        "파산 제목",
+        "최종 일차",
+        "최종 자금",
+        "상회 단계",
+        "대출 상태",
+        "파산 원인",
+        "결과 저장",
+        "타이틀"
+      ],
+      "notes": "별도 독립 씬보다 여정 결과 씬의 실패 상태로 관리한다."
+    }
+  ]
+}

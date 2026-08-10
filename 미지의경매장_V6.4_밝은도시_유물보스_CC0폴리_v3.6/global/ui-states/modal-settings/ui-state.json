@@ -1,0 +1,88 @@
+{
+  "id": "modal-settings",
+  "type": "modal",
+  "scope": "global",
+  "global": true,
+  "title": "설정",
+  "description": "고대비·글자 크기·QA·튜토리얼 설정 전역 모달.",
+  "hostSceneIds": [],
+  "bindings": [
+    {
+      "hostSceneId": "*",
+      "trigger": "설정 버튼",
+      "triggerFeatureId": "",
+      "condition": "항상"
+    }
+  ],
+  "returnMode": "opener",
+  "blocksInput": true,
+  "closeOnBackdrop": false,
+  "closeOnEscape": true,
+  "reusable": true,
+  "referencePath": "앱 셸 구현",
+  "image": "assets/reference/popup-mockups/settings.png",
+  "requirements": [
+    "전역 접근",
+    "적용 전 취소 가능"
+  ],
+  "annotations": [
+    {
+      "id": "settings-fields",
+      "type": "area",
+      "xPercent": 50,
+      "yPercent": 45,
+      "coordinateSpace": "image",
+      "title": "설정 항목",
+      "requirement": "고대비·텍스트 크기·QA·첫날 튜토리얼 값을 편집한다.",
+      "acceptanceCriteria": [
+        "설정값은 저장 후 전체 화면에 반영된다."
+      ],
+      "refType": "data",
+      "actionRef": "",
+      "dataRefs": [
+        "settings.contrast",
+        "settings.textScale",
+        "settings.qa",
+        "settings.tutorial"
+      ],
+      "navTargetSceneId": "",
+      "modalName": "",
+      "commonKey": "",
+      "failureSlot": false,
+      "sourceBasis": "앱 셸",
+      "implementationStatus": "implemented",
+      "widthPercent": 65,
+      "heightPercent": 45
+    },
+    {
+      "id": "settings-apply",
+      "type": "pin",
+      "xPercent": 64,
+      "yPercent": 82,
+      "coordinateSpace": "image",
+      "title": "적용",
+      "requirement": "설정값을 저장하고 닫는다.",
+      "acceptanceCriteria": [
+        "적용 결과를 즉시 확인할 수 있다."
+      ],
+      "refType": "action",
+      "actionRef": "act-apply-settings",
+      "dataRefs": [],
+      "navTargetSceneId": "",
+      "modalName": "",
+      "commonKey": "",
+      "failureSlot": false,
+      "sourceBasis": "앱 셸",
+      "implementationStatus": "implemented"
+    }
+  ],
+  "referenceImage": "assets/reference/popup-mockups/settings.png",
+  "imageRole": "reference-mockup",
+  "runtimeBackground": "",
+  "openActionRef": "act-open-settings",
+  "confirmActionRef": "act-apply-settings",
+  "cancelActionRef": "act-close-settings",
+  "closeActionRef": "act-close-settings",
+  "actionContractMode": "explicit",
+  "dismissPolicy": "cancel-or-apply"
+}

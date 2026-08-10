@@ -1,0 +1,411 @@
+[
+  {
+    "id": "modal-settings",
+    "name": "설정",
+    "type": "global-modal",
+    "priority": "A",
+    "hostScenes": [
+      "*"
+    ],
+    "mockup": "assets/reference/popup-mockups/settings.png",
+    "implementationStatus": "partial",
+    "requiredUi": [
+      "닫기",
+      "마스터/BGM/SFX 음량",
+      "전체 화면/창 모드",
+      "해상도",
+      "텍스트 속도",
+      "기본값 복원",
+      "적용"
+    ],
+    "notes": "현재 HTML의 고대비·글자 크기·QA·튜토리얼 설정과 목업 항목이 다르다. 실제 지원 기능만 노출해야 한다.",
+    "actionContract": {
+      "openActionRef": "act-open-settings",
+      "confirmActionRef": "act-apply-settings",
+      "cancelActionRef": "act-close-settings",
+      "closeActionRef": "act-close-settings"
+    },
+    "dismissPolicy": "cancel-or-apply"
+  },
+  {
+    "id": "modal-confirm",
+    "name": "공통 확인",
+    "type": "global-modal",
+    "priority": "A",
+    "hostScenes": [
+      "scene-title",
+      "scene-continue",
+      "scene-exchange",
+      "scene-guild",
+      "scene-merchant",
+      "scene-ending"
+    ],
+    "mockup": "assets/reference/popup-mockups/confirm.png",
+    "implementationStatus": "implemented",
+    "requiredUi": [
+      "제목",
+      "경고 아이콘",
+      "행동 설명",
+      "비용/결과 요약",
+      "취소",
+      "확인"
+    ],
+    "notes": "저장 삭제·새 여정 덮어쓰기·고액 판매·대출·승급·유물 경매 입장처럼 되돌리기 어려운 행동에 재사용한다.",
+    "actionContract": {
+      "openActionRef": "act-request-delete-save",
+      "confirmActionRef": "act-delete-save",
+      "cancelActionRef": "act-close-confirm",
+      "closeActionRef": "act-close-confirm"
+    },
+    "dismissPolicy": "confirm-or-cancel"
+  },
+  {
+    "id": "tutorial-first-day",
+    "name": "첫 여정 튜토리얼",
+    "type": "overlay",
+    "priority": "B",
+    "hostScenes": [
+      "scene-city"
+    ],
+    "mockup": "assets/reference/popup-mockups/tutorial.png",
+    "implementationStatus": "partial",
+    "requiredUi": [
+      "단계 수",
+      "설명",
+      "예시 이미지",
+      "이전",
+      "다음",
+      "닫기",
+      "다시 보지 않기"
+    ],
+    "notes": "V5 용어와 거점 7종에 맞춰 감정소→의뢰소, 중개인 조합→조합으로 교체한다.",
+    "actionContract": {
+      "openActionRef": "act-open-first-day",
+      "confirmActionRef": "act-complete-first-day-tutorial",
+      "cancelActionRef": "act-skip-first-day-tutorial",
+      "closeActionRef": ""
+    },
+    "dismissPolicy": "complete-or-skip"
+  },
+  {
+    "id": "popup-lot-result",
+    "name": "출품 결과",
+    "type": "blocking-popup",
+    "priority": "A",
+    "hostScenes": [
+      "scene-auction"
+    ],
+    "mockup": "assets/reference/popup-mockups/lot-result.png",
+    "implementationStatus": "implemented",
+    "requiredUi": [
+      "출품 번호",
+      "출품 카드",
+      "낙찰/유찰 상태",
+      "낙찰자",
+      "낙찰가",
+      "수수료",
+      "총 지출",
+      "다음 출품"
+    ],
+    "notes": "LOT은 화면에서 출품으로 변경한다. 자동 시간 경과보다 확인 버튼으로 다음 출품 진행이 명확하다.",
+    "actionContract": {
+      "openActionRef": "act-finalize-lot",
+      "confirmActionRef": "act-next-lot",
+      "cancelActionRef": "",
+      "closeActionRef": ""
+    },
+    "dismissPolicy": "confirm-only"
+  },
+  {
+    "id": "popup-appraisal-result",
+    "name": "감정 결과",
+    "type": "information-popup",
+    "priority": "A",
+    "hostScenes": [
+      "scene-office"
+    ],
+    "mockup": "",
+    "implementationStatus": "spec-only",
+    "requiredUi": [
+      "대상 출품",
+      "감정 종류",
+      "품질 범위",
+      "감정비",
+      "확인"
+    ],
+    "notes": "실가치·추천 입찰가는 표시하지 않는다.",
+    "actionContract": {
+      "openActionRef": "act-appraise-lot",
+      "confirmActionRef": "act-close-appraisal-result",
+      "cancelActionRef": "",
+      "closeActionRef": "act-close-appraisal-result"
+    },
+    "dismissPolicy": "confirm-or-escape"
+  },
+  {
+    "id": "popup-hanbo-result",
+    "name": "족보 판매 완료",
+    "type": "result-popup",
+    "priority": "B",
+    "hostScenes": [
+      "scene-exchange"
+    ],
+    "mockup": "",
+    "implementationStatus": "spec-only",
+    "requiredUi": [
+      "계약명",
+      "판매한 보유품",
+      "기본 처분가",
+      "계약 배수",
+      "상회 보너스",
+      "최종 수령액"
+    ],
+    "notes": "단순 판매 완료는 토스트로 처리하고, 족보 판매만 결과 팝업으로 강조한다.",
+    "actionContract": {
+      "openActionRef": "act-form-hanbo",
+      "confirmActionRef": "act-close-hanbo-result",
+      "cancelActionRef": "",
+      "closeActionRef": "act-close-hanbo-result"
+    },
+    "dismissPolicy": "confirm-or-escape"
+  },
+  {
+    "id": "popup-loan-overdue",
+    "name": "대출 만기·담보 압류",
+    "type": "blocking-popup",
+    "priority": "A",
+    "hostScenes": [
+      "scene-city",
+      "scene-guild",
+      "scene-summary"
+    ],
+    "mockup": "",
+    "implementationStatus": "spec-only",
+    "requiredUi": [
+      "미상환 금액",
+      "압류 담보",
+      "조합 거래 제한",
+      "확인"
+    ],
+    "notes": "다음 날 개시 시 자동 판정하며 닫기 전 원인을 확인하게 한다.",
+    "actionContract": {
+      "openActionRef": "act-process-loan-due",
+      "confirmActionRef": "act-close-loan-overdue",
+      "cancelActionRef": "",
+      "closeActionRef": ""
+    },
+    "dismissPolicy": "confirm-only"
+  },
+  {
+    "id": "popup-upgrade-result",
+    "name": "상회 승급 결과",
+    "type": "result-popup",
+    "priority": "A",
+    "hostScenes": [
+      "scene-merchant"
+    ],
+    "mockup": "",
+    "implementationStatus": "spec-only",
+    "requiredUi": [
+      "새 상회 단계",
+      "보관칸 변화",
+      "새 거점 해금",
+      "정보/거래/보관/연줄 효과 변화",
+      "확인"
+    ],
+    "notes": "별도 브랜치 선택 화면은 만들지 않는다.",
+    "actionContract": {
+      "openActionRef": "act-upgrade-shop",
+      "confirmActionRef": "act-close-upgrade-result",
+      "cancelActionRef": "",
+      "closeActionRef": "act-close-upgrade-result"
+    },
+    "dismissPolicy": "confirm-or-escape"
+  },
+  {
+    "id": "popup-relic-round-result",
+    "name": "유물 라운드 결과",
+    "type": "blocking-popup",
+    "priority": "A",
+    "hostScenes": [
+      "scene-final"
+    ],
+    "mockup": "",
+    "implementationStatus": "spec-only",
+    "requiredUi": [
+      "유물 티어",
+      "유물",
+      "낙찰자",
+      "낙찰가",
+      "남은 자금",
+      "다음 라운드"
+    ],
+    "notes": "하급·중급·상급 라운드 사이의 결과와 자금 소모를 명확히 보여준다.",
+    "actionContract": {
+      "openActionRef": "act-open-relic-round-result",
+      "confirmActionRef": "act-next-relic-round",
+      "cancelActionRef": "",
+      "closeActionRef": ""
+    },
+    "dismissPolicy": "confirm-only"
+  },
+  {
+    "id": "popup-relic-detail",
+    "name": "유물 상세",
+    "type": "detail-popup",
+    "priority": "A",
+    "hostScenes": [
+      "scene-museum"
+    ],
+    "mockup": "",
+    "implementationStatus": "spec-only",
+    "requiredUi": [
+      "유물 이름",
+      "티어",
+      "이미지",
+      "영구 효과",
+      "적용 시점",
+      "획득 여정",
+      "닫기"
+    ],
+    "notes": "유물의 수치 효과는 고정 템플릿 데이터에서 읽는다.",
+    "actionContract": {
+      "openActionRef": "act-open-relic-detail",
+      "confirmActionRef": "",
+      "cancelActionRef": "",
+      "closeActionRef": "act-close-relic-detail"
+    },
+    "dismissPolicy": "close-or-escape"
+  },
+  {
+    "id": "popup-campaign-complete",
+    "name": "완전한 결말",
+    "type": "ending-popup",
+    "priority": "B",
+    "hostScenes": [
+      "scene-result"
+    ],
+    "mockup": "",
+    "implementationStatus": "spec-only",
+    "requiredUi": [
+      "3여정 성공 기록",
+      "상급 유물 3개",
+      "완전한 결말 문구",
+      "전시관",
+      "타이틀"
+    ],
+    "notes": "3여정 모두 상급 유물을 낙찰한 경우에만 표시한다.",
+    "actionContract": {
+      "openActionRef": "act-open-campaign-complete",
+      "confirmActionRef": "",
+      "cancelActionRef": "",
+      "closeActionRef": ""
+    },
+    "dismissPolicy": "explicit-navigation"
+  },
+  {
+    "id": "popup-global-failure",
+    "name": "행동 실패 안내",
+    "type": "modal",
+    "priority": "A",
+    "hostScenes": [
+      "*"
+    ],
+    "mockup": "",
+    "implementationStatus": "implemented",
+    "requiredUi": [
+      "안내 제목",
+      "실패 원인",
+      "확인 버튼"
+    ],
+    "notes": "자금 부족·잠금·보관칸 부족·저장 오류 등 여정을 종료하지 않는 실패에 사용한다. 파산·마감 실패는 결과 상태로 처리한다.",
+    "actionContract": {
+      "openActionRef": "act-show-failure-popup",
+      "confirmActionRef": "act-close-failure-popup",
+      "cancelActionRef": "",
+      "closeActionRef": "act-close-failure-popup"
+    },
+    "dismissPolicy": "confirm-or-escape",
+    "messageDataRef": "ui.lastMessage",
+    "presentationRole": "non-ending-action-failure"
+  },
+  {
+    "id": "toast-global",
+    "name": "전역 토스트",
+    "type": "toast",
+    "priority": "A",
+    "hostScenes": [
+      "*"
+    ],
+    "mockup": "",
+    "implementationStatus": "implemented",
+    "requiredUi": [
+      "성공/정보 아이콘",
+      "한 줄 설명",
+      "자동 닫힘"
+    ],
+    "notes": "저장 완료·획득 완료·일반 정보처럼 흐름을 막지 않는 성공·정보 결과에 사용한다.",
+    "actionContract": {
+      "openActionRef": "act-show-toast",
+      "confirmActionRef": "",
+      "cancelActionRef": "",
+      "closeActionRef": "act-close-toast"
+    },
+    "dismissPolicy": "auto-or-close",
+    "presentationRole": "success-or-information"
+  },
+  {
+    "id": "state-exchange-settlement",
+    "name": "12일차 거래소 정산 상태",
+    "type": "scene-state",
+    "priority": "A",
+    "hostScenes": [
+      "scene-exchange"
+    ],
+    "mockup": "",
+    "implementationStatus": "implemented",
+    "requiredUi": [
+      "정산 상태 배지",
+      "당일 낙찰품 판매 가능 표시",
+      "정산 종료 버튼"
+    ],
+    "notes": "팝업이 아니라 거래소 씬의 상태 변형이다.",
+    "actionContract": {
+      "openActionRef": "act-open-day12-settlement",
+      "confirmActionRef": "act-finish-settlement",
+      "cancelActionRef": "",
+      "closeActionRef": ""
+    },
+    "dismissPolicy": "confirm-only"
+  },
+  {
+    "id": "state-result-bankruptcy",
+    "name": "파산 결과 상태",
+    "type": "scene-state",
+    "priority": "A",
+    "hostScenes": [
+      "scene-result"
+    ],
+    "mockup": "assets/reference/scene-mockups/bankruptcy.png",
+    "implementationStatus": "implemented",
+    "requiredUi": [
+      "파산 제목",
+      "최종 일차",
+      "최종 자금",
+      "상회 단계",
+      "대출 상태",
+      "파산 원인",
+      "결과 저장",
+      "타이틀",
+      "타이틀로"
+    ],
+    "notes": "별도 독립 씬보다 여정 결과 씬의 실패 상태로 관리한다.",
+    "actionContract": {
+      "openActionRef": "act-open-result-bankruptcy",
+      "confirmActionRef": "act-return-title-from-bankruptcy",
+      "cancelActionRef": "",
+      "closeActionRef": ""
+    },
+    "dismissPolicy": "confirm-only"
+  }
+]

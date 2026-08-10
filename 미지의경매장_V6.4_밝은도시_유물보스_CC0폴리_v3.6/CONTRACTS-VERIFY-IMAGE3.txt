@@ -1,0 +1,42 @@
+== 1. 빈 곳이 남았는가 ==
+  PASS  모든 데이터 경로에 타입이 있다                                    75/75
+  PASS  모든 데이터 경로에 소유 시스템이 있다                                
+  PASS  모든 행동에 읽기·쓰기 필드가 있다                                  
+  PASS  핀의 데이터 참조가 그 행동이 읽는 것과 같다                            핀 122개
+
+== 2. 가리키는 것이 실제로 있는가 (fail-closed) ==
+  PASS  행동의 읽기·쓰기가 전부 선언된 경로다                                ok
+  PASS  핀의 데이터 참조가 전부 선언된 경로다                                ok
+  PASS  핀의 행동 참조가 전부 선언된 행동이다                                ok
+  PASS  소유 시스템이 전부 등록된 시스템이다                                 ok
+  PASS  이동 대상 씬이 전부 존재한다                                     ok
+
+== 3. 아무도 안 쓰는 것이 있는가 ==
+  PASS  아무 행동도 안 읽고 안 쓰는 경로가 없다                              0개
+     (참고) 아무도 안 쓰는 경로 3개: shop.upgradeCost, tutorial.step, ui.lastMessage
+     (참고) 어느 경로도 안 쓰는 타입 10개: Appraisal, BidLogEntry, Ending, InventoryItem, Loan, Quest, SaveSlot, SetContract, Settings, Tycoon
+
+== 4. 계약 등록소가 툴 형식에 맞는가 ==
+  PASS  다섯 갈래가 다 있다                                          actions, apiJobs, data, systems, types
+  PASS  데이터 항목 수가 경로 수와 같다                                   75 = 75
+  PASS  행동 항목 수가 행동 수와 같다                                    
+  PASS  모든 계약 항목에 id 가 있다                                    
+  PASS  행동의 소유 시스템이 전부 등록된 시스템이다                             
+
+== 5. 음성 시험 — 일부러 깨면 잡히는가 ==
+  PASS  없는 경로를 넣으면 잡힌다                                       잡힌 수 1
+  PASS  없는 시스템을 넣으면 잡힌다                                      잡힌 수 1
+
+PASS · 위반 0
+
+
+Spreadsheet runtime warmup failed during python startup
+Traceback (most recent call last):
+  File "/tmp/tmp.yTcnQsZYiA/artifact_tool_v2-2.8.4/artifact_tool/patches/warm_spreadsheet_runtime_on_startup.py", line 26, in warm_spreadsheet_runtime_on_startup
+  File "/tmp/tmp.yTcnQsZYiA/artifact_tool_v2-2.8.4/artifact_tool/spreadsheet_warmup.py", line 785, in warm_spreadsheet_runtime
+  File "/tmp/tmp.yTcnQsZYiA/artifact_tool_v2-2.8.4/artifact_tool/spreadsheet_warmup.py", line 720, in _warm_feature_flows
+  File "/tmp/tmp.yTcnQsZYiA/artifact_tool_v2-2.8.4/artifact_tool/spreadsheet_warmup.py", line 704, in _warm_collaboration_flows
+  File "/tmp/tmp.yTcnQsZYiA/artifact_tool_v2-2.8.4/artifact_tool/generated/interface/models.py", line 30820, in hydrate_crdt_from_proto
+  File "/tmp/tmp.yTcnQsZYiA/artifact_tool_v2-2.8.4/artifact_tool/rpc/remote.py", line 749, in __call__
+  File "/tmp/tmp.yTcnQsZYiA/artifact_tool_v2-2.8.4/artifact_tool/rpc/client.py", line 150, in call
+artifact_tool.rpc.client.RemoteError: hydrateCrdtFromProto requires an empty collaborative document.

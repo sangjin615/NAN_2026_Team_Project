@@ -19,6 +19,8 @@
 라우터는 둘 다 한 번에 만든다. 한 번에 만들면 같은 모델도 무너진다 —
 `Docs/GENERATION-ROUTER-PARITY.md` 에 실측과 옮기는 방법을 적어 뒀다.
 
+게임 본체는 `Runtime/` 이다. 나머지 최상위 폴더는 기획서와 리소스다.
+
 ## 무엇이든 고친 뒤에 돌릴 것
 
 ```bash
@@ -145,6 +147,17 @@ npm run audit:generation:live     # 연결 후. 실제로 호출해 측정한다
   (`app.js:274`, `app.js:840`). 뒤쪽 호출의 범위는 3일이지만 첫날이 이미
   `readyDays` 에 있어 실제로 나가는 것은 **2건**이다. 새 게임 한 번이면
   blueprint 1 + day 1 + (day 2 · day 3 동시) 이다
+연결 전에 정해야 할 것이 남아 있다.
+
+- `timeoutMs` 하나를 블루프린트와 일자 생성이 같이 쓴다. 실측은 블루프린트
+  중앙 2.9초, 일자 생성 중앙 15.3초로 5배 차이다. 지금 값 15초면 일자 생성
+  다수가 타임아웃되어 fallback 으로 떨어진다
+- `GenerationApiProvider.request()` 는 헤더가 `content-type` 뿐이라 인증
+  토큰을 실을 자리가 없다. 외부 서비스를 붙이려면 필요하다
+- `api-config.json` 은 `build:standalone` 이 독립 실행본에 그대로 박는다.
+  **키를 여기 넣으면 배포본에 노출된다**
+- `GenerationBuffer.ensure()` 가 3일치를 동시에 호출한다. 동시 요청 제한이
+  있는 서비스라면 확인이 필요하다
 
 ## 커밋
 

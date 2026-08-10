@@ -1,0 +1,28 @@
+{
+  "date": "2026-07-30",
+  "canonicalDocument": "미지의 경매장 V5 통합 기획서",
+  "confirmed": [
+    {
+      "id": "tycoon-budget",
+      "decision": "거물 자금은 플레이어와 독립된 절대 자금형"
+    },
+    {
+      "id": "break-even-ui",
+      "decision": "손익분기선·안전 입찰가·추천 입찰가는 유저에게 표시하지 않음"
+    },
+    {
+      "id": "ending",
+      "decision": "마감·파산·유물 경매 빈손 실패와 3여정 완전 결말의 단순형"
+    }
+  ],
+  "pending": [
+    {
+      "id": "minimum-bid-loop",
+      "reason": "일반 봇 알고리즘 구현 후 플레이를 보고 판단"
+    },
+    {
+      "id": "quality-distribution",
+      "reason": "밸런싱 후 확정"
+    }
+  ]
+}

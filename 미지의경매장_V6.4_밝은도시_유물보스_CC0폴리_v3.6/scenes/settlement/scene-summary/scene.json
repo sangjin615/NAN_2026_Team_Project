@@ -1,0 +1,390 @@
+{
+  "id": "scene-summary",
+  "type": "scene",
+  "title": "하루 결산",
+  "groupId": "g-settlement",
+  "x": 1400,
+  "y": 190,
+  "description": "하루 낙찰·수익·시세·의뢰·마감 상태를 복기하고 다음 날 또는 12일차 정산으로 진행한다.",
+  "requirements": [
+    "낙찰 목록",
+    "순이익",
+    "계열 지수",
+    "의뢰 판정",
+    "마감 잔여 경고",
+    "12일차 정산 분기"
+  ],
+  "referencePath": "V5 §5.3, §5.4, §10",
+  "image": "assets/reference/scene-mockups/summary.png",
+  "annotations": [
+    {
+      "id": "scene-summary-topbar",
+      "type": "area",
+      "xPercent": 50,
+      "yPercent": 5,
+      "coordinateSpace": "image",
+      "title": "[공통] 여정 상태 표시",
+      "requirement": "현재 일차·자금·상회 단계·보관칸을 표시한다. 대출 활성 시 만기 잔여 일수·상환 총액·담보 처분가 합계를 함께 표시한다.",
+      "acceptanceCriteria": [
+        "일차는 현재 값과 12일을 함께 표시한다.",
+        "플레이어 자금은 예산이라고 부르지 않는다.",
+        "대출이 없으면 대출 관련 값은 숨긴다."
+      ],
+      "refType": "data",
+      "actionRef": "",
+      "dataRefs": [
+        "run.day",
+        "run.totalDays",
+        "player.cash",
+        "shop.stage",
+        "player.inventory",
+        "player.storageCapacity",
+        "loan.dueDay",
+        "loan.repay",
+        "loan.collateralDisposalValue"
+      ],
+      "navTargetSceneId": "",
+      "modalName": "",
+      "commonKey": "global-topbar",
+      "failureSlot": false,
+      "sourceBasis": "V5 §0.5.2, §5, §12",
+      "implementationStatus": "implemented",
+      "widthPercent": 92,
+      "heightPercent": 8
+    },
+    {
+      "id": "summary-auction-results",
+      "type": "area",
+      "xPercent": 25,
+      "yPercent": 45,
+      "coordinateSpace": "image",
+      "title": "오늘 낙찰 목록",
+      "requirement": "8출품의 낙찰자·낙찰가·수수료와 플레이어 획득품을 표시한다.",
+      "acceptanceCriteria": [
+        "실제 결과와 일치한다."
+      ],
+      "refType": "data",
+      "actionRef": "",
+      "dataRefs": [
+        "daily.auctionResults",
+        "player.inventory"
+      ],
+      "navTargetSceneId": "",
+      "modalName": "",
+      "commonKey": "",
+      "failureSlot": false,
+      "sourceBasis": "V5 §5.3",
+      "implementationStatus": "implemented",
+      "widthPercent": 42,
+      "heightPercent": 60
+    },
+    {
+      "id": "summary-economy",
+      "type": "area",
+      "xPercent": 55,
+      "yPercent": 30,
+      "coordinateSpace": "image",
+      "title": "오늘 수입·지출·순이익",
+      "requirement": "오늘의 수입·지출·순이익과 잔액을 표시한다.",
+      "acceptanceCriteria": [
+        "대출 유입은 거래 수익과 구분한다."
+      ],
+      "refType": "data",
+      "actionRef": "",
+      "dataRefs": [
+        "daily.income",
+        "daily.expense",
+        "player.cash"
+      ],
+      "navTargetSceneId": "",
+      "modalName": "",
+      "commonKey": "",
+      "failureSlot": false,
+      "sourceBasis": "V5 §5.3",
+      "implementationStatus": "implemented",
+      "widthPercent": 30,
+      "heightPercent": 24
+    },
+    {
+      "id": "summary-market",
+      "type": "area",
+      "xPercent": 82,
+      "yPercent": 44,
+      "coordinateSpace": "image",
+      "title": "계열 지수 변화",
+      "requirement": "6계열 지수와 오늘 반영된 사건을 표시한다.",
+      "acceptanceCriteria": [
+        "추천가와 숨은 실가치를 표시하지 않는다."
+      ],
+      "refType": "data",
+      "actionRef": "",
+      "dataRefs": [
+        "market.indexByFamily",
+        "daily.event"
+      ],
+      "navTargetSceneId": "",
+      "modalName": "",
+      "commonKey": "",
+      "failureSlot": false,
+      "sourceBasis": "V5 §5.3, §7.3",
+      "implementationStatus": "implemented",
+      "widthPercent": 30,
+      "heightPercent": 48
+    },
+    {
+      "id": "summary-quests",
+      "type": "area",
+      "xPercent": 55,
+      "yPercent": 60,
+      "coordinateSpace": "image",
+      "title": "의뢰 판정",
+      "requirement": "수주 의뢰별 성공·실패·보상 결과를 표시한다.",
+      "acceptanceCriteria": [
+        "완료 의뢰 수를 승급 조건에 반영한다."
+      ],
+      "refType": "data",
+      "actionRef": "",
+      "dataRefs": [
+        "quests.results",
+        "shop.completedQuestsTotal"
+      ],
+      "navTargetSceneId": "",
+      "modalName": "",
+      "commonKey": "",
+      "failureSlot": false,
+      "sourceBasis": "V5 §10",
+      "implementationStatus": "implemented",
+      "widthPercent": 30,
+      "heightPercent": 24
+    },
+    {
+      "id": "summary-deadline",
+      "type": "area",
+      "xPercent": 55,
+      "yPercent": 80,
+      "coordinateSpace": "image",
+      "title": "마감 잔여 경고",
+      "requirement": "다음 4·7·10일차 개시까지 필요한 상회 단계를 표시한다.",
+      "acceptanceCriteria": [
+        "마감 미달 시 뒤처진 상태로 계속하지 않고 여정을 종료한다."
+      ],
+      "refType": "data",
+      "actionRef": "",
+      "dataRefs": [
+        "run.day",
+        "shop.stage",
+        "shop.deadlineRequiredStage"
+      ],
+      "navTargetSceneId": "",
+      "modalName": "",
+      "commonKey": "",
+      "failureSlot": false,
+      "sourceBasis": "V5 §5.2",
+      "implementationStatus": "implemented",
+      "widthPercent": 38,
+      "heightPercent": 13
+    },
+    {
+      "id": "summary-next-day",
+      "type": "pin",
+      "xPercent": 42,
+      "yPercent": 92,
+      "coordinateSpace": "image",
+      "title": "다음 날",
+      "requirement": "파산과 다음 날 마감을 검사한 뒤 다음 날 도시로 이동한다.",
+      "acceptanceCriteria": [
+        "파산 또는 마감 미달 시 결과 화면으로 이동한다."
+      ],
+      "refType": "action",
+      "actionRef": "act-next-day",
+      "dataRefs": [
+        "daily.acceptedQuests",
+        "loan.dueDay",
+        "player.cash",
+        "run.day",
+        "shop.deadlineRequiredStage",
+        "shop.stage"
+      ],
+      "navTargetSceneId": "scene-city",
+      "modalName": "",
+      "commonKey": "",
+      "failureSlot": false,
+      "sourceBasis": "V5 §5.2, §5.6",
+      "implementationStatus": "implemented",
+      "soundCue": "sfx-day-advance"
+    },
+    {
+      "id": "summary-settlement",
+      "type": "pin",
+      "xPercent": 62,
+      "yPercent": 92,
+      "coordinateSpace": "image",
+      "title": "12일차 정산",
+      "requirement": "12일차에는 거래소 정산 창으로 이동한다.",
+      "acceptanceCriteria": [
+        "당일 낙찰품 판매 예외를 허용한다."
+      ],
+      "refType": "action",
+      "actionRef": "act-open-day12-settlement",
+      "dataRefs": [
+        "player.inventory",
+        "run.day"
+      ],
+      "navTargetSceneId": "scene-exchange",
+      "modalName": "",
+      "commonKey": "",
+      "failureSlot": false,
+      "sourceBasis": "V5 §5.4",
+      "implementationStatus": "implemented",
+      "soundCue": "sfx-settlement-open"
+    }
+  ],
+  "actionRefs": [
+    "act-next-day",
+    "act-open-day12-settlement",
+    "act-save-game",
+    "act-open-settings"
+  ],
+  "implementationStatus": "implemented",
+  "referenceImage": "assets/reference/scene-mockups/summary.png",
+  "runtimeBackground": "assets/runtime/backgrounds/summary.png",
+  "imageRole": "reference-mockup",
+  "assetStatus": "pure-background-and-mockup",
+  "uiRequirements": [
+    {
+      "id": "summary-topbar",
+      "name": "일차·자금·상회 단계",
+      "kind": "global-status",
+      "priority": "A",
+      "implementationStatus": "implemented",
+      "dataRefs": [],
+      "actionRefs": [],
+      "notes": ""
+    },
+    {
+      "id": "summary-lot-results",
+      "name": "8출품 낙찰/유찰 결과",
+      "kind": "result-list",
+      "priority": "A",
+      "implementationStatus": "implemented",
+      "dataRefs": [],
+      "actionRefs": [],
+      "notes": ""
+    },
+    {
+      "id": "summary-acquired",
+      "name": "획득 물품 목록",
+      "kind": "item-list",
+      "priority": "A",
+      "implementationStatus": "implemented",
+      "dataRefs": [],
+      "actionRefs": [],
+      "notes": ""
+    },
+    {
+      "id": "summary-money",
+      "name": "입찰·수수료·판매·정보·의뢰·순손익",
+      "kind": "ledger",
+      "priority": "A",
+      "implementationStatus": "partial",
+      "dataRefs": [],
+      "actionRefs": [],
+      "notes": ""
+    },
+    {
+      "id": "summary-quests",
+      "name": "의뢰 성공·실패·보상",
+      "kind": "result-list",
+      "priority": "A",
+      "implementationStatus": "implemented",
+      "dataRefs": [],
+      "actionRefs": [],
+      "notes": ""
+    },
+    {
+      "id": "summary-market",
+      "name": "6계열 시세 변화",
+      "kind": "chart",
+      "priority": "A",
+      "implementationStatus": "partial",
+      "dataRefs": [],
+      "actionRefs": [],
+      "notes": ""
+    },
+    {
+      "id": "summary-deadline",
+      "name": "다음 승급 마감 경고",
+      "kind": "warning",
+      "priority": "A",
+      "implementationStatus": "implemented",
+      "dataRefs": [],
+      "actionRefs": [],
+      "notes": ""
+    },
+    {
+      "id": "summary-next",
+      "name": "다음 날/12일차 정산 버튼",
+      "kind": "button",
+      "priority": "A",
+      "implementationStatus": "implemented",
+      "dataRefs": [],
+      "actionRefs": [],
+      "notes": ""
+    }
+  ],
+  "popupRefs": [
+    "modal-settings",
+    "toast-global",
+    "popup-global-failure"
+  ],
+  "mockupCorrections": [
+    "명성 변화 영역을 삭제하고 의뢰 결과와 승급 마감 상태로 교체한다.",
+    "점핑 비드 사용액을 별도 지출로 표시하지 않는다.",
+    "계열별 시세는 등급 평균가가 아니라 계열 지수 변화로 표시한다."
+  ],
+  "backgroundPolicy": {
+    "source": "runtime",
+    "path": "assets/runtime/backgrounds/summary.png",
+    "fit": "contain",
+    "contentRect": {
+      "x": 0.0,
+      "y": 0.0,
+      "width": 1536.0,
+      "height": 1024.0,
+      "xPercent": 0.0,
+      "yPercent": 0.0,
+      "widthPercent": 100.0,
+      "heightPercent": 100.0
+    },
+    "sourceImageSize": {
+      "width": 1536,
+      "height": 1024
+    },
+    "sceneTransform": {
+      "scale": 1.0,
+      "offsetXPercent": 0.0,
+      "offsetYPercent": 0.0,
+      "anchor": "center",
+      "appliesTo": "background-and-scene-ui",
+      "editable": true
+    },
+    "onMissingAsset": "show-error-placeholder"
+  },
+  "runtimeBackgroundSource": "runtime",
+  "temporaryRuntimeUse": false,
+  "layoutCanvas": {
+    "width": 1536,
+    "height": 1024
+  },
+  "failureFeedbackRef": "popup-global-failure",
+  "failureFeedbackPolicy": "global-popup",
+  "sound": {
+    "bgm": "bgm-05-settlement",
+    "layers": [
+      "L1",
+      "L2"
+    ],
+    "layersOnSuccess": null,
+    "restart": true
+  }
+}
