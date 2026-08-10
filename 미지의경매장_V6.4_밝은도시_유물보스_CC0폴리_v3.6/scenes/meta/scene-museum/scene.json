@@ -1,0 +1,221 @@
+{
+  "id": "scene-museum",
+  "type": "scene",
+  "title": "유물 전시관",
+  "groupId": "g-meta",
+  "x": 2360,
+  "y": 560,
+  "description": "획득한 영구 유물 9종과 메타 효과·캠페인 진행을 확인하는 공간.",
+  "requirements": [
+    "유물 9종",
+    "미획득·획득 구분",
+    "유물 영구 보존",
+    "메타 효과 표시",
+    "타이틀 또는 도시 복귀"
+  ],
+  "referencePath": "V5 §13, §16",
+  "image": "assets/reference/scene-mockups/museum.png",
+  "annotations": [
+    {
+      "id": "museum-grid",
+      "type": "area",
+      "xPercent": 50,
+      "yPercent": 48,
+      "coordinateSpace": "image",
+      "title": "유물 전시 목록",
+      "requirement": "하급·중급·상급 유물 9종의 획득 상태와 효과를 표시한다.",
+      "acceptanceCriteria": [
+        "미획득 유물은 숨김 상태로 구분한다.",
+        "획득 유물은 여정이 끝나도 유지한다."
+      ],
+      "refType": "data",
+      "actionRef": "",
+      "dataRefs": [
+        "meta.relics"
+      ],
+      "navTargetSceneId": "",
+      "modalName": "",
+      "commonKey": "",
+      "failureSlot": false,
+      "sourceBasis": "V5 §16",
+      "implementationStatus": "implemented",
+      "widthPercent": 82,
+      "heightPercent": 68
+    },
+    {
+      "id": "museum-meta",
+      "type": "area",
+      "xPercent": 50,
+      "yPercent": 84,
+      "coordinateSpace": "image",
+      "title": "메타·캠페인 상태",
+      "requirement": "이월 자금·완료 여정 수·캠페인 진행을 표시한다.",
+      "acceptanceCriteria": [
+        "캠페인 데이터가 없으면 미구현 상태를 명시한다."
+      ],
+      "refType": "data",
+      "actionRef": "",
+      "dataRefs": [
+        "meta.carry",
+        "meta.runs",
+        "campaign.journeyIndex",
+        "campaign.highTierWins",
+        "campaign.status"
+      ],
+      "navTargetSceneId": "",
+      "modalName": "",
+      "commonKey": "",
+      "failureSlot": false,
+      "sourceBasis": "V5 §5.7, §15.4",
+      "implementationStatus": "partial",
+      "widthPercent": 60,
+      "heightPercent": 12
+    },
+    {
+      "id": "museum-back",
+      "type": "pin",
+      "xPercent": 12,
+      "yPercent": 92,
+      "coordinateSpace": "image",
+      "title": "돌아가기",
+      "requirement": "진입 맥락에 따라 타이틀 또는 도시로 돌아간다.",
+      "acceptanceCriteria": [
+        "진행 중 여정 상태와 메타 상태를 유지한다."
+      ],
+      "refType": "action",
+      "actionRef": "act-return-city",
+      "dataRefs": [],
+      "navTargetSceneId": "",
+      "modalName": "",
+      "commonKey": "",
+      "failureSlot": false,
+      "sourceBasis": "V5 §13, §16",
+      "implementationStatus": "implemented",
+      "soundCue": "sfx-ui-back"
+    }
+  ],
+  "actionRefs": [
+    "act-return-city"
+  ],
+  "implementationStatus": "implemented",
+  "referenceImage": "assets/reference/scene-mockups/museum.png",
+  "runtimeBackground": "assets/reference/scene-mockups/museum.png",
+  "imageRole": "reference-mockup",
+  "assetStatus": "reference-mockup-only",
+  "uiRequirements": [
+    {
+      "id": "museum-topbar",
+      "name": "영구 유물 수·이월 자금·캠페인 상태",
+      "kind": "global-status",
+      "priority": "B",
+      "implementationStatus": "partial",
+      "dataRefs": [],
+      "actionRefs": [],
+      "notes": ""
+    },
+    {
+      "id": "museum-grid",
+      "name": "유물 9종 전시 그리드",
+      "kind": "relic-grid",
+      "priority": "A",
+      "implementationStatus": "implemented",
+      "dataRefs": [],
+      "actionRefs": [],
+      "notes": ""
+    },
+    {
+      "id": "museum-locked",
+      "name": "미획득 유물 잠금 상태",
+      "kind": "state",
+      "priority": "A",
+      "implementationStatus": "implemented",
+      "dataRefs": [],
+      "actionRefs": [],
+      "notes": ""
+    },
+    {
+      "id": "museum-detail",
+      "name": "선택 유물 상세",
+      "kind": "detail-panel",
+      "priority": "A",
+      "implementationStatus": "partial",
+      "dataRefs": [],
+      "actionRefs": [],
+      "notes": ""
+    },
+    {
+      "id": "museum-effect",
+      "name": "영구 효과와 적용 시점",
+      "kind": "effect-panel",
+      "priority": "A",
+      "implementationStatus": "partial",
+      "dataRefs": [],
+      "actionRefs": [],
+      "notes": ""
+    },
+    {
+      "id": "museum-back",
+      "name": "타이틀/도시 복귀 버튼",
+      "kind": "button",
+      "priority": "A",
+      "implementationStatus": "implemented",
+      "dataRefs": [],
+      "actionRefs": [],
+      "notes": ""
+    }
+  ],
+  "popupRefs": [
+    "popup-relic-detail",
+    "toast-global",
+    "popup-global-failure"
+  ],
+  "mockupCorrections": [
+    "명성·상회 단계 헤더가 필요하지 않은 메타 화면에서는 영구 유물 수와 캠페인 상태로 교체한다.",
+    "순수 배경이 제공되지 않아 목업은 참고 전용이다."
+  ],
+  "backgroundPolicy": {
+    "source": "reference-temporary",
+    "path": "assets/reference/scene-mockups/museum.png",
+    "fit": "contain",
+    "temporaryRuntimeUse": true,
+    "onMissingAsset": "show-error-placeholder",
+    "contentRect": {
+      "x": 0.0,
+      "y": 0.0,
+      "width": 1536.0,
+      "height": 1024.0,
+      "xPercent": 0.0,
+      "yPercent": 0.0,
+      "widthPercent": 100.0,
+      "heightPercent": 100.0
+    },
+    "sourceImageSize": {
+      "width": 1536,
+      "height": 1024
+    },
+    "sceneTransform": {
+      "scale": 1.0,
+      "offsetXPercent": 0.0,
+      "offsetYPercent": 0.0,
+      "anchor": "center",
+      "appliesTo": "background-and-scene-ui",
+      "editable": true
+    }
+  },
+  "runtimeBackgroundSource": "reference-temporary",
+  "temporaryRuntimeUse": true,
+  "layoutCanvas": {
+    "width": 1536,
+    "height": 1024
+  },
+  "failureFeedbackRef": "popup-global-failure",
+  "failureFeedbackPolicy": "global-popup",
+  "sound": {
+    "bgm": "bgm-05-settlement",
+    "layers": [
+      "L1"
+    ],
+    "layersOnSuccess": null,
+    "restart": true
+  }
+}

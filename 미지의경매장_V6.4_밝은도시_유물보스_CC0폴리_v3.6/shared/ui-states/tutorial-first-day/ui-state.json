@@ -1,0 +1,66 @@
+{
+  "id": "tutorial-first-day",
+  "type": "overlay",
+  "scope": "scenes",
+  "global": false,
+  "title": "첫 여정 안내",
+  "description": "첫날 도시·마감·가치 정보 안내 오버레이.",
+  "hostSceneIds": [
+    "scene-city"
+  ],
+  "bindings": [
+    {
+      "hostSceneId": "scene-city",
+      "trigger": "1일차 첫 진입",
+      "triggerFeatureId": "",
+      "condition": "튜토리얼 설정 켜짐"
+    }
+  ],
+  "returnMode": "opener",
+  "blocksInput": true,
+  "closeOnBackdrop": false,
+  "closeOnEscape": false,
+  "reusable": false,
+  "referencePath": "V5 §5·§6 + 앱 셸",
+  "image": "assets/reference/popup-mockups/tutorial.png",
+  "requirements": [
+    "스킵 가능",
+    "현재 여정 상태 유지"
+  ],
+  "annotations": [
+    {
+      "id": "tutorial-content",
+      "type": "area",
+      "xPercent": 50,
+      "yPercent": 50,
+      "coordinateSpace": "image",
+      "title": "튜토리얼 내용",
+      "requirement": "도시 준비→경매→결산과 4·7·10일차 마감을 안내한다.",
+      "acceptanceCriteria": [
+        "기준가·계열·등급은 공개, 품질·실가치는 비공개라고 설명한다."
+      ],
+      "refType": "data",
+      "actionRef": "",
+      "dataRefs": [
+        "tutorial.step"
+      ],
+      "navTargetSceneId": "",
+      "modalName": "",
+      "commonKey": "",
+      "failureSlot": false,
+      "sourceBasis": "V5 §5·§6",
+      "implementationStatus": "implemented",
+      "widthPercent": 70,
+      "heightPercent": 60
+    }
+  ],
+  "referenceImage": "assets/reference/popup-mockups/tutorial.png",
+  "imageRole": "reference-mockup",
+  "runtimeBackground": "",
+  "openActionRef": "act-open-first-day",
+  "confirmActionRef": "act-complete-first-day-tutorial",
+  "cancelActionRef": "act-skip-first-day-tutorial",
+  "closeActionRef": "",
+  "actionContractMode": "explicit",
+  "dismissPolicy": "complete-or-skip"
+}

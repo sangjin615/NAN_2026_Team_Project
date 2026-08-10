@@ -1,0 +1,12 @@
+{
+  "version": "1.4",
+  "issue": "씬 목업과 실제 배경, UI 목업이 동일 assets 폴더와 layout background 역할에 섞여 있었음",
+  "changes": [
+    "실행용 순수 배경과 참고 목업 폴더 분리",
+    "실행용 버튼·아이콘 별도 분리",
+    "UI 목업을 layout background element에서 제거",
+    "final-auction/museum 목업의 런타임 배경 사용 제거",
+    "의뢰소의 merchant 배경 재사용 제거",
+    "asset ownerType·ownerId·role 재지정"
+  ]
+}

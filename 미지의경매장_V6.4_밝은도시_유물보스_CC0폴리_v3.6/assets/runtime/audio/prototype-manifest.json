@@ -1,0 +1,12 @@
+{
+  "schemaVersion": "prototype-audio-3.6-cc0-foley-clarity",
+  "notice": "INTERACTIVE MIX — CC0 real Foley is layered with procedural support; source pages are recorded in sound/sound.json.",
+  "sampleRate": 44100,
+  "direction": "bright harbor / antique shop / clockwork clarity: real wood, metal, paper, coin, lock and mechanical transients with restrained procedural body",
+  "counts": {
+    "sfx": 99,
+    "ambience": 11,
+    "bgm": 33
+  },
+  "replacementContract": "sound/sound.json"
+}

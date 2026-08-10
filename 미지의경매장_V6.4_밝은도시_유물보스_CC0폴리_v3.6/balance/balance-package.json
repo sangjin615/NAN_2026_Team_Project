@@ -1,0 +1,31 @@
+{
+  "schemaVersion": "balance-package-1.0",
+  "projectId": "unknown-auction-v5-v1-3-pins",
+  "projectTitle": "미지의 경매장 V5 — 핀·기능 통합",
+  "approvalStatus": "candidate",
+  "requiredForImplementation": true,
+  "sourceOfTruth": "balance/data/balance.json",
+  "runtimeRules": "balance/greybox/rules-v6.js",
+  "playtestGuide": "balance/greybox/PLAY.md",
+  "labGuide": "balance/lab/LAB.md",
+  "applyScript": "balance/apply-balance.py",
+  "applyCommand": "python balance/apply-balance.py",
+  "checkCommand": "python balance/apply-balance.py --check",
+  "playtestRecords": [],
+  "sourceArchives": [
+    {
+      "name": "플레이테스트.zip",
+      "kind": "playtest-kit"
+    },
+    {
+      "name": "밸런싱랩.zip",
+      "kind": "balance-package",
+      "files": 18,
+      "addedAt": "2026-07-31T05:30:17.222Z"
+    }
+  ],
+  "notes": "현재 업로드 자료를 v6.1 밸런스 인계 형식으로 넣은 테스트본",
+  "updatedAt": "2026-07-31T05:30:49.798Z",
+  "compatibilityAlias": "data/balance.json",
+  "aliasPolicy": "must-match-source-of-truth"
+}

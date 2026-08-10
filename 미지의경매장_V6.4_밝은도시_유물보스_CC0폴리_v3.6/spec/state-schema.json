@@ -1,0 +1,651 @@
+{
+  "schemaVersion": "state-schema-draft-1.0",
+  "paths": [
+    {
+      "path": "run.scene",
+      "label": "현재 씬",
+      "usedBy": [
+        "scene:scene-loading/loading-progress"
+      ]
+    },
+    {
+      "path": "run.day",
+      "label": "현재 일차",
+      "usedBy": [
+        "scene:scene-continue/continue-slots",
+        "scene:scene-city/scene-city-topbar",
+        "scene:scene-office/scene-office-topbar",
+        "scene:scene-tavern/scene-tavern-topbar",
+        "scene:scene-exchange/scene-exchange-topbar",
+        "scene:scene-guild/scene-guild-topbar",
+        "scene:scene-merchant/scene-merchant-topbar",
+        "scene:scene-auction/scene-auction-topbar",
+        "scene:scene-summary/scene-summary-topbar",
+        "scene:scene-summary/summary-deadline",
+        "scene:scene-ending/scene-ending-topbar",
+        "scene:scene-final/scene-final-topbar",
+        "ui:state-exchange-settlement/settlement-state"
+      ]
+    },
+    {
+      "path": "run.totalDays",
+      "label": "전체 일수",
+      "usedBy": [
+        "scene:scene-city/scene-city-topbar",
+        "scene:scene-office/scene-office-topbar",
+        "scene:scene-tavern/scene-tavern-topbar",
+        "scene:scene-exchange/scene-exchange-topbar",
+        "scene:scene-guild/scene-guild-topbar",
+        "scene:scene-merchant/scene-merchant-topbar",
+        "scene:scene-auction/scene-auction-topbar",
+        "scene:scene-summary/scene-summary-topbar",
+        "scene:scene-ending/scene-ending-topbar",
+        "scene:scene-final/scene-final-topbar"
+      ]
+    },
+    {
+      "path": "run.slot",
+      "label": "저장 슬롯",
+      "usedBy": [
+        "scene:scene-continue/continue-slots"
+      ]
+    },
+    {
+      "path": "run.ended",
+      "label": "여정 종료 여부",
+      "usedBy": [
+        "scene:scene-result/result-outcome"
+      ]
+    },
+    {
+      "path": "run.ending.type",
+      "label": "종료 유형",
+      "usedBy": [
+        "scene:scene-result/result-outcome",
+        "ui:state-result-bankruptcy/bankruptcy-reason"
+      ]
+    },
+    {
+      "path": "run.ending.reason",
+      "label": "종료 이유",
+      "usedBy": [
+        "scene:scene-result/result-outcome",
+        "ui:state-result-bankruptcy/bankruptcy-reason"
+      ]
+    },
+    {
+      "path": "run.startCash",
+      "label": "여정 시작 자금",
+      "usedBy": []
+    },
+    {
+      "path": "player.cash",
+      "label": "현재 자금",
+      "usedBy": [
+        "scene:scene-continue/continue-slots",
+        "scene:scene-city/scene-city-topbar",
+        "scene:scene-office/scene-office-topbar",
+        "scene:scene-office/office-appraisals",
+        "scene:scene-tavern/scene-tavern-topbar",
+        "scene:scene-tavern/tavern-info-cards",
+        "scene:scene-exchange/scene-exchange-topbar",
+        "scene:scene-guild/scene-guild-topbar",
+        "scene:scene-merchant/scene-merchant-topbar",
+        "scene:scene-merchant/merchant-upgrade-status",
+        "scene:scene-auction/scene-auction-topbar",
+        "scene:scene-summary/scene-summary-topbar",
+        "scene:scene-summary/summary-economy",
+        "scene:scene-ending/scene-ending-topbar",
+        "scene:scene-ending/ending-status",
+        "scene:scene-final/scene-final-topbar",
+        "scene:scene-result/result-kpi"
+      ]
+    },
+    {
+      "path": "player.inventory",
+      "label": "보유품 목록",
+      "usedBy": [
+        "scene:scene-continue/continue-slots",
+        "scene:scene-city/scene-city-topbar",
+        "scene:scene-city/city-prep",
+        "scene:scene-office/scene-office-topbar",
+        "scene:scene-tavern/scene-tavern-topbar",
+        "scene:scene-exchange/scene-exchange-topbar",
+        "scene:scene-exchange/exchange-sell-list",
+        "scene:scene-guild/scene-guild-topbar",
+        "scene:scene-guild/guild-collateral",
+        "scene:scene-merchant/scene-merchant-topbar",
+        "scene:scene-merchant/merchant-inventory",
+        "scene:scene-auction/scene-auction-topbar",
+        "scene:scene-summary/scene-summary-topbar",
+        "scene:scene-summary/summary-auction-results",
+        "scene:scene-ending/scene-ending-topbar",
+        "scene:scene-final/scene-final-topbar"
+      ]
+    },
+    {
+      "path": "player.storageCapacity",
+      "label": "보관칸",
+      "usedBy": [
+        "scene:scene-city/scene-city-topbar",
+        "scene:scene-office/scene-office-topbar",
+        "scene:scene-tavern/scene-tavern-topbar",
+        "scene:scene-exchange/scene-exchange-topbar",
+        "scene:scene-guild/scene-guild-topbar",
+        "scene:scene-merchant/scene-merchant-topbar",
+        "scene:scene-merchant/merchant-inventory",
+        "scene:scene-auction/scene-auction-topbar",
+        "scene:scene-summary/scene-summary-topbar",
+        "scene:scene-ending/scene-ending-topbar",
+        "scene:scene-final/scene-final-topbar"
+      ]
+    },
+    {
+      "path": "shop.stage",
+      "label": "상회 단계",
+      "usedBy": [
+        "scene:scene-continue/continue-slots",
+        "scene:scene-city/scene-city-topbar",
+        "scene:scene-office/scene-office-topbar",
+        "scene:scene-tavern/scene-tavern-topbar",
+        "scene:scene-exchange/scene-exchange-topbar",
+        "scene:scene-guild/scene-guild-topbar",
+        "scene:scene-merchant/scene-merchant-topbar",
+        "scene:scene-merchant/merchant-upgrade-status",
+        "scene:scene-merchant/merchant-branches",
+        "scene:scene-auction/scene-auction-topbar",
+        "scene:scene-summary/scene-summary-topbar",
+        "scene:scene-summary/summary-deadline",
+        "scene:scene-ending/scene-ending-topbar",
+        "scene:scene-ending/ending-status",
+        "scene:scene-final/scene-final-topbar",
+        "scene:scene-result/result-kpi"
+      ]
+    },
+    {
+      "path": "shop.displayName",
+      "label": "상회 화면 표시명",
+      "usedBy": []
+    },
+    {
+      "path": "shop.completedQuestsTotal",
+      "label": "누적 의뢰 완료",
+      "usedBy": [
+        "scene:scene-merchant/merchant-upgrade-status",
+        "scene:scene-summary/summary-quests"
+      ]
+    },
+    {
+      "path": "shop.upgradeCost",
+      "label": "다음 승급비",
+      "usedBy": [
+        "scene:scene-merchant/merchant-upgrade-status"
+      ]
+    },
+    {
+      "path": "shop.deadlineRequiredStage",
+      "label": "현재 마감 요구 단계",
+      "usedBy": [
+        "scene:scene-merchant/merchant-upgrade-status",
+        "scene:scene-summary/summary-deadline"
+      ]
+    },
+    {
+      "path": "daily.phase",
+      "label": "하루 페이즈",
+      "usedBy": []
+    },
+    {
+      "path": "daily.event",
+      "label": "오늘 시장 사건",
+      "usedBy": [
+        "scene:scene-city/city-event",
+        "scene:scene-summary/summary-market"
+      ]
+    },
+    {
+      "path": "daily.lots",
+      "label": "오늘 출품 8점",
+      "usedBy": [
+        "scene:scene-office/office-appraisals",
+        "scene:scene-auction/auction-order"
+      ]
+    },
+    {
+      "path": "daily.lotIndex",
+      "label": "현재 출품 순번",
+      "usedBy": []
+    },
+    {
+      "path": "daily.acceptedQuests",
+      "label": "수주 의뢰",
+      "usedBy": [
+        "scene:scene-city/city-prep",
+        "scene:scene-office/office-quests",
+        "scene:scene-auction/auction-quest-tracker"
+      ]
+    },
+    {
+      "path": "daily.appraisals",
+      "label": "감정 결과",
+      "usedBy": [
+        "scene:scene-city/city-prep",
+        "scene:scene-office/office-appraisals",
+        "scene:scene-auction/auction-lot"
+      ]
+    },
+    {
+      "path": "daily.info",
+      "label": "구매 정보",
+      "usedBy": [
+        "scene:scene-city/city-prep",
+        "scene:scene-tavern/tavern-info-cards"
+      ]
+    },
+    {
+      "path": "hanbo.patterns",
+      "label": "오늘 족보 판매",
+      "usedBy": [
+        "scene:scene-exchange/exchange-contracts"
+      ]
+    },
+    {
+      "path": "daily.auctionResults",
+      "label": "오늘 경매 결과",
+      "usedBy": [
+        "scene:scene-summary/summary-auction-results"
+      ]
+    },
+    {
+      "path": "daily.expense",
+      "label": "오늘 지출",
+      "usedBy": [
+        "scene:scene-summary/summary-economy"
+      ]
+    },
+    {
+      "path": "daily.income",
+      "label": "오늘 수입",
+      "usedBy": [
+        "scene:scene-summary/summary-economy"
+      ]
+    },
+    {
+      "path": "daily.settlement",
+      "label": "12일차 정산 상태",
+      "usedBy": [
+        "scene:scene-exchange/exchange-sell-list",
+        "ui:state-exchange-settlement/settlement-state"
+      ]
+    },
+    {
+      "path": "market.indexByFamily",
+      "label": "계열별 시세 지수",
+      "usedBy": [
+        "scene:scene-city/city-event",
+        "scene:scene-exchange/exchange-sell-list",
+        "scene:scene-exchange/exchange-market",
+        "scene:scene-summary/summary-market"
+      ]
+    },
+    {
+      "path": "market.schedule",
+      "label": "시장 사건 일정",
+      "usedBy": [
+        "scene:scene-loading/loading-progress"
+      ]
+    },
+    {
+      "path": "market.history",
+      "label": "과거 시세 기록",
+      "usedBy": [
+        "scene:scene-exchange/exchange-market"
+      ]
+    },
+    {
+      "path": "auction.currentLot",
+      "label": "현재 출품",
+      "usedBy": [
+        "scene:scene-auction/auction-lot"
+      ]
+    },
+    {
+      "path": "auction.currentBid",
+      "label": "현재 호가",
+      "usedBy": [
+        "scene:scene-auction/auction-current-bid"
+      ]
+    },
+    {
+      "path": "auction.minimumRaise",
+      "label": "최소 인상폭",
+      "usedBy": [
+        "scene:scene-auction/auction-current-bid"
+      ]
+    },
+    {
+      "path": "auction.leader",
+      "label": "최고 입찰자",
+      "usedBy": []
+    },
+    {
+      "path": "auction.playerPassed",
+      "label": "플레이어 물러남",
+      "usedBy": []
+    },
+    {
+      "path": "auction.bidLog",
+      "label": "입찰 기록",
+      "usedBy": [
+        "scene:scene-auction/auction-log"
+      ]
+    },
+    {
+      "path": "auction.bots",
+      "label": "일반 경매 경쟁자",
+      "usedBy": [
+        "scene:scene-auction/auction-bots"
+      ]
+    },
+    {
+      "path": "auction.lastResult",
+      "label": "직전 출품 결과",
+      "usedBy": [
+        "ui:popup-lot-result/lot-result-data"
+      ]
+    },
+    {
+      "path": "quests.available",
+      "label": "오늘 제시 의뢰",
+      "usedBy": [
+        "scene:scene-office/office-quests"
+      ]
+    },
+    {
+      "path": "quests.progress",
+      "label": "경매 중 의뢰 진행",
+      "usedBy": [
+        "scene:scene-auction/auction-quest-tracker"
+      ]
+    },
+    {
+      "path": "quests.results",
+      "label": "하루 의뢰 판정",
+      "usedBy": [
+        "scene:scene-summary/summary-quests"
+      ]
+    },
+    {
+      "path": "information.marketForecast",
+      "label": "수요 동향",
+      "usedBy": [
+        "scene:scene-tavern/tavern-owned",
+        "scene:scene-exchange/exchange-market"
+      ]
+    },
+    {
+      "path": "information.lotCatalog",
+      "label": "출품 목록",
+      "usedBy": [
+        "scene:scene-tavern/tavern-owned",
+        "scene:scene-auction/auction-order"
+      ]
+    },
+    {
+      "path": "information.competitors",
+      "label": "경쟁자 예산·표적",
+      "usedBy": [
+        "scene:scene-tavern/tavern-owned",
+        "scene:scene-auction/auction-bots"
+      ]
+    },
+    {
+      "path": "loan.principal",
+      "label": "대출 원금",
+      "usedBy": [
+        "scene:scene-guild/guild-loan-status"
+      ]
+    },
+    {
+      "path": "loan.repay",
+      "label": "상환 총액",
+      "usedBy": [
+        "scene:scene-city/scene-city-topbar",
+        "scene:scene-office/scene-office-topbar",
+        "scene:scene-tavern/scene-tavern-topbar",
+        "scene:scene-exchange/scene-exchange-topbar",
+        "scene:scene-guild/scene-guild-topbar",
+        "scene:scene-guild/guild-loan-status",
+        "scene:scene-merchant/scene-merchant-topbar",
+        "scene:scene-auction/scene-auction-topbar",
+        "scene:scene-summary/scene-summary-topbar",
+        "scene:scene-ending/scene-ending-topbar",
+        "scene:scene-final/scene-final-topbar"
+      ]
+    },
+    {
+      "path": "loan.dueDay",
+      "label": "만기 일차",
+      "usedBy": [
+        "scene:scene-city/scene-city-topbar",
+        "scene:scene-office/scene-office-topbar",
+        "scene:scene-tavern/scene-tavern-topbar",
+        "scene:scene-exchange/scene-exchange-topbar",
+        "scene:scene-guild/scene-guild-topbar",
+        "scene:scene-guild/guild-loan-status",
+        "scene:scene-merchant/scene-merchant-topbar",
+        "scene:scene-auction/scene-auction-topbar",
+        "scene:scene-summary/scene-summary-topbar",
+        "scene:scene-ending/scene-ending-topbar",
+        "scene:scene-final/scene-final-topbar"
+      ]
+    },
+    {
+      "path": "loan.collateralId",
+      "label": "담보 보유품",
+      "usedBy": [
+        "scene:scene-guild/guild-loan-status",
+        "scene:scene-guild/guild-collateral",
+        "scene:scene-merchant/merchant-inventory"
+      ]
+    },
+    {
+      "path": "loan.guildLocked",
+      "label": "조합 거래 제한",
+      "usedBy": [
+        "scene:scene-guild/guild-lock"
+      ]
+    },
+    {
+      "path": "loan.collateralDisposalValue",
+      "label": "담보 처분가 합계",
+      "usedBy": [
+        "scene:scene-city/scene-city-topbar",
+        "scene:scene-office/scene-office-topbar",
+        "scene:scene-tavern/scene-tavern-topbar",
+        "scene:scene-exchange/scene-exchange-topbar",
+        "scene:scene-guild/scene-guild-topbar",
+        "scene:scene-guild/guild-loan-status",
+        "scene:scene-merchant/scene-merchant-topbar",
+        "scene:scene-auction/scene-auction-topbar",
+        "scene:scene-summary/scene-summary-topbar",
+        "scene:scene-ending/scene-ending-topbar",
+        "scene:scene-final/scene-final-topbar"
+      ]
+    },
+    {
+      "path": "competitor.bennett",
+      "label": "숙적 베넷 상태",
+      "usedBy": [
+        "scene:scene-loading/loading-progress",
+        "scene:scene-auction/auction-bots"
+      ]
+    },
+    {
+      "path": "competitor.bennettRumor",
+      "label": "베넷 성장 소문",
+      "usedBy": [
+        "scene:scene-tavern/tavern-owned"
+      ]
+    },
+    {
+      "path": "competitor.tycoons",
+      "label": "거물 3인 절대 데이터",
+      "usedBy": [
+        "scene:scene-loading/loading-progress",
+        "scene:scene-final/final-tycoons"
+      ]
+    },
+    {
+      "path": "relicAuction.round",
+      "label": "유물 경매 라운드",
+      "usedBy": [
+        "scene:scene-final/final-relic"
+      ]
+    },
+    {
+      "path": "relicAuction.currentBid",
+      "label": "유물 현재 호가",
+      "usedBy": [
+        "scene:scene-final/final-current-bid"
+      ]
+    },
+    {
+      "path": "relicAuction.currentRelic",
+      "label": "현재 유물",
+      "usedBy": [
+        "scene:scene-final/final-relic"
+      ]
+    },
+    {
+      "path": "relicAuction.bidLog",
+      "label": "유물 입찰 기록",
+      "usedBy": [
+        "scene:scene-final/final-log"
+      ]
+    },
+    {
+      "path": "relicAuction.wins",
+      "label": "이번 여정 낙찰 유물",
+      "usedBy": [
+        "scene:scene-result/result-outcome"
+      ]
+    },
+    {
+      "path": "meta.relics",
+      "label": "영구 유물 목록",
+      "usedBy": [
+        "scene:scene-result/result-kpi",
+        "scene:scene-museum/museum-grid"
+      ]
+    },
+    {
+      "path": "meta.carry",
+      "label": "다음 여정 이월 자금",
+      "usedBy": [
+        "scene:scene-museum/museum-meta"
+      ]
+    },
+    {
+      "path": "meta.runs",
+      "label": "완료 여정 수",
+      "usedBy": [
+        "scene:scene-museum/museum-meta"
+      ]
+    },
+    {
+      "path": "campaign.journeyIndex",
+      "label": "캠페인 여정 순번",
+      "usedBy": [
+        "scene:scene-result/result-campaign",
+        "scene:scene-museum/museum-meta"
+      ]
+    },
+    {
+      "path": "campaign.highTierWins",
+      "label": "상급 유물 성공 기록",
+      "usedBy": [
+        "scene:scene-result/result-campaign",
+        "scene:scene-museum/museum-meta"
+      ]
+    },
+    {
+      "path": "campaign.status",
+      "label": "캠페인 상태",
+      "usedBy": [
+        "scene:scene-result/result-campaign",
+        "scene:scene-museum/museum-meta"
+      ]
+    },
+    {
+      "path": "settings.contrast",
+      "label": "고대비 설정",
+      "usedBy": [
+        "ui:modal-settings/settings-fields"
+      ]
+    },
+    {
+      "path": "settings.textScale",
+      "label": "글자 크기",
+      "usedBy": [
+        "ui:modal-settings/settings-fields"
+      ]
+    },
+    {
+      "path": "settings.tutorial",
+      "label": "튜토리얼 설정",
+      "usedBy": [
+        "ui:modal-settings/settings-fields"
+      ]
+    },
+    {
+      "path": "settings.qa",
+      "label": "QA 설정",
+      "usedBy": [
+        "ui:modal-settings/settings-fields"
+      ]
+    },
+    {
+      "path": "ui.lastMessage",
+      "label": "최근 실패·안내 문구",
+      "usedBy": [
+        "scene:scene-title/scene-title-failure",
+        "scene:scene-continue/scene-continue-failure",
+        "scene:scene-loading/scene-loading-failure",
+        "scene:scene-city/scene-city-failure",
+        "scene:scene-office/scene-office-failure",
+        "scene:scene-tavern/scene-tavern-failure",
+        "scene:scene-exchange/scene-exchange-failure",
+        "scene:scene-guild/scene-guild-failure",
+        "scene:scene-merchant/scene-merchant-failure",
+        "scene:scene-auction/scene-auction-failure",
+        "scene:scene-summary/scene-summary-failure",
+        "scene:scene-ending/scene-ending-failure",
+        "scene:scene-final/scene-final-failure",
+        "scene:scene-result/scene-result-failure",
+        "scene:scene-museum/scene-museum-failure"
+      ]
+    },
+    {
+      "path": "ui.modal",
+      "label": "현재 모달",
+      "usedBy": [
+        "ui:modal-confirm/confirm-body"
+      ]
+    },
+    {
+      "path": "tutorial.step",
+      "label": "튜토리얼 단계",
+      "usedBy": [
+        "ui:tutorial-first-day/tutorial-content"
+      ]
+    },
+    {
+      "path": "tutorial.seen",
+      "label": "첫날 튜토리얼 완료 여부",
+      "usedBy": [
+        "ui:tutorial-first-day/tutorial-content"
+      ]
+    }
+  ]
+}

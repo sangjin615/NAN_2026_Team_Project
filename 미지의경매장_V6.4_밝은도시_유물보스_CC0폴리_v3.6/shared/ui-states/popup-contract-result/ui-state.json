@@ -1,0 +1,39 @@
+{
+  "id": "popup-hanbo-result",
+  "type": "result-popup",
+  "scope": "scenes",
+  "global": false,
+  "title": "족보 판매 완료",
+  "description": "단순 판매 완료는 토스트로 처리하고, 족보 판매만 결과 팝업으로 강조한다.",
+  "hostSceneIds": [
+    "scene-exchange"
+  ],
+  "bindings": [],
+  "returnMode": "opener",
+  "blocksInput": false,
+  "closeOnBackdrop": false,
+  "closeOnEscape": true,
+  "reusable": false,
+  "referencePath": "V5 씬별 UI 정리 v1.5",
+  "image": "",
+  "referenceImage": "",
+  "imageRole": "none",
+  "runtimeBackground": "",
+  "requirements": [
+    "계약명",
+    "판매한 보유품",
+    "기본 처분가",
+    "계약 배수",
+    "상회 보너스",
+    "최종 수령액"
+  ],
+  "implementationStatus": "spec-only",
+  "priority": "B",
+  "annotations": [],
+  "openActionRef": "act-form-hanbo",
+  "confirmActionRef": "act-close-hanbo-result",
+  "cancelActionRef": "",
+  "closeActionRef": "act-close-hanbo-result",
+  "actionContractMode": "explicit",
+  "dismissPolicy": "confirm-or-escape"
+}

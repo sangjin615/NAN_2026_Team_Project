@@ -1,0 +1,78 @@
+<meta charset="utf-8"><title>미지의 경매장 — 그레이박스</title>
+<style>
+:root{--line:#999;--bg:#fff;--fg:#111;--dim:#666;--box:#f5f5f5;--hi:#ffe9a8;--ok:#2a7;--no:#c33;--warn:#c93}
+@media(prefers-color-scheme:dark){:root{--line:#555;--bg:#15171b;--fg:#e8e8e8;--dim:#999;--box:#212429;--hi:#5a4a1e}}
+*{box-sizing:border-box}
+body{margin:0;padding:14px;background:var(--bg);color:var(--fg);font:13px/1.55 system-ui,'Malgun Gothic',sans-serif}
+.wrap{max-width:1180px;margin:0 auto}
+h1{font-size:15px;margin:0 0 3px}
+.note{color:var(--dim);font-size:11px;margin-bottom:12px}
+.grid{display:grid;grid-template-columns:1fr 330px;gap:12px;align-items:start}
+@media(max-width:900px){.grid{grid-template-columns:1fr}}
+.box{border:1px solid var(--line);background:var(--box);padding:8px 10px;margin-bottom:10px;position:relative}
+.box::before{content:attr(data-id);position:absolute;top:2px;right:6px;font-size:9px;color:var(--dim);letter-spacing:.4px}
+.box h2{font-size:11px;margin:0 0 6px;color:var(--dim);font-weight:600;letter-spacing:.4px}
+.stat{display:flex;justify-content:space-between;gap:8px;padding:2px 0;border-bottom:1px dotted var(--line)}
+.stat b{font-variant-numeric:tabular-nums}
+.row{border:1px solid var(--line);padding:6px 9px;margin-bottom:5px;display:grid;grid-template-columns:22px 1fr auto;gap:8px;align-items:center;background:var(--bg)}
+.row.cur{background:var(--hi);border-width:2px}
+.row.done{opacity:.4}
+.g{font-weight:700}
+.m{color:var(--dim);font-size:11px}
+button{font:inherit;padding:4px 10px;border:1px solid var(--line);background:var(--bg);color:var(--fg);cursor:pointer;margin:0 5px 5px 0}
+button:disabled{opacity:.32;cursor:default}
+button.p{border-width:2px;font-weight:600}
+input{font:inherit;width:100px;padding:4px 6px;border:1px solid var(--line);background:var(--bg);color:var(--fg);text-align:right}
+.ok{color:var(--ok)}.no{color:var(--no)}.warn{color:var(--warn)}
+.slots{display:flex;gap:4px;flex-wrap:wrap;margin-top:4px}
+.slot{width:44px;height:40px;border:1px dashed var(--line);display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:9px;color:var(--dim);text-align:center;line-height:1.15}
+.slot.full{border-style:solid;background:var(--bg);color:var(--fg)}
+.slot.lock{border-color:var(--warn);color:var(--warn)}
+.tag{display:inline-block;border:1px solid var(--line);padding:0 5px;font-size:10px;margin-right:3px;color:var(--dim)}
+.tag.on{border-color:var(--ok);color:var(--ok)}
+.tag.clash{border-color:var(--no);color:var(--no)}
+.log{font-size:11px;max-height:150px;overflow:auto}
+.log div{padding:1px 0;border-bottom:1px dotted var(--line)}
+table{border-collapse:collapse;width:100%;font-size:11px}
+td,th{border-bottom:1px solid var(--line);padding:2px 4px;text-align:right}
+td:first-child,th:first-child{text-align:left}
+.sep{border-top:1px solid var(--line);margin:7px 0;padding-top:7px}
+</style>
+<div class="wrap">
+<h1>미지의 경매장 — 그레이박스</h1>
+<div class="note">에셋 없다. 상자와 자리만 있다. 값은 전부 <b>data/balance.json</b> → <b>rules-v6.js</b> 에서 온다.
+근거는 <b>SIMULATION-STATUS.md 6.16~6.37</b>. 씨앗은 <code>?seed=123</code>.</div>
+
+<div class="grid">
+<div>
+  <div class="box" data-id="daily.lots"><h2>오늘의 출품 · 8건</h2><div id="lots"></div></div>
+  <div class="box" data-id="auction"><h2>진행</h2>
+    <div id="cur"></div>
+    <div id="bidzone" style="margin-top:7px"></div>
+    <div id="msg" class="note" style="margin:5px 0 0"></div>
+  </div>
+  <div class="box" data-id="auction.bidLog"><h2>경매 이력</h2><div id="log" class="log"></div></div>
+</div>
+
+<div>
+  <div class="box" data-id="run"><h2>여정</h2>
+    <div class="stat"><span>일차</span><b id="day"></b></div>
+    <div class="stat"><span>자산</span><b id="cash"></b></div>
+    <div class="stat"><span>상회 단계</span><b id="stage"></b></div>
+    <div class="stat"><span>개시 마감</span><b id="deadline"></b></div>
+  </div>
+  <div class="box" data-id="player.inventory"><h2>보관</h2><div class="slots" id="slots"></div>
+    <div id="setnow" class="note" style="margin-top:5px"></div></div>
+  <div class="box" data-id="quests"><h2>의뢰 · 오늘 제시</h2><div id="quests"></div></div>
+  <div class="box" data-id="information"><h2>정보</h2><div id="info"></div></div>
+  <div class="box" data-id="auction.bots"><h2>경쟁자 · 입찰 상한</h2><div id="bots"></div></div>
+  <div class="box" data-id="loan"><h2>담보 대출</h2><div id="loan"></div></div>
+  <div class="box" data-id="shop"><h2>상회</h2><div id="shop"></div></div>
+  <div class="box" data-id="playtest.log"><h2>플레이 기록</h2><div id="rec"></div></div>
+</div>
+</div>
+
+<div class="box" data-id="summary" id="summaryBox" style="display:none"><h2>결산</h2><div id="summary"></div></div>
+</div>
+<script src="rules-v6.js"></script>
+<script src="greybox.js"></script>

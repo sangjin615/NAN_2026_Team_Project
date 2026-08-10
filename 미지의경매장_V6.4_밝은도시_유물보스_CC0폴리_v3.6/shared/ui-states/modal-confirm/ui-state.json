@@ -1,0 +1,65 @@
+{
+  "id": "modal-confirm",
+  "type": "modal",
+  "scope": "scenes",
+  "global": false,
+  "title": "공통 확인",
+  "description": "저장 삭제 등 비가역 행동 확인용 공통 모달.",
+  "hostSceneIds": [
+    "scene-continue"
+  ],
+  "bindings": [
+    {
+      "hostSceneId": "scene-continue",
+      "trigger": "저장 삭제 요청",
+      "triggerFeatureId": "continue-delete",
+      "condition": "저장 슬롯 존재"
+    }
+  ],
+  "returnMode": "opener",
+  "blocksInput": true,
+  "closeOnBackdrop": false,
+  "closeOnEscape": true,
+  "reusable": true,
+  "referencePath": "앱 셸 구현",
+  "image": "assets/reference/popup-mockups/confirm.png",
+  "requirements": [
+    "확인 전 상태 변경 금지"
+  ],
+  "annotations": [
+    {
+      "id": "confirm-body",
+      "type": "area",
+      "xPercent": 50,
+      "yPercent": 45,
+      "coordinateSpace": "image",
+      "title": "확인 내용",
+      "requirement": "행동 대상과 결과를 표시한다.",
+      "acceptanceCriteria": [
+        "취소 시 상태가 변경되지 않는다."
+      ],
+      "refType": "data",
+      "actionRef": "",
+      "dataRefs": [
+        "ui.modal"
+      ],
+      "navTargetSceneId": "",
+      "modalName": "",
+      "commonKey": "",
+      "failureSlot": false,
+      "sourceBasis": "앱 셸",
+      "implementationStatus": "implemented",
+      "widthPercent": 70,
+      "heightPercent": 40
+    }
+  ],
+  "referenceImage": "assets/reference/popup-mockups/confirm.png",
+  "imageRole": "reference-mockup",
+  "runtimeBackground": "",
+  "openActionRef": "act-request-delete-save",
+  "confirmActionRef": "act-delete-save",
+  "cancelActionRef": "act-close-confirm",
+  "closeActionRef": "act-close-confirm",
+  "actionContractMode": "explicit",
+  "dismissPolicy": "confirm-or-cancel"
+}

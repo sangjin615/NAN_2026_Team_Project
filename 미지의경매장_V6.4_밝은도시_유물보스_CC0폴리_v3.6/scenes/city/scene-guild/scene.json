@@ -1,0 +1,369 @@
+{
+  "id": "scene-guild",
+  "type": "scene",
+  "title": "조합",
+  "groupId": "g-city",
+  "x": 1720,
+  "y": 560,
+  "description": "상회 3단계부터 미판매 보유품을 담보로 유동성을 확보하고 2일 내 상환하는 조합 화면.",
+  "requirements": [
+    "2단계 해금",
+    "담보 처분가 70% 한도",
+    "2일 만기",
+    "원금 10% 이자",
+    "동시 1건",
+    "미상환 압류·조합 제한"
+  ],
+  "referencePath": "V5 §12",
+  "image": "assets/reference/scene-mockups/guild.png",
+  "annotations": [
+    {
+      "id": "scene-guild-topbar",
+      "type": "area",
+      "xPercent": 50,
+      "yPercent": 5,
+      "coordinateSpace": "image",
+      "title": "[공통] 여정 상태 표시",
+      "requirement": "현재 일차·자금·상회 단계·보관칸을 표시한다. 대출 활성 시 만기 잔여 일수·상환 총액·담보 처분가 합계를 함께 표시한다.",
+      "acceptanceCriteria": [
+        "일차는 현재 값과 12일을 함께 표시한다.",
+        "플레이어 자금은 예산이라고 부르지 않는다.",
+        "대출이 없으면 대출 관련 값은 숨긴다."
+      ],
+      "refType": "data",
+      "actionRef": "",
+      "dataRefs": [
+        "run.day",
+        "run.totalDays",
+        "player.cash",
+        "shop.stage",
+        "player.inventory",
+        "player.storageCapacity",
+        "loan.dueDay",
+        "loan.repay",
+        "loan.collateralDisposalValue"
+      ],
+      "navTargetSceneId": "",
+      "modalName": "",
+      "commonKey": "global-topbar",
+      "failureSlot": false,
+      "sourceBasis": "V5 §0.5.2, §5, §12",
+      "implementationStatus": "implemented",
+      "widthPercent": 92,
+      "heightPercent": 8
+    },
+    {
+      "id": "guild-loan-status",
+      "type": "area",
+      "xPercent": 65,
+      "yPercent": 28,
+      "coordinateSpace": "image",
+      "title": "대출 상태·상시 노출값",
+      "requirement": "활성 대출의 원금·상환 총액·만기·담보를 표시한다.",
+      "acceptanceCriteria": [
+        "상환 총액은 원금의 110%다.",
+        "대출이 없으면 담보 선택 상태를 표시한다."
+      ],
+      "refType": "data",
+      "actionRef": "",
+      "dataRefs": [
+        "loan.principal",
+        "loan.repay",
+        "loan.dueDay",
+        "loan.collateralId",
+        "loan.collateralDisposalValue"
+      ],
+      "navTargetSceneId": "",
+      "modalName": "",
+      "commonKey": "",
+      "failureSlot": false,
+      "sourceBasis": "V5 §12",
+      "implementationStatus": "implemented",
+      "widthPercent": 55,
+      "heightPercent": 28
+    },
+    {
+      "id": "guild-collateral",
+      "type": "area",
+      "xPercent": 28,
+      "yPercent": 58,
+      "coordinateSpace": "image",
+      "title": "담보 선택 목록",
+      "requirement": "미판매·미잠금 보유품과 처분가·대출 한도를 표시한다.",
+      "acceptanceCriteria": [
+        "담보는 보관칸을 계속 점유한다."
+      ],
+      "refType": "data",
+      "actionRef": "",
+      "dataRefs": [
+        "player.inventory",
+        "loan.collateralId"
+      ],
+      "navTargetSceneId": "",
+      "modalName": "",
+      "commonKey": "inventory-list",
+      "failureSlot": false,
+      "sourceBasis": "V5 §12",
+      "implementationStatus": "implemented",
+      "widthPercent": 42,
+      "heightPercent": 48
+    },
+    {
+      "id": "guild-take",
+      "type": "pin",
+      "xPercent": 30,
+      "yPercent": 84,
+      "coordinateSpace": "image",
+      "title": "대출 실행",
+      "requirement": "선택 담보로 처분가의 70%를 대출한다.",
+      "acceptanceCriteria": [
+        "동시 대출은 1건이다.",
+        "실행 후 담보 판매를 막는다."
+      ],
+      "refType": "action",
+      "actionRef": "act-take-loan",
+      "dataRefs": [
+        "player.inventory",
+        "run.day"
+      ],
+      "navTargetSceneId": "",
+      "modalName": "",
+      "commonKey": "",
+      "failureSlot": false,
+      "sourceBasis": "V5 §12",
+      "implementationStatus": "implemented",
+      "soundCue": "sfx-loan-take"
+    },
+    {
+      "id": "guild-repay",
+      "type": "pin",
+      "xPercent": 70,
+      "yPercent": 70,
+      "coordinateSpace": "image",
+      "title": "대출 상환",
+      "requirement": "원금의 110%를 상환한다.",
+      "acceptanceCriteria": [
+        "상환 후 담보 잠금을 해제한다."
+      ],
+      "refType": "action",
+      "actionRef": "act-repay-loan",
+      "dataRefs": [
+        "loan.repay",
+        "player.cash"
+      ],
+      "navTargetSceneId": "",
+      "modalName": "",
+      "commonKey": "",
+      "failureSlot": false,
+      "sourceBasis": "V5 §12",
+      "implementationStatus": "implemented",
+      "soundCue": "sfx-loan-repay"
+    },
+    {
+      "id": "guild-lock",
+      "type": "area",
+      "xPercent": 70,
+      "yPercent": 86,
+      "coordinateSpace": "image",
+      "title": "조합 거래 제한 상태",
+      "requirement": "미상환 압류 후 조합 거래 제한 상태를 표시한다.",
+      "acceptanceCriteria": [
+        "제한 강도는 공개하고 확률은 공개하지 않는다."
+      ],
+      "refType": "data",
+      "actionRef": "",
+      "dataRefs": [
+        "loan.guildLocked"
+      ],
+      "navTargetSceneId": "",
+      "modalName": "",
+      "commonKey": "",
+      "failureSlot": false,
+      "sourceBasis": "V5 §12",
+      "implementationStatus": "implemented",
+      "widthPercent": 38,
+      "heightPercent": 13
+    },
+    {
+      "id": "guild-back",
+      "type": "pin",
+      "xPercent": 8,
+      "yPercent": 9,
+      "coordinateSpace": "image",
+      "title": "도시로",
+      "requirement": "대출 상태를 유지하고 도시로 돌아간다.",
+      "acceptanceCriteria": [
+        "활성 대출 데이터가 유지된다."
+      ],
+      "refType": "action",
+      "actionRef": "act-return-city",
+      "dataRefs": [],
+      "navTargetSceneId": "scene-city",
+      "modalName": "",
+      "commonKey": "return-city",
+      "failureSlot": false,
+      "sourceBasis": "V5 §5.3",
+      "implementationStatus": "implemented",
+      "soundCue": "sfx-ui-back"
+    }
+  ],
+  "actionRefs": [
+    "act-take-loan",
+    "act-repay-loan",
+    "act-process-loan-due",
+    "act-return-city",
+    "act-save-game",
+    "act-open-settings"
+  ],
+  "implementationStatus": "implemented",
+  "referenceImage": "assets/reference/scene-mockups/guild.png",
+  "runtimeBackground": "assets/runtime/backgrounds/guild.png",
+  "imageRole": "reference-mockup",
+  "assetStatus": "pure-background-and-mockup",
+  "uiRequirements": [
+    {
+      "id": "guild-topbar",
+      "name": "일차·자금·상회 단계·대출 만기",
+      "kind": "global-status",
+      "priority": "A",
+      "implementationStatus": "implemented",
+      "dataRefs": [],
+      "actionRefs": [],
+      "notes": ""
+    },
+    {
+      "id": "guild-loan-status",
+      "name": "활성 대출 원금·상환액·만기·담보",
+      "kind": "status-panel",
+      "priority": "A",
+      "implementationStatus": "implemented",
+      "dataRefs": [],
+      "actionRefs": [],
+      "notes": ""
+    },
+    {
+      "id": "guild-collateral-list",
+      "name": "담보 가능 보유품 목록",
+      "kind": "list",
+      "priority": "A",
+      "implementationStatus": "implemented",
+      "dataRefs": [],
+      "actionRefs": [],
+      "notes": ""
+    },
+    {
+      "id": "guild-selected",
+      "name": "선택 담보와 처분가",
+      "kind": "detail-panel",
+      "priority": "A",
+      "implementationStatus": "implemented",
+      "dataRefs": [],
+      "actionRefs": [],
+      "notes": ""
+    },
+    {
+      "id": "guild-limit",
+      "name": "처분가 45%·상환 x1.90·2일 만기",
+      "kind": "terms-panel",
+      "priority": "A",
+      "implementationStatus": "implemented",
+      "dataRefs": [],
+      "actionRefs": [],
+      "notes": ""
+    },
+    {
+      "id": "guild-take",
+      "name": "대출 실행 버튼",
+      "kind": "button",
+      "priority": "A",
+      "implementationStatus": "implemented",
+      "dataRefs": [],
+      "actionRefs": [],
+      "notes": ""
+    },
+    {
+      "id": "guild-repay",
+      "name": "대출 상환 버튼",
+      "kind": "button",
+      "priority": "A",
+      "implementationStatus": "implemented",
+      "dataRefs": [],
+      "actionRefs": [],
+      "notes": ""
+    },
+    {
+      "id": "guild-locked",
+      "name": "조합 거래 제한 상태",
+      "kind": "state",
+      "priority": "A",
+      "implementationStatus": "implemented",
+      "dataRefs": [],
+      "actionRefs": [],
+      "notes": ""
+    },
+    {
+      "id": "guild-back",
+      "name": "도시 복귀 버튼",
+      "kind": "button",
+      "priority": "A",
+      "implementationStatus": "implemented",
+      "dataRefs": [],
+      "actionRefs": [],
+      "notes": ""
+    }
+  ],
+  "popupRefs": [
+    "modal-confirm",
+    "popup-loan-overdue",
+    "toast-global",
+    "popup-global-failure"
+  ],
+  "mockupCorrections": [
+    "채권이라는 용어를 담보 대출로 교체한다.",
+    "청산가치는 처분가로 교체한다.",
+    "동시 대출은 1건이며 현재 HTML 기준 담보는 1점을 선택한다.",
+    "명성 표시를 삭제한다."
+  ],
+  "backgroundPolicy": {
+    "source": "runtime",
+    "path": "assets/runtime/backgrounds/guild.png",
+    "fit": "contain",
+    "contentRect": {
+      "x": 0.0,
+      "y": 0.0,
+      "width": 1536.0,
+      "height": 1024.0,
+      "xPercent": 0.0,
+      "yPercent": 0.0,
+      "widthPercent": 100.0,
+      "heightPercent": 100.0
+    },
+    "sourceImageSize": {
+      "width": 1536,
+      "height": 1024
+    },
+    "sceneTransform": {
+      "scale": 1.0,
+      "offsetXPercent": 0.0,
+      "offsetYPercent": 0.0,
+      "anchor": "center",
+      "appliesTo": "background-and-scene-ui",
+      "editable": true
+    },
+    "onMissingAsset": "show-error-placeholder"
+  },
+  "runtimeBackgroundSource": "runtime",
+  "temporaryRuntimeUse": false,
+  "layoutCanvas": {
+    "width": 1536,
+    "height": 1024
+  },
+  "failureFeedbackRef": "popup-global-failure",
+  "failureFeedbackPolicy": "global-popup",
+  "sound": {
+    "bgm": "bgm-02-city",
+    "layers": null,
+    "layersOnSuccess": null,
+    "restart": false
+  }
+}

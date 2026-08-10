@@ -1,0 +1,39 @@
+{
+  "id": "panel-exchange-market",
+  "type": "panel",
+  "scope": "scenes",
+  "global": false,
+  "title": "거래소 — 시세판 탭",
+  "description": "6계열 과거 시세와 구매 예보 밴드 상태.",
+  "hostSceneIds": [
+    "scene-exchange"
+  ],
+  "bindings": [
+    {
+      "hostSceneId": "scene-exchange",
+      "trigger": "시세판 탭 선택",
+      "triggerFeatureId": "exchange-tabs",
+      "condition": ""
+    }
+  ],
+  "returnMode": "host-state",
+  "blocksInput": false,
+  "closeOnBackdrop": false,
+  "closeOnEscape": true,
+  "reusable": false,
+  "referencePath": "V5 §7.3",
+  "image": "",
+  "requirements": [
+    "현재 적정가·추천가 금지"
+  ],
+  "annotations": [],
+  "referenceImage": "",
+  "imageRole": "none",
+  "runtimeBackground": "",
+  "openActionRef": "act-switch-exchange-tab",
+  "confirmActionRef": "",
+  "cancelActionRef": "",
+  "closeActionRef": "",
+  "actionContractMode": "host-panel",
+  "dismissPolicy": "host-tab"
+}

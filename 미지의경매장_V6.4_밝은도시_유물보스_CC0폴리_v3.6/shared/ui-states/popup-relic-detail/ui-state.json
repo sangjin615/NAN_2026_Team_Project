@@ -1,0 +1,40 @@
+{
+  "id": "popup-relic-detail",
+  "type": "detail-popup",
+  "scope": "scenes",
+  "global": false,
+  "title": "유물 상세",
+  "description": "유물의 수치 효과는 고정 템플릿 데이터에서 읽는다.",
+  "hostSceneIds": [
+    "scene-museum"
+  ],
+  "bindings": [],
+  "returnMode": "opener",
+  "blocksInput": false,
+  "closeOnBackdrop": false,
+  "closeOnEscape": true,
+  "reusable": true,
+  "referencePath": "V5 씬별 UI 정리 v1.5",
+  "image": "",
+  "referenceImage": "",
+  "imageRole": "none",
+  "runtimeBackground": "",
+  "requirements": [
+    "유물 이름",
+    "티어",
+    "이미지",
+    "영구 효과",
+    "적용 시점",
+    "획득 여정",
+    "닫기"
+  ],
+  "implementationStatus": "spec-only",
+  "priority": "A",
+  "annotations": [],
+  "openActionRef": "act-open-relic-detail",
+  "confirmActionRef": "",
+  "cancelActionRef": "",
+  "closeActionRef": "act-close-relic-detail",
+  "actionContractMode": "explicit",
+  "dismissPolicy": "close-or-escape"
+}

@@ -1,0 +1,38 @@
+{
+  "id": "popup-information-result",
+  "type": "information-popup",
+  "scope": "scenes",
+  "global": false,
+  "title": "정보 획득 결과",
+  "description": "유물 정보는 자금·의중·배분 중 어느 축인지와 좁혀진 범위를 표시한다.",
+  "hostSceneIds": [
+    "scene-tavern"
+  ],
+  "bindings": [],
+  "returnMode": "opener",
+  "blocksInput": false,
+  "closeOnBackdrop": false,
+  "closeOnEscape": true,
+  "reusable": true,
+  "referencePath": "V5 씬별 UI 정리 v1.5",
+  "image": "",
+  "referenceImage": "",
+  "imageRole": "none",
+  "runtimeBackground": "",
+  "requirements": [
+    "정보 채널",
+    "구매 가격",
+    "획득 내용",
+    "유효 기간",
+    "확인"
+  ],
+  "implementationStatus": "spec-only",
+  "priority": "A",
+  "annotations": [],
+  "openActionRef": "act-open-information-result",
+  "confirmActionRef": "act-close-information-result",
+  "cancelActionRef": "",
+  "closeActionRef": "act-close-information-result",
+  "actionContractMode": "explicit",
+  "dismissPolicy": "confirm-or-escape"
+}

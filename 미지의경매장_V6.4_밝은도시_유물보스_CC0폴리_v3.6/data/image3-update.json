@@ -1,0 +1,20 @@
+{
+  "version": "1.6",
+  "sourceArchive": "이미지 (3).zip",
+  "newFiles": [
+    {
+      "sourcePath": "이미지/이미지/의뢰소/의뢰소 목업.png",
+      "targetPath": "assets/reference/scene-mockups/office.png",
+      "sha256": "09f56cae737c4ea0cb73f72c904378f1c955f4cab93703146b38f49c32a08cc5",
+      "bytes": 2224245,
+      "role": "reference-mockup"
+    }
+  ],
+  "notAdded": [
+    {
+      "sceneId": "scene-office",
+      "assetType": "runtime-background",
+      "reason": "이미지 (3).zip에 의뢰소 순수 배경이 없음"
+    }
+  ]
+}

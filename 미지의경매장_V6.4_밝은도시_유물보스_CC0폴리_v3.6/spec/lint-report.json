@@ -1,0 +1,19 @@
+{
+  "schemaVersion": "lint-report-1.0",
+  "errors": 0,
+  "warnings": 2,
+  "issues": [
+    {
+      "code": "L41",
+      "severity": "warning",
+      "target": "continue-back",
+      "message": "이동 핀과 일치하는 엣지 없음"
+    },
+    {
+      "code": "L50",
+      "severity": "warning",
+      "target": "scene-city",
+      "message": "전용 목업 이미지 미연결"
+    }
+  ]
+}

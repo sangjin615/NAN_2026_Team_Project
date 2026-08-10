@@ -1,0 +1,39 @@
+{
+  "id": "panel-office-appraisal",
+  "type": "panel",
+  "scope": "scenes",
+  "global": false,
+  "title": "의뢰소 — 감정 탭",
+  "description": "감정 상품 목록 상태.",
+  "hostSceneIds": [
+    "scene-office"
+  ],
+  "bindings": [
+    {
+      "hostSceneId": "scene-office",
+      "trigger": "감정 탭 선택",
+      "triggerFeatureId": "office-tabs",
+      "condition": ""
+    }
+  ],
+  "returnMode": "host-state",
+  "blocksInput": false,
+  "closeOnBackdrop": false,
+  "closeOnEscape": true,
+  "reusable": false,
+  "referencePath": "V5 §9.1",
+  "image": "",
+  "requirements": [
+    "감정 대상·가격·정밀도 표시"
+  ],
+  "annotations": [],
+  "referenceImage": "",
+  "imageRole": "none",
+  "runtimeBackground": "",
+  "openActionRef": "act-switch-office-tab",
+  "confirmActionRef": "",
+  "cancelActionRef": "",
+  "closeActionRef": "",
+  "actionContractMode": "host-panel",
+  "dismissPolicy": "host-tab"
+}

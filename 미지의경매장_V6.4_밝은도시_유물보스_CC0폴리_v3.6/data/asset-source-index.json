@@ -1,0 +1,157 @@
+{
+  "schemaVersion": "asset-source-index-1.0",
+  "sourceArchive": "이미지 (3).zip",
+  "rules": {
+    "runtimeBackground": "파일명에 배경이 명시된 순수 배경만 사용",
+    "sceneMockup": "완성 화면 참고 전용",
+    "popupMockup": "팝업·오버레이 참고 전용"
+  },
+  "scenes": {
+    "scene-title": {
+      "referenceImage": "assets/reference/scene-mockups/title.png",
+      "runtimeBackground": "assets/runtime/backgrounds/title.png",
+      "needsNewPureBackground": false
+    },
+    "scene-continue": {
+      "referenceImage": "assets/reference/scene-mockups/continue.png",
+      "runtimeBackground": "assets/runtime/backgrounds/continue.png",
+      "needsNewPureBackground": false
+    },
+    "scene-loading": {
+      "referenceImage": "assets/reference/scene-mockups/loading.png",
+      "runtimeBackground": "assets/runtime/backgrounds/loading.png",
+      "needsNewPureBackground": false
+    },
+    "scene-city": {
+      "referenceImage": "assets/reference/scene-mockups/city.png",
+      "runtimeBackground": "",
+      "needsNewPureBackground": true
+    },
+    "scene-office": {
+      "referenceImage": "assets/reference/scene-mockups/office.png",
+      "runtimeBackground": "",
+      "needsNewPureBackground": true
+    },
+    "scene-tavern": {
+      "referenceImage": "assets/reference/scene-mockups/tavern.png",
+      "runtimeBackground": "assets/runtime/backgrounds/tavern.png",
+      "needsNewPureBackground": false
+    },
+    "scene-exchange": {
+      "referenceImage": "assets/reference/scene-mockups/exchange.png",
+      "runtimeBackground": "assets/runtime/backgrounds/exchange.png",
+      "needsNewPureBackground": false
+    },
+    "scene-guild": {
+      "referenceImage": "assets/reference/scene-mockups/guild.png",
+      "runtimeBackground": "assets/runtime/backgrounds/guild.png",
+      "needsNewPureBackground": false
+    },
+    "scene-merchant": {
+      "referenceImage": "assets/reference/scene-mockups/merchant.png",
+      "runtimeBackground": "assets/runtime/backgrounds/merchant.png",
+      "needsNewPureBackground": false
+    },
+    "scene-auction": {
+      "referenceImage": "assets/reference/scene-mockups/auction.png",
+      "runtimeBackground": "assets/runtime/backgrounds/auction.png",
+      "needsNewPureBackground": false
+    },
+    "scene-summary": {
+      "referenceImage": "assets/reference/scene-mockups/summary.png",
+      "runtimeBackground": "assets/runtime/backgrounds/summary.png",
+      "needsNewPureBackground": false
+    },
+    "scene-ending": {
+      "referenceImage": "assets/reference/scene-mockups/qualification.png",
+      "runtimeBackground": "assets/runtime/backgrounds/ending.png",
+      "needsNewPureBackground": false
+    },
+    "scene-final": {
+      "referenceImage": "assets/reference/scene-mockups/final-auction.png",
+      "runtimeBackground": "",
+      "needsNewPureBackground": true
+    },
+    "scene-result": {
+      "referenceImage": "assets/reference/scene-mockups/result.png",
+      "runtimeBackground": "",
+      "needsNewPureBackground": true
+    },
+    "scene-museum": {
+      "referenceImage": "assets/reference/scene-mockups/museum.png",
+      "runtimeBackground": "",
+      "needsNewPureBackground": true
+    }
+  },
+  "popups": {
+    "modal-settings": {
+      "referenceImage": "assets/reference/popup-mockups/settings.png",
+      "needsNewArt": false
+    },
+    "modal-confirm": {
+      "referenceImage": "assets/reference/popup-mockups/confirm.png",
+      "needsNewArt": false
+    },
+    "tutorial-first-day": {
+      "referenceImage": "assets/reference/popup-mockups/tutorial.png",
+      "needsNewArt": false
+    },
+    "popup-lot-result": {
+      "referenceImage": "assets/reference/popup-mockups/lot-result.png",
+      "needsNewArt": false
+    },
+    "popup-appraisal-result": {
+      "referenceImage": "",
+      "needsNewArt": true
+    },
+    "popup-information-result": {
+      "referenceImage": "",
+      "needsNewArt": true
+    },
+    "popup-contract-result": {
+      "referenceImage": "",
+      "needsNewArt": true
+    },
+    "popup-loan-overdue": {
+      "referenceImage": "",
+      "needsNewArt": true
+    },
+    "popup-upgrade-result": {
+      "referenceImage": "",
+      "needsNewArt": true
+    },
+    "popup-relic-round-result": {
+      "referenceImage": "",
+      "needsNewArt": true
+    },
+    "popup-relic-detail": {
+      "referenceImage": "",
+      "needsNewArt": true
+    },
+    "popup-campaign-complete": {
+      "referenceImage": "",
+      "needsNewArt": true
+    },
+    "toast-global": {
+      "referenceImage": "",
+      "needsNewArt": true
+    },
+    "state-exchange-settlement": {
+      "referenceImage": "",
+      "needsNewArt": true
+    },
+    "state-result-bankruptcy": {
+      "referenceImage": "assets/reference/scene-mockups/bankruptcy.png",
+      "needsNewArt": false
+    }
+  },
+  "addedInThisUpdate": [
+    {
+      "sceneId": "scene-office",
+      "sourcePath": "이미지/이미지/의뢰소/의뢰소 목업.png",
+      "targetPath": "assets/reference/scene-mockups/office.png",
+      "sha256": "09f56cae737c4ea0cb73f72c904378f1c955f4cab93703146b38f49c32a08cc5",
+      "role": "reference-mockup"
+    }
+  ]
+}

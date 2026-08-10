@@ -1,0 +1,67 @@
+{
+  "id": "state-exchange-settlement",
+  "type": "state",
+  "scope": "scenes",
+  "global": false,
+  "title": "거래소 — 12일차 정산",
+  "description": "12일차 당일 낙찰품 판매 예외 상태.",
+  "hostSceneIds": [
+    "scene-exchange"
+  ],
+  "bindings": [
+    {
+      "hostSceneId": "scene-exchange",
+      "trigger": "12일차 결산 후 정산 열기",
+      "triggerFeatureId": "summary-settlement",
+      "condition": "run.day=12"
+    }
+  ],
+  "returnMode": "host-state",
+  "blocksInput": false,
+  "closeOnBackdrop": false,
+  "closeOnEscape": false,
+  "reusable": false,
+  "referencePath": "V5 §5.4",
+  "image": "",
+  "requirements": [
+    "당일 낙찰품 판매 허용",
+    "도시 복귀 봉쇄"
+  ],
+  "annotations": [
+    {
+      "id": "settlement-state",
+      "type": "area",
+      "xPercent": 50,
+      "yPercent": 50,
+      "coordinateSpace": "image",
+      "title": "정산 예외 상태",
+      "requirement": "daily.settlement=true일 때 당일 낙찰품 즉시 처분과 정산 종료 버튼을 활성화한다.",
+      "acceptanceCriteria": [
+        "12일차 외에는 표시하지 않는다."
+      ],
+      "refType": "data",
+      "actionRef": "",
+      "dataRefs": [
+        "daily.settlement",
+        "run.day"
+      ],
+      "navTargetSceneId": "",
+      "modalName": "",
+      "commonKey": "",
+      "failureSlot": false,
+      "sourceBasis": "V5 §5.4",
+      "implementationStatus": "implemented",
+      "widthPercent": 70,
+      "heightPercent": 45
+    }
+  ],
+  "referenceImage": "",
+  "imageRole": "none",
+  "runtimeBackground": "",
+  "openActionRef": "act-open-day12-settlement",
+  "confirmActionRef": "act-finish-settlement",
+  "cancelActionRef": "",
+  "closeActionRef": "",
+  "actionContractMode": "explicit",
+  "dismissPolicy": "confirm-only"
+}

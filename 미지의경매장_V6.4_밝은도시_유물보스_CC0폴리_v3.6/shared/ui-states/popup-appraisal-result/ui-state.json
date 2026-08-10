@@ -1,0 +1,38 @@
+{
+  "id": "popup-appraisal-result",
+  "type": "information-popup",
+  "scope": "scenes",
+  "global": false,
+  "title": "감정 결과",
+  "description": "실가치·추천 입찰가는 표시하지 않는다.",
+  "hostSceneIds": [
+    "scene-office"
+  ],
+  "bindings": [],
+  "returnMode": "opener",
+  "blocksInput": false,
+  "closeOnBackdrop": false,
+  "closeOnEscape": true,
+  "reusable": true,
+  "referencePath": "V5 씬별 UI 정리 v1.5",
+  "image": "",
+  "referenceImage": "",
+  "imageRole": "none",
+  "runtimeBackground": "",
+  "requirements": [
+    "대상 출품",
+    "감정 종류",
+    "품질 범위",
+    "감정비",
+    "확인"
+  ],
+  "implementationStatus": "spec-only",
+  "priority": "A",
+  "annotations": [],
+  "openActionRef": "act-appraise-lot",
+  "confirmActionRef": "act-close-appraisal-result",
+  "cancelActionRef": "",
+  "closeActionRef": "act-close-appraisal-result",
+  "actionContractMode": "explicit",
+  "dismissPolicy": "confirm-or-escape"
+}
