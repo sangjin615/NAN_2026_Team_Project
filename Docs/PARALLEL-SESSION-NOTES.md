@@ -110,4 +110,4 @@ skip-generation 로 중단할 수 있다` 로 바르게 낸다.
 - **로딩창 최소 표시 2초와 날짜 전환 로딩창** — `MIN_LOADING_VISIBLE_MS`,
   `completeLoadingWindow()`
 
-근거와 기각한 대안은 `Docs/GENERATION-STARTUP-LATENCY.md` 에 있다.
+근거와 기각한 대안은 `Docs/Development/Generation/GENERATION-STARTUP-LATENCY.md` 에 있다.

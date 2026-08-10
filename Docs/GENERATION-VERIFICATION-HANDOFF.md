@@ -155,7 +155,7 @@ fixture 재생성은 강화된 계약과 선택적 복구가 들어온 뒤에 �
 - ~~**`run-local-generation-experiment.mjs` 34행** — 출력 스키마가 `appraisalCopy`
   를 요구한다~~ **해소됐다.** `Runtime/tools/` 안에 `appraisalCopy` 를 요구하는
   코드가 남아 있지 않다
-- ~~**`Docs/RUNTIME-PREPARATION-HANDOFF.md`** — "물품별/선택 감정과 판매, 정보
+- ~~**`Docs/Development/Runtime/RUNTIME-PREPARATION-HANDOFF.md`** — "물품별/선택 감정과 판매, 정보
   구매"를 준비된 기능으로 적어두고 있다. `AGENTS.md` 와 정면으로 어긋난다~~
   **해소됐다.** 지금은 `물품 판매. 감정과 정보 구매는 설계에서 빠졌다` 로 적혀
   있다
