@@ -6,7 +6,7 @@ VSL은 게임 엔진을 대신하지 않는다. 사람이 만든 목업·좌표�
 
 ## 확인된 결과
 
-- 최신 편집 프로젝트: `Releases/미지의_경매장_V6_CleanUI_프로젝트_LATEST.zip`
+- 최신 편집 프로젝트: `Archive/Releases/미지의_경매장_V6_CleanUI_프로젝트_LATEST.zip`
 - ZIP 항목: 85개
 - 씬: 15개
 - UI 상태: 18개
