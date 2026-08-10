@@ -20,8 +20,10 @@ CFG = {
     'fees': b['shop']['auctionFee'], 'storage': b['shop']['storage'],
     'upgradeCost': b['shop']['upgradeCost'], 'upgradeQuests': b['shop']['questRequirement'],
     'setBonus': b['shop']['setBonus'], 'questBonus': b['shop']['questBonus'],
-    'infoDiscount': b['shop']['infoDiscount'],
-    'bots': {'initial': b['bots']['nemesisInitial'], 'growth': b['bots']['growthPerDay'],
+    'infoDiscount': b['shop']['infoDiscount'], 'priceMultiplier': b['shop']['priceMultiplier'],
+    'questCompletionBonus': b['quests']['rewardPolicy']['completionBonusByStage'],
+    'bots': {'capitalByStage': b['bots']['capitalByStage'],
+             'initial': b['bots']['nemesisInitial'], 'growth': b['bots']['growthPerDay'],
              'capRatio': b['bots']['bidCapRatio'], 'drifterRatio': b['bots']['drifterRatio'],
              'drifterCount': b['bots']['drifterCount'], 'continueP': 0.78, 'wantLo': 0.78, 'wantHi': 1.08},
     'market': {'phi': b['market']['phi'], 'shockSd': b['market']['shockSd'],
@@ -110,13 +112,13 @@ function demandOf(item, index) {
 function disposalValue(item, index) { return round10(item.basePrice * item.quality * demandOf(item, index)); }
 
 // 6.7/6.15 경쟁자. 자본은 플레이어와 무관한 절대값이다.
-function makeBots(day, R) {
-  const nem = round100(CFG.bots.initial * Math.pow(CFG.bots.growth, day));
+function makeBots(day, R, stage = 1) {
+  const nem = CFG.bots.capitalByStage[stage];
   const pick = () => CFG.families[Math.floor(R() * CFG.families.length)];
   const bots = [{ id: 'bennett', name: '숙적 베넷', nemesis: true, target: pick(), cash: nem }];
   for (let i = 0; i < CFG.bots.drifterCount; i += 1) {
     bots.push({ id: 'drifter' + i, name: '떠돌이 상인 ' + (i + 1), nemesis: false, target: pick(),
-      cash: round100(nem * CFG.bots.drifterRatio * (0.85 + R() * 0.3)) });
+      cash: nem });
   }
   return bots;
 }

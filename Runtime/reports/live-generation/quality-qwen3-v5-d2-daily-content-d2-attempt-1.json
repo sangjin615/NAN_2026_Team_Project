@@ -1,0 +1,186 @@
+{
+  "valid": true,
+  "model": "qwen3:14b",
+  "latencyMs": 15038,
+  "request": {
+    "schemaVersion": "1.0",
+    "mode": "daily-content",
+    "runSeed": "quality-qwen3-v5-d2",
+    "day": 2,
+    "context": {
+      "premise": "A mysterious late-19th-century auction city where ancient artifacts, rare botanicals, and celestial instruments converge.",
+      "market": {
+        "day": 2,
+        "headline": "BOK 상승: 보석 거래가 활발해진다",
+        "mood": "활기차"
+      },
+      "sets": [
+        {
+          "setId": "set-01",
+          "title": "해상의 여정",
+          "sharedSecret": "해양에서 발견된 비밀의 보석",
+          "revealHint": "비밀의 보석은 해양의 깊숙이 숨겨져 있다"
+        },
+        {
+          "setId": "set-04",
+          "title": "천체의 탐험",
+          "sharedSecret": "별자리에서 발견된 비밀의 도구",
+          "revealHint": "별자리에서 발견된 비밀의 도구는 천체를 이해하는 데 도움이 된다"
+        },
+        {
+          "setId": "set-05",
+          "title": "연극의 매력",
+          "sharedSecret": "연극의 전설적인 장식품",
+          "revealHint": "연극의 전설적인 장식품은 연극의 아름다움을 상징한다"
+        },
+        {
+          "setId": "set-06",
+          "title": "생물학의 발견",
+          "sharedSecret": "비밀의 식물",
+          "revealHint": "비밀의 식물은 생명의 힘을 상징한다"
+        },
+        {
+          "setId": "set-10",
+          "title": "천체의 탐험",
+          "sharedSecret": "별자리에서 발견된 비밀의 도구",
+          "revealHint": "별자리에서 발견된 비밀의 도구는 천체를 이해하는 데 도움이 된다"
+        },
+        {
+          "setId": "set-11",
+          "title": "연극의 매력",
+          "sharedSecret": "연극의 전설적인 장식품",
+          "revealHint": "연극의 전설적인 장식품은 연극의 아름다움을 상징한다"
+        }
+      ]
+    },
+    "lots": [
+      {
+        "lotId": "api-html-minimal-v3-d2-l1",
+        "baseName": "직사각 점프아워 시계",
+        "category": "CLK",
+        "grade": "EPIC",
+        "setId": "set-11"
+      },
+      {
+        "lotId": "api-html-minimal-v3-d2-l2",
+        "baseName": "일식 관측 필사본",
+        "category": "BOK",
+        "grade": "COMMON",
+        "setId": "set-05"
+      },
+      {
+        "lotId": "api-html-minimal-v3-d2-l3",
+        "baseName": "푸른 부두",
+        "category": "PNT",
+        "grade": "COMMON",
+        "setId": "set-01"
+      },
+      {
+        "lotId": "api-html-minimal-v3-d2-l4",
+        "baseName": "항해도 월백유 매병",
+        "category": "CER",
+        "grade": "RARE",
+        "setId": "set-04"
+      },
+      {
+        "lotId": "api-html-minimal-v3-d2-l5",
+        "baseName": "꽃문양 은제 성냥갑",
+        "category": "MET",
+        "grade": "RARE",
+        "setId": "set-04"
+      },
+      {
+        "lotId": "api-html-minimal-v3-d2-l6",
+        "baseName": "황동뚜껑 육각 항아리",
+        "category": "CER",
+        "grade": "COMMON",
+        "setId": "set-10"
+      },
+      {
+        "lotId": "api-html-minimal-v3-d2-l7",
+        "baseName": "별자리 사파이어 팔찌",
+        "category": "JEW",
+        "grade": "RARE",
+        "setId": "set-10"
+      },
+      {
+        "lotId": "api-html-minimal-v3-d2-l8",
+        "baseName": "바다사자 문장 장식",
+        "category": "MET",
+        "grade": "RARE",
+        "setId": "set-06"
+      }
+    ]
+  },
+  "output": {
+    "schemaVersion": "1.0",
+    "day": 2,
+    "marketHeadline": "BOK 상승: 보석 거래가 활발해진다",
+    "lots": [
+      {
+        "lotId": "api-html-minimal-v3-d2-l1",
+        "displayName": "직사각 점프아워 시계",
+        "description": "금속 테두리에 흠집이 남아 있다.",
+        "rumor": "이 시계는 해양에서 발견된 비밀의 보석과 관련된 것으로 보인다.",
+        "setHint": "해양에서 발견된 비밀의 보석",
+        "npcReaction": "이 시계는 해양의 깊숙이 숨겨진 비밀을 드러난다."
+      },
+      {
+        "lotId": "api-html-minimal-v3-d2-l2",
+        "displayName": "일식 관측 필사본",
+        "description": "종이 표면에 희미한 물기 자국이 확인된다.",
+        "rumor": "이 필사본은 생명의 힘을 상징하는 것으로 보인다.",
+        "setHint": "비밀의 식물",
+        "npcReaction": "이 필사본은 생명의 힘을 드러낸다."
+      },
+      {
+        "lotId": "api-html-minimal-v3-d2-l3",
+        "displayName": "푸른 부두",
+        "description": "표면에 녹이 슬어 있는 흔적이 남아 있다.",
+        "rumor": "이 부두는 해양에서 발견된 비밀의 보석과 관련된 것으로 보인다.",
+        "setHint": "해양에서 발견된 비밀의 보석",
+        "npcReaction": "이 부두는 해양의 깊숙이 숨겨진 비밀을 드러낸다."
+      },
+      {
+        "lotId": "api-html-minimal-v3-d2-l4",
+        "displayName": "항해도 월백유 매병",
+        "description": "유리 표면에 흠집이 확인된다.",
+        "rumor": "이 매병은 별자리에서 발견된 비밀의 도구와 관련된 것으로 보인다.",
+        "setHint": "별자리에서 발견된 비밀의 도구",
+        "npcReaction": "이 매병은 천체를 이해하는 데 도움이 될 것으로 보인다."
+      },
+      {
+        "lotId": "api-html-minimal-v3-d2-l5",
+        "displayName": "꽃문양 은제 성냥갑",
+        "description": "은 표면에 마모 흔적이 확인된다.",
+        "rumor": "이 성냥갑은 별자리에서 발견된 비밀의 도구와 관련된 것으로 보인다.",
+        "setHint": "별자리에서 발견된 비밀의 도구",
+        "npcReaction": "이 성냥갑은 천체를 이해하는 데 도움이 될 것으로 보인다."
+      },
+      {
+        "lotId": "api-html-minimal-v3-d2-l6",
+        "displayName": "황동뚜껑 육각 항아리",
+        "description": "항아리 표면에 녹이 슬어 있는 흔적이 남아 있다.",
+        "rumor": "이 항아리는 별자리에서 발견된 비밀의 도구와 관련된 것으로 보인다.",
+        "setHint": "별자리에서 발견된 비밀의 도구",
+        "npcReaction": "이 항아리는 천체를 이해하는 데 도움이 될 것으로 보인다."
+      },
+      {
+        "lotId": "api-html-minimal-v3-d2-l7",
+        "displayName": "별자리 사파이어 팔찌",
+        "description": "팔찌 표면에 금속 흠집이 남아 있다.",
+        "rumor": "이 팔찌는 별자리에서 발견된 비밀의 도구와 관련된 것으로 보인다.",
+        "setHint": "별자리에서 발견된 비밀의 도구",
+        "npcReaction": "이 팔찌는 천체를 이해하는 데 도움이 될 것으로 보인다."
+      },
+      {
+        "lotId": "api-html-minimal-v3-d2-l8",
+        "displayName": "바다사자 문장 장식",
+        "description": "금속 표면에 마모 흔적이 확인된다.",
+        "rumor": "이 장식은 연극의 전설적인 장식품과 관련된 것으로 보인다.",
+        "setHint": "연극의 전설적인 장식품",
+        "npcReaction": "이 장식은 연극의 아름다움을 상징한다."
+      }
+    ]
+  }
+}

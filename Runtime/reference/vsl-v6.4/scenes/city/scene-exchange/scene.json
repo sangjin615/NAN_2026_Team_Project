@@ -1,0 +1,441 @@
+{
+  "id": "scene-exchange",
+  "type": "scene",
+  "title": "거래소",
+  "groupId": "g-city",
+  "x": 1400,
+  "y": 560,
+  "description": "보유품의 즉시 처분·족보 판매·시세판을 제공하며 12일차에는 당일 낙찰품 즉시 처분 예외를 연다.",
+  "requirements": [
+    "즉시 처분",
+    "족보 6종",
+    "시세판",
+    "12일차 정산 예외"
+  ],
+  "referencePath": "V5 §5.4, §7.3, §11",
+  "image": "assets/reference/scene-mockups/exchange.png",
+  "annotations": [
+    {
+      "id": "scene-exchange-topbar",
+      "type": "area",
+      "xPercent": 50,
+      "yPercent": 5,
+      "coordinateSpace": "image",
+      "title": "[공통] 여정 상태 표시",
+      "requirement": "현재 일차·자금·상회 단계·보관칸을 표시한다. 대출 활성 시 만기 잔여 일수·상환 총액·담보 처분가 합계를 함께 표시한다.",
+      "acceptanceCriteria": [
+        "일차는 현재 값과 12일을 함께 표시한다.",
+        "플레이어 자금은 예산이라고 부르지 않는다.",
+        "대출이 없으면 대출 관련 값은 숨긴다."
+      ],
+      "refType": "data",
+      "actionRef": "",
+      "dataRefs": [
+        "run.day",
+        "run.totalDays",
+        "player.cash",
+        "shop.stage",
+        "player.inventory",
+        "player.storageCapacity",
+        "loan.dueDay",
+        "loan.repay",
+        "loan.collateralDisposalValue"
+      ],
+      "navTargetSceneId": "",
+      "modalName": "",
+      "commonKey": "global-topbar",
+      "failureSlot": false,
+      "sourceBasis": "V5 §0.5.2, §5, §12",
+      "implementationStatus": "implemented",
+      "widthPercent": 92,
+      "heightPercent": 8
+    },
+    {
+      "id": "exchange-tabs",
+      "type": "area",
+      "xPercent": 50,
+      "yPercent": 14,
+      "coordinateSpace": "image",
+      "title": "거래소 탭",
+      "requirement": "즉시 처분·족보 판매·시세판 탭을 전환한다.",
+      "acceptanceCriteria": [
+        "시세판은 무료로 열람 가능하다."
+      ],
+      "refType": "action",
+      "actionRef": "act-switch-exchange-tab",
+      "dataRefs": [],
+      "navTargetSceneId": "",
+      "modalName": "",
+      "commonKey": "scene-tabs",
+      "failureSlot": false,
+      "sourceBasis": "V5 §11",
+      "implementationStatus": "implemented",
+      "widthPercent": 55,
+      "heightPercent": 8,
+      "soundCue": "sfx-ui-tab"
+    },
+    {
+      "id": "exchange-sell-list",
+      "type": "area",
+      "xPercent": 30,
+      "yPercent": 48,
+      "coordinateSpace": "image",
+      "title": "판매 가능 보유품",
+      "requirement": "판매 가능 보유품과 취득가·처분가를 표시한다.",
+      "acceptanceCriteria": [
+        "처분가는 항상 표시한다.",
+        "담보품은 판매할 수 없다.",
+        "당일 낙찰품은 12일차 정산 외에는 판매할 수 없다."
+      ],
+      "refType": "data",
+      "actionRef": "",
+      "dataRefs": [
+        "player.inventory",
+        "market.indexByFamily",
+        "daily.settlement"
+      ],
+      "navTargetSceneId": "",
+      "modalName": "",
+      "commonKey": "inventory-list",
+      "failureSlot": false,
+      "sourceBasis": "V5 §5.3, §5.4, §11.3",
+      "implementationStatus": "implemented",
+      "widthPercent": 45,
+      "heightPercent": 58
+    },
+    {
+      "id": "exchange-sell",
+      "type": "pin",
+      "xPercent": 30,
+      "yPercent": 80,
+      "coordinateSpace": "image",
+      "title": "즉시 처분",
+      "requirement": "선택 보유품을 당일 처분가에 판매한다.",
+      "acceptanceCriteria": [
+        "성공 시 자금과 보유품 상태를 갱신한다."
+      ],
+      "refType": "action",
+      "actionRef": "act-sell-immediate",
+      "dataRefs": [
+        "market.indexByFamily",
+        "player.inventory"
+      ],
+      "navTargetSceneId": "",
+      "modalName": "",
+      "commonKey": "",
+      "failureSlot": false,
+      "sourceBasis": "V5 §11.1",
+      "implementationStatus": "implemented",
+      "soundCue": "sfx-sell"
+    },
+    {
+      "id": "exchange-contracts",
+      "type": "area",
+      "xPercent": 72,
+      "yPercent": 45,
+      "coordinateSpace": "image",
+      "title": "족보 판매 제시·진행",
+      "requirement": "오늘 제시된 계약과 진행 중 계약·마감 일차를 표시한다.",
+      "acceptanceCriteria": [
+        "페어·트리플·정렬·스트레이트·풀하우스·로열을 지원한다.",
+        "기한은 전부 3일이다."
+      ],
+      "refType": "data",
+      "actionRef": "",
+      "dataRefs": [
+        "hanbo.patterns"
+      ],
+      "navTargetSceneId": "",
+      "modalName": "",
+      "commonKey": "",
+      "failureSlot": false,
+      "sourceBasis": "V5 §11.2",
+      "implementationStatus": "implemented",
+      "widthPercent": 42,
+      "heightPercent": 50
+    },
+    {
+      "id": "exchange-accept-contract",
+      "type": "pin",
+      "xPercent": 67,
+      "yPercent": 72,
+      "coordinateSpace": "image",
+      "title": "족보 판매 수락",
+      "requirement": "선택한 족보 판매을 수락한다.",
+      "acceptanceCriteria": [
+        "중복 진행 계약이면 비활성 처리한다."
+      ],
+      "refType": "action",
+      "actionRef": "act-form-hanbo",
+      "dataRefs": [
+        "hanbo.patterns",
+        "player.inventory",
+        "market.indexByFamily",
+        "shop.stage"
+      ],
+      "navTargetSceneId": "",
+      "modalName": "",
+      "commonKey": "",
+      "failureSlot": false,
+      "sourceBasis": "V5 §11.2",
+      "implementationStatus": "implemented",
+      "soundCue": "sfx-hanbo-complete"
+    },
+    {
+      "id": "exchange-market",
+      "type": "area",
+      "xPercent": 72,
+      "yPercent": 87,
+      "coordinateSpace": "image",
+      "title": "계열 시세판",
+      "requirement": "6계열의 과거 지수와 구매한 예보 밴드를 표시한다.",
+      "acceptanceCriteria": [
+        "현재 적정가·추천가는 표시하지 않는다.",
+        "당일 체결분은 다음 날 반영한다."
+      ],
+      "refType": "data",
+      "actionRef": "",
+      "dataRefs": [
+        "market.indexByFamily",
+        "market.history",
+        "information.marketForecast"
+      ],
+      "navTargetSceneId": "",
+      "modalName": "",
+      "commonKey": "",
+      "failureSlot": false,
+      "sourceBasis": "V5 §7.3",
+      "implementationStatus": "partial",
+      "widthPercent": 42,
+      "heightPercent": 16
+    },
+    {
+      "id": "exchange-settlement",
+      "type": "pin",
+      "xPercent": 50,
+      "yPercent": 91,
+      "coordinateSpace": "image",
+      "title": "12일차 정산 종료",
+      "requirement": "12일차 당일 판매 예외를 종료하고 여정 판정으로 이동한다.",
+      "acceptanceCriteria": [
+        "12일차 정산 중에만 표시한다."
+      ],
+      "refType": "action",
+      "actionRef": "act-finish-settlement",
+      "dataRefs": [
+        "market.indexByFamily",
+        "player.inventory"
+      ],
+      "navTargetSceneId": "scene-ending",
+      "modalName": "",
+      "commonKey": "",
+      "failureSlot": false,
+      "sourceBasis": "V5 §5.4",
+      "implementationStatus": "implemented",
+      "soundCue": "sfx-settlement-open"
+    },
+    {
+      "id": "exchange-back",
+      "type": "pin",
+      "xPercent": 8,
+      "yPercent": 9,
+      "coordinateSpace": "image",
+      "title": "도시로",
+      "requirement": "판매·계약 상태를 유지하고 도시로 돌아간다.",
+      "acceptanceCriteria": [
+        "12일차 정산 중에는 돌아가기를 막는다."
+      ],
+      "refType": "action",
+      "actionRef": "act-return-city",
+      "dataRefs": [],
+      "navTargetSceneId": "scene-city",
+      "modalName": "",
+      "commonKey": "return-city",
+      "failureSlot": false,
+      "sourceBasis": "V5 §5.3",
+      "implementationStatus": "implemented",
+      "soundCue": "sfx-ui-back"
+    }
+  ],
+  "actionRefs": [
+    "act-switch-exchange-tab",
+    "act-sell-immediate",
+    "act-form-hanbo",
+    "act-finish-settlement",
+    "act-return-city",
+    "act-save-game",
+    "act-open-settings"
+  ],
+  "implementationStatus": "implemented",
+  "referenceImage": "assets/reference/scene-mockups/exchange.png",
+  "runtimeBackground": "assets/runtime/backgrounds/exchange.png",
+  "imageRole": "reference-mockup",
+  "assetStatus": "pure-background-and-mockup",
+  "uiRequirements": [
+    {
+      "id": "exchange-topbar",
+      "name": "일차·자금·상회 단계",
+      "kind": "global-status",
+      "priority": "A",
+      "implementationStatus": "implemented",
+      "dataRefs": [],
+      "actionRefs": [],
+      "notes": ""
+    },
+    {
+      "id": "exchange-tabs",
+      "name": "즉시 처분/족보 판매/시세판 탭",
+      "kind": "tabs",
+      "priority": "A",
+      "implementationStatus": "implemented",
+      "dataRefs": [],
+      "actionRefs": [],
+      "notes": ""
+    },
+    {
+      "id": "exchange-inventory",
+      "name": "판매 가능 보유품 그리드",
+      "kind": "inventory-grid",
+      "priority": "A",
+      "implementationStatus": "implemented",
+      "dataRefs": [],
+      "actionRefs": [],
+      "notes": ""
+    },
+    {
+      "id": "exchange-item-detail",
+      "name": "선택품 취득가·당일 처분가",
+      "kind": "detail-panel",
+      "priority": "A",
+      "implementationStatus": "implemented",
+      "dataRefs": [],
+      "actionRefs": [],
+      "notes": ""
+    },
+    {
+      "id": "exchange-sell",
+      "name": "즉시 처분 버튼",
+      "kind": "button",
+      "priority": "A",
+      "implementationStatus": "implemented",
+      "dataRefs": [],
+      "actionRefs": [],
+      "notes": ""
+    },
+    {
+      "id": "exchange-contract-offers",
+      "name": "오늘의 족보 판매 제시",
+      "kind": "card-list",
+      "priority": "A",
+      "implementationStatus": "implemented",
+      "dataRefs": [],
+      "actionRefs": [],
+      "notes": ""
+    },
+    {
+      "id": "exchange-active-contracts",
+      "name": "진행 중 계약·기한·조건",
+      "kind": "list",
+      "priority": "A",
+      "implementationStatus": "implemented",
+      "dataRefs": [],
+      "actionRefs": [],
+      "notes": ""
+    },
+    {
+      "id": "exchange-market-chart",
+      "name": "6계열 과거 시세 그래프",
+      "kind": "chart",
+      "priority": "A",
+      "implementationStatus": "partial",
+      "dataRefs": [],
+      "actionRefs": [],
+      "notes": ""
+    },
+    {
+      "id": "exchange-forecast-band",
+      "name": "구매한 수요 동향 밴드",
+      "kind": "chart-overlay",
+      "priority": "B",
+      "implementationStatus": "spec-only",
+      "dataRefs": [],
+      "actionRefs": [],
+      "notes": ""
+    },
+    {
+      "id": "exchange-settlement",
+      "name": "12일차 정산 종료 버튼",
+      "kind": "button",
+      "priority": "A",
+      "implementationStatus": "implemented",
+      "dataRefs": [],
+      "actionRefs": [],
+      "notes": ""
+    },
+    {
+      "id": "exchange-back",
+      "name": "도시 복귀 버튼",
+      "kind": "button",
+      "priority": "A",
+      "implementationStatus": "implemented",
+      "dataRefs": [],
+      "actionRefs": [],
+      "notes": ""
+    }
+  ],
+  "popupRefs": [
+    "modal-confirm",
+    "popup-hanbo-result",
+    "state-exchange-settlement",
+    "toast-global",
+    "popup-global-failure"
+  ],
+  "mockupCorrections": [
+    "목업의 명성 표시를 삭제한다.",
+    "등급별 평균 시세 표를 6계열 과거 지수 그래프로 교체한다.",
+    "현재 적정가·추천가·손익분기선은 표시하지 않는다.",
+    "세트 예약이 아니라 족보 판매 용어를 사용하고 별도 탭으로 둔다."
+  ],
+  "backgroundPolicy": {
+    "source": "runtime",
+    "path": "assets/runtime/backgrounds/exchange.png",
+    "fit": "contain",
+    "contentRect": {
+      "x": 0.0,
+      "y": 0.0,
+      "width": 1536.0,
+      "height": 1024.0,
+      "xPercent": 0.0,
+      "yPercent": 0.0,
+      "widthPercent": 100.0,
+      "heightPercent": 100.0
+    },
+    "sourceImageSize": {
+      "width": 1536,
+      "height": 1024
+    },
+    "sceneTransform": {
+      "scale": 1.0,
+      "offsetXPercent": 0.0,
+      "offsetYPercent": 0.0,
+      "anchor": "center",
+      "appliesTo": "background-and-scene-ui",
+      "editable": true
+    },
+    "onMissingAsset": "show-error-placeholder"
+  },
+  "runtimeBackgroundSource": "runtime",
+  "temporaryRuntimeUse": false,
+  "layoutCanvas": {
+    "width": 1536,
+    "height": 1024
+  },
+  "failureFeedbackRef": "popup-global-failure",
+  "failureFeedbackPolicy": "global-popup",
+  "sound": {
+    "bgm": "bgm-02-city",
+    "layers": null,
+    "layersOnSuccess": null,
+    "restart": false
+  }
+}

@@ -1,0 +1,377 @@
+{
+  "id": "scene-final",
+  "type": "scene",
+  "title": "유물 경매",
+  "groupId": "g-settlement",
+  "x": 2040,
+  "y": 190,
+  "description": "경제 밖의 최종 3라운드 공개 호가. 거물은 이름만 표시하며 유물 정보 채널은 사용하지 않는다.",
+  "requirements": [
+    "3라운드 공개 호가",
+    "거물 이름 표시",
+    "유물 획득 판정"
+  ],
+  "referencePath": "V5 §9.3, §15",
+  "image": "assets/reference/scene-mockups/final-auction.png",
+  "annotations": [
+    {
+      "id": "scene-final-topbar",
+      "type": "area",
+      "xPercent": 50,
+      "yPercent": 5,
+      "coordinateSpace": "image",
+      "title": "[공통] 여정 상태 표시",
+      "requirement": "현재 일차·자금·상회 단계·보관칸을 표시한다. 대출 활성 시 만기 잔여 일수·상환 총액·담보 처분가 합계를 함께 표시한다.",
+      "acceptanceCriteria": [
+        "일차는 현재 값과 12일을 함께 표시한다.",
+        "플레이어 자금은 예산이라고 부르지 않는다.",
+        "대출이 없으면 대출 관련 값은 숨긴다."
+      ],
+      "refType": "data",
+      "actionRef": "",
+      "dataRefs": [
+        "run.day",
+        "run.totalDays",
+        "player.cash",
+        "shop.stage",
+        "player.inventory",
+        "player.storageCapacity",
+        "loan.dueDay",
+        "loan.repay",
+        "loan.collateralDisposalValue"
+      ],
+      "navTargetSceneId": "",
+      "modalName": "",
+      "commonKey": "global-topbar",
+      "failureSlot": false,
+      "sourceBasis": "V5 §0.5.2, §5, §12",
+      "implementationStatus": "implemented",
+      "widthPercent": 92,
+      "heightPercent": 8
+    },
+    {
+      "id": "final-relic",
+      "type": "area",
+      "xPercent": 35,
+      "yPercent": 26,
+      "coordinateSpace": "image",
+      "title": "현재 유물·티어",
+      "requirement": "현재 유물 이름·효과·하급/중급/상급 티어를 표시한다.",
+      "acceptanceCriteria": [
+        "중복 유물을 출품하지 않는다."
+      ],
+      "refType": "data",
+      "actionRef": "",
+      "dataRefs": [
+        "relicAuction.currentRelic",
+        "relicAuction.round"
+      ],
+      "navTargetSceneId": "",
+      "modalName": "",
+      "commonKey": "item-card",
+      "failureSlot": false,
+      "sourceBasis": "V5 §15.1, §16",
+      "implementationStatus": "implemented",
+      "widthPercent": 52,
+      "heightPercent": 30
+    },
+    {
+      "id": "final-current-bid",
+      "type": "area",
+      "xPercent": 48,
+      "yPercent": 50,
+      "coordinateSpace": "image",
+      "title": "현재 호가",
+      "requirement": "현재 호가와 최소 인상폭을 표시한다.",
+      "acceptanceCriteria": [
+        "손익분기선이나 정답 호가를 표시하지 않는다."
+      ],
+      "refType": "data",
+      "actionRef": "",
+      "dataRefs": [
+        "relicAuction.currentBid"
+      ],
+      "navTargetSceneId": "",
+      "modalName": "",
+      "commonKey": "",
+      "failureSlot": false,
+      "sourceBasis": "V5 §15",
+      "implementationStatus": "implemented",
+      "widthPercent": 30,
+      "heightPercent": 13
+    },
+    {
+      "id": "final-place-bid",
+      "type": "pin",
+      "xPercent": 48,
+      "yPercent": 80,
+      "coordinateSpace": "image",
+      "title": "유물 입찰",
+      "requirement": "유물 공개 호가에 입찰한다.",
+      "acceptanceCriteria": [
+        "자금과 최소 인상폭을 검증한다."
+      ],
+      "refType": "action",
+      "actionRef": "act-place-relic-bid",
+      "dataRefs": [
+        "player.cash",
+        "relicAuction.currentBid"
+      ],
+      "navTargetSceneId": "",
+      "modalName": "",
+      "commonKey": "",
+      "failureSlot": false,
+      "sourceBasis": "V5 §15",
+      "implementationStatus": "implemented",
+      "soundCue": "sfx-relic-bid"
+    },
+    {
+      "id": "final-pass",
+      "type": "pin",
+      "xPercent": 64,
+      "yPercent": 80,
+      "coordinateSpace": "image",
+      "title": "물러나기",
+      "requirement": "현재 유물 라운드에서 물러난다.",
+      "acceptanceCriteria": [
+        "다음 라운드 자금은 유지한다."
+      ],
+      "refType": "action",
+      "actionRef": "act-pass-relic",
+      "dataRefs": [],
+      "navTargetSceneId": "",
+      "modalName": "",
+      "commonKey": "",
+      "failureSlot": false,
+      "sourceBasis": "V5 §15",
+      "implementationStatus": "implemented",
+      "soundCue": "sfx-pass"
+    },
+    {
+      "id": "final-tycoons",
+      "type": "area",
+      "xPercent": 83,
+      "yPercent": 30,
+      "coordinateSpace": "image",
+      "title": "거물 3인",
+      "requirement": "거물 3인의 이름과 물러남 상태를 표시한다.",
+      "acceptanceCriteria": [
+        "거물 자금은 플레이어 자금과 독립이다.",
+        "자금·의중·배분은 구매 정보 범위만큼만 알 수 있다."
+      ],
+      "refType": "data",
+      "actionRef": "",
+      "dataRefs": [
+        "competitor.tycoons"
+      ],
+      "navTargetSceneId": "",
+      "modalName": "",
+      "commonKey": "participant-card",
+      "failureSlot": false,
+      "sourceBasis": "V5 §15.3 + 사용자 확정 2026-07-30",
+      "implementationStatus": "implemented",
+      "widthPercent": 27,
+      "heightPercent": 34
+    },
+    {
+      "id": "final-log",
+      "type": "area",
+      "xPercent": 82,
+      "yPercent": 84,
+      "coordinateSpace": "image",
+      "title": "유물 입찰 기록",
+      "requirement": "거물과 플레이어의 공개 호가 기록을 표시한다.",
+      "acceptanceCriteria": [
+        "라운드별 기록을 구분한다."
+      ],
+      "refType": "data",
+      "actionRef": "",
+      "dataRefs": [
+        "relicAuction.bidLog"
+      ],
+      "navTargetSceneId": "",
+      "modalName": "",
+      "commonKey": "bid-log",
+      "failureSlot": false,
+      "sourceBasis": "V5 §15",
+      "implementationStatus": "implemented",
+      "widthPercent": 28,
+      "heightPercent": 20
+    }
+  ],
+  "actionRefs": [
+    "act-place-relic-bid",
+    "act-pass-relic",
+    "act-run-tycoon-turn",
+    "act-next-relic-round",
+    "act-finish-relic-auction",
+    "act-save-game",
+    "act-open-settings"
+  ],
+  "implementationStatus": "implemented",
+  "referenceImage": "assets/reference/scene-mockups/final-auction.png",
+  "runtimeBackground": "assets/reference/scene-mockups/final-auction.png",
+  "imageRole": "reference-mockup",
+  "assetStatus": "reference-mockup-only",
+  "uiRequirements": [
+    {
+      "id": "final-topbar",
+      "name": "일차·자금·상회 단계",
+      "kind": "global-status",
+      "priority": "A",
+      "implementationStatus": "implemented",
+      "dataRefs": [],
+      "actionRefs": [],
+      "notes": ""
+    },
+    {
+      "id": "final-round",
+      "name": "하급/중급/상급 3라운드 진행",
+      "kind": "progress",
+      "priority": "A",
+      "implementationStatus": "implemented",
+      "dataRefs": [],
+      "actionRefs": [],
+      "notes": ""
+    },
+    {
+      "id": "final-relic-card",
+      "name": "현재 유물 이름·티어·영구 효과",
+      "kind": "relic-card",
+      "priority": "A",
+      "implementationStatus": "implemented",
+      "dataRefs": [],
+      "actionRefs": [],
+      "notes": ""
+    },
+    {
+      "id": "final-current-bid",
+      "name": "현재 호가·최소 인상폭",
+      "kind": "display",
+      "priority": "A",
+      "implementationStatus": "implemented",
+      "dataRefs": [],
+      "actionRefs": [],
+      "notes": ""
+    },
+    {
+      "id": "final-tycoons",
+      "name": "거물 3인 상태",
+      "kind": "participant-list",
+      "priority": "A",
+      "implementationStatus": "implemented",
+      "dataRefs": [],
+      "actionRefs": [],
+      "notes": ""
+    },
+    {
+      "id": "final-clues",
+      "name": "구매한 자금·의중·배분 정보",
+      "kind": "info-panel",
+      "priority": "A",
+      "implementationStatus": "implemented",
+      "dataRefs": [],
+      "actionRefs": [],
+      "notes": ""
+    },
+    {
+      "id": "final-log",
+      "name": "유물 공개 호가 기록",
+      "kind": "log",
+      "priority": "A",
+      "implementationStatus": "implemented",
+      "dataRefs": [],
+      "actionRefs": [],
+      "notes": ""
+    },
+    {
+      "id": "final-bid-input",
+      "name": "직접 호가 입력",
+      "kind": "input",
+      "priority": "A",
+      "implementationStatus": "implemented",
+      "dataRefs": [],
+      "actionRefs": [],
+      "notes": ""
+    },
+    {
+      "id": "final-bid",
+      "name": "입찰 버튼",
+      "kind": "button",
+      "priority": "A",
+      "implementationStatus": "implemented",
+      "dataRefs": [],
+      "actionRefs": [],
+      "notes": ""
+    },
+    {
+      "id": "final-pass",
+      "name": "물러나기 버튼",
+      "kind": "button",
+      "priority": "A",
+      "implementationStatus": "implemented",
+      "dataRefs": [],
+      "actionRefs": [],
+      "notes": ""
+    }
+  ],
+  "popupRefs": [
+    "popup-relic-round-result",
+    "toast-global",
+    "modal-settings",
+    "popup-global-failure"
+  ],
+  "mockupCorrections": [
+    "목업의 명성 표시를 삭제한다.",
+    "예상 가치 범위를 자동으로 표시하지 않는다.",
+    "점핑 비드는 사용하지 않는다.",
+    "1회 최종 경매 표시를 하급·중급·상급 3라운드 진행 표시로 변경한다.",
+    "거물 자금은 플레이어 자금과 독립된 절대 데이터다."
+  ],
+  "backgroundPolicy": {
+    "source": "reference-temporary",
+    "path": "assets/reference/scene-mockups/final-auction.png",
+    "fit": "contain",
+    "temporaryRuntimeUse": true,
+    "onMissingAsset": "show-error-placeholder",
+    "contentRect": {
+      "x": 0.0,
+      "y": 0.0,
+      "width": 1536.0,
+      "height": 1024.0,
+      "xPercent": 0.0,
+      "yPercent": 0.0,
+      "widthPercent": 100.0,
+      "heightPercent": 100.0
+    },
+    "sourceImageSize": {
+      "width": 1536,
+      "height": 1024
+    },
+    "sceneTransform": {
+      "scale": 1.0,
+      "offsetXPercent": 0.0,
+      "offsetYPercent": 0.0,
+      "anchor": "center",
+      "appliesTo": "background-and-scene-ui",
+      "editable": true
+    }
+  },
+  "runtimeBackgroundSource": "reference-temporary",
+  "temporaryRuntimeUse": true,
+  "layoutCanvas": {
+    "width": 1536,
+    "height": 1024
+  },
+  "failureFeedbackRef": "popup-global-failure",
+  "failureFeedbackPolicy": "global-popup",
+  "sound": {
+    "bgm": "bgm-04-relic",
+    "layers": [
+      "L1",
+      "L2"
+    ],
+    "layersOnSuccess": null,
+    "restart": false
+  }
+}

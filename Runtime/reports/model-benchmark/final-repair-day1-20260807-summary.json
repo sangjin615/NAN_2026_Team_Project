@@ -1,0 +1,64 @@
+{
+  "runId": "final-repair-day1-20260807",
+  "measuredAt": "2026-08-06T17:18:35.257Z",
+  "sourceRequestPath": "C:\\NHN Project\\NAN_2026_Team_Project-api\\Runtime\\reports\\local-model-experiment\\day-1-request.json",
+  "requestDay": 1,
+  "rules": {
+    "fullTemperature": 0.3,
+    "repairTemperature": 0.1,
+    "maxRepairRounds": 1,
+    "fallbackAfterRepairFailure": true,
+    "timeoutMs": 120000
+  },
+  "combinations": [
+    {
+      "model": "qwen3:14b",
+      "harness": "runtime-schema-selective-lot-repair",
+      "trials": 3,
+      "passes": 3,
+      "passRate": 1,
+      "fallbackCount": 0,
+      "averageRepairedLots": 1.3333333333333333,
+      "averageLatencyMs": 19233,
+      "averageEvalCount": 1400
+    }
+  ],
+  "observations": [
+    {
+      "model": "qwen3:14b",
+      "trial": 1,
+      "passed": true,
+      "fallbackRequired": false,
+      "errors": [],
+      "skillValidatorPassed": true,
+      "repairedLots": 1,
+      "totalLatencyMs": 20128,
+      "totalEvalCount": 1449,
+      "artifact": "final-repair-day1-20260807-qwen3-14b-t1-final.json"
+    },
+    {
+      "model": "qwen3:14b",
+      "trial": 2,
+      "passed": true,
+      "fallbackRequired": false,
+      "errors": [],
+      "skillValidatorPassed": true,
+      "repairedLots": 3,
+      "totalLatencyMs": 22411,
+      "totalEvalCount": 1629,
+      "artifact": "final-repair-day1-20260807-qwen3-14b-t2-final.json"
+    },
+    {
+      "model": "qwen3:14b",
+      "trial": 3,
+      "passed": true,
+      "fallbackRequired": false,
+      "errors": [],
+      "skillValidatorPassed": true,
+      "repairedLots": 0,
+      "totalLatencyMs": 15160,
+      "totalEvalCount": 1122,
+      "artifact": "final-repair-day1-20260807-qwen3-14b-t3-final.json"
+    }
+  ]
+}

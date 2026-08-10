@@ -3,6 +3,22 @@
 이 저장소에서 사람과 AI 실행자가 함께 일한다. 브랜치가 갈려 있어 서로의 변경을
 바로 볼 수 없으므로, 매번 알릴 필요가 없는 상시 규칙을 여기에 둔다.
 
+다른 실행자와 동시에 작업하면 `Docs/PARALLEL-SESSION-NOTES.md` 를 먼저 읽는다.
+포트 충돌, 시드 무작위화 때문에 버그 재현이 안 되는 문제, 커밋에 남의 파일이 섞이는
+경로 같은 함정과 현재 작업 분담이 거기 있다.
+
+게임 본체는 `Runtime/` 이다. 나머지 최상위 폴더는 기획서와 리소스다.
+
+생성·검증을 건드리기 전에 `Docs/GENERATION-VERIFICATION-HANDOFF.md` 를 읽는다.
+현재 미결인 검수 상태와 그 판단이 거기 있다. 검수 판단은 Team Loop 데이터베이스에
+남는데 `.team-loop/` 는 `.gitignore` 대상이라 저장소에 흔적이 없다. 그래서 기능
+제거나 계약 변경 같은 판단은 이 저장소 문서에도 남긴다.
+
+`Runtime/aws/generation-router.mjs` 는 생성 전략이 `generation-server.js` 와 다르다.
+로컬은 blueprint 를 세트 단위로 나눠 만들고 일자 생성은 실패한 LOT 만 복구하는데,
+라우터는 둘 다 한 번에 만든다. 한 번에 만들면 같은 모델도 무너진다 —
+`Docs/GENERATION-ROUTER-PARITY.md` 에 실측과 옮기는 방법을 적어 뒀다.
+
 게임 본체는 `Runtime/` 이다. 나머지 최상위 폴더는 기획서와 리소스다.
 
 ## 무엇이든 고친 뒤에 돌릴 것
@@ -95,6 +111,42 @@ npm run audit:generation:live     # 연결 후. 실제로 호출해 측정한다
 
 기준선은 `Runtime/reports/generation-audit.json` 에 남는다.
 
+연결 전에 정해야 할 것이 남아 있었다. **연결은 끝났다 (2026-08-08 확인).**
+`api-config.json` 이 `enabled: true` 로 배포된 AWS 라우터
+(`https://8tjqzce89j.execute-api.us-east-1.amazonaws.com/generate`)를 가리킨다.
+아래 목록은 그래서 "정할 것" 이 아니라 **무엇이 해소되고 무엇이 남았는지의
+기록**이다.
+
+- ~~`timeoutMs` 하나를 블루프린트와 일자 생성이 같이 쓴다. 실측은 블루프린트
+  중앙 2.9초, 일자 생성 중앙 15.3초로 5배 차이다. 지금 값 15초면 일자 생성
+  다수가 타임아웃되어 fallback 으로 떨어진다~~ **해소됐다 (2026-08-08 정정).**
+  `generation-api-provider.js:15` 의 `timeoutFor(mode)` 가 모드로 고른다 —
+  `run-blueprint` 은 `blueprintTimeoutMs`, `daily-content` 는 `dayTimeoutMs`,
+  **둘 다 없을 때만** `timeoutMs` 로 떨어진다. `api-config.json` 의 현재 값은
+  블루프린트 120초 · 일자 60초이고, `timeoutMs` 15초는 그 폴백 자리로만 남았다.
+  위의 "중앙 2.9초 / 15.3초" 는 로컬 ollama 실측이라 지금 붙어 있는 AWS
+  라우터에는 그대로 적용되지 않는다 — 라우터 쪽 예산(게이트웨이 통합 타임아웃
+  30초에서 나눈 luna 20초 · mini 8초 · 복구 6초)은
+  `Docs/GENERATION-ROUTER-PARITY.md` 에 따로 있다
+- ~~`GenerationApiProvider.request()` 는 헤더가 `content-type` 뿐이라 인증
+  토큰을 실을 자리가 없다~~ **틀렸다 (2026-08-07 정정).** `requestHeaders` 를
+  펼쳐 넣는다. 자리는 있다 — 문제는 그 자리에 넣을 것이 없다는 쪽이다
+  (2026-08-08 재확인: `generation-api-provider.js:29`)
+- `api-config.json` 은 `build:standalone` 이 독립 실행본에 그대로 박는다.
+  **키를 여기 넣으면 배포본에 노출된다.** `assertPublicGenerationConfig` 가
+  빌드 단계에서 막는다. 그래서 **배포본은 어떤 비밀도 들 수 없다** — 런타임에
+  `window.__NAN_GENERATION_API_CONFIG__` 로 주입하는 로컬·사내 경로만 남는다.
+  라우터 인증을 포기하고 상한으로 간 이유가 이것이다
+  (`Docs/GENERATION-ROUTER-PARITY.md` 의 "남은 결정" 1번).
+  2026-08-08 재확인 — `generation-api-config.js:1` 의 `SENSITIVE_CONFIG_KEYS`
+  가 `requestHeaders` 까지 막고 있어 여전히 유효하다
+- ~~`GenerationBuffer.ensure()` 가 3일치를 동시에 호출한다.~~ **지금은 2일치다
+  (2026-08-08 정정).** 결론(동시 요청 제한 확인 필요)은 유효하고 수만 틀렸다.
+  `app.js` 가 호출을 둘로 쪼갰다 — 들어갈 날 하나는 `aheadDays: 0` 으로 기다리고
+  (`app.js:265`, `app.js:836`), 선행 생성은 기본 `aheadDays`(2)로 뒤에서 돈다
+  (`app.js:274`, `app.js:840`). 뒤쪽 호출의 범위는 3일이지만 첫날이 이미
+  `readyDays` 에 있어 실제로 나가는 것은 **2건**이다. 새 게임 한 번이면
+  blueprint 1 + day 1 + (day 2 · day 3 동시) 이다
 연결 전에 정해야 할 것이 남아 있다.
 
 - `timeoutMs` 하나를 블루프린트와 일자 생성이 같이 쓴다. 실측은 블루프린트

@@ -1,0 +1,276 @@
+{
+  "id": "scene-title",
+  "type": "scene",
+  "title": "타이틀",
+  "groupId": "g-entry",
+  "x": 100,
+  "y": 190,
+  "description": "새 여정·이어하기·유물 전시관·게임 종료 진입 화면. 설정은 전역 모달이다.",
+  "requirements": [
+    "새 여정",
+    "이어하기",
+    "유물 전시관",
+    "게임 종료",
+    "전역 설정"
+  ],
+  "referencePath": "V5 §2·§3·§5·§16 + 앱 셸",
+  "image": "assets/reference/scene-mockups/title.png",
+  "annotations": [
+    {
+      "id": "title-new",
+      "type": "pin",
+      "xPercent": 50,
+      "yPercent": 48,
+      "coordinateSpace": "image",
+      "title": "새 여정",
+      "requirement": "새 12일 여정을 시작한다.",
+      "acceptanceCriteria": [
+        "시작 자금 20,000G와 상회 1단계를 설정한다.",
+        "여정 생성 화면으로 이동한다."
+      ],
+      "refType": "action",
+      "actionRef": "act-start-new-run",
+      "dataRefs": [
+        "run.slot"
+      ],
+      "navTargetSceneId": "scene-loading",
+      "modalName": "",
+      "commonKey": "",
+      "failureSlot": false,
+      "sourceBasis": "V5 §5.1, §17.1",
+      "implementationStatus": "implemented",
+      "soundCue": "sfx-new-run"
+    },
+    {
+      "id": "title-continue",
+      "type": "pin",
+      "xPercent": 50,
+      "yPercent": 59,
+      "coordinateSpace": "image",
+      "title": "이어하기",
+      "requirement": "저장 슬롯 화면으로 이동한다.",
+      "acceptanceCriteria": [
+        "저장 데이터가 없어도 슬롯 화면은 열린다."
+      ],
+      "refType": "nav",
+      "actionRef": "",
+      "dataRefs": [
+        "run.slot"
+      ],
+      "navTargetSceneId": "scene-continue",
+      "modalName": "",
+      "commonKey": "",
+      "failureSlot": false,
+      "sourceBasis": "앱 셸",
+      "implementationStatus": "implemented"
+    },
+    {
+      "id": "title-museum",
+      "type": "pin",
+      "xPercent": 50,
+      "yPercent": 70,
+      "coordinateSpace": "image",
+      "title": "유물 전시관",
+      "requirement": "영구 유물 전시관을 연다.",
+      "acceptanceCriteria": [
+        "여정 상태를 변경하지 않는다."
+      ],
+      "refType": "action",
+      "actionRef": "act-enter-museum",
+      "dataRefs": [
+        "meta.relics"
+      ],
+      "navTargetSceneId": "scene-museum",
+      "modalName": "",
+      "commonKey": "",
+      "failureSlot": false,
+      "sourceBasis": "V5 §16",
+      "implementationStatus": "implemented",
+      "soundCue": "sfx-venue-enter"
+    },
+    {
+      "id": "title-exit",
+      "type": "pin",
+      "xPercent": 50,
+      "yPercent": 81,
+      "coordinateSpace": "image",
+      "title": "게임 종료",
+      "requirement": "게임 실행 종료를 요청한다.",
+      "acceptanceCriteria": [
+        "브라우저에서는 탭 종료 안내를 표시한다."
+      ],
+      "refType": "action",
+      "actionRef": "act-exit-game",
+      "dataRefs": [],
+      "navTargetSceneId": "",
+      "modalName": "",
+      "commonKey": "",
+      "failureSlot": false,
+      "sourceBasis": "앱 셸",
+      "implementationStatus": "implemented",
+      "soundCue": "sfx-ui-back"
+    },
+    {
+      "id": "title-settings",
+      "type": "pin",
+      "xPercent": 94,
+      "yPercent": 6,
+      "coordinateSpace": "image",
+      "title": "설정",
+      "requirement": "전역 설정 모달을 연다.",
+      "acceptanceCriteria": [
+        "닫으면 타이틀 상태가 유지된다."
+      ],
+      "refType": "modal",
+      "actionRef": "act-open-settings",
+      "dataRefs": [
+        "settings.contrast",
+        "settings.qa",
+        "settings.textScale",
+        "settings.tutorial"
+      ],
+      "navTargetSceneId": "",
+      "modalName": "modal-settings",
+      "commonKey": "settings-button",
+      "failureSlot": false,
+      "sourceBasis": "앱 셸",
+      "implementationStatus": "implemented",
+      "soundCue": "sfx-popup-open"
+    }
+  ],
+  "actionRefs": [
+    "act-start-new-run",
+    "act-open-continue",
+    "act-enter-museum",
+    "act-exit-game",
+    "act-open-settings"
+  ],
+  "implementationStatus": "implemented",
+  "referenceImage": "assets/reference/scene-mockups/title.png",
+  "runtimeBackground": "assets/runtime/backgrounds/title.png",
+  "imageRole": "reference-mockup",
+  "assetStatus": "pure-background-and-mockup",
+  "uiRequirements": [
+    {
+      "id": "title-logo",
+      "name": "게임 타이틀 로고",
+      "kind": "display",
+      "priority": "A",
+      "implementationStatus": "asset-available",
+      "dataRefs": [],
+      "actionRefs": [],
+      "notes": ""
+    },
+    {
+      "id": "title-new",
+      "name": "새 여정 버튼",
+      "kind": "button",
+      "priority": "A",
+      "implementationStatus": "implemented",
+      "dataRefs": [],
+      "actionRefs": [
+        "act-start-new-run"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "title-continue",
+      "name": "이어하기 버튼",
+      "kind": "button",
+      "priority": "A",
+      "implementationStatus": "implemented",
+      "dataRefs": [],
+      "actionRefs": [
+        "act-open-continue"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "title-museum",
+      "name": "유물 전시관 버튼",
+      "kind": "button",
+      "priority": "A",
+      "implementationStatus": "implemented",
+      "dataRefs": [],
+      "actionRefs": [
+        "act-enter-museum"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "title-exit",
+      "name": "게임 종료 버튼",
+      "kind": "button",
+      "priority": "B",
+      "implementationStatus": "implemented",
+      "dataRefs": [],
+      "actionRefs": [
+        "act-exit-game"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "title-settings",
+      "name": "설정 버튼",
+      "kind": "button",
+      "priority": "A",
+      "implementationStatus": "implemented",
+      "dataRefs": [],
+      "actionRefs": [
+        "act-open-settings"
+      ],
+      "notes": ""
+    }
+  ],
+  "popupRefs": [
+    "modal-settings",
+    "modal-confirm",
+    "popup-global-failure"
+  ],
+  "mockupCorrections": [
+    "목업 구조를 그대로 사용해도 V5와 충돌하지 않는다.",
+    "새 여정 버튼이 기존 슬롯을 덮어쓰는 경우 공통 확인 팝업을 사용한다."
+  ],
+  "backgroundPolicy": {
+    "source": "runtime",
+    "path": "assets/runtime/backgrounds/title.png",
+    "fit": "contain",
+    "contentRect": {
+      "x": 0.0,
+      "y": 0.0,
+      "width": 1536.0,
+      "height": 1024.0,
+      "xPercent": 0.0,
+      "yPercent": 0.0,
+      "widthPercent": 100.0,
+      "heightPercent": 100.0
+    },
+    "sourceImageSize": {
+      "width": 1536,
+      "height": 1024
+    },
+    "sceneTransform": {
+      "scale": 1.0,
+      "offsetXPercent": 0.0,
+      "offsetYPercent": 0.0,
+      "anchor": "center",
+      "appliesTo": "background-and-scene-ui",
+      "editable": true
+    },
+    "onMissingAsset": "show-error-placeholder"
+  },
+  "runtimeBackgroundSource": "runtime",
+  "temporaryRuntimeUse": false,
+  "layoutCanvas": {
+    "width": 1536,
+    "height": 1024
+  },
+  "failureFeedbackRef": "popup-global-failure",
+  "failureFeedbackPolicy": "global-popup",
+  "sound": {
+    "bgm": "bgm-01-title",
+    "layers": null,
+    "layersOnSuccess": null,
+    "restart": true
+  }
+}

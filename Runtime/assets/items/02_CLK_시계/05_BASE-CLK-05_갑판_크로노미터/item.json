@@ -1,0 +1,16 @@
+{
+  "base_id": "BASE-CLK-05",
+  "item_name_ko": "갑판 크로노미터",
+  "category": "CLK",
+  "category_name_ko": "시계",
+  "canvas": [
+    128,
+    128
+  ],
+  "grades": {
+    "COMMON": "02_CLK_시계/05_BASE-CLK-05_갑판_크로노미터/01_COMMON_일반/BASE-CLK-05_COMMON.png",
+    "RARE": "02_CLK_시계/05_BASE-CLK-05_갑판_크로노미터/02_RARE_레어/BASE-CLK-05_RARE.png",
+    "EPIC": "02_CLK_시계/05_BASE-CLK-05_갑판_크로노미터/03_EPIC_에픽/BASE-CLK-05_EPIC.png",
+    "LEGENDARY": "02_CLK_시계/05_BASE-CLK-05_갑판_크로노미터/04_LEGENDARY_전설/BASE-CLK-05_LEGENDARY.png"
+  }
+}

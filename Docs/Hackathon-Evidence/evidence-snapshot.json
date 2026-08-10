@@ -1,0 +1,58 @@
+{
+  "measuredAt": "2026-08-03",
+  "timezone": "Asia/Seoul",
+  "window": {
+    "from": "2026-07-27T00:00:00+09:00",
+    "to": "2026-08-03T23:59:59+09:00",
+    "commits": 30,
+    "contributors": 3,
+    "activeDates": ["2026-07-31", "2026-08-02", "2026-08-03"],
+    "textLinesAdded": 37212,
+    "textLinesDeleted": 302
+  },
+  "project": {
+    "runtimeFilesMeasured": 464,
+    "baseItems": 60,
+    "itemSprites": 240,
+    "sceneBackgrounds": 17,
+    "daysPerRun": 12,
+    "lotsPerDay": 8,
+    "lotsPerRun": 96,
+    "automatedTests": {"passed": 12, "failed": 0}
+  },
+  "simulation": {
+    "seeds": 900,
+    "lots": 86400,
+    "invalidSchedules": 0,
+    "gradeRates": {
+      "COMMON": 0.2481,
+      "RARE": 0.3767,
+      "EPIC": 0.2517,
+      "LEGENDARY": 0.1235
+    }
+  },
+  "vslPackage": {
+    "path": "Releases/미지의_경매장_V6_CleanUI_프로젝트_LATEST.zip",
+    "zipEntries": 85,
+    "scenes": 15,
+    "uiStates": 18,
+    "assets": 55,
+    "cleanUiAssets": 13,
+    "nineSliceDefinitions": 6,
+    "sha256": "e2fe9202a1c6de51940a457c580bc57cd3f1639df04e400928432609fcb22a17"
+  },
+  "localGenerationBenchmark": {
+    "model": "qwen3:14b",
+    "verbose": {"promptChars": 4710, "strictPasses": 0, "trials": 2},
+    "skillHarness": {"promptChars": 1918, "strictPasses": 3, "trials": 3},
+    "promptCharacterReductionRate": 0.5928,
+    "latencyImprovementDemonstrated": false
+  },
+  "unmeasured": [
+    "manualUiBaselineMinutes",
+    "vslUiMinutes",
+    "externalApiSuccessRate",
+    "externalApiP95Latency",
+    "playtestCompletionRate"
+  ]
+}

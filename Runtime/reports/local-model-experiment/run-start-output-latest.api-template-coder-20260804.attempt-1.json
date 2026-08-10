@@ -1,0 +1,189 @@
+{
+  "model": "qwen2.5-coder:14b",
+  "seed": "api-template-coder-20260804",
+  "attempt": 1,
+  "temperature": 0.3,
+  "latencyMs": 29382,
+  "output": {
+    "schemaVersion": "1.0",
+    "runSeed": "api-template-coder-20260804",
+    "premise": "한반도의 오랜 역사를 담은 고요한 경매장에서, 다양한 유물들이 판매됩니다.",
+    "marketArc": [
+      {
+        "day": 1,
+        "headline": "신비로운 금고 발견",
+        "mood": "기대"
+      },
+      {
+        "day": 2,
+        "headline": "왕실 문양의 흔적",
+        "mood": "중요"
+      },
+      {
+        "day": 3,
+        "headline": "유랑 상인들의 경쟁",
+        "mood": "열정"
+      },
+      {
+        "day": 4,
+        "headline": "천문학자의 발견",
+        "mood": "신비"
+      },
+      {
+        "day": 5,
+        "headline": "연극 가면의 신비",
+        "mood": "예술"
+      },
+      {
+        "day": 6,
+        "headline": "생물학의 보물",
+        "mood": "자연"
+      },
+      {
+        "day": 7,
+        "headline": "해외 여행자의 물건",
+        "mood": "모험"
+      },
+      {
+        "day": 8,
+        "headline": "세대를 넘어서",
+        "mood": "역사"
+      },
+      {
+        "day": 9,
+        "headline": "길드의 비밀",
+        "mood": "동맹"
+      },
+      {
+        "day": 10,
+        "headline": "별을 찾아가는 길",
+        "mood": "우주"
+      },
+      {
+        "day": 11,
+        "headline": "극장에서의 순간",
+        "mood": "연기"
+      },
+      {
+        "day": 12,
+        "headline": "생물학의 진화",
+        "mood": "발견"
+      }
+    ],
+    "sets": [
+      {
+        "setId": "set-01",
+        "title": "여행의 이야기",
+        "sharedSecret": "해외 여행자의 물건들로 이루어진 세트입니다.",
+        "reveal": "세부 정보는 경매장에서 확인하세요."
+      },
+      {
+        "setId": "set-02",
+        "title": "왕실의 흔적",
+        "sharedSecret": "왕실 문양이 새겨진 유물들로 이루어진 세트입니다.",
+        "reveal": "세부 정보는 경매장에서 확인하세요."
+      },
+      {
+        "setId": "set-03",
+        "title": "길드의 비밀",
+        "sharedSecret": "길드와 관련된 다양한 물건들이 모여있는 세트입니다.",
+        "reveal": "세부 정보는 경매장에서 확인하세요."
+      },
+      {
+        "setId": "set-04",
+        "title": "천문학자의 발견",
+        "sharedSecret": "천문학자들이 사용한 도구와 관련된 물건들로 이루어진 세트입니다.",
+        "reveal": "세부 정보는 경매장에서 확인하세요."
+      },
+      {
+        "setId": "set-05",
+        "title": "연극의 순간",
+        "sharedSecret": "연극 가면과 연기 관련된 물건들이 모여있는 세트입니다.",
+        "reveal": "세부 정보는 경매장에서 확인하세요."
+      },
+      {
+        "setId": "set-06",
+        "title": "생물학의 발견",
+        "sharedSecret": "생물학자들이 수집한 식물과 관련된 물건들로 이루어진 세트입니다.",
+        "reveal": "세부 정보는 경매장에서 확인하세요."
+      }
+    ],
+    "bots": [
+      {
+        "botId": "nemesis",
+        "speech": "이곳은 과거와 현재가 어우러진 장소입니다. 모든 물건들은 그들의 이야기를 담고 있습니다.",
+        "mood": "중요"
+      },
+      {
+        "botId": "drifter-a",
+        "speech": "여행의 향기를 느껴보세요! 다양한 경매물들이 기다리고 있습니다.",
+        "mood": "열정"
+      },
+      {
+        "botId": "drifter-b",
+        "speech": "역사를 탐험하며, 새로운 발견을 찾아보세요!",
+        "mood": "모험"
+      }
+    ],
+    "relics": [
+      {
+        "relicId": "old-scale",
+        "displayName": "오래된 저울",
+        "description": "이 저울은 과거의 무게를 정확히 측정할 수 있었습니다.",
+        "tier": "low"
+      },
+      {
+        "relicId": "leather-ledger",
+        "displayName": "가죽장부",
+        "description": "과거의 거래 기록이 담긴 가죽 장부입니다.",
+        "tier": "low"
+      },
+      {
+        "relicId": "worn-seal",
+        "displayName": "오래된 납각",
+        "description": "왕실에서 사용되었던 오래된 납각입니다.",
+        "tier": "low"
+      },
+      {
+        "relicId": "magnifier",
+        "displayName": "확대경",
+        "description": "세부적인 관찰을 위해 사용되었던 확대경입니다.",
+        "tier": "mid"
+      },
+      {
+        "relicId": "compass",
+        "displayName": "나침반",
+        "description": "해외 여행자들이 방향을 찾기 위해 사용한 나침반이며, 매우 신뢰할 수 있습니다.",
+        "tier": "mid"
+      },
+      {
+        "relicId": "broker-card",
+        "displayName": "중개인 카드",
+        "description": "과거의 중개인이 사용하던 카드입니다. 중요한 역할을 했습니다.",
+        "tier": "mid"
+      },
+      {
+        "relicId": "royal-charter",
+        "displayName": "왕실 특권",
+        "description": "왕실에서 발행한 특권으로, 그 당시의 권력을 나타냅니다.",
+        "tier": "high"
+      },
+      {
+        "relicId": "house-crest",
+        "displayName": "가정 문양",
+        "description": "고귀 가정의 문양이 새겨진 물건입니다. 그들의 히스토리를 알 수 있습니다.",
+        "tier": "high"
+      },
+      {
+        "relicId": "merchant-safe",
+        "displayName": "상인 금고",
+        "description": "과거 상인들이 보물들을 보관하기 위해 사용한 금고입니다. 안전하게 담긴 물건이 있을 수 있습니다.",
+        "tier": "high"
+      }
+    ],
+    "ending": {
+      "success": "경매가 성공적으로 마무리되었습니다. 모든 참가자들은 자신만의 발견을 했습니다.",
+      "failure": "경매장에서 예상치 못한 일이 발생하여 경매를 중단해야 했습니다."
+    }
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "base_id": "BASE-CER-01",
+  "item_name_ko": "청화 약탕기",
+  "category": "CER",
+  "category_name_ko": "도자기",
+  "canvas": [
+    128,
+    128
+  ],
+  "grades": {
+    "COMMON": "01_CER_도자기/01_BASE-CER-01_청화_약탕기/01_COMMON_일반/BASE-CER-01_COMMON.png",
+    "RARE": "01_CER_도자기/01_BASE-CER-01_청화_약탕기/02_RARE_레어/BASE-CER-01_RARE.png",
+    "EPIC": "01_CER_도자기/01_BASE-CER-01_청화_약탕기/03_EPIC_에픽/BASE-CER-01_EPIC.png",
+    "LEGENDARY": "01_CER_도자기/01_BASE-CER-01_청화_약탕기/04_LEGENDARY_전설/BASE-CER-01_LEGENDARY.png"
+  }
+}

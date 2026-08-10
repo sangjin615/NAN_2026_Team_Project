@@ -1,0 +1,16 @@
+{
+  "base_id": "BASE-CLK-10",
+  "item_name_ko": "직사각 점프아워 시계",
+  "category": "CLK",
+  "category_name_ko": "시계",
+  "canvas": [
+    128,
+    128
+  ],
+  "grades": {
+    "COMMON": "02_CLK_시계/10_BASE-CLK-10_직사각_점프아워_시계/01_COMMON_일반/BASE-CLK-10_COMMON.png",
+    "RARE": "02_CLK_시계/10_BASE-CLK-10_직사각_점프아워_시계/02_RARE_레어/BASE-CLK-10_RARE.png",
+    "EPIC": "02_CLK_시계/10_BASE-CLK-10_직사각_점프아워_시계/03_EPIC_에픽/BASE-CLK-10_EPIC.png",
+    "LEGENDARY": "02_CLK_시계/10_BASE-CLK-10_직사각_점프아워_시계/04_LEGENDARY_전설/BASE-CLK-10_LEGENDARY.png"
+  }
+}

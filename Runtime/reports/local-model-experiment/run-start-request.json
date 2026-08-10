@@ -1,0 +1,706 @@
+{
+  "schemaVersion": "1.0",
+  "mode": "run-blueprint",
+  "runSeed": "newspaper-grounded-14b-20260806",
+  "days": 12,
+  "categories": [
+    "CER",
+    "CLK",
+    "PNT",
+    "BOK",
+    "MET",
+    "JEW"
+  ],
+  "sets": [
+    {
+      "setId": "set-01",
+      "themeKey": "voyage",
+      "members": [
+        {
+          "lotId": "newspaper-grounded-14b-20260806-d6-l4",
+          "baseName": "진수 기념 대접",
+          "category": "CER"
+        },
+        {
+          "lotId": "newspaper-grounded-14b-20260806-d8-l2",
+          "baseName": "별자리 사파이어 팔찌",
+          "category": "JEW"
+        },
+        {
+          "lotId": "newspaper-grounded-14b-20260806-d5-l3",
+          "baseName": "붉은 장갑의 배우",
+          "category": "PNT"
+        },
+        {
+          "lotId": "newspaper-grounded-14b-20260806-d11-l5",
+          "baseName": "카메오 펜던트",
+          "category": "JEW"
+        },
+        {
+          "lotId": "newspaper-grounded-14b-20260806-d11-l1",
+          "baseName": "유리돔 골격시계",
+          "category": "CLK"
+        },
+        {
+          "lotId": "newspaper-grounded-14b-20260806-d6-l1",
+          "baseName": "일식 관측 필사본",
+          "category": "BOK"
+        },
+        {
+          "lotId": "newspaper-grounded-14b-20260806-d12-l1",
+          "baseName": "파문 금제 담뱃갑",
+          "category": "MET"
+        },
+        {
+          "lotId": "newspaper-grounded-14b-20260806-d11-l2",
+          "baseName": "삼색 사자손잡이 용기",
+          "category": "CER"
+        }
+      ]
+    },
+    {
+      "setId": "set-02",
+      "themeKey": "dynasty",
+      "members": [
+        {
+          "lotId": "newspaper-grounded-14b-20260806-d7-l7",
+          "baseName": "올리브문 쌍촛대",
+          "category": "MET"
+        },
+        {
+          "lotId": "newspaper-grounded-14b-20260806-d1-l4",
+          "baseName": "접이식 탁상시계",
+          "category": "CLK"
+        },
+        {
+          "lotId": "newspaper-grounded-14b-20260806-d9-l4",
+          "baseName": "세 갈래 다이아몬드 티아라",
+          "category": "JEW"
+        },
+        {
+          "lotId": "newspaper-grounded-14b-20260806-d12-l3",
+          "baseName": "쌍어문 청록 화병",
+          "category": "CER"
+        },
+        {
+          "lotId": "newspaper-grounded-14b-20260806-d6-l3",
+          "baseName": "에메랄드 인탈리오 반지",
+          "category": "JEW"
+        },
+        {
+          "lotId": "newspaper-grounded-14b-20260806-d10-l8",
+          "baseName": "밧줄문 계량컵",
+          "category": "MET"
+        },
+        {
+          "lotId": "newspaper-grounded-14b-20260806-d2-l8",
+          "baseName": "푸른 동백 대형병",
+          "category": "CER"
+        },
+        {
+          "lotId": "newspaper-grounded-14b-20260806-d8-l1",
+          "baseName": "과실문 주전자",
+          "category": "CER"
+        }
+      ]
+    },
+    {
+      "setId": "set-03",
+      "themeKey": "guild",
+      "members": [
+        {
+          "lotId": "newspaper-grounded-14b-20260806-d3-l2",
+          "baseName": "폐쇄된 온실",
+          "category": "PNT"
+        },
+        {
+          "lotId": "newspaper-grounded-14b-20260806-d6-l7",
+          "baseName": "북문 거리 행렬",
+          "category": "PNT"
+        },
+        {
+          "lotId": "newspaper-grounded-14b-20260806-d1-l1",
+          "baseName": "흑진주 리본 목걸이",
+          "category": "JEW"
+        },
+        {
+          "lotId": "newspaper-grounded-14b-20260806-d8-l4",
+          "baseName": "건국항로 해도집",
+          "category": "BOK"
+        },
+        {
+          "lotId": "newspaper-grounded-14b-20260806-d10-l2",
+          "baseName": "구리 종 벽시계",
+          "category": "CLK"
+        },
+        {
+          "lotId": "newspaper-grounded-14b-20260806-d3-l1",
+          "baseName": "부두 노동자 노래책",
+          "category": "BOK"
+        },
+        {
+          "lotId": "newspaper-grounded-14b-20260806-d2-l1",
+          "baseName": "약초 처방집",
+          "category": "BOK"
+        },
+        {
+          "lotId": "newspaper-grounded-14b-20260806-d1-l2",
+          "baseName": "구리 종 벽시계",
+          "category": "CLK"
+        }
+      ]
+    },
+    {
+      "setId": "set-04",
+      "themeKey": "astronomy",
+      "members": [
+        {
+          "lotId": "newspaper-grounded-14b-20260806-d4-l7",
+          "baseName": "여름 선창의 범선",
+          "category": "PNT"
+        },
+        {
+          "lotId": "newspaper-grounded-14b-20260806-d11-l4",
+          "baseName": "항로문 금은 상감함",
+          "category": "MET"
+        },
+        {
+          "lotId": "newspaper-grounded-14b-20260806-d1-l7",
+          "baseName": "다층 천문시계",
+          "category": "CLK"
+        },
+        {
+          "lotId": "newspaper-grounded-14b-20260806-d2-l5",
+          "baseName": "직사각 점프아워 시계",
+          "category": "CLK"
+        },
+        {
+          "lotId": "newspaper-grounded-14b-20260806-d2-l2",
+          "baseName": "붉은 무대막 희곡집",
+          "category": "BOK"
+        },
+        {
+          "lotId": "newspaper-grounded-14b-20260806-d10-l7",
+          "baseName": "선실용 모래시계",
+          "category": "CLK"
+        },
+        {
+          "lotId": "newspaper-grounded-14b-20260806-d5-l5",
+          "baseName": "항로문 금은 상감함",
+          "category": "MET"
+        },
+        {
+          "lotId": "newspaper-grounded-14b-20260806-d11-l7",
+          "baseName": "개항 파노라마",
+          "category": "PNT"
+        }
+      ]
+    },
+    {
+      "setId": "set-05",
+      "themeKey": "theatre",
+      "members": [
+        {
+          "lotId": "newspaper-grounded-14b-20260806-d8-l6",
+          "baseName": "별자리 사파이어 팔찌",
+          "category": "JEW"
+        },
+        {
+          "lotId": "newspaper-grounded-14b-20260806-d12-l5",
+          "baseName": "직사각 점프아워 시계",
+          "category": "CLK"
+        },
+        {
+          "lotId": "newspaper-grounded-14b-20260806-d10-l6",
+          "baseName": "가면문 알림시계",
+          "category": "CLK"
+        },
+        {
+          "lotId": "newspaper-grounded-14b-20260806-d1-l6",
+          "baseName": "삼색 사자손잡이 용기",
+          "category": "CER"
+        },
+        {
+          "lotId": "newspaper-grounded-14b-20260806-d4-l8",
+          "baseName": "꽃문양 은제 성냥갑",
+          "category": "MET"
+        },
+        {
+          "lotId": "newspaper-grounded-14b-20260806-d12-l8",
+          "baseName": "식물 채색 도감",
+          "category": "BOK"
+        },
+        {
+          "lotId": "newspaper-grounded-14b-20260806-d1-l8",
+          "baseName": "달과 파도 조수력",
+          "category": "BOK"
+        },
+        {
+          "lotId": "newspaper-grounded-14b-20260806-d7-l2",
+          "baseName": "등대 창가의 가족",
+          "category": "PNT"
+        }
+      ]
+    },
+    {
+      "setId": "set-06",
+      "themeKey": "botany",
+      "members": [
+        {
+          "lotId": "newspaper-grounded-14b-20260806-d4-l3",
+          "baseName": "끈잠금 통역 수첩",
+          "category": "BOK"
+        },
+        {
+          "lotId": "newspaper-grounded-14b-20260806-d4-l5",
+          "baseName": "항해도 월백유 매병",
+          "category": "CER"
+        },
+        {
+          "lotId": "newspaper-grounded-14b-20260806-d10-l4",
+          "baseName": "여왕의 항해 초상",
+          "category": "PNT"
+        },
+        {
+          "lotId": "newspaper-grounded-14b-20260806-d8-l7",
+          "baseName": "등대와 선박 센터피스",
+          "category": "MET"
+        },
+        {
+          "lotId": "newspaper-grounded-14b-20260806-d11-l6",
+          "baseName": "파도문 은제 티포트",
+          "category": "MET"
+        },
+        {
+          "lotId": "newspaper-grounded-14b-20260806-d3-l7",
+          "baseName": "자동인형 시계",
+          "category": "CLK"
+        },
+        {
+          "lotId": "newspaper-grounded-14b-20260806-d5-l7",
+          "baseName": "등대와 선박 센터피스",
+          "category": "MET"
+        },
+        {
+          "lotId": "newspaper-grounded-14b-20260806-d2-l4",
+          "baseName": "세 갈래 다이아몬드 티아라",
+          "category": "JEW"
+        }
+      ]
+    },
+    {
+      "setId": "set-07",
+      "themeKey": "voyage",
+      "members": [
+        {
+          "lotId": "newspaper-grounded-14b-20260806-d8-l3",
+          "baseName": "석류석 진주 초커",
+          "category": "JEW"
+        },
+        {
+          "lotId": "newspaper-grounded-14b-20260806-d7-l4",
+          "baseName": "청록 뚜껑 소금단지",
+          "category": "CER"
+        },
+        {
+          "lotId": "newspaper-grounded-14b-20260806-d2-l7",
+          "baseName": "식물 채색 도감",
+          "category": "BOK"
+        },
+        {
+          "lotId": "newspaper-grounded-14b-20260806-d5-l6",
+          "baseName": "선실용 모래시계",
+          "category": "CLK"
+        },
+        {
+          "lotId": "newspaper-grounded-14b-20260806-d4-l2",
+          "baseName": "월상표시 회중시계",
+          "category": "CLK"
+        },
+        {
+          "lotId": "newspaper-grounded-14b-20260806-d3-l5",
+          "baseName": "제본공 견본첩",
+          "category": "BOK"
+        },
+        {
+          "lotId": "newspaper-grounded-14b-20260806-d10-l3",
+          "baseName": "꽃문양 은제 성냥갑",
+          "category": "MET"
+        },
+        {
+          "lotId": "newspaper-grounded-14b-20260806-d11-l8",
+          "baseName": "등대 창가의 가족",
+          "category": "PNT"
+        }
+      ]
+    },
+    {
+      "setId": "set-08",
+      "themeKey": "dynasty",
+      "members": [
+        {
+          "lotId": "newspaper-grounded-14b-20260806-d7-l5",
+          "baseName": "산호구슬 귀걸이",
+          "category": "JEW"
+        },
+        {
+          "lotId": "newspaper-grounded-14b-20260806-d7-l6",
+          "baseName": "밧줄문 계량컵",
+          "category": "MET"
+        },
+        {
+          "lotId": "newspaper-grounded-14b-20260806-d10-l1",
+          "baseName": "자개 부채 머리빗",
+          "category": "JEW"
+        },
+        {
+          "lotId": "newspaper-grounded-14b-20260806-d12-l2",
+          "baseName": "월상표시 회중시계",
+          "category": "CLK"
+        },
+        {
+          "lotId": "newspaper-grounded-14b-20260806-d3-l3",
+          "baseName": "잎문양 소형 촛대",
+          "category": "MET"
+        },
+        {
+          "lotId": "newspaper-grounded-14b-20260806-d12-l7",
+          "baseName": "창가의 재봉사",
+          "category": "PNT"
+        },
+        {
+          "lotId": "newspaper-grounded-14b-20260806-d2-l3",
+          "baseName": "루비 타이핀·커프스 세트",
+          "category": "JEW"
+        },
+        {
+          "lotId": "newspaper-grounded-14b-20260806-d5-l2",
+          "baseName": "유리돔 골격시계",
+          "category": "CLK"
+        }
+      ]
+    },
+    {
+      "setId": "set-09",
+      "themeKey": "guild",
+      "members": [
+        {
+          "lotId": "newspaper-grounded-14b-20260806-d6-l2",
+          "baseName": "개항 파노라마",
+          "category": "PNT"
+        },
+        {
+          "lotId": "newspaper-grounded-14b-20260806-d7-l8",
+          "baseName": "푸른 부두",
+          "category": "PNT"
+        },
+        {
+          "lotId": "newspaper-grounded-14b-20260806-d1-l5",
+          "baseName": "파도문 은제 티포트",
+          "category": "MET"
+        },
+        {
+          "lotId": "newspaper-grounded-14b-20260806-d3-l4",
+          "baseName": "제비문 은 브로치",
+          "category": "JEW"
+        },
+        {
+          "lotId": "newspaper-grounded-14b-20260806-d9-l2",
+          "baseName": "자동인형 시계",
+          "category": "CLK"
+        },
+        {
+          "lotId": "newspaper-grounded-14b-20260806-d4-l6",
+          "baseName": "제비문 찻잔 한 쌍",
+          "category": "CER"
+        },
+        {
+          "lotId": "newspaper-grounded-14b-20260806-d4-l1",
+          "baseName": "바다사자 문장 장식",
+          "category": "MET"
+        },
+        {
+          "lotId": "newspaper-grounded-14b-20260806-d9-l6",
+          "baseName": "부두 노동자 노래책",
+          "category": "BOK"
+        }
+      ]
+    },
+    {
+      "setId": "set-10",
+      "themeKey": "astronomy",
+      "members": [
+        {
+          "lotId": "newspaper-grounded-14b-20260806-d12-l6",
+          "baseName": "푸른 동백 대형병",
+          "category": "CER"
+        },
+        {
+          "lotId": "newspaper-grounded-14b-20260806-d3-l8",
+          "baseName": "청화 약탕기",
+          "category": "CER"
+        },
+        {
+          "lotId": "newspaper-grounded-14b-20260806-d4-l4",
+          "baseName": "갑판 크로노미터",
+          "category": "CLK"
+        },
+        {
+          "lotId": "newspaper-grounded-14b-20260806-d1-l3",
+          "baseName": "가면문 알림시계",
+          "category": "CLK"
+        },
+        {
+          "lotId": "newspaper-grounded-14b-20260806-d11-l3",
+          "baseName": "잎문양 소형 촛대",
+          "category": "MET"
+        },
+        {
+          "lotId": "newspaper-grounded-14b-20260806-d6-l8",
+          "baseName": "창가의 재봉사",
+          "category": "PNT"
+        },
+        {
+          "lotId": "newspaper-grounded-14b-20260806-d5-l4",
+          "baseName": "여왕의 항해 초상",
+          "category": "PNT"
+        },
+        {
+          "lotId": "newspaper-grounded-14b-20260806-d9-l1",
+          "baseName": "항해도 월백유 매병",
+          "category": "CER"
+        }
+      ]
+    },
+    {
+      "setId": "set-11",
+      "themeKey": "theatre",
+      "members": [
+        {
+          "lotId": "newspaper-grounded-14b-20260806-d8-l5",
+          "baseName": "건국항로 해도집",
+          "category": "BOK"
+        },
+        {
+          "lotId": "newspaper-grounded-14b-20260806-d3-l6",
+          "baseName": "파문 금제 담뱃갑",
+          "category": "MET"
+        },
+        {
+          "lotId": "newspaper-grounded-14b-20260806-d8-l8",
+          "baseName": "올리브문 쌍촛대",
+          "category": "MET"
+        },
+        {
+          "lotId": "newspaper-grounded-14b-20260806-d10-l5",
+          "baseName": "약초 처방집",
+          "category": "BOK"
+        },
+        {
+          "lotId": "newspaper-grounded-14b-20260806-d12-l4",
+          "baseName": "루비 타이핀·커프스 세트",
+          "category": "JEW"
+        },
+        {
+          "lotId": "newspaper-grounded-14b-20260806-d9-l5",
+          "baseName": "일식 관측 필사본",
+          "category": "BOK"
+        },
+        {
+          "lotId": "newspaper-grounded-14b-20260806-d7-l3",
+          "baseName": "황동뚜껑 육각 항아리",
+          "category": "CER"
+        },
+        {
+          "lotId": "newspaper-grounded-14b-20260806-d6-l5",
+          "baseName": "산호손잡이 금박 고블릿",
+          "category": "MET"
+        }
+      ]
+    },
+    {
+      "setId": "set-12",
+      "themeKey": "botany",
+      "members": [
+        {
+          "lotId": "newspaper-grounded-14b-20260806-d5-l8",
+          "baseName": "푸른 예배당 예행연습",
+          "category": "PNT"
+        },
+        {
+          "lotId": "newspaper-grounded-14b-20260806-d6-l6",
+          "baseName": "카메오 펜던트",
+          "category": "JEW"
+        },
+        {
+          "lotId": "newspaper-grounded-14b-20260806-d9-l8",
+          "baseName": "제비문 은 브로치",
+          "category": "JEW"
+        },
+        {
+          "lotId": "newspaper-grounded-14b-20260806-d9-l3",
+          "baseName": "에메랄드 인탈리오 반지",
+          "category": "JEW"
+        },
+        {
+          "lotId": "newspaper-grounded-14b-20260806-d9-l7",
+          "baseName": "산호손잡이 금박 고블릿",
+          "category": "MET"
+        },
+        {
+          "lotId": "newspaper-grounded-14b-20260806-d5-l1",
+          "baseName": "자개 부채 머리빗",
+          "category": "JEW"
+        },
+        {
+          "lotId": "newspaper-grounded-14b-20260806-d2-l6",
+          "baseName": "쌍어문 청록 화병",
+          "category": "CER"
+        },
+        {
+          "lotId": "newspaper-grounded-14b-20260806-d7-l1",
+          "baseName": "대륙 우편 지도첩",
+          "category": "BOK"
+        }
+      ]
+    }
+  ],
+  "bots": [
+    {
+      "botId": "nemesis",
+      "role": "숙적"
+    },
+    {
+      "botId": "drifter-a",
+      "role": "유랑 상인"
+    },
+    {
+      "botId": "drifter-b",
+      "role": "유랑 상인"
+    }
+  ],
+  "relics": [
+    {
+      "relicId": "old-scale",
+      "tier": "low"
+    },
+    {
+      "relicId": "leather-ledger",
+      "tier": "low"
+    },
+    {
+      "relicId": "worn-seal",
+      "tier": "low"
+    },
+    {
+      "relicId": "magnifier",
+      "tier": "mid"
+    },
+    {
+      "relicId": "compass",
+      "tier": "mid"
+    },
+    {
+      "relicId": "broker-card",
+      "tier": "mid"
+    },
+    {
+      "relicId": "royal-charter",
+      "tier": "high"
+    },
+    {
+      "relicId": "house-crest",
+      "tier": "high"
+    },
+    {
+      "relicId": "merchant-safe",
+      "tier": "high"
+    }
+  ],
+  "market": {
+    "CER": [
+      0.884,
+      0.9325,
+      0.8527,
+      0.923,
+      1.0626,
+      1.0896,
+      1.0729,
+      0.9992,
+      0.93,
+      1.0376,
+      1.0837,
+      1.0132
+    ],
+    "CLK": [
+      0.9794,
+      0.9921,
+      0.9805,
+      1.0026,
+      0.9795,
+      0.8592,
+      1.0418,
+      1.0963,
+      1.1055,
+      1.1528,
+      1.0733,
+      1.0138
+    ],
+    "PNT": [
+      1.0449,
+      1.0252,
+      1.12,
+      1.1794,
+      1.0799,
+      1.1786,
+      1.256,
+      1.2085,
+      0.938,
+      1.0086,
+      1.0599,
+      1.1822
+    ],
+    "BOK": [
+      1.0204,
+      1.0957,
+      1.0585,
+      1.0702,
+      1.0321,
+      1.129,
+      1.0402,
+      0.9879,
+      0.929,
+      0.8998,
+      1.0207,
+      1.027
+    ],
+    "MET": [
+      0.8669,
+      0.9005,
+      0.8645,
+      0.9584,
+      1.0848,
+      1.1961,
+      1.1816,
+      1.2268,
+      1.228,
+      0.9951,
+      0.9137,
+      0.9503
+    ],
+    "JEW": [
+      1.0585,
+      1.0549,
+      1.1902,
+      1.0939,
+      1.0709,
+      1.095,
+      1.1238,
+      1.0411,
+      1.0349,
+      1.0721,
+      1.1165,
+      0.9399
+    ]
+  }
+}

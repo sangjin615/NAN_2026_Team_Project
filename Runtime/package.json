@@ -1,0 +1,27 @@
+{
+  "name": "unknown-auction-vsl-runtime",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node dev-server.js",
+    "start:generation": "node generation-server.js",
+    "start:router": "node tools/serve-generation-router.mjs",
+    "build:standalone": "node tools/build-standalone.mjs",
+    "test": "node --test test/*.test.js",
+    "audit": "node tools/audit-runtime.mjs && node tools/audit-generation.mjs",
+    "audit:runtime": "node tools/audit-runtime.mjs",
+    "audit:generation": "node tools/audit-generation.mjs",
+    "audit:generation:live": "node tools/audit-generation.mjs --live",
+    "measure": "node tools/measure-generation.js && node tools/measure-project.js",
+    "measure:project": "node tools/measure-project.js",
+    "experiment:prepare": "node tools/prepare-local-generation-experiment.js",
+    "experiment:run": "node tools/run-local-generation-experiment.mjs",
+    "experiment:promote": "node tools/promote-generation-fixture.mjs",
+    "build:lambda": "node tools/build-generation-lambda.mjs",
+    "build:fallback-bank": "node tools/build-fallback-bank.mjs",
+    "measure:router": "node tools/measure-generation-router.mjs"
+  },
+  "devDependencies": {
+    "esbuild": "^0.25.8"
+  }
+}

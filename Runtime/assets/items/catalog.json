@@ -1,0 +1,2065 @@
+{
+  "description": "미지의 경매장 출품품 60종, 품목별 4등급 AI 판독용 구조",
+  "canvas": [
+    128,
+    128
+  ],
+  "category_order": [
+    "CER",
+    "CLK",
+    "PNT",
+    "BOK",
+    "MET",
+    "JEW"
+  ],
+  "grade_order": [
+    "COMMON",
+    "RARE",
+    "EPIC",
+    "LEGENDARY"
+  ],
+  "item_count": 60,
+  "sprite_count": 240,
+  "items": [
+    {
+      "base_id": "BASE-CER-01",
+      "item_name_ko": "청화 약탕기",
+      "category": "CER",
+      "category_name_ko": "도자기",
+      "canvas": [
+        128,
+        128
+      ],
+      "grades": {
+        "COMMON": "01_CER_도자기/01_BASE-CER-01_청화_약탕기/01_COMMON_일반/BASE-CER-01_COMMON.png",
+        "RARE": "01_CER_도자기/01_BASE-CER-01_청화_약탕기/02_RARE_레어/BASE-CER-01_RARE.png",
+        "EPIC": "01_CER_도자기/01_BASE-CER-01_청화_약탕기/03_EPIC_에픽/BASE-CER-01_EPIC.png",
+        "LEGENDARY": "01_CER_도자기/01_BASE-CER-01_청화_약탕기/04_LEGENDARY_전설/BASE-CER-01_LEGENDARY.png"
+      },
+      "sprite_anchors": {
+        "COMMON": {
+          "x": 0.0,
+          "y": -10.2
+        },
+        "RARE": {
+          "x": 0.0,
+          "y": 2.3
+        },
+        "EPIC": {
+          "x": 0.0,
+          "y": 0.8
+        },
+        "LEGENDARY": {
+          "x": 0.0,
+          "y": 2.0
+        }
+      }
+    },
+    {
+      "base_id": "BASE-CER-02",
+      "item_name_ko": "청록 뚜껑 소금단지",
+      "category": "CER",
+      "category_name_ko": "도자기",
+      "canvas": [
+        128,
+        128
+      ],
+      "grades": {
+        "COMMON": "01_CER_도자기/02_BASE-CER-02_청록_뚜껑_소금단지/01_COMMON_일반/BASE-CER-02_COMMON.png",
+        "RARE": "01_CER_도자기/02_BASE-CER-02_청록_뚜껑_소금단지/02_RARE_레어/BASE-CER-02_RARE.png",
+        "EPIC": "01_CER_도자기/02_BASE-CER-02_청록_뚜껑_소금단지/03_EPIC_에픽/BASE-CER-02_EPIC.png",
+        "LEGENDARY": "01_CER_도자기/02_BASE-CER-02_청록_뚜껑_소금단지/04_LEGENDARY_전설/BASE-CER-02_LEGENDARY.png"
+      },
+      "sprite_anchors": {
+        "COMMON": {
+          "x": 0.4,
+          "y": -9.4
+        },
+        "RARE": {
+          "x": 0.0,
+          "y": 3.1
+        },
+        "EPIC": {
+          "x": 0.0,
+          "y": 1.6
+        },
+        "LEGENDARY": {
+          "x": 0.4,
+          "y": 2.0
+        }
+      }
+    },
+    {
+      "base_id": "BASE-CER-03",
+      "item_name_ko": "제비문 찻잔 한 쌍",
+      "category": "CER",
+      "category_name_ko": "도자기",
+      "canvas": [
+        128,
+        128
+      ],
+      "grades": {
+        "COMMON": "01_CER_도자기/03_BASE-CER-03_제비문_찻잔_한_쌍/01_COMMON_일반/BASE-CER-03_COMMON.png",
+        "RARE": "01_CER_도자기/03_BASE-CER-03_제비문_찻잔_한_쌍/02_RARE_레어/BASE-CER-03_RARE.png",
+        "EPIC": "01_CER_도자기/03_BASE-CER-03_제비문_찻잔_한_쌍/03_EPIC_에픽/BASE-CER-03_EPIC.png",
+        "LEGENDARY": "01_CER_도자기/03_BASE-CER-03_제비문_찻잔_한_쌍/04_LEGENDARY_전설/BASE-CER-03_LEGENDARY.png"
+      },
+      "sprite_anchors": {
+        "COMMON": {
+          "x": 0.0,
+          "y": -27.0
+        },
+        "RARE": {
+          "x": 0.0,
+          "y": -21.5
+        },
+        "EPIC": {
+          "x": 0.0,
+          "y": -22.3
+        },
+        "LEGENDARY": {
+          "x": 0.4,
+          "y": -21.9
+        }
+      }
+    },
+    {
+      "base_id": "BASE-CER-04",
+      "item_name_ko": "쌍어문 청록 화병",
+      "category": "CER",
+      "category_name_ko": "도자기",
+      "canvas": [
+        128,
+        128
+      ],
+      "grades": {
+        "COMMON": "01_CER_도자기/04_BASE-CER-04_쌍어문_청록_화병/01_COMMON_일반/BASE-CER-04_COMMON.png",
+        "RARE": "01_CER_도자기/04_BASE-CER-04_쌍어문_청록_화병/02_RARE_레어/BASE-CER-04_RARE.png",
+        "EPIC": "01_CER_도자기/04_BASE-CER-04_쌍어문_청록_화병/03_EPIC_에픽/BASE-CER-04_EPIC.png",
+        "LEGENDARY": "01_CER_도자기/04_BASE-CER-04_쌍어문_청록_화병/04_LEGENDARY_전설/BASE-CER-04_LEGENDARY.png"
+      },
+      "sprite_anchors": {
+        "COMMON": {
+          "x": 0.4,
+          "y": -9.4
+        },
+        "RARE": {
+          "x": 0.4,
+          "y": 3.1
+        },
+        "EPIC": {
+          "x": 0.4,
+          "y": 1.6
+        },
+        "LEGENDARY": {
+          "x": 0.4,
+          "y": 2.0
+        }
+      }
+    },
+    {
+      "base_id": "BASE-CER-05",
+      "item_name_ko": "황동뚜껑 육각 항아리",
+      "category": "CER",
+      "category_name_ko": "도자기",
+      "canvas": [
+        128,
+        128
+      ],
+      "grades": {
+        "COMMON": "01_CER_도자기/05_BASE-CER-05_황동뚜껑_육각_항아리/01_COMMON_일반/BASE-CER-05_COMMON.png",
+        "RARE": "01_CER_도자기/05_BASE-CER-05_황동뚜껑_육각_항아리/02_RARE_레어/BASE-CER-05_RARE.png",
+        "EPIC": "01_CER_도자기/05_BASE-CER-05_황동뚜껑_육각_항아리/03_EPIC_에픽/BASE-CER-05_EPIC.png",
+        "LEGENDARY": "01_CER_도자기/05_BASE-CER-05_황동뚜껑_육각_항아리/04_LEGENDARY_전설/BASE-CER-05_LEGENDARY.png"
+      },
+      "sprite_anchors": {
+        "COMMON": {
+          "x": 0.0,
+          "y": -9.4
+        },
+        "RARE": {
+          "x": 0.4,
+          "y": 3.1
+        },
+        "EPIC": {
+          "x": 0.4,
+          "y": 1.6
+        },
+        "LEGENDARY": {
+          "x": 0.0,
+          "y": 2.0
+        }
+      }
+    },
+    {
+      "base_id": "BASE-CER-06",
+      "item_name_ko": "과실문 주전자",
+      "category": "CER",
+      "category_name_ko": "도자기",
+      "canvas": [
+        128,
+        128
+      ],
+      "grades": {
+        "COMMON": "01_CER_도자기/06_BASE-CER-06_과실문_주전자/01_COMMON_일반/BASE-CER-06_COMMON.png",
+        "RARE": "01_CER_도자기/06_BASE-CER-06_과실문_주전자/02_RARE_레어/BASE-CER-06_RARE.png",
+        "EPIC": "01_CER_도자기/06_BASE-CER-06_과실문_주전자/03_EPIC_에픽/BASE-CER-06_EPIC.png",
+        "LEGENDARY": "01_CER_도자기/06_BASE-CER-06_과실문_주전자/04_LEGENDARY_전설/BASE-CER-06_LEGENDARY.png"
+      },
+      "sprite_anchors": {
+        "COMMON": {
+          "x": 0.0,
+          "y": -9.8
+        },
+        "RARE": {
+          "x": 0.0,
+          "y": 2.7
+        },
+        "EPIC": {
+          "x": 0.0,
+          "y": 1.2
+        },
+        "LEGENDARY": {
+          "x": -0.4,
+          "y": 2.0
+        }
+      }
+    },
+    {
+      "base_id": "BASE-CER-07",
+      "item_name_ko": "진수 기념 대접",
+      "category": "CER",
+      "category_name_ko": "도자기",
+      "canvas": [
+        128,
+        128
+      ],
+      "grades": {
+        "COMMON": "01_CER_도자기/07_BASE-CER-07_진수_기념_대접/01_COMMON_일반/BASE-CER-07_COMMON.png",
+        "RARE": "01_CER_도자기/07_BASE-CER-07_진수_기념_대접/02_RARE_레어/BASE-CER-07_RARE.png",
+        "EPIC": "01_CER_도자기/07_BASE-CER-07_진수_기념_대접/03_EPIC_에픽/BASE-CER-07_EPIC.png",
+        "LEGENDARY": "01_CER_도자기/07_BASE-CER-07_진수_기념_대접/04_LEGENDARY_전설/BASE-CER-07_LEGENDARY.png"
+      },
+      "sprite_anchors": {
+        "COMMON": {
+          "x": 0.0,
+          "y": -18.0
+        },
+        "RARE": {
+          "x": 0.0,
+          "y": -8.6
+        },
+        "EPIC": {
+          "x": 0.0,
+          "y": -9.8
+        },
+        "LEGENDARY": {
+          "x": -0.4,
+          "y": -9.0
+        }
+      }
+    },
+    {
+      "base_id": "BASE-CER-08",
+      "item_name_ko": "항해도 월백유 매병",
+      "category": "CER",
+      "category_name_ko": "도자기",
+      "canvas": [
+        128,
+        128
+      ],
+      "grades": {
+        "COMMON": "01_CER_도자기/08_BASE-CER-08_항해도_월백유_매병/01_COMMON_일반/BASE-CER-08_COMMON.png",
+        "RARE": "01_CER_도자기/08_BASE-CER-08_항해도_월백유_매병/02_RARE_레어/BASE-CER-08_RARE.png",
+        "EPIC": "01_CER_도자기/08_BASE-CER-08_항해도_월백유_매병/03_EPIC_에픽/BASE-CER-08_EPIC.png",
+        "LEGENDARY": "01_CER_도자기/08_BASE-CER-08_항해도_월백유_매병/04_LEGENDARY_전설/BASE-CER-08_LEGENDARY.png"
+      },
+      "sprite_anchors": {
+        "COMMON": {
+          "x": 0.0,
+          "y": -9.4
+        },
+        "RARE": {
+          "x": 0.0,
+          "y": 3.1
+        },
+        "EPIC": {
+          "x": 0.4,
+          "y": 1.6
+        },
+        "LEGENDARY": {
+          "x": 1.6,
+          "y": 2.0
+        }
+      }
+    },
+    {
+      "base_id": "BASE-CER-09",
+      "item_name_ko": "삼색 사자손잡이 용기",
+      "category": "CER",
+      "category_name_ko": "도자기",
+      "canvas": [
+        128,
+        128
+      ],
+      "grades": {
+        "COMMON": "01_CER_도자기/09_BASE-CER-09_삼색_사자손잡이_용기/01_COMMON_일반/BASE-CER-09_COMMON.png",
+        "RARE": "01_CER_도자기/09_BASE-CER-09_삼색_사자손잡이_용기/02_RARE_레어/BASE-CER-09_RARE.png",
+        "EPIC": "01_CER_도자기/09_BASE-CER-09_삼색_사자손잡이_용기/03_EPIC_에픽/BASE-CER-09_EPIC.png",
+        "LEGENDARY": "01_CER_도자기/09_BASE-CER-09_삼색_사자손잡이_용기/04_LEGENDARY_전설/BASE-CER-09_LEGENDARY.png"
+      },
+      "sprite_anchors": {
+        "COMMON": {
+          "x": 0.0,
+          "y": -12.1
+        },
+        "RARE": {
+          "x": 0.0,
+          "y": -0.8
+        },
+        "EPIC": {
+          "x": 0.0,
+          "y": -2.3
+        },
+        "LEGENDARY": {
+          "x": -0.8,
+          "y": -1.2
+        }
+      }
+    },
+    {
+      "base_id": "BASE-CER-10",
+      "item_name_ko": "푸른 동백 대형병",
+      "category": "CER",
+      "category_name_ko": "도자기",
+      "canvas": [
+        128,
+        128
+      ],
+      "grades": {
+        "COMMON": "01_CER_도자기/10_BASE-CER-10_푸른_동백_대형병/01_COMMON_일반/BASE-CER-10_COMMON.png",
+        "RARE": "01_CER_도자기/10_BASE-CER-10_푸른_동백_대형병/02_RARE_레어/BASE-CER-10_RARE.png",
+        "EPIC": "01_CER_도자기/10_BASE-CER-10_푸른_동백_대형병/03_EPIC_에픽/BASE-CER-10_EPIC.png",
+        "LEGENDARY": "01_CER_도자기/10_BASE-CER-10_푸른_동백_대형병/04_LEGENDARY_전설/BASE-CER-10_LEGENDARY.png"
+      },
+      "sprite_anchors": {
+        "COMMON": {
+          "x": 0.4,
+          "y": -9.4
+        },
+        "RARE": {
+          "x": 0.4,
+          "y": 3.1
+        },
+        "EPIC": {
+          "x": 0.4,
+          "y": 1.6
+        },
+        "LEGENDARY": {
+          "x": 1.2,
+          "y": 2.0
+        }
+      }
+    },
+    {
+      "base_id": "BASE-CLK-01",
+      "item_name_ko": "접이식 탁상시계",
+      "category": "CLK",
+      "category_name_ko": "시계",
+      "canvas": [
+        128,
+        128
+      ],
+      "grades": {
+        "COMMON": "02_CLK_시계/01_BASE-CLK-01_접이식_탁상시계/01_COMMON_일반/BASE-CLK-01_COMMON.png",
+        "RARE": "02_CLK_시계/01_BASE-CLK-01_접이식_탁상시계/02_RARE_레어/BASE-CLK-01_RARE.png",
+        "EPIC": "02_CLK_시계/01_BASE-CLK-01_접이식_탁상시계/03_EPIC_에픽/BASE-CLK-01_EPIC.png",
+        "LEGENDARY": "02_CLK_시계/01_BASE-CLK-01_접이식_탁상시계/04_LEGENDARY_전설/BASE-CLK-01_LEGENDARY.png"
+      },
+      "sprite_anchors": {
+        "COMMON": {
+          "x": 0.0,
+          "y": -18.8
+        },
+        "RARE": {
+          "x": 0.0,
+          "y": -9.8
+        },
+        "EPIC": {
+          "x": -8.2,
+          "y": -10.2
+        },
+        "LEGENDARY": {
+          "x": 0.4,
+          "y": -9.8
+        }
+      }
+    },
+    {
+      "base_id": "BASE-CLK-02",
+      "item_name_ko": "구리 종 벽시계",
+      "category": "CLK",
+      "category_name_ko": "시계",
+      "canvas": [
+        128,
+        128
+      ],
+      "grades": {
+        "COMMON": "02_CLK_시계/02_BASE-CLK-02_구리_종_벽시계/01_COMMON_일반/BASE-CLK-02_COMMON.png",
+        "RARE": "02_CLK_시계/02_BASE-CLK-02_구리_종_벽시계/02_RARE_레어/BASE-CLK-02_RARE.png",
+        "EPIC": "02_CLK_시계/02_BASE-CLK-02_구리_종_벽시계/03_EPIC_에픽/BASE-CLK-02_EPIC.png",
+        "LEGENDARY": "02_CLK_시계/02_BASE-CLK-02_구리_종_벽시계/04_LEGENDARY_전설/BASE-CLK-02_LEGENDARY.png"
+      },
+      "sprite_anchors": {
+        "COMMON": {
+          "x": 0.0,
+          "y": -9.8
+        },
+        "RARE": {
+          "x": 0.0,
+          "y": 2.7
+        },
+        "EPIC": {
+          "x": 0.4,
+          "y": 2.0
+        },
+        "LEGENDARY": {
+          "x": 0.0,
+          "y": 2.0
+        }
+      }
+    },
+    {
+      "base_id": "BASE-CLK-03",
+      "item_name_ko": "선실용 모래시계",
+      "category": "CLK",
+      "category_name_ko": "시계",
+      "canvas": [
+        128,
+        128
+      ],
+      "grades": {
+        "COMMON": "02_CLK_시계/03_BASE-CLK-03_선실용_모래시계/01_COMMON_일반/BASE-CLK-03_COMMON.png",
+        "RARE": "02_CLK_시계/03_BASE-CLK-03_선실용_모래시계/02_RARE_레어/BASE-CLK-03_RARE.png",
+        "EPIC": "02_CLK_시계/03_BASE-CLK-03_선실용_모래시계/03_EPIC_에픽/BASE-CLK-03_EPIC.png",
+        "LEGENDARY": "02_CLK_시계/03_BASE-CLK-03_선실용_모래시계/04_LEGENDARY_전설/BASE-CLK-03_LEGENDARY.png"
+      },
+      "sprite_anchors": {
+        "COMMON": {
+          "x": 0.0,
+          "y": -10.2
+        },
+        "RARE": {
+          "x": 0.0,
+          "y": 2.3
+        },
+        "EPIC": {
+          "x": 3.5,
+          "y": 2.3
+        },
+        "LEGENDARY": {
+          "x": 0.4,
+          "y": 2.0
+        }
+      }
+    },
+    {
+      "base_id": "BASE-CLK-04",
+      "item_name_ko": "월상표시 회중시계",
+      "category": "CLK",
+      "category_name_ko": "시계",
+      "canvas": [
+        128,
+        128
+      ],
+      "grades": {
+        "COMMON": "02_CLK_시계/04_BASE-CLK-04_월상표시_회중시계/01_COMMON_일반/BASE-CLK-04_COMMON.png",
+        "RARE": "02_CLK_시계/04_BASE-CLK-04_월상표시_회중시계/02_RARE_레어/BASE-CLK-04_RARE.png",
+        "EPIC": "02_CLK_시계/04_BASE-CLK-04_월상표시_회중시계/03_EPIC_에픽/BASE-CLK-04_EPIC.png",
+        "LEGENDARY": "02_CLK_시계/04_BASE-CLK-04_월상표시_회중시계/04_LEGENDARY_전설/BASE-CLK-04_LEGENDARY.png"
+      },
+      "sprite_anchors": {
+        "COMMON": {
+          "x": 0.0,
+          "y": -10.2
+        },
+        "RARE": {
+          "x": 0.0,
+          "y": 2.0
+        },
+        "EPIC": {
+          "x": 0.8,
+          "y": 2.0
+        },
+        "LEGENDARY": {
+          "x": 1.6,
+          "y": 1.6
+        }
+      }
+    },
+    {
+      "base_id": "BASE-CLK-05",
+      "item_name_ko": "갑판 크로노미터",
+      "category": "CLK",
+      "category_name_ko": "시계",
+      "canvas": [
+        128,
+        128
+      ],
+      "grades": {
+        "COMMON": "02_CLK_시계/05_BASE-CLK-05_갑판_크로노미터/01_COMMON_일반/BASE-CLK-05_COMMON.png",
+        "RARE": "02_CLK_시계/05_BASE-CLK-05_갑판_크로노미터/02_RARE_레어/BASE-CLK-05_RARE.png",
+        "EPIC": "02_CLK_시계/05_BASE-CLK-05_갑판_크로노미터/03_EPIC_에픽/BASE-CLK-05_EPIC.png",
+        "LEGENDARY": "02_CLK_시계/05_BASE-CLK-05_갑판_크로노미터/04_LEGENDARY_전설/BASE-CLK-05_LEGENDARY.png"
+      },
+      "sprite_anchors": {
+        "COMMON": {
+          "x": 0.4,
+          "y": -18.8
+        },
+        "RARE": {
+          "x": 0.0,
+          "y": -10.2
+        },
+        "EPIC": {
+          "x": 7.8,
+          "y": -9.8
+        },
+        "LEGENDARY": {
+          "x": 0.0,
+          "y": -10.5
+        }
+      }
+    },
+    {
+      "base_id": "BASE-CLK-06",
+      "item_name_ko": "가면문 알림시계",
+      "category": "CLK",
+      "category_name_ko": "시계",
+      "canvas": [
+        128,
+        128
+      ],
+      "grades": {
+        "COMMON": "02_CLK_시계/06_BASE-CLK-06_가면문_알림시계/01_COMMON_일반/BASE-CLK-06_COMMON.png",
+        "RARE": "02_CLK_시계/06_BASE-CLK-06_가면문_알림시계/02_RARE_레어/BASE-CLK-06_RARE.png",
+        "EPIC": "02_CLK_시계/06_BASE-CLK-06_가면문_알림시계/03_EPIC_에픽/BASE-CLK-06_EPIC.png",
+        "LEGENDARY": "02_CLK_시계/06_BASE-CLK-06_가면문_알림시계/04_LEGENDARY_전설/BASE-CLK-06_LEGENDARY.png"
+      },
+      "sprite_anchors": {
+        "COMMON": {
+          "x": 0.0,
+          "y": -15.2
+        },
+        "RARE": {
+          "x": 0.4,
+          "y": -4.7
+        },
+        "EPIC": {
+          "x": -9.0,
+          "y": 9.4
+        },
+        "LEGENDARY": {
+          "x": 0.0,
+          "y": -4.7
+        }
+      }
+    },
+    {
+      "base_id": "BASE-CLK-07",
+      "item_name_ko": "자동인형 시계",
+      "category": "CLK",
+      "category_name_ko": "시계",
+      "canvas": [
+        128,
+        128
+      ],
+      "grades": {
+        "COMMON": "02_CLK_시계/07_BASE-CLK-07_자동인형_시계/01_COMMON_일반/BASE-CLK-07_COMMON.png",
+        "RARE": "02_CLK_시계/07_BASE-CLK-07_자동인형_시계/02_RARE_레어/BASE-CLK-07_RARE.png",
+        "EPIC": "02_CLK_시계/07_BASE-CLK-07_자동인형_시계/03_EPIC_에픽/BASE-CLK-07_EPIC.png",
+        "LEGENDARY": "02_CLK_시계/07_BASE-CLK-07_자동인형_시계/04_LEGENDARY_전설/BASE-CLK-07_LEGENDARY.png"
+      },
+      "sprite_anchors": {
+        "COMMON": {
+          "x": 0.4,
+          "y": -10.2
+        },
+        "RARE": {
+          "x": 0.0,
+          "y": 2.3
+        },
+        "EPIC": {
+          "x": 1.2,
+          "y": 2.3
+        },
+        "LEGENDARY": {
+          "x": 0.8,
+          "y": 2.3
+        }
+      }
+    },
+    {
+      "base_id": "BASE-CLK-08",
+      "item_name_ko": "유리돔 골격시계",
+      "category": "CLK",
+      "category_name_ko": "시계",
+      "canvas": [
+        128,
+        128
+      ],
+      "grades": {
+        "COMMON": "02_CLK_시계/08_BASE-CLK-08_유리돔_골격시계/01_COMMON_일반/BASE-CLK-08_COMMON.png",
+        "RARE": "02_CLK_시계/08_BASE-CLK-08_유리돔_골격시계/02_RARE_레어/BASE-CLK-08_RARE.png",
+        "EPIC": "02_CLK_시계/08_BASE-CLK-08_유리돔_골격시계/03_EPIC_에픽/BASE-CLK-08_EPIC.png",
+        "LEGENDARY": "02_CLK_시계/08_BASE-CLK-08_유리돔_골격시계/04_LEGENDARY_전설/BASE-CLK-08_LEGENDARY.png"
+      },
+      "sprite_anchors": {
+        "COMMON": {
+          "x": 0.4,
+          "y": -10.2
+        },
+        "RARE": {
+          "x": 0.4,
+          "y": 2.3
+        },
+        "EPIC": {
+          "x": 2.7,
+          "y": 2.3
+        },
+        "LEGENDARY": {
+          "x": 0.8,
+          "y": 1.6
+        }
+      }
+    },
+    {
+      "base_id": "BASE-CLK-09",
+      "item_name_ko": "다층 천문시계",
+      "category": "CLK",
+      "category_name_ko": "시계",
+      "canvas": [
+        128,
+        128
+      ],
+      "grades": {
+        "COMMON": "02_CLK_시계/09_BASE-CLK-09_다층_천문시계/01_COMMON_일반/BASE-CLK-09_COMMON.png",
+        "RARE": "02_CLK_시계/09_BASE-CLK-09_다층_천문시계/02_RARE_레어/BASE-CLK-09_RARE.png",
+        "EPIC": "02_CLK_시계/09_BASE-CLK-09_다층_천문시계/03_EPIC_에픽/BASE-CLK-09_EPIC.png",
+        "LEGENDARY": "02_CLK_시계/09_BASE-CLK-09_다층_천문시계/04_LEGENDARY_전설/BASE-CLK-09_LEGENDARY.png"
+      },
+      "sprite_anchors": {
+        "COMMON": {
+          "x": 0.0,
+          "y": -10.5
+        },
+        "RARE": {
+          "x": 0.4,
+          "y": 1.6
+        },
+        "EPIC": {
+          "x": 1.2,
+          "y": 2.3
+        },
+        "LEGENDARY": {
+          "x": 0.0,
+          "y": 1.2
+        }
+      }
+    },
+    {
+      "base_id": "BASE-CLK-10",
+      "item_name_ko": "직사각 점프아워 시계",
+      "category": "CLK",
+      "category_name_ko": "시계",
+      "canvas": [
+        128,
+        128
+      ],
+      "grades": {
+        "COMMON": "02_CLK_시계/10_BASE-CLK-10_직사각_점프아워_시계/01_COMMON_일반/BASE-CLK-10_COMMON.png",
+        "RARE": "02_CLK_시계/10_BASE-CLK-10_직사각_점프아워_시계/02_RARE_레어/BASE-CLK-10_RARE.png",
+        "EPIC": "02_CLK_시계/10_BASE-CLK-10_직사각_점프아워_시계/03_EPIC_에픽/BASE-CLK-10_EPIC.png",
+        "LEGENDARY": "02_CLK_시계/10_BASE-CLK-10_직사각_점프아워_시계/04_LEGENDARY_전설/BASE-CLK-10_LEGENDARY.png"
+      },
+      "sprite_anchors": {
+        "COMMON": {
+          "x": 0.4,
+          "y": -21.1
+        },
+        "RARE": {
+          "x": 0.4,
+          "y": -12.9
+        },
+        "EPIC": {
+          "x": 5.9,
+          "y": 2.3
+        },
+        "LEGENDARY": {
+          "x": 0.8,
+          "y": -13.3
+        }
+      }
+    },
+    {
+      "base_id": "BASE-PNT-01",
+      "item_name_ko": "창가의 재봉사",
+      "category": "PNT",
+      "category_name_ko": "회화",
+      "canvas": [
+        128,
+        128
+      ],
+      "grades": {
+        "COMMON": "03_PNT_회화/01_BASE-PNT-01_창가의_재봉사/01_COMMON_일반/BASE-PNT-01_COMMON.png",
+        "RARE": "03_PNT_회화/01_BASE-PNT-01_창가의_재봉사/02_RARE_레어/BASE-PNT-01_RARE.png",
+        "EPIC": "03_PNT_회화/01_BASE-PNT-01_창가의_재봉사/03_EPIC_에픽/BASE-PNT-01_EPIC.png",
+        "LEGENDARY": "03_PNT_회화/01_BASE-PNT-01_창가의_재봉사/04_LEGENDARY_전설/BASE-PNT-01_LEGENDARY.png"
+      },
+      "sprite_anchors": {
+        "COMMON": {
+          "x": 0.0,
+          "y": -16.8
+        },
+        "RARE": {
+          "x": 0.0,
+          "y": -7.4
+        },
+        "EPIC": {
+          "x": 0.0,
+          "y": -8.6
+        },
+        "LEGENDARY": {
+          "x": 0.4,
+          "y": -7.8
+        }
+      }
+    },
+    {
+      "base_id": "BASE-PNT-02",
+      "item_name_ko": "여름 선창의 범선",
+      "category": "PNT",
+      "category_name_ko": "회화",
+      "canvas": [
+        128,
+        128
+      ],
+      "grades": {
+        "COMMON": "03_PNT_회화/02_BASE-PNT-02_여름_선창의_범선/01_COMMON_일반/BASE-PNT-02_COMMON.png",
+        "RARE": "03_PNT_회화/02_BASE-PNT-02_여름_선창의_범선/02_RARE_레어/BASE-PNT-02_RARE.png",
+        "EPIC": "03_PNT_회화/02_BASE-PNT-02_여름_선창의_범선/03_EPIC_에픽/BASE-PNT-02_EPIC.png",
+        "LEGENDARY": "03_PNT_회화/02_BASE-PNT-02_여름_선창의_범선/04_LEGENDARY_전설/BASE-PNT-02_LEGENDARY.png"
+      },
+      "sprite_anchors": {
+        "COMMON": {
+          "x": 0.0,
+          "y": -16.8
+        },
+        "RARE": {
+          "x": 0.0,
+          "y": -7.0
+        },
+        "EPIC": {
+          "x": 0.0,
+          "y": -8.2
+        },
+        "LEGENDARY": {
+          "x": 0.4,
+          "y": -7.4
+        }
+      }
+    },
+    {
+      "base_id": "BASE-PNT-03",
+      "item_name_ko": "붉은 장갑의 배우",
+      "category": "PNT",
+      "category_name_ko": "회화",
+      "canvas": [
+        128,
+        128
+      ],
+      "grades": {
+        "COMMON": "03_PNT_회화/03_BASE-PNT-03_붉은_장갑의_배우/01_COMMON_일반/BASE-PNT-03_COMMON.png",
+        "RARE": "03_PNT_회화/03_BASE-PNT-03_붉은_장갑의_배우/02_RARE_레어/BASE-PNT-03_RARE.png",
+        "EPIC": "03_PNT_회화/03_BASE-PNT-03_붉은_장갑의_배우/03_EPIC_에픽/BASE-PNT-03_EPIC.png",
+        "LEGENDARY": "03_PNT_회화/03_BASE-PNT-03_붉은_장갑의_배우/04_LEGENDARY_전설/BASE-PNT-03_LEGENDARY.png"
+      },
+      "sprite_anchors": {
+        "COMMON": {
+          "x": 0.0,
+          "y": -16.4
+        },
+        "RARE": {
+          "x": 0.0,
+          "y": -6.6
+        },
+        "EPIC": {
+          "x": 0.0,
+          "y": -7.8
+        },
+        "LEGENDARY": {
+          "x": 0.4,
+          "y": -6.6
+        }
+      }
+    },
+    {
+      "base_id": "BASE-PNT-04",
+      "item_name_ko": "폐쇄된 온실",
+      "category": "PNT",
+      "category_name_ko": "회화",
+      "canvas": [
+        128,
+        128
+      ],
+      "grades": {
+        "COMMON": "03_PNT_회화/04_BASE-PNT-04_폐쇄된_온실/01_COMMON_일반/BASE-PNT-04_COMMON.png",
+        "RARE": "03_PNT_회화/04_BASE-PNT-04_폐쇄된_온실/02_RARE_레어/BASE-PNT-04_RARE.png",
+        "EPIC": "03_PNT_회화/04_BASE-PNT-04_폐쇄된_온실/03_EPIC_에픽/BASE-PNT-04_EPIC.png",
+        "LEGENDARY": "03_PNT_회화/04_BASE-PNT-04_폐쇄된_온실/04_LEGENDARY_전설/BASE-PNT-04_LEGENDARY.png"
+      },
+      "sprite_anchors": {
+        "COMMON": {
+          "x": 0.0,
+          "y": -16.8
+        },
+        "RARE": {
+          "x": 0.0,
+          "y": -7.0
+        },
+        "EPIC": {
+          "x": 0.0,
+          "y": -8.2
+        },
+        "LEGENDARY": {
+          "x": 0.4,
+          "y": -7.4
+        }
+      }
+    },
+    {
+      "base_id": "BASE-PNT-05",
+      "item_name_ko": "개항 파노라마",
+      "category": "PNT",
+      "category_name_ko": "회화",
+      "canvas": [
+        128,
+        128
+      ],
+      "grades": {
+        "COMMON": "03_PNT_회화/05_BASE-PNT-05_개항_파노라마/01_COMMON_일반/BASE-PNT-05_COMMON.png",
+        "RARE": "03_PNT_회화/05_BASE-PNT-05_개항_파노라마/02_RARE_레어/BASE-PNT-05_RARE.png",
+        "EPIC": "03_PNT_회화/05_BASE-PNT-05_개항_파노라마/03_EPIC_에픽/BASE-PNT-05_EPIC.png",
+        "LEGENDARY": "03_PNT_회화/05_BASE-PNT-05_개항_파노라마/04_LEGENDARY_전설/BASE-PNT-05_LEGENDARY.png"
+      },
+      "sprite_anchors": {
+        "COMMON": {
+          "x": 0.0,
+          "y": -16.8
+        },
+        "RARE": {
+          "x": 0.0,
+          "y": -7.0
+        },
+        "EPIC": {
+          "x": 0.0,
+          "y": -8.2
+        },
+        "LEGENDARY": {
+          "x": 0.4,
+          "y": -7.4
+        }
+      }
+    },
+    {
+      "base_id": "BASE-PNT-06",
+      "item_name_ko": "푸른 부두",
+      "category": "PNT",
+      "category_name_ko": "회화",
+      "canvas": [
+        128,
+        128
+      ],
+      "grades": {
+        "COMMON": "03_PNT_회화/06_BASE-PNT-06_푸른_부두/01_COMMON_일반/BASE-PNT-06_COMMON.png",
+        "RARE": "03_PNT_회화/06_BASE-PNT-06_푸른_부두/02_RARE_레어/BASE-PNT-06_RARE.png",
+        "EPIC": "03_PNT_회화/06_BASE-PNT-06_푸른_부두/03_EPIC_에픽/BASE-PNT-06_EPIC.png",
+        "LEGENDARY": "03_PNT_회화/06_BASE-PNT-06_푸른_부두/04_LEGENDARY_전설/BASE-PNT-06_LEGENDARY.png"
+      },
+      "sprite_anchors": {
+        "COMMON": {
+          "x": 0.0,
+          "y": -16.8
+        },
+        "RARE": {
+          "x": 0.0,
+          "y": -7.4
+        },
+        "EPIC": {
+          "x": 0.0,
+          "y": -8.6
+        },
+        "LEGENDARY": {
+          "x": 0.4,
+          "y": -7.8
+        }
+      }
+    },
+    {
+      "base_id": "BASE-PNT-07",
+      "item_name_ko": "등대 창가의 가족",
+      "category": "PNT",
+      "category_name_ko": "회화",
+      "canvas": [
+        128,
+        128
+      ],
+      "grades": {
+        "COMMON": "03_PNT_회화/07_BASE-PNT-07_등대_창가의_가족/01_COMMON_일반/BASE-PNT-07_COMMON.png",
+        "RARE": "03_PNT_회화/07_BASE-PNT-07_등대_창가의_가족/02_RARE_레어/BASE-PNT-07_RARE.png",
+        "EPIC": "03_PNT_회화/07_BASE-PNT-07_등대_창가의_가족/03_EPIC_에픽/BASE-PNT-07_EPIC.png",
+        "LEGENDARY": "03_PNT_회화/07_BASE-PNT-07_등대_창가의_가족/04_LEGENDARY_전설/BASE-PNT-07_LEGENDARY.png"
+      },
+      "sprite_anchors": {
+        "COMMON": {
+          "x": 0.0,
+          "y": -16.8
+        },
+        "RARE": {
+          "x": 0.0,
+          "y": -7.0
+        },
+        "EPIC": {
+          "x": 0.0,
+          "y": -8.2
+        },
+        "LEGENDARY": {
+          "x": 0.4,
+          "y": -7.4
+        }
+      }
+    },
+    {
+      "base_id": "BASE-PNT-08",
+      "item_name_ko": "북문 거리 행렬",
+      "category": "PNT",
+      "category_name_ko": "회화",
+      "canvas": [
+        128,
+        128
+      ],
+      "grades": {
+        "COMMON": "03_PNT_회화/08_BASE-PNT-08_북문_거리_행렬/01_COMMON_일반/BASE-PNT-08_COMMON.png",
+        "RARE": "03_PNT_회화/08_BASE-PNT-08_북문_거리_행렬/02_RARE_레어/BASE-PNT-08_RARE.png",
+        "EPIC": "03_PNT_회화/08_BASE-PNT-08_북문_거리_행렬/03_EPIC_에픽/BASE-PNT-08_EPIC.png",
+        "LEGENDARY": "03_PNT_회화/08_BASE-PNT-08_북문_거리_행렬/04_LEGENDARY_전설/BASE-PNT-08_LEGENDARY.png"
+      },
+      "sprite_anchors": {
+        "COMMON": {
+          "x": 0.0,
+          "y": -15.6
+        },
+        "RARE": {
+          "x": 0.0,
+          "y": -5.9
+        },
+        "EPIC": {
+          "x": 0.0,
+          "y": -7.0
+        },
+        "LEGENDARY": {
+          "x": 0.4,
+          "y": -5.9
+        }
+      }
+    },
+    {
+      "base_id": "BASE-PNT-09",
+      "item_name_ko": "푸른 예배당 예행연습",
+      "category": "PNT",
+      "category_name_ko": "회화",
+      "canvas": [
+        128,
+        128
+      ],
+      "grades": {
+        "COMMON": "03_PNT_회화/09_BASE-PNT-09_푸른_예배당_예행연습/01_COMMON_일반/BASE-PNT-09_COMMON.png",
+        "RARE": "03_PNT_회화/09_BASE-PNT-09_푸른_예배당_예행연습/02_RARE_레어/BASE-PNT-09_RARE.png",
+        "EPIC": "03_PNT_회화/09_BASE-PNT-09_푸른_예배당_예행연습/03_EPIC_에픽/BASE-PNT-09_EPIC.png",
+        "LEGENDARY": "03_PNT_회화/09_BASE-PNT-09_푸른_예배당_예행연습/04_LEGENDARY_전설/BASE-PNT-09_LEGENDARY.png"
+      },
+      "sprite_anchors": {
+        "COMMON": {
+          "x": 0.0,
+          "y": -16.8
+        },
+        "RARE": {
+          "x": 0.0,
+          "y": -7.0
+        },
+        "EPIC": {
+          "x": 0.0,
+          "y": -8.2
+        },
+        "LEGENDARY": {
+          "x": 0.4,
+          "y": -7.4
+        }
+      }
+    },
+    {
+      "base_id": "BASE-PNT-10",
+      "item_name_ko": "여왕의 항해 초상",
+      "category": "PNT",
+      "category_name_ko": "회화",
+      "canvas": [
+        128,
+        128
+      ],
+      "grades": {
+        "COMMON": "03_PNT_회화/10_BASE-PNT-10_여왕의_항해_초상/01_COMMON_일반/BASE-PNT-10_COMMON.png",
+        "RARE": "03_PNT_회화/10_BASE-PNT-10_여왕의_항해_초상/02_RARE_레어/BASE-PNT-10_RARE.png",
+        "EPIC": "03_PNT_회화/10_BASE-PNT-10_여왕의_항해_초상/03_EPIC_에픽/BASE-PNT-10_EPIC.png",
+        "LEGENDARY": "03_PNT_회화/10_BASE-PNT-10_여왕의_항해_초상/04_LEGENDARY_전설/BASE-PNT-10_LEGENDARY.png"
+      },
+      "sprite_anchors": {
+        "COMMON": {
+          "x": 0.0,
+          "y": -16.8
+        },
+        "RARE": {
+          "x": 0.0,
+          "y": -7.0
+        },
+        "EPIC": {
+          "x": 0.0,
+          "y": -8.2
+        },
+        "LEGENDARY": {
+          "x": 0.4,
+          "y": -7.4
+        }
+      }
+    },
+    {
+      "base_id": "BASE-BOK-01",
+      "item_name_ko": "부두 노동자 노래책",
+      "category": "BOK",
+      "category_name_ko": "고서",
+      "canvas": [
+        128,
+        128
+      ],
+      "grades": {
+        "COMMON": "04_BOK_고서/01_BASE-BOK-01_부두_노동자_노래책/01_COMMON_일반/BASE-BOK-01_COMMON.png",
+        "RARE": "04_BOK_고서/01_BASE-BOK-01_부두_노동자_노래책/02_RARE_레어/BASE-BOK-01_RARE.png",
+        "EPIC": "04_BOK_고서/01_BASE-BOK-01_부두_노동자_노래책/03_EPIC_에픽/BASE-BOK-01_EPIC.png",
+        "LEGENDARY": "04_BOK_고서/01_BASE-BOK-01_부두_노동자_노래책/04_LEGENDARY_전설/BASE-BOK-01_LEGENDARY.png"
+      },
+      "sprite_anchors": {
+        "COMMON": {
+          "x": 0.0,
+          "y": -10.5
+        },
+        "RARE": {
+          "x": 0.4,
+          "y": 1.6
+        },
+        "EPIC": {
+          "x": 1.6,
+          "y": 3.1
+        },
+        "LEGENDARY": {
+          "x": 0.0,
+          "y": 1.2
+        }
+      }
+    },
+    {
+      "base_id": "BASE-BOK-02",
+      "item_name_ko": "제본공 견본첩",
+      "category": "BOK",
+      "category_name_ko": "고서",
+      "canvas": [
+        128,
+        128
+      ],
+      "grades": {
+        "COMMON": "04_BOK_고서/02_BASE-BOK-02_제본공_견본첩/01_COMMON_일반/BASE-BOK-02_COMMON.png",
+        "RARE": "04_BOK_고서/02_BASE-BOK-02_제본공_견본첩/02_RARE_레어/BASE-BOK-02_RARE.png",
+        "EPIC": "04_BOK_고서/02_BASE-BOK-02_제본공_견본첩/03_EPIC_에픽/BASE-BOK-02_EPIC.png",
+        "LEGENDARY": "04_BOK_고서/02_BASE-BOK-02_제본공_견본첩/04_LEGENDARY_전설/BASE-BOK-02_LEGENDARY.png"
+      },
+      "sprite_anchors": {
+        "COMMON": {
+          "x": 0.4,
+          "y": -10.5
+        },
+        "RARE": {
+          "x": 0.4,
+          "y": 1.6
+        },
+        "EPIC": {
+          "x": 1.6,
+          "y": 3.1
+        },
+        "LEGENDARY": {
+          "x": 0.4,
+          "y": 1.2
+        }
+      }
+    },
+    {
+      "base_id": "BASE-BOK-03",
+      "item_name_ko": "붉은 무대막 희곡집",
+      "category": "BOK",
+      "category_name_ko": "고서",
+      "canvas": [
+        128,
+        128
+      ],
+      "grades": {
+        "COMMON": "04_BOK_고서/03_BASE-BOK-03_붉은_무대막_희곡집/01_COMMON_일반/BASE-BOK-03_COMMON.png",
+        "RARE": "04_BOK_고서/03_BASE-BOK-03_붉은_무대막_희곡집/02_RARE_레어/BASE-BOK-03_RARE.png",
+        "EPIC": "04_BOK_고서/03_BASE-BOK-03_붉은_무대막_희곡집/03_EPIC_에픽/BASE-BOK-03_EPIC.png",
+        "LEGENDARY": "04_BOK_고서/03_BASE-BOK-03_붉은_무대막_희곡집/04_LEGENDARY_전설/BASE-BOK-03_LEGENDARY.png"
+      },
+      "sprite_anchors": {
+        "COMMON": {
+          "x": 0.4,
+          "y": -10.5
+        },
+        "RARE": {
+          "x": 0.4,
+          "y": 1.6
+        },
+        "EPIC": {
+          "x": 1.6,
+          "y": 3.1
+        },
+        "LEGENDARY": {
+          "x": 0.4,
+          "y": 0.8
+        }
+      }
+    },
+    {
+      "base_id": "BASE-BOK-04",
+      "item_name_ko": "식물 채색 도감",
+      "category": "BOK",
+      "category_name_ko": "고서",
+      "canvas": [
+        128,
+        128
+      ],
+      "grades": {
+        "COMMON": "04_BOK_고서/04_BASE-BOK-04_식물_채색_도감/01_COMMON_일반/BASE-BOK-04_COMMON.png",
+        "RARE": "04_BOK_고서/04_BASE-BOK-04_식물_채색_도감/02_RARE_레어/BASE-BOK-04_RARE.png",
+        "EPIC": "04_BOK_고서/04_BASE-BOK-04_식물_채색_도감/03_EPIC_에픽/BASE-BOK-04_EPIC.png",
+        "LEGENDARY": "04_BOK_고서/04_BASE-BOK-04_식물_채색_도감/04_LEGENDARY_전설/BASE-BOK-04_LEGENDARY.png"
+      },
+      "sprite_anchors": {
+        "COMMON": {
+          "x": 0.4,
+          "y": -10.9
+        },
+        "RARE": {
+          "x": 0.4,
+          "y": 1.2
+        },
+        "EPIC": {
+          "x": 1.6,
+          "y": 2.7
+        },
+        "LEGENDARY": {
+          "x": 0.4,
+          "y": 0.8
+        }
+      }
+    },
+    {
+      "base_id": "BASE-BOK-05",
+      "item_name_ko": "대륙 우편 지도첩",
+      "category": "BOK",
+      "category_name_ko": "고서",
+      "canvas": [
+        128,
+        128
+      ],
+      "grades": {
+        "COMMON": "04_BOK_고서/05_BASE-BOK-05_대륙_우편_지도첩/01_COMMON_일반/BASE-BOK-05_COMMON.png",
+        "RARE": "04_BOK_고서/05_BASE-BOK-05_대륙_우편_지도첩/02_RARE_레어/BASE-BOK-05_RARE.png",
+        "EPIC": "04_BOK_고서/05_BASE-BOK-05_대륙_우편_지도첩/03_EPIC_에픽/BASE-BOK-05_EPIC.png",
+        "LEGENDARY": "04_BOK_고서/05_BASE-BOK-05_대륙_우편_지도첩/04_LEGENDARY_전설/BASE-BOK-05_LEGENDARY.png"
+      },
+      "sprite_anchors": {
+        "COMMON": {
+          "x": 0.4,
+          "y": -10.5
+        },
+        "RARE": {
+          "x": 0.0,
+          "y": 1.6
+        },
+        "EPIC": {
+          "x": 1.2,
+          "y": 3.1
+        },
+        "LEGENDARY": {
+          "x": 0.4,
+          "y": 0.8
+        }
+      }
+    },
+    {
+      "base_id": "BASE-BOK-06",
+      "item_name_ko": "건국항로 해도집",
+      "category": "BOK",
+      "category_name_ko": "고서",
+      "canvas": [
+        128,
+        128
+      ],
+      "grades": {
+        "COMMON": "04_BOK_고서/06_BASE-BOK-06_건국항로_해도집/01_COMMON_일반/BASE-BOK-06_COMMON.png",
+        "RARE": "04_BOK_고서/06_BASE-BOK-06_건국항로_해도집/02_RARE_레어/BASE-BOK-06_RARE.png",
+        "EPIC": "04_BOK_고서/06_BASE-BOK-06_건국항로_해도집/03_EPIC_에픽/BASE-BOK-06_EPIC.png",
+        "LEGENDARY": "04_BOK_고서/06_BASE-BOK-06_건국항로_해도집/04_LEGENDARY_전설/BASE-BOK-06_LEGENDARY.png"
+      },
+      "sprite_anchors": {
+        "COMMON": {
+          "x": 0.0,
+          "y": -16.4
+        },
+        "RARE": {
+          "x": 0.0,
+          "y": -6.6
+        },
+        "EPIC": {
+          "x": -9.8,
+          "y": 9.4
+        },
+        "LEGENDARY": {
+          "x": 1.6,
+          "y": -6.6
+        }
+      }
+    },
+    {
+      "base_id": "BASE-BOK-07",
+      "item_name_ko": "달과 파도 조수력",
+      "category": "BOK",
+      "category_name_ko": "고서",
+      "canvas": [
+        128,
+        128
+      ],
+      "grades": {
+        "COMMON": "04_BOK_고서/07_BASE-BOK-07_달과_파도_조수력/01_COMMON_일반/BASE-BOK-07_COMMON.png",
+        "RARE": "04_BOK_고서/07_BASE-BOK-07_달과_파도_조수력/02_RARE_레어/BASE-BOK-07_RARE.png",
+        "EPIC": "04_BOK_고서/07_BASE-BOK-07_달과_파도_조수력/03_EPIC_에픽/BASE-BOK-07_EPIC.png",
+        "LEGENDARY": "04_BOK_고서/07_BASE-BOK-07_달과_파도_조수력/04_LEGENDARY_전설/BASE-BOK-07_LEGENDARY.png"
+      },
+      "sprite_anchors": {
+        "COMMON": {
+          "x": 0.4,
+          "y": -10.5
+        },
+        "RARE": {
+          "x": 0.4,
+          "y": 1.6
+        },
+        "EPIC": {
+          "x": 1.6,
+          "y": 3.1
+        },
+        "LEGENDARY": {
+          "x": 0.4,
+          "y": 1.6
+        }
+      }
+    },
+    {
+      "base_id": "BASE-BOK-08",
+      "item_name_ko": "약초 처방집",
+      "category": "BOK",
+      "category_name_ko": "고서",
+      "canvas": [
+        128,
+        128
+      ],
+      "grades": {
+        "COMMON": "04_BOK_고서/08_BASE-BOK-08_약초_처방집/01_COMMON_일반/BASE-BOK-08_COMMON.png",
+        "RARE": "04_BOK_고서/08_BASE-BOK-08_약초_처방집/02_RARE_레어/BASE-BOK-08_RARE.png",
+        "EPIC": "04_BOK_고서/08_BASE-BOK-08_약초_처방집/03_EPIC_에픽/BASE-BOK-08_EPIC.png",
+        "LEGENDARY": "04_BOK_고서/08_BASE-BOK-08_약초_처방집/04_LEGENDARY_전설/BASE-BOK-08_LEGENDARY.png"
+      },
+      "sprite_anchors": {
+        "COMMON": {
+          "x": 0.0,
+          "y": -10.9
+        },
+        "RARE": {
+          "x": 0.0,
+          "y": 1.2
+        },
+        "EPIC": {
+          "x": 1.2,
+          "y": 2.7
+        },
+        "LEGENDARY": {
+          "x": 0.8,
+          "y": 0.4
+        }
+      }
+    },
+    {
+      "base_id": "BASE-BOK-09",
+      "item_name_ko": "끈잠금 통역 수첩",
+      "category": "BOK",
+      "category_name_ko": "고서",
+      "canvas": [
+        128,
+        128
+      ],
+      "grades": {
+        "COMMON": "04_BOK_고서/09_BASE-BOK-09_끈잠금_통역_수첩/01_COMMON_일반/BASE-BOK-09_COMMON.png",
+        "RARE": "04_BOK_고서/09_BASE-BOK-09_끈잠금_통역_수첩/02_RARE_레어/BASE-BOK-09_RARE.png",
+        "EPIC": "04_BOK_고서/09_BASE-BOK-09_끈잠금_통역_수첩/03_EPIC_에픽/BASE-BOK-09_EPIC.png",
+        "LEGENDARY": "04_BOK_고서/09_BASE-BOK-09_끈잠금_통역_수첩/04_LEGENDARY_전설/BASE-BOK-09_LEGENDARY.png"
+      },
+      "sprite_anchors": {
+        "COMMON": {
+          "x": 0.0,
+          "y": -10.5
+        },
+        "RARE": {
+          "x": 0.0,
+          "y": 1.6
+        },
+        "EPIC": {
+          "x": 1.2,
+          "y": 3.1
+        },
+        "LEGENDARY": {
+          "x": 0.0,
+          "y": 1.6
+        }
+      }
+    },
+    {
+      "base_id": "BASE-BOK-10",
+      "item_name_ko": "일식 관측 필사본",
+      "category": "BOK",
+      "category_name_ko": "고서",
+      "canvas": [
+        128,
+        128
+      ],
+      "grades": {
+        "COMMON": "04_BOK_고서/10_BASE-BOK-10_일식_관측_필사본/01_COMMON_일반/BASE-BOK-10_COMMON.png",
+        "RARE": "04_BOK_고서/10_BASE-BOK-10_일식_관측_필사본/02_RARE_레어/BASE-BOK-10_RARE.png",
+        "EPIC": "04_BOK_고서/10_BASE-BOK-10_일식_관측_필사본/03_EPIC_에픽/BASE-BOK-10_EPIC.png",
+        "LEGENDARY": "04_BOK_고서/10_BASE-BOK-10_일식_관측_필사본/04_LEGENDARY_전설/BASE-BOK-10_LEGENDARY.png"
+      },
+      "sprite_anchors": {
+        "COMMON": {
+          "x": 0.4,
+          "y": -18.0
+        },
+        "RARE": {
+          "x": 0.0,
+          "y": -9.0
+        },
+        "EPIC": {
+          "x": 14.1,
+          "y": 7.0
+        },
+        "LEGENDARY": {
+          "x": 0.8,
+          "y": -9.0
+        }
+      }
+    },
+    {
+      "base_id": "BASE-MET-01",
+      "item_name_ko": "꽃문양 은제 성냥갑",
+      "category": "MET",
+      "category_name_ko": "금은세공",
+      "canvas": [
+        128,
+        128
+      ],
+      "grades": {
+        "COMMON": "05_MET_금은세공/01_BASE-MET-01_꽃문양_은제_성냥갑/01_COMMON_일반/BASE-MET-01_COMMON.png",
+        "RARE": "05_MET_금은세공/01_BASE-MET-01_꽃문양_은제_성냥갑/02_RARE_레어/BASE-MET-01_RARE.png",
+        "EPIC": "05_MET_금은세공/01_BASE-MET-01_꽃문양_은제_성냥갑/03_EPIC_에픽/BASE-MET-01_EPIC.png",
+        "LEGENDARY": "05_MET_금은세공/01_BASE-MET-01_꽃문양_은제_성냥갑/04_LEGENDARY_전설/BASE-MET-01_LEGENDARY.png"
+      },
+      "sprite_anchors": {
+        "COMMON": {
+          "x": 0.0,
+          "y": -21.5
+        },
+        "RARE": {
+          "x": 0.4,
+          "y": -13.7
+        },
+        "EPIC": {
+          "x": -12.9,
+          "y": -13.3
+        },
+        "LEGENDARY": {
+          "x": 0.8,
+          "y": -14.1
+        }
+      }
+    },
+    {
+      "base_id": "BASE-MET-02",
+      "item_name_ko": "잎문양 소형 촛대",
+      "category": "MET",
+      "category_name_ko": "금은세공",
+      "canvas": [
+        128,
+        128
+      ],
+      "grades": {
+        "COMMON": "05_MET_금은세공/02_BASE-MET-02_잎문양_소형_촛대/01_COMMON_일반/BASE-MET-02_COMMON.png",
+        "RARE": "05_MET_금은세공/02_BASE-MET-02_잎문양_소형_촛대/02_RARE_레어/BASE-MET-02_RARE.png",
+        "EPIC": "05_MET_금은세공/02_BASE-MET-02_잎문양_소형_촛대/03_EPIC_에픽/BASE-MET-02_EPIC.png",
+        "LEGENDARY": "05_MET_금은세공/02_BASE-MET-02_잎문양_소형_촛대/04_LEGENDARY_전설/BASE-MET-02_LEGENDARY.png"
+      },
+      "sprite_anchors": {
+        "COMMON": {
+          "x": 0.4,
+          "y": -10.2
+        },
+        "RARE": {
+          "x": 0.0,
+          "y": 2.0
+        },
+        "EPIC": {
+          "x": 2.3,
+          "y": 2.7
+        },
+        "LEGENDARY": {
+          "x": 0.0,
+          "y": 1.6
+        }
+      }
+    },
+    {
+      "base_id": "BASE-MET-03",
+      "item_name_ko": "밧줄문 계량컵",
+      "category": "MET",
+      "category_name_ko": "금은세공",
+      "canvas": [
+        128,
+        128
+      ],
+      "grades": {
+        "COMMON": "05_MET_금은세공/03_BASE-MET-03_밧줄문_계량컵/01_COMMON_일반/BASE-MET-03_COMMON.png",
+        "RARE": "05_MET_금은세공/03_BASE-MET-03_밧줄문_계량컵/02_RARE_레어/BASE-MET-03_RARE.png",
+        "EPIC": "05_MET_금은세공/03_BASE-MET-03_밧줄문_계량컵/03_EPIC_에픽/BASE-MET-03_EPIC.png",
+        "LEGENDARY": "05_MET_금은세공/03_BASE-MET-03_밧줄문_계량컵/04_LEGENDARY_전설/BASE-MET-03_LEGENDARY.png"
+      },
+      "sprite_anchors": {
+        "COMMON": {
+          "x": 0.0,
+          "y": -12.5
+        },
+        "RARE": {
+          "x": 0.0,
+          "y": -1.2
+        },
+        "EPIC": {
+          "x": 0.4,
+          "y": -0.4
+        },
+        "LEGENDARY": {
+          "x": 0.0,
+          "y": -1.6
+        }
+      }
+    },
+    {
+      "base_id": "BASE-MET-04",
+      "item_name_ko": "파도문 은제 티포트",
+      "category": "MET",
+      "category_name_ko": "금은세공",
+      "canvas": [
+        128,
+        128
+      ],
+      "grades": {
+        "COMMON": "05_MET_금은세공/04_BASE-MET-04_파도문_은제_티포트/01_COMMON_일반/BASE-MET-04_COMMON.png",
+        "RARE": "05_MET_금은세공/04_BASE-MET-04_파도문_은제_티포트/02_RARE_레어/BASE-MET-04_RARE.png",
+        "EPIC": "05_MET_금은세공/04_BASE-MET-04_파도문_은제_티포트/03_EPIC_에픽/BASE-MET-04_EPIC.png",
+        "LEGENDARY": "05_MET_금은세공/04_BASE-MET-04_파도문_은제_티포트/04_LEGENDARY_전설/BASE-MET-04_LEGENDARY.png"
+      },
+      "sprite_anchors": {
+        "COMMON": {
+          "x": 0.0,
+          "y": -11.3
+        },
+        "RARE": {
+          "x": 0.0,
+          "y": 0.4
+        },
+        "EPIC": {
+          "x": 0.0,
+          "y": 0.4
+        },
+        "LEGENDARY": {
+          "x": -0.4,
+          "y": 0.0
+        }
+      }
+    },
+    {
+      "base_id": "BASE-MET-05",
+      "item_name_ko": "산호손잡이 금박 고블릿",
+      "category": "MET",
+      "category_name_ko": "금은세공",
+      "canvas": [
+        128,
+        128
+      ],
+      "grades": {
+        "COMMON": "05_MET_금은세공/05_BASE-MET-05_산호손잡이_금박_고블릿/01_COMMON_일반/BASE-MET-05_COMMON.png",
+        "RARE": "05_MET_금은세공/05_BASE-MET-05_산호손잡이_금박_고블릿/02_RARE_레어/BASE-MET-05_RARE.png",
+        "EPIC": "05_MET_금은세공/05_BASE-MET-05_산호손잡이_금박_고블릿/03_EPIC_에픽/BASE-MET-05_EPIC.png",
+        "LEGENDARY": "05_MET_금은세공/05_BASE-MET-05_산호손잡이_금박_고블릿/04_LEGENDARY_전설/BASE-MET-05_LEGENDARY.png"
+      },
+      "sprite_anchors": {
+        "COMMON": {
+          "x": 0.4,
+          "y": -19.1
+        },
+        "RARE": {
+          "x": 0.0,
+          "y": -10.5
+        },
+        "EPIC": {
+          "x": 8.6,
+          "y": -10.2
+        },
+        "LEGENDARY": {
+          "x": -1.2,
+          "y": -10.9
+        }
+      }
+    },
+    {
+      "base_id": "BASE-MET-06",
+      "item_name_ko": "바다사자 문장 장식",
+      "category": "MET",
+      "category_name_ko": "금은세공",
+      "canvas": [
+        128,
+        128
+      ],
+      "grades": {
+        "COMMON": "05_MET_금은세공/06_BASE-MET-06_바다사자_문장_장식/01_COMMON_일반/BASE-MET-06_COMMON.png",
+        "RARE": "05_MET_금은세공/06_BASE-MET-06_바다사자_문장_장식/02_RARE_레어/BASE-MET-06_RARE.png",
+        "EPIC": "05_MET_금은세공/06_BASE-MET-06_바다사자_문장_장식/03_EPIC_에픽/BASE-MET-06_EPIC.png",
+        "LEGENDARY": "05_MET_금은세공/06_BASE-MET-06_바다사자_문장_장식/04_LEGENDARY_전설/BASE-MET-06_LEGENDARY.png"
+      },
+      "sprite_anchors": {
+        "COMMON": {
+          "x": 0.4,
+          "y": -17.2
+        },
+        "RARE": {
+          "x": 0.4,
+          "y": -7.8
+        },
+        "EPIC": {
+          "x": -13.7,
+          "y": 12.1
+        },
+        "LEGENDARY": {
+          "x": 0.0,
+          "y": -8.2
+        }
+      }
+    },
+    {
+      "base_id": "BASE-MET-07",
+      "item_name_ko": "파문 금제 담뱃갑",
+      "category": "MET",
+      "category_name_ko": "금은세공",
+      "canvas": [
+        128,
+        128
+      ],
+      "grades": {
+        "COMMON": "05_MET_금은세공/07_BASE-MET-07_파문_금제_담뱃갑/01_COMMON_일반/BASE-MET-07_COMMON.png",
+        "RARE": "05_MET_금은세공/07_BASE-MET-07_파문_금제_담뱃갑/02_RARE_레어/BASE-MET-07_RARE.png",
+        "EPIC": "05_MET_금은세공/07_BASE-MET-07_파문_금제_담뱃갑/03_EPIC_에픽/BASE-MET-07_EPIC.png",
+        "LEGENDARY": "05_MET_금은세공/07_BASE-MET-07_파문_금제_담뱃갑/04_LEGENDARY_전설/BASE-MET-07_LEGENDARY.png"
+      },
+      "sprite_anchors": {
+        "COMMON": {
+          "x": 0.0,
+          "y": -16.4
+        },
+        "RARE": {
+          "x": 0.0,
+          "y": -6.6
+        },
+        "EPIC": {
+          "x": 1.2,
+          "y": -4.7
+        },
+        "LEGENDARY": {
+          "x": -0.8,
+          "y": -6.2
+        }
+      }
+    },
+    {
+      "base_id": "BASE-MET-08",
+      "item_name_ko": "올리브문 쌍촛대",
+      "category": "MET",
+      "category_name_ko": "금은세공",
+      "canvas": [
+        128,
+        128
+      ],
+      "grades": {
+        "COMMON": "05_MET_금은세공/08_BASE-MET-08_올리브문_쌍촛대/01_COMMON_일반/BASE-MET-08_COMMON.png",
+        "RARE": "05_MET_금은세공/08_BASE-MET-08_올리브문_쌍촛대/02_RARE_레어/BASE-MET-08_RARE.png",
+        "EPIC": "05_MET_금은세공/08_BASE-MET-08_올리브문_쌍촛대/03_EPIC_에픽/BASE-MET-08_EPIC.png",
+        "LEGENDARY": "05_MET_금은세공/08_BASE-MET-08_올리브문_쌍촛대/04_LEGENDARY_전설/BASE-MET-08_LEGENDARY.png"
+      },
+      "sprite_anchors": {
+        "COMMON": {
+          "x": 0.4,
+          "y": -10.2
+        },
+        "RARE": {
+          "x": 0.4,
+          "y": 2.3
+        },
+        "EPIC": {
+          "x": 0.4,
+          "y": 2.3
+        },
+        "LEGENDARY": {
+          "x": -0.8,
+          "y": 1.6
+        }
+      }
+    },
+    {
+      "base_id": "BASE-MET-09",
+      "item_name_ko": "항로문 금은 상감함",
+      "category": "MET",
+      "category_name_ko": "금은세공",
+      "canvas": [
+        128,
+        128
+      ],
+      "grades": {
+        "COMMON": "05_MET_금은세공/09_BASE-MET-09_항로문_금은_상감함/01_COMMON_일반/BASE-MET-09_COMMON.png",
+        "RARE": "05_MET_금은세공/09_BASE-MET-09_항로문_금은_상감함/02_RARE_레어/BASE-MET-09_RARE.png",
+        "EPIC": "05_MET_금은세공/09_BASE-MET-09_항로문_금은_상감함/03_EPIC_에픽/BASE-MET-09_EPIC.png",
+        "LEGENDARY": "05_MET_금은세공/09_BASE-MET-09_항로문_금은_상감함/04_LEGENDARY_전설/BASE-MET-09_LEGENDARY.png"
+      },
+      "sprite_anchors": {
+        "COMMON": {
+          "x": 0.4,
+          "y": -16.0
+        },
+        "RARE": {
+          "x": 0.0,
+          "y": -6.2
+        },
+        "EPIC": {
+          "x": 2.0,
+          "y": -5.9
+        },
+        "LEGENDARY": {
+          "x": 0.0,
+          "y": -6.6
+        }
+      }
+    },
+    {
+      "base_id": "BASE-MET-10",
+      "item_name_ko": "등대와 선박 센터피스",
+      "category": "MET",
+      "category_name_ko": "금은세공",
+      "canvas": [
+        128,
+        128
+      ],
+      "grades": {
+        "COMMON": "05_MET_금은세공/10_BASE-MET-10_등대와_선박_센터피스/01_COMMON_일반/BASE-MET-10_COMMON.png",
+        "RARE": "05_MET_금은세공/10_BASE-MET-10_등대와_선박_센터피스/02_RARE_레어/BASE-MET-10_RARE.png",
+        "EPIC": "05_MET_금은세공/10_BASE-MET-10_등대와_선박_센터피스/03_EPIC_에픽/BASE-MET-10_EPIC.png",
+        "LEGENDARY": "05_MET_금은세공/10_BASE-MET-10_등대와_선박_센터피스/04_LEGENDARY_전설/BASE-MET-10_LEGENDARY.png"
+      },
+      "sprite_anchors": {
+        "COMMON": {
+          "x": 0.0,
+          "y": -18.0
+        },
+        "RARE": {
+          "x": 0.0,
+          "y": -8.6
+        },
+        "EPIC": {
+          "x": 8.2,
+          "y": 12.1
+        },
+        "LEGENDARY": {
+          "x": -0.4,
+          "y": -9.0
+        }
+      }
+    },
+    {
+      "base_id": "BASE-JEW-01",
+      "item_name_ko": "산호구슬 귀걸이",
+      "category": "JEW",
+      "category_name_ko": "장신구",
+      "canvas": [
+        128,
+        128
+      ],
+      "grades": {
+        "COMMON": "06_JEW_장신구/01_BASE-JEW-01_산호구슬_귀걸이/01_COMMON_일반/BASE-JEW-01_COMMON.png",
+        "RARE": "06_JEW_장신구/01_BASE-JEW-01_산호구슬_귀걸이/02_RARE_레어/BASE-JEW-01_RARE.png",
+        "EPIC": "06_JEW_장신구/01_BASE-JEW-01_산호구슬_귀걸이/03_EPIC_에픽/BASE-JEW-01_EPIC.png",
+        "LEGENDARY": "06_JEW_장신구/01_BASE-JEW-01_산호구슬_귀걸이/04_LEGENDARY_전설/BASE-JEW-01_LEGENDARY.png"
+      },
+      "sprite_anchors": {
+        "COMMON": {
+          "x": 0.0,
+          "y": -18.8
+        },
+        "RARE": {
+          "x": 0.4,
+          "y": -10.2
+        },
+        "EPIC": {
+          "x": -16.8,
+          "y": -9.8
+        },
+        "LEGENDARY": {
+          "x": 0.4,
+          "y": -10.5
+        }
+      }
+    },
+    {
+      "base_id": "BASE-JEW-02",
+      "item_name_ko": "제비문 은 브로치",
+      "category": "JEW",
+      "category_name_ko": "장신구",
+      "canvas": [
+        128,
+        128
+      ],
+      "grades": {
+        "COMMON": "06_JEW_장신구/02_BASE-JEW-02_제비문_은_브로치/01_COMMON_일반/BASE-JEW-02_COMMON.png",
+        "RARE": "06_JEW_장신구/02_BASE-JEW-02_제비문_은_브로치/02_RARE_레어/BASE-JEW-02_RARE.png",
+        "EPIC": "06_JEW_장신구/02_BASE-JEW-02_제비문_은_브로치/03_EPIC_에픽/BASE-JEW-02_EPIC.png",
+        "LEGENDARY": "06_JEW_장신구/02_BASE-JEW-02_제비문_은_브로치/04_LEGENDARY_전설/BASE-JEW-02_LEGENDARY.png"
+      },
+      "sprite_anchors": {
+        "COMMON": {
+          "x": 0.0,
+          "y": -13.3
+        },
+        "RARE": {
+          "x": 0.0,
+          "y": -2.3
+        },
+        "EPIC": {
+          "x": 0.0,
+          "y": -2.3
+        },
+        "LEGENDARY": {
+          "x": 0.0,
+          "y": -2.7
+        }
+      }
+    },
+    {
+      "base_id": "BASE-JEW-03",
+      "item_name_ko": "카메오 펜던트",
+      "category": "JEW",
+      "category_name_ko": "장신구",
+      "canvas": [
+        128,
+        128
+      ],
+      "grades": {
+        "COMMON": "06_JEW_장신구/03_BASE-JEW-03_카메오_펜던트/01_COMMON_일반/BASE-JEW-03_COMMON.png",
+        "RARE": "06_JEW_장신구/03_BASE-JEW-03_카메오_펜던트/02_RARE_레어/BASE-JEW-03_RARE.png",
+        "EPIC": "06_JEW_장신구/03_BASE-JEW-03_카메오_펜던트/03_EPIC_에픽/BASE-JEW-03_EPIC.png",
+        "LEGENDARY": "06_JEW_장신구/03_BASE-JEW-03_카메오_펜던트/04_LEGENDARY_전설/BASE-JEW-03_LEGENDARY.png"
+      },
+      "sprite_anchors": {
+        "COMMON": {
+          "x": 0.4,
+          "y": -9.4
+        },
+        "RARE": {
+          "x": 0.0,
+          "y": 3.1
+        },
+        "EPIC": {
+          "x": 1.2,
+          "y": 1.6
+        },
+        "LEGENDARY": {
+          "x": 0.4,
+          "y": 2.3
+        }
+      }
+    },
+    {
+      "base_id": "BASE-JEW-04",
+      "item_name_ko": "자개 부채 머리빗",
+      "category": "JEW",
+      "category_name_ko": "장신구",
+      "canvas": [
+        128,
+        128
+      ],
+      "grades": {
+        "COMMON": "06_JEW_장신구/04_BASE-JEW-04_자개_부채_머리빗/01_COMMON_일반/BASE-JEW-04_COMMON.png",
+        "RARE": "06_JEW_장신구/04_BASE-JEW-04_자개_부채_머리빗/02_RARE_레어/BASE-JEW-04_RARE.png",
+        "EPIC": "06_JEW_장신구/04_BASE-JEW-04_자개_부채_머리빗/03_EPIC_에픽/BASE-JEW-04_EPIC.png",
+        "LEGENDARY": "06_JEW_장신구/04_BASE-JEW-04_자개_부채_머리빗/04_LEGENDARY_전설/BASE-JEW-04_LEGENDARY.png"
+      },
+      "sprite_anchors": {
+        "COMMON": {
+          "x": 0.0,
+          "y": -12.9
+        },
+        "RARE": {
+          "x": 0.0,
+          "y": -1.6
+        },
+        "EPIC": {
+          "x": 0.4,
+          "y": -3.1
+        },
+        "LEGENDARY": {
+          "x": 0.0,
+          "y": -2.0
+        }
+      }
+    },
+    {
+      "base_id": "BASE-JEW-05",
+      "item_name_ko": "흑진주 리본 목걸이",
+      "category": "JEW",
+      "category_name_ko": "장신구",
+      "canvas": [
+        128,
+        128
+      ],
+      "grades": {
+        "COMMON": "06_JEW_장신구/05_BASE-JEW-05_흑진주_리본_목걸이/01_COMMON_일반/BASE-JEW-05_COMMON.png",
+        "RARE": "06_JEW_장신구/05_BASE-JEW-05_흑진주_리본_목걸이/02_RARE_레어/BASE-JEW-05_RARE.png",
+        "EPIC": "06_JEW_장신구/05_BASE-JEW-05_흑진주_리본_목걸이/03_EPIC_에픽/BASE-JEW-05_EPIC.png",
+        "LEGENDARY": "06_JEW_장신구/05_BASE-JEW-05_흑진주_리본_목걸이/04_LEGENDARY_전설/BASE-JEW-05_LEGENDARY.png"
+      },
+      "sprite_anchors": {
+        "COMMON": {
+          "x": 0.4,
+          "y": -18.8
+        },
+        "RARE": {
+          "x": 0.0,
+          "y": -10.2
+        },
+        "EPIC": {
+          "x": 14.1,
+          "y": -9.8
+        },
+        "LEGENDARY": {
+          "x": -0.4,
+          "y": -10.2
+        }
+      }
+    },
+    {
+      "base_id": "BASE-JEW-06",
+      "item_name_ko": "에메랄드 인탈리오 반지",
+      "category": "JEW",
+      "category_name_ko": "장신구",
+      "canvas": [
+        128,
+        128
+      ],
+      "grades": {
+        "COMMON": "06_JEW_장신구/06_BASE-JEW-06_에메랄드_인탈리오_반지/01_COMMON_일반/BASE-JEW-06_COMMON.png",
+        "RARE": "06_JEW_장신구/06_BASE-JEW-06_에메랄드_인탈리오_반지/02_RARE_레어/BASE-JEW-06_RARE.png",
+        "EPIC": "06_JEW_장신구/06_BASE-JEW-06_에메랄드_인탈리오_반지/03_EPIC_에픽/BASE-JEW-06_EPIC.png",
+        "LEGENDARY": "06_JEW_장신구/06_BASE-JEW-06_에메랄드_인탈리오_반지/04_LEGENDARY_전설/BASE-JEW-06_LEGENDARY.png"
+      },
+      "sprite_anchors": {
+        "COMMON": {
+          "x": 0.0,
+          "y": -20.3
+        },
+        "RARE": {
+          "x": 0.4,
+          "y": -12.1
+        },
+        "EPIC": {
+          "x": -14.5,
+          "y": 16.4
+        },
+        "LEGENDARY": {
+          "x": 0.0,
+          "y": -12.9
+        }
+      }
+    },
+    {
+      "base_id": "BASE-JEW-07",
+      "item_name_ko": "석류석 진주 초커",
+      "category": "JEW",
+      "category_name_ko": "장신구",
+      "canvas": [
+        128,
+        128
+      ],
+      "grades": {
+        "COMMON": "06_JEW_장신구/07_BASE-JEW-07_석류석_진주_초커/01_COMMON_일반/BASE-JEW-07_COMMON.png",
+        "RARE": "06_JEW_장신구/07_BASE-JEW-07_석류석_진주_초커/02_RARE_레어/BASE-JEW-07_RARE.png",
+        "EPIC": "06_JEW_장신구/07_BASE-JEW-07_석류석_진주_초커/03_EPIC_에픽/BASE-JEW-07_EPIC.png",
+        "LEGENDARY": "06_JEW_장신구/07_BASE-JEW-07_석류석_진주_초커/04_LEGENDARY_전설/BASE-JEW-07_LEGENDARY.png"
+      },
+      "sprite_anchors": {
+        "COMMON": {
+          "x": 0.0,
+          "y": -11.3
+        },
+        "RARE": {
+          "x": 0.0,
+          "y": 0.4
+        },
+        "EPIC": {
+          "x": 0.8,
+          "y": 0.4
+        },
+        "LEGENDARY": {
+          "x": -0.8,
+          "y": 0.0
+        }
+      }
+    },
+    {
+      "base_id": "BASE-JEW-08",
+      "item_name_ko": "별자리 사파이어 팔찌",
+      "category": "JEW",
+      "category_name_ko": "장신구",
+      "canvas": [
+        128,
+        128
+      ],
+      "grades": {
+        "COMMON": "06_JEW_장신구/08_BASE-JEW-08_별자리_사파이어_팔찌/01_COMMON_일반/BASE-JEW-08_COMMON.png",
+        "RARE": "06_JEW_장신구/08_BASE-JEW-08_별자리_사파이어_팔찌/02_RARE_레어/BASE-JEW-08_RARE.png",
+        "EPIC": "06_JEW_장신구/08_BASE-JEW-08_별자리_사파이어_팔찌/03_EPIC_에픽/BASE-JEW-08_EPIC.png",
+        "LEGENDARY": "06_JEW_장신구/08_BASE-JEW-08_별자리_사파이어_팔찌/04_LEGENDARY_전설/BASE-JEW-08_LEGENDARY.png"
+      },
+      "sprite_anchors": {
+        "COMMON": {
+          "x": 0.0,
+          "y": -16.8
+        },
+        "RARE": {
+          "x": 0.0,
+          "y": -7.0
+        },
+        "EPIC": {
+          "x": 0.4,
+          "y": -5.9
+        },
+        "LEGENDARY": {
+          "x": 0.0,
+          "y": -7.8
+        }
+      }
+    },
+    {
+      "base_id": "BASE-JEW-09",
+      "item_name_ko": "세 갈래 다이아몬드 티아라",
+      "category": "JEW",
+      "category_name_ko": "장신구",
+      "canvas": [
+        128,
+        128
+      ],
+      "grades": {
+        "COMMON": "06_JEW_장신구/09_BASE-JEW-09_세_갈래_다이아몬드_티아라/01_COMMON_일반/BASE-JEW-09_COMMON.png",
+        "RARE": "06_JEW_장신구/09_BASE-JEW-09_세_갈래_다이아몬드_티아라/02_RARE_레어/BASE-JEW-09_RARE.png",
+        "EPIC": "06_JEW_장신구/09_BASE-JEW-09_세_갈래_다이아몬드_티아라/03_EPIC_에픽/BASE-JEW-09_EPIC.png",
+        "LEGENDARY": "06_JEW_장신구/09_BASE-JEW-09_세_갈래_다이아몬드_티아라/04_LEGENDARY_전설/BASE-JEW-09_LEGENDARY.png"
+      },
+      "sprite_anchors": {
+        "COMMON": {
+          "x": 0.4,
+          "y": -22.3
+        },
+        "RARE": {
+          "x": 0.0,
+          "y": -14.8
+        },
+        "EPIC": {
+          "x": 6.2,
+          "y": -14.5
+        },
+        "LEGENDARY": {
+          "x": 1.2,
+          "y": -15.6
+        }
+      }
+    },
+    {
+      "base_id": "BASE-JEW-10",
+      "item_name_ko": "루비 타이핀·커프스 세트",
+      "category": "JEW",
+      "category_name_ko": "장신구",
+      "canvas": [
+        128,
+        128
+      ],
+      "grades": {
+        "COMMON": "06_JEW_장신구/10_BASE-JEW-10_루비_타이핀·커프스_세트/01_COMMON_일반/BASE-JEW-10_COMMON.png",
+        "RARE": "06_JEW_장신구/10_BASE-JEW-10_루비_타이핀·커프스_세트/02_RARE_레어/BASE-JEW-10_RARE.png",
+        "EPIC": "06_JEW_장신구/10_BASE-JEW-10_루비_타이핀·커프스_세트/03_EPIC_에픽/BASE-JEW-10_EPIC.png",
+        "LEGENDARY": "06_JEW_장신구/10_BASE-JEW-10_루비_타이핀·커프스_세트/04_LEGENDARY_전설/BASE-JEW-10_LEGENDARY.png"
+      },
+      "sprite_anchors": {
+        "COMMON": {
+          "x": 0.0,
+          "y": -21.1
+        },
+        "RARE": {
+          "x": 0.4,
+          "y": -12.9
+        },
+        "EPIC": {
+          "x": 7.4,
+          "y": 5.5
+        },
+        "LEGENDARY": {
+          "x": -0.8,
+          "y": -13.7
+        }
+      }
+    }
+  ]
+}

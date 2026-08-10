@@ -1,0 +1,143 @@
+{
+  "schemaVersion": "1.0",
+  "mode": "daily-content",
+  "runSeed": "newspaper-grounded-14b-20260806",
+  "day": 1,
+  "blueprintFile": "run-start-output.json",
+  "market": {
+    "CER": 0.884,
+    "CLK": 0.9794,
+    "PNT": 1.0449,
+    "BOK": 1.0204,
+    "MET": 0.8669,
+    "JEW": 1.0585
+  },
+  "questOffers": [
+    {
+      "questId": "designated",
+      "rule": "지정 계열 1점을 낙찰한다"
+    },
+    {
+      "questId": "multi",
+      "rule": "서로 다른 계열 2점을 낙찰한다"
+    },
+    {
+      "questId": "bargain",
+      "rule": "기준가의 85% 이하에 낙찰한다"
+    }
+  ],
+  "lots": [
+    {
+      "lotId": "newspaper-grounded-14b-20260806-d1-l1",
+      "baseItemId": "BASE-JEW-05",
+      "baseName": "흑진주 리본 목걸이",
+      "category": "JEW",
+      "grade": "EPIC",
+      "basePrice": 6000,
+      "trueValue": 8100,
+      "quality": {
+        "label": "수려",
+        "multiplier": 1.35
+      },
+      "setId": "set-03"
+    },
+    {
+      "lotId": "newspaper-grounded-14b-20260806-d1-l2",
+      "baseItemId": "BASE-CLK-02",
+      "baseName": "구리 종 벽시계",
+      "category": "CLK",
+      "grade": "COMMON",
+      "basePrice": 800,
+      "trueValue": 1080,
+      "quality": {
+        "label": "수려",
+        "multiplier": 1.35
+      },
+      "setId": "set-03"
+    },
+    {
+      "lotId": "newspaper-grounded-14b-20260806-d1-l3",
+      "baseItemId": "BASE-CLK-06",
+      "baseName": "가면문 알림시계",
+      "category": "CLK",
+      "grade": "RARE",
+      "basePrice": 2000,
+      "trueValue": 1800,
+      "quality": {
+        "label": "보통",
+        "multiplier": 0.9
+      },
+      "setId": "set-10"
+    },
+    {
+      "lotId": "newspaper-grounded-14b-20260806-d1-l4",
+      "baseItemId": "BASE-CLK-01",
+      "baseName": "접이식 탁상시계",
+      "category": "CLK",
+      "grade": "COMMON",
+      "basePrice": 800,
+      "trueValue": 720,
+      "quality": {
+        "label": "보통",
+        "multiplier": 0.9
+      },
+      "setId": "set-02"
+    },
+    {
+      "lotId": "newspaper-grounded-14b-20260806-d1-l5",
+      "baseItemId": "BASE-MET-04",
+      "baseName": "파도문 은제 티포트",
+      "category": "MET",
+      "grade": "COMMON",
+      "basePrice": 800,
+      "trueValue": 480,
+      "quality": {
+        "label": "손상",
+        "multiplier": 0.6
+      },
+      "setId": "set-09"
+    },
+    {
+      "lotId": "newspaper-grounded-14b-20260806-d1-l6",
+      "baseItemId": "BASE-CER-09",
+      "baseName": "삼색 사자손잡이 용기",
+      "category": "CER",
+      "grade": "LEGENDARY",
+      "basePrice": 12500,
+      "trueValue": 13750,
+      "quality": {
+        "label": "양호",
+        "multiplier": 1.1
+      },
+      "setId": "set-05"
+    },
+    {
+      "lotId": "newspaper-grounded-14b-20260806-d1-l7",
+      "baseItemId": "BASE-CLK-09",
+      "baseName": "다층 천문시계",
+      "category": "CLK",
+      "grade": "COMMON",
+      "basePrice": 800,
+      "trueValue": 880,
+      "quality": {
+        "label": "양호",
+        "multiplier": 1.1
+      },
+      "setId": "set-04"
+    },
+    {
+      "lotId": "newspaper-grounded-14b-20260806-d1-l8",
+      "baseItemId": "BASE-BOK-07",
+      "baseName": "달과 파도 조수력",
+      "category": "BOK",
+      "grade": "RARE",
+      "basePrice": 2000,
+      "trueValue": 2200,
+      "quality": {
+        "label": "양호",
+        "multiplier": 1.1
+      },
+      "setId": "set-05"
+    }
+  ]
+}

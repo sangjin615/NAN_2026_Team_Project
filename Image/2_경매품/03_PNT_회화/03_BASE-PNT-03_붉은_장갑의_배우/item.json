@@ -1,0 +1,16 @@
+{
+  "base_id": "BASE-PNT-03",
+  "item_name_ko": "붉은 장갑의 배우",
+  "category": "PNT",
+  "category_name_ko": "회화",
+  "canvas": [
+    128,
+    128
+  ],
+  "grades": {
+    "COMMON": "03_PNT_회화/03_BASE-PNT-03_붉은_장갑의_배우/01_COMMON_일반/BASE-PNT-03_COMMON.png",
+    "RARE": "03_PNT_회화/03_BASE-PNT-03_붉은_장갑의_배우/02_RARE_레어/BASE-PNT-03_RARE.png",
+    "EPIC": "03_PNT_회화/03_BASE-PNT-03_붉은_장갑의_배우/03_EPIC_에픽/BASE-PNT-03_EPIC.png",
+    "LEGENDARY": "03_PNT_회화/03_BASE-PNT-03_붉은_장갑의_배우/04_LEGENDARY_전설/BASE-PNT-03_LEGENDARY.png"
+  }
+}

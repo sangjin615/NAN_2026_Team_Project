@@ -1,0 +1,24 @@
+{
+  "version": "clean-v1",
+  "purpose": "Content-free, data-overlay-ready UI kit derived from project mockups",
+  "source": "C:/Users/1/Desktop/미지의 경매장 이미지/ui",
+  "rules": {
+    "text": "Render with HTML/engine text, never bake into PNG",
+    "dynamicValues": "Render from game data above frames",
+    "icons": "Use independent SVG assets",
+    "rasterFrames": "Use border-image/9-slice scaling"
+  },
+  "buttons": {
+    "files": ["buttons/button-green.png", "buttons/button-dark.png", "buttons/button-parchment.png", "buttons/button-red.png", "buttons/button-purple.png"],
+    "canvas": {"width": 600, "height": 160},
+    "recommendedDisplay": {"width": 240, "height": 64},
+    "nineSlice": {"top": 32, "right": 52, "bottom": 32, "left": 52, "repeat": "stretch"}
+  },
+  "saveSlot": {
+    "file": "slots/save-slot-frame.png",
+    "canvas": {"width": 1000, "height": 200},
+    "recommendedDisplay": {"width": 800, "height": 160},
+    "nineSlice": {"top": 24, "right": 28, "bottom": 24, "left": 28, "repeat": "stretch"}
+  },
+  "icons": {"size": 64, "files": ["icons/close.svg", "icons/settings.svg", "icons/arrow-left.svg", "icons/arrow-right.svg", "icons/coin.svg", "icons/home.svg", "icons/gavel.svg"]}
+}

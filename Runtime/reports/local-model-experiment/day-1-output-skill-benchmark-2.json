@@ -1,0 +1,89 @@
+{
+  "experiment": {
+    "model": "qwen3:14b",
+    "mode": "daily-content",
+    "profile": "skill",
+    "promptChars": 1918,
+    "promptEvalCount": 1549,
+    "latencyMs": 26139,
+    "createdAt": "2026-08-02T14:22:55.149Z",
+    "evalCount": 1061,
+    "attempts": [
+      {
+        "attempt": 1,
+        "errors": []
+      }
+    ]
+  },
+  "output": {
+    "schemaVersion": "1.0",
+    "day": 1,
+    "marketHeadline": "은행가의 은밀한 거래",
+    "lots": [
+      {
+        "lotId": "team-loop-local-001-d1-l1",
+        "displayName": "붉은 무대막 희곡집",
+        "description": "19세기 연극 무대의 붉은 막을 수놓은 희곡집. 희극의 마지막 장면이 흐릿하게 새겨져 있다.",
+        "rumor": "이 책에 수록된 연극은 실제로 공연된 적이 없다고 한다.",
+        "setHint": "희곡집의 뒷면에 숨겨진 문구가 중요하다",
+        "npcReaction": "구매자에게 눈을 마주치며 고개를 끄덕인다"
+      },
+      {
+        "lotId": "team-loop-local-001-d1-l2",
+        "displayName": "황동뚜껑 육각 항아리",
+        "description": "오래된 황동 뚜껑의 육각 항아리. 내부가 깨끗하게 보존되어 있지만 뚜껑이 삐걱거린다.",
+        "rumor": "이 항아리가 담았던 내용물은 비밀이다",
+        "setHint": "뚜껑의 각도가 특별한 형태를 이룬다",
+        "npcReaction": "항아리에 손을 대는 자를 경계한다"
+      },
+      {
+        "lotId": "team-loop-local-001-d1-l3",
+        "displayName": "카메오 펜던트",
+        "description": "고대 유물로 추정되는 카메오 펜던트. 얼굴이 새겨진 돌이 비치는 빛을 머금고 있다",
+        "rumor": "이 펜던트를 소유한 자는 운명이 바뀐다는 소문",
+        "setHint": "돌의 뒷면에 낯선 문양이 새겨져 있다",
+        "npcReaction": "펜던트를 바라보며 속삭이는 듯한 말을 한다"
+      },
+      {
+        "lotId": "team-loop-local-001-d1-l4",
+        "displayName": "제본공 견본첩",
+        "description": "제본공이 사용한 견본첩. 손으로 그린 선이 잔잔한 물결을 이룬다",
+        "rumor": "이 견본첩은 실존하지 않는 도서관의 자료라고 한다",
+        "setHint": "첩의 테두리에 숨겨진 날짜가 중요하다",
+        "npcReaction": "첩을 펼치면 손바닥에 잔 흔적이 남는다"
+      },
+      {
+        "lotId": "team-loop-local-001-d1-l5",
+        "displayName": "북문 거리 행렬",
+        "description": "북문 거리의 행렬을 묘사한 그림. 인물들이 움직이는 듯한 느낌을 준다",
+        "rumor": "그림 속 인물 중 한 명이 실존 인물이라고 한다",
+        "setHint": "그림의 가장자리에 흐릿한 글씨가 있다",
+        "npcReaction": "그림을 바라보면 웃음이 흐른다"
+      },
+      {
+        "lotId": "team-loop-local-001-d1-l6",
+        "displayName": "등대 창가의 가족",
+        "description": "등대를 바라보는 가족의 초상. 창문 유리에 반사된 그림자가 두 개 보인다",
+        "rumor": "이 가족의 후손이 아직도 등대에 남아 있다고 한다",
+        "setHint": "등대의 색상이 그림과 다르다",
+        "npcReaction": "등대를 향해 손을 뻗는다"
+      },
+      {
+        "lotId": "team-loop-local-001-d1-l7",
+        "displayName": "루비 타이핀·커프스 세트",
+        "description": "루비로 장식된 타이핀과 커프스 세트. 반짝이는 루비가 햇빛을 먹는 듯하다",
+        "rumor": "이 세트를 착용한 자는 운명을 바꾼다",
+        "setHint": "루비의 내부에 숨겨진 글자가 중요하다",
+        "npcReaction": "세트를 바라보며 손가락을 깨물 듯한 태도를 보인다"
+      },
+      {
+        "lotId": "team-loop-local-001-d1-l8",
+        "displayName": "청록 뚜껑 소금단지",
+        "description": "청록색 뚜껑의 소금단지. 내부에 담긴 소금이 시간을 먹은 듯 반질반질하다",
+        "rumor": "이 단지가 담았던 소금은 특별한 곳에서 채취했다고 한다",
+        "setHint": "뚜껑의 테두리에 낯선 기호가 새겨져 있다",
+        "npcReaction": "단지를 들어 올리면 바람이 갑자기 불어온다"
+      }
+    ]
+  }
+}

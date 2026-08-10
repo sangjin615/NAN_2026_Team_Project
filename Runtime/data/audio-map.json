@@ -1,0 +1,33 @@
+{
+  "schemaVersion": "1.1",
+  "sourceContract": "V6.4 sound-3.4-city-weight-appraisal-soften",
+  "masterVolume": 0.8,
+  "bgm": {
+    "title": { "file": "./assets/audio/bgm/bgm-01-title__loop.wav", "volume": 0.72, "loop": true },
+    "city": { "file": "./assets/audio/bgm/bgm-02-city__loop.wav", "volume": 0.72, "loop": true },
+    "workplace": { "file": "./assets/audio/bgm/bgm-07-loading-workshop__loop.wav", "volume": 0.68, "loop": true },
+    "tavern": { "file": "./assets/audio/bgm/bgm-11-tavern-whispers__loop.wav", "volume": 0.68, "loop": true },
+    "auction": { "file": "./assets/audio/bgm/bgm-03-auction__L1.wav", "volume": 0.74, "loop": true },
+    "relic": { "file": "./assets/audio/bgm/bgm-04-relic__L1.wav", "volume": 0.76, "loop": true },
+    "settlement": { "file": "./assets/audio/bgm/bgm-05-settlement__L1.wav", "volume": 0.7, "loop": true },
+    "museum": { "file": "./assets/audio/bgm/bgm-06-archive__loop.wav", "volume": 0.66, "loop": true }
+  },
+  "sfx": {
+    "navigate": { "file": "./assets/audio/sfx/sfx-venue-enter.wav", "volume": 0.72 },
+    "back": { "file": "./assets/audio/sfx/sfx-ui-back.wav", "volume": 0.7 },
+    "bid": { "file": "./assets/audio/sfx/sfx-bid-place.wav", "volume": 0.78 },
+    "bot-bid": { "file": "./assets/audio/sfx/sfx-bid-bot.wav", "volume": 0.68 },
+    "pass": { "file": "./assets/audio/sfx/sfx-pass.wav", "volume": 0.7 },
+    "gavel": { "file": "./assets/audio/sfx/sfx-gavel.wav", "volume": 0.82 },
+    "sell": { "file": "./assets/audio/sfx/sfx-sale-confirm.wav", "volume": 0.76 },
+    "quest": { "file": "./assets/audio/sfx/sfx-quest-accept.wav", "volume": 0.72 },
+    "loan": { "file": "./assets/audio/sfx/sfx-loan-seal.wav", "volume": 0.78 },
+    "repay": { "file": "./assets/audio/sfx/sfx-loan-repay.wav", "volume": 0.74 },
+    "upgrade": { "file": "./assets/audio/sfx/sfx-upgrade.wav", "volume": 0.8 },
+    "day": { "file": "./assets/audio/sfx/sfx-day-advance.wav", "volume": 0.72 },
+    "relic-bid": { "file": "./assets/audio/sfx/sfx-relic-bid.wav", "volume": 0.8 },
+    "relic-pass": { "file": "./assets/audio/sfx/sfx-relic-pass.wav", "volume": 0.72 },
+    "relic-gavel": { "file": "./assets/audio/sfx/sfx-relic-gavel.wav", "volume": 0.84 },
+    "museum": { "file": "./assets/audio/sfx/sfx-museum-inspect.wav", "volume": 0.65 }
+  }
+}

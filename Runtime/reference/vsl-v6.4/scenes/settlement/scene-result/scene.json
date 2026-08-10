@@ -1,0 +1,349 @@
+{
+  "id": "scene-result",
+  "type": "scene",
+  "title": "여정 결과",
+  "groupId": "g-settlement",
+  "x": 2360,
+  "y": 190,
+  "description": "여정 실패 원인 또는 획득 유물·최종 상태를 표시하고 타이틀·전시관·다음 여정으로 이동한다.",
+  "requirements": [
+    "마감·파산·빈손 실패 구분",
+    "획득 유물",
+    "최종 단계·자금",
+    "메타 저장",
+    "다음 여정",
+    "3여정 캠페인 상태"
+  ],
+  "referencePath": "V5 §3 불변 10, §5.6·§5.7, §15.4",
+  "image": "assets/reference/scene-mockups/result.png",
+  "annotations": [
+    {
+      "id": "result-outcome",
+      "type": "area",
+      "xPercent": 50,
+      "yPercent": 28,
+      "coordinateSpace": "image",
+      "title": "여정 결과·실패 원인",
+      "requirement": "성공 시 획득 영구 유물, 실패 시 마감·파산·빈손 원인을 표시한다.",
+      "acceptanceCriteria": [
+        "중도 실패와 최종 실패를 구분한다."
+      ],
+      "refType": "data",
+      "actionRef": "",
+      "dataRefs": [
+        "run.ended",
+        "run.ending.type",
+        "run.ending.reason",
+        "relicAuction.wins"
+      ],
+      "navTargetSceneId": "",
+      "modalName": "",
+      "commonKey": "",
+      "failureSlot": false,
+      "sourceBasis": "V5 §5.2, §5.6, §15.4",
+      "implementationStatus": "implemented",
+      "widthPercent": 72,
+      "heightPercent": 34
+    },
+    {
+      "id": "result-kpi",
+      "type": "area",
+      "xPercent": 50,
+      "yPercent": 60,
+      "coordinateSpace": "image",
+      "title": "최종 상태",
+      "requirement": "최종 상회 단계·자금·영구 유물 총계를 표시한다.",
+      "acceptanceCriteria": [
+        "저장된 메타와 일치한다."
+      ],
+      "refType": "data",
+      "actionRef": "",
+      "dataRefs": [
+        "shop.stage",
+        "player.cash",
+        "meta.relics"
+      ],
+      "navTargetSceneId": "",
+      "modalName": "",
+      "commonKey": "",
+      "failureSlot": false,
+      "sourceBasis": "V5 §15.4",
+      "implementationStatus": "implemented",
+      "widthPercent": 70,
+      "heightPercent": 20
+    },
+    {
+      "id": "result-campaign",
+      "type": "area",
+      "xPercent": 50,
+      "yPercent": 78,
+      "coordinateSpace": "image",
+      "title": "3여정 캠페인",
+      "requirement": "현재 여정 순번과 상급 유물 성공 기록을 표시하고 3여정 모두 성공 시 완전한 결말을 판정한다.",
+      "acceptanceCriteria": [
+        "여정 실패 시 캠페인을 종료하되 유물은 보존한다."
+      ],
+      "refType": "data",
+      "actionRef": "",
+      "dataRefs": [
+        "campaign.journeyIndex",
+        "campaign.highTierWins",
+        "campaign.status"
+      ],
+      "navTargetSceneId": "",
+      "modalName": "",
+      "commonKey": "",
+      "failureSlot": false,
+      "sourceBasis": "V5 §5.7",
+      "implementationStatus": "spec-only",
+      "widthPercent": 65,
+      "heightPercent": 13
+    },
+    {
+      "id": "result-title",
+      "type": "pin",
+      "xPercent": 30,
+      "yPercent": 92,
+      "coordinateSpace": "image",
+      "title": "타이틀",
+      "requirement": "결과 저장 후 타이틀로 이동한다.",
+      "acceptanceCriteria": [
+        "메타 유물과 이월 자금을 유지한다."
+      ],
+      "refType": "nav",
+      "actionRef": "",
+      "dataRefs": [
+        "meta.relics",
+        "meta.carry"
+      ],
+      "navTargetSceneId": "scene-title",
+      "modalName": "",
+      "commonKey": "",
+      "failureSlot": false,
+      "sourceBasis": "V5 §15.4",
+      "implementationStatus": "implemented"
+    },
+    {
+      "id": "result-museum",
+      "type": "pin",
+      "xPercent": 50,
+      "yPercent": 92,
+      "coordinateSpace": "image",
+      "title": "전시관",
+      "requirement": "결과 저장 후 유물 전시관을 연다.",
+      "acceptanceCriteria": [
+        "획득 유물이 즉시 표시된다."
+      ],
+      "refType": "action",
+      "actionRef": "act-enter-museum",
+      "dataRefs": [
+        "meta.relics"
+      ],
+      "navTargetSceneId": "scene-museum",
+      "modalName": "",
+      "commonKey": "",
+      "failureSlot": false,
+      "sourceBasis": "V5 §15.4, §16",
+      "implementationStatus": "implemented",
+      "soundCue": "sfx-venue-enter"
+    },
+    {
+      "id": "result-next",
+      "type": "pin",
+      "xPercent": 70,
+      "yPercent": 92,
+      "coordinateSpace": "image",
+      "title": "다음 여정",
+      "requirement": "성공한 경우 다음 여정을 시작한다.",
+      "acceptanceCriteria": [
+        "이월률과 영구 유물 효과를 적용한다.",
+        "캠페인 실패 시 비활성 처리한다."
+      ],
+      "refType": "action",
+      "actionRef": "act-start-next-journey",
+      "dataRefs": [
+        "campaign.journeyIndex",
+        "meta.carry",
+        "meta.relics"
+      ],
+      "navTargetSceneId": "scene-loading",
+      "modalName": "",
+      "commonKey": "",
+      "failureSlot": false,
+      "sourceBasis": "V5 §5.7, §15.4",
+      "implementationStatus": "partial",
+      "soundCue": "sfx-new-run"
+    }
+  ],
+  "actionRefs": [
+    "act-enter-museum",
+    "act-start-next-journey",
+    "act-start-new-run"
+  ],
+  "implementationStatus": "implemented",
+  "referenceImage": "assets/reference/scene-mockups/result.png",
+  "runtimeBackground": "assets/reference/scene-mockups/result.png",
+  "imageRole": "reference-mockup",
+  "assetStatus": "reference-mockup-only",
+  "uiRequirements": [
+    {
+      "id": "result-outcome",
+      "name": "성공/마감/파산/빈손 결과",
+      "kind": "result-panel",
+      "priority": "A",
+      "implementationStatus": "implemented",
+      "dataRefs": [],
+      "actionRefs": [],
+      "notes": ""
+    },
+    {
+      "id": "result-stage",
+      "name": "최종 상회 단계",
+      "kind": "display",
+      "priority": "A",
+      "implementationStatus": "implemented",
+      "dataRefs": [],
+      "actionRefs": [],
+      "notes": ""
+    },
+    {
+      "id": "result-cash",
+      "name": "최종 자금·증감",
+      "kind": "display",
+      "priority": "A",
+      "implementationStatus": "implemented",
+      "dataRefs": [],
+      "actionRefs": [],
+      "notes": ""
+    },
+    {
+      "id": "result-relic",
+      "name": "획득 영구 유물",
+      "kind": "relic-card",
+      "priority": "A",
+      "implementationStatus": "implemented",
+      "dataRefs": [],
+      "actionRefs": [],
+      "notes": ""
+    },
+    {
+      "id": "result-review",
+      "name": "주요 판단 복기 타임라인",
+      "kind": "timeline",
+      "priority": "A",
+      "implementationStatus": "partial",
+      "dataRefs": [],
+      "actionRefs": [],
+      "notes": ""
+    },
+    {
+      "id": "result-failure",
+      "name": "실패 원인과 판정 근거",
+      "kind": "notice",
+      "priority": "A",
+      "implementationStatus": "implemented",
+      "dataRefs": [],
+      "actionRefs": [],
+      "notes": ""
+    },
+    {
+      "id": "result-museum",
+      "name": "유물 전시관 버튼",
+      "kind": "button",
+      "priority": "A",
+      "implementationStatus": "implemented",
+      "dataRefs": [],
+      "actionRefs": [],
+      "notes": ""
+    },
+    {
+      "id": "result-title",
+      "name": "타이틀 복귀 버튼",
+      "kind": "button",
+      "priority": "A",
+      "implementationStatus": "implemented",
+      "dataRefs": [],
+      "actionRefs": [],
+      "notes": ""
+    },
+    {
+      "id": "result-next-run",
+      "name": "다음 여정 버튼",
+      "kind": "button",
+      "priority": "B",
+      "implementationStatus": "partial",
+      "dataRefs": [],
+      "actionRefs": [],
+      "notes": ""
+    },
+    {
+      "id": "result-campaign",
+      "name": "3여정 캠페인 진행",
+      "kind": "progress",
+      "priority": "B",
+      "implementationStatus": "spec-only",
+      "dataRefs": [],
+      "actionRefs": [],
+      "notes": ""
+    }
+  ],
+  "popupRefs": [
+    "popup-campaign-complete",
+    "toast-global",
+    "popup-global-failure"
+  ],
+  "mockupCorrections": [
+    "운영 방식별 다중 엔딩 문구를 사용하지 않는다.",
+    "성공·실패·완전한 결말의 단순 구조를 사용한다.",
+    "복기 타임라인에는 구매 정보, 과지불, 포기한 출품의 결과를 포함한다.",
+    "순수 결과 배경이 제공되지 않아 목업은 참고 전용이다."
+  ],
+  "backgroundPolicy": {
+    "source": "reference-temporary",
+    "path": "assets/reference/scene-mockups/result.png",
+    "fit": "contain",
+    "temporaryRuntimeUse": true,
+    "onMissingAsset": "show-error-placeholder",
+    "contentRect": {
+      "x": 0.0,
+      "y": 0.0,
+      "width": 1536.0,
+      "height": 1024.0,
+      "xPercent": 0.0,
+      "yPercent": 0.0,
+      "widthPercent": 100.0,
+      "heightPercent": 100.0
+    },
+    "sourceImageSize": {
+      "width": 1536,
+      "height": 1024
+    },
+    "sceneTransform": {
+      "scale": 1.0,
+      "offsetXPercent": 0.0,
+      "offsetYPercent": 0.0,
+      "anchor": "center",
+      "appliesTo": "background-and-scene-ui",
+      "editable": true
+    }
+  },
+  "runtimeBackgroundSource": "reference-temporary",
+  "temporaryRuntimeUse": true,
+  "layoutCanvas": {
+    "width": 1536,
+    "height": 1024
+  },
+  "failureFeedbackRef": "popup-global-failure",
+  "failureFeedbackPolicy": "global-popup",
+  "sound": {
+    "bgm": "bgm-05-settlement",
+    "layers": [
+      "L1"
+    ],
+    "layersOnSuccess": [
+      "L1",
+      "L2"
+    ],
+    "restart": true
+  }
+}

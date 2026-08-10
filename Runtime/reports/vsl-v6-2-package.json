@@ -1,0 +1,86 @@
+{
+  "source": "C:\\Users\\1\\Downloads\\미지의_경매장_V6_1_확정사양_프로젝트_FINAL.zip",
+  "output": "C:\\Users\\1\\Downloads\\미지의_경매장_V6_2_해커톤구현기준_VSL_FINAL.zip",
+  "sizeBytes": 102529562,
+  "sha256": "6b99bb1d33482d296eca6432490ebadf32587c9b5e1b59eb50305821d6a1bb92",
+  "baseline": {
+    "schemaVersion": "unknown-auction-balance-contract-6.2",
+    "status": "hackathon-implementation-baseline",
+    "derivedFrom": {
+      "uxAndFlow": "V6.1 final visual spec",
+      "numericBalance": "Runtime/data/balance.json 900-seed measurement baseline"
+    },
+    "run": {
+      "days": 12,
+      "lotsPerDay": 8,
+      "startCash": 20000
+    },
+    "auction": {
+      "competitors": 3,
+      "playerTurnSeconds": 15,
+      "minimumRaiseRate": 0.1,
+      "transactionFeeRate": 0,
+      "firstNoBidPolicy": "requeue-at-end",
+      "secondNoBidPolicy": "final-no-sale"
+    },
+    "shop": {
+      "stages": 4,
+      "upgradeCosts": [
+        0,
+        7500,
+        12000,
+        17500
+      ],
+      "storageByStage": [
+        0,
+        3,
+        4,
+        5,
+        6
+      ],
+      "requiredStageAfterDay": {
+        "3": 2,
+        "6": 3,
+        "9": 4
+      }
+    },
+    "loan": {
+      "unlockShopStage": 2,
+      "limitFromDisposalValue": 0.35,
+      "maturityRepayMultiplier": 1.9,
+      "earlyRepayMultiplier": 1.0,
+      "dueDayOffset": 2,
+      "maxConcurrent": 1,
+      "overdue": "seize-collateral-and-lock-guild-for-run"
+    },
+    "failure": {
+      "bankruptcyEnabled": false,
+      "upgradeDeadlineFailureEnabled": true
+    },
+    "quest": {
+      "offersPerDay": 3,
+      "deliveryMode": "manual-item-delivery-at-office",
+      "deadline": "three-auction-opportunities",
+      "day12Delivery": "before-final-settlement-sale"
+    },
+    "generation": {
+      "engineOwns": [
+        "basePrice",
+        "trueValue",
+        "quality",
+        "numericRules",
+        "judgement"
+      ],
+      "modelOwns": [
+        "displayName",
+        "description",
+        "rumor",
+        "setHint",
+        "npcReaction"
+      ],
+      "bufferDaysAhead": 2,
+      "retryCount": 1,
+      "fallbackTemplateSets": 3
+    }
+  }
+}

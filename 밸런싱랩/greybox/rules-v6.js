@@ -103,7 +103,7 @@ const CFG = {
   "upgradeCost": [
     0,
     7500,
-    12000,
+    11500,
     17500
   ],
   "upgradeQuests": [
@@ -133,7 +133,28 @@ const CFG = {
     0.3,
     0.4
   ],
+  "priceMultiplier": [
+    0,
+    0.5,
+    0.75,
+    1,
+    1.25
+  ],
+  "questCompletionBonus": [
+    0,
+    3000,
+    4500,
+    6000,
+    7500
+  ],
   "bots": {
+    "capitalByStage": [
+      0,
+      14000,
+      21000,
+      28000,
+      35000
+    ],
     "initial": 25000,
     "growth": 1.155,
     "capRatio": 1,
@@ -174,9 +195,9 @@ const CFG = {
     ]
   },
   "infoRate": {
-    "competitors": 0.008,
-    "catalog": 0.007,
-    "forecast": 0.004
+    "competitors": 0,
+    "catalog": 0,
+    "forecast": 0
   },
   "sets": [
     {
@@ -255,7 +276,7 @@ const CFG = {
     }
   },
   "questOffer": 3,
-  "questAccept": 2,
+  "questAccept": 3,
   "questClash": {
     "restraint": [
       "multi",
@@ -279,10 +300,10 @@ const CFG = {
   "restraintKeepRate": 0.6,
   "blockPushThreshold": 1500,
   "loan": {
-    "ltv": 0.35,
-    "repay": 1.9,
-    "term": 2,
-    "minStage": 3
+    "ltv": 1.5,
+    "repay": 1.1,
+    "term": 3,
+    "minStage": 2
   },
   "deadline": {
     "3": 2,
@@ -350,13 +371,13 @@ function demandOf(item, index) {
 function disposalValue(item, index) { return round10(item.basePrice * item.quality * demandOf(item, index)); }
 
 // 6.7/6.15 경쟁자. 자본은 플레이어와 무관한 절대값이다.
-function makeBots(day, R) {
-  const nem = round100(CFG.bots.initial * Math.pow(CFG.bots.growth, day));
+function makeBots(day, R, stage = 1) {
+  const nem = CFG.bots.capitalByStage[stage];
   const pick = () => CFG.families[Math.floor(R() * CFG.families.length)];
   const bots = [{ id: 'bennett', name: '숙적 베넷', nemesis: true, target: pick(), cash: nem }];
   for (let i = 0; i < CFG.bots.drifterCount; i += 1) {
     bots.push({ id: 'drifter' + i, name: '떠돌이 상인 ' + (i + 1), nemesis: false, target: pick(),
-      cash: round100(nem * CFG.bots.drifterRatio * (0.85 + R() * 0.3)) });
+      cash: nem });
   }
   return bots;
 }

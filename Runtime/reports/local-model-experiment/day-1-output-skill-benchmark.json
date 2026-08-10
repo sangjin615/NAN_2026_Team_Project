@@ -1,0 +1,95 @@
+{
+  "experiment": {
+    "model": "qwen3:14b",
+    "mode": "daily-content",
+    "profile": "skill",
+    "promptChars": 1918,
+    "promptEvalCount": 1429,
+    "latencyMs": 59620,
+    "createdAt": "2026-08-02T14:22:13.794Z",
+    "evalCount": 1320,
+    "attempts": [
+      {
+        "attempt": 1,
+        "errors": [
+          "invalid JSON"
+        ]
+      },
+      {
+        "attempt": 2,
+        "errors": []
+      }
+    ]
+  },
+  "output": {
+    "schemaVersion": "1.0",
+    "day": 1,
+    "marketHeadline": "이상한 물건들이 모여든 날",
+    "lots": [
+      {
+        "lotId": "team-loop-local-001-d1-l1",
+        "displayName": "붉은 무대막 희곡집",
+        "description": "오래된 무대막 위에 쓰인 희곡집. 붉은 잉크로 쓰인 글씨가 시간을 거슬러 올라간다.",
+        "rumor": "이 희곡집은 극장에서 마지막 공연을 보고 난 뒤 사라진 연기자의 손에 의해 쓰였다는 소문이 있다.",
+        "setHint": "희곡의 끝에 숨겨진 비밀이 있다.",
+        "npcReaction": "이 책을 보면 마음이 떨린다. 그 안에 무엇이 숨어 있는지..."
+      },
+      {
+        "lotId": "team-loop-local-001-d1-l2",
+        "displayName": "황동뚜껑 육각 항아리",
+        "description": "손상된 항아리. 육각이 날카롭게 새겨져 있지만, 내부는 깨끗하다.",
+        "rumor": "이 항아리에 담긴 것은 누구도 말하지 못하는 비밀이다.",
+        "setHint": "뚜껑을 열면 시간이 멈춘 듯한 기분이 드는 물건이 있다.",
+        "npcReaction": "이 항아리의 뚜껑을 열면, 그 안에 있는 것이 당신의 운명을 바꿀지도 모른다."
+      },
+      {
+        "lotId": "team-loop-local-001-d1-l3",
+        "displayName": "카메오 펜던트",
+        "description": "고대의 카메오가 새겨진 펜던트. 빛이 반사되면 그림이 움직인다.",
+        "rumor": "이 펜던트는 사랑을 지킨 여인의 유물로, 그녀의 얼굴이 새겨져 있다.",
+        "setHint": "카메오의 그림 속에 숨겨진 이야기가 있다.",
+        "npcReaction": "이 펜던트를 보면 그녀의 눈빛이 당신을 따라온다."
+      },
+      {
+        "lotId": "team-loop-local-001-d1-l4",
+        "displayName": "제본공 견본첩",
+        "description": "제본공이 만든 견본첩. 손으로 만든 종이 위에 정교한 그림이 그려져 있다.",
+        "rumor": "이 견본첩은 제본공이 마지막으로 만든 것으로, 그 후 그는 사라졌다.",
+        "setHint": "첩의 끝에 숨겨진 그림이 있다.",
+        "npcReaction": "이 견본첩을 보면 그 제본공의 손길이 느껴진다."
+      },
+      {
+        "lotId": "team-loop-local-001-d1-l5",
+        "displayName": "북문 거리 행렬",
+        "description": "북문 거리에서 행진하던 무리의 모습을 그린 그림. 그림 속 인물들이 움직인다.",
+        "rumor": "이 그림은 행렬이 지나간 후, 그 길을 따라오는 자들에게만 보인다.",
+        "setHint": "그림 속 인물들이 움직이는 이유가 있다.",
+        "npcReaction": "이 그림을 보면 그 행렬이 당신을 향해 오고 있다."
+      },
+      {
+        "lotId": "team-loop-local-001-d1-l6",
+        "displayName": "등대 창가의 가족",
+        "description": "등대 창가에서 바라보는 가족의 모습. 그림 속 가족들이 움직인다.",
+        "rumor": "이 그림은 등대에서 마지막으로 그려진 것으로, 그 후 그 가족은 사라졌다.",
+        "setHint": "등대의 빛이 그림 속 가족을 보호했다.",
+        "npcReaction": "이 그림을 보면 그 가족의 눈빛이 당신을 따라온다."
+      },
+      {
+        "lotId": "team-loop-local-001-d1-l7",
+        "displayName": "루비 타이핀·커프스 세트",
+        "description": "루비로 장식된 타이핀과 커프스. 빛이 반사되면 그림이 움직인다.",
+        "rumor": "이 세트는 사랑을 지킨 남자의 유물로, 그의 손길이 새겨져 있다.",
+        "setHint": "루비의 그림 속에 숨겨진 이야기가 있다.",
+        "npcReaction": "이 세트를 보면 그 남자의 손길이 당신을 따라온다."
+      },
+      {
+        "lotId": "team-loop-local-001-d1-l8",
+        "displayName": "청록 뚜껑 소금단지",
+        "description": "청록 뚜껑의 소금단지. 내부는 깨끗하고, 뚜껑은 정교하게 장식되어 있다.",
+        "rumor": "이 단지에 담긴 소금은 누구도 말하지 못하는 비밀이다.",
+        "setHint": "뚜껑을 열면 시간이 멈춘 듯한 기분이 드는 물건이 있다.",
+        "npcReaction": "이 단지의 뚜껑을 열면, 그 안에 있는 것이 당신의 운명을 바꿀지도 모른다."
+      }
+    ]
+  }
+}

@@ -1,0 +1,306 @@
+{
+  "runId": "qwen35-screen-20260807",
+  "measuredAt": "2026-08-06T16:47:22.481Z",
+  "mode": "daily-content",
+  "trials": 1,
+  "rules": {
+    "attempts": 2,
+    "temperatures": [
+      0.3,
+      0.1
+    ],
+    "requestTimeoutMs": 120000,
+    "fallbackAfterFailure": true,
+    "validators": [
+      "generate-auction-content validate-output.mjs",
+      "Runtime generation-server validateOutput"
+    ]
+  },
+  "models": [
+    "qwen3.5:9b"
+  ],
+  "profiles": {
+    "skill-incompatible-schema": {
+      "contract": "C:\\Users\\1\\.codex\\skills\\generate-auction-content\\assets\\compact-contract.txt",
+      "structuredOutput": true,
+      "preflightCompatible": false,
+      "preflightIssue": "skill template requires fields omitted by the Runtime response schema",
+      "description": "unaltered skill template + Runtime JSON Schema (negative control)"
+    },
+    "skill-compatible-schema": {
+      "contract": "C:\\NHN Project\\NAN_2026_Team_Project-api\\Runtime\\contracts\\compact-generation-skill-compatible.txt",
+      "structuredOutput": true,
+      "preflightCompatible": true,
+      "description": "skill template adapted only to the Runtime response shape + exact JSON Schema"
+    },
+    "runtime-schema": {
+      "contract": "C:\\NHN Project\\NAN_2026_Team_Project-api\\Runtime\\contracts\\compact-generation-contract.txt",
+      "structuredOutput": true,
+      "preflightCompatible": true,
+      "description": "Runtime quality template + exact JSON Schema"
+    },
+    "runtime-json": {
+      "contract": "C:\\NHN Project\\NAN_2026_Team_Project-api\\Runtime\\contracts\\compact-generation-contract.txt",
+      "structuredOutput": false,
+      "preflightCompatible": true,
+      "description": "Runtime quality template + JSON-only mode"
+    }
+  },
+  "capabilityProbes": [
+    {
+      "model": "qwen3.5:9b",
+      "passed": true,
+      "error": null,
+      "latencyMs": 18479,
+      "promptEvalCount": 39,
+      "evalCount": 33
+    }
+  ],
+  "combinations": [
+    {
+      "model": "qwen3.5:9b",
+      "modelBytes": 6594474711,
+      "profile": "skill-incompatible-schema",
+      "trials": 0,
+      "passes": 0,
+      "passRate": null,
+      "diagnosis": "template-harness-incompatible",
+      "preflightIssue": "skill template requires fields omitted by the Runtime response schema"
+    },
+    {
+      "model": "qwen3.5:9b",
+      "modelBytes": 6594474711,
+      "profile": "skill-compatible-schema",
+      "trials": 1,
+      "passes": 0,
+      "passRate": 0,
+      "firstPasses": 0,
+      "fallbackCount": 1,
+      "averageLatencyMs": 21136,
+      "averageEvalCount": 2285,
+      "diagnoses": [
+        "narrative-quality"
+      ]
+    },
+    {
+      "model": "qwen3.5:9b",
+      "modelBytes": 6594474711,
+      "profile": "runtime-schema",
+      "trials": 1,
+      "passes": 0,
+      "passRate": 0,
+      "firstPasses": 0,
+      "fallbackCount": 1,
+      "averageLatencyMs": 20787,
+      "averageEvalCount": 2221,
+      "diagnoses": [
+        "narrative-quality"
+      ]
+    },
+    {
+      "model": "qwen3.5:9b",
+      "modelBytes": 6594474711,
+      "profile": "runtime-json",
+      "trials": 1,
+      "passes": 0,
+      "passRate": 0,
+      "firstPasses": 0,
+      "fallbackCount": 1,
+      "averageLatencyMs": 33225,
+      "averageEvalCount": 3407,
+      "diagnoses": [
+        "contract-compliance"
+      ]
+    }
+  ],
+  "observations": [
+    {
+      "model": "qwen3.5:9b",
+      "modelBytes": 6594474711,
+      "profile": "skill-incompatible-schema",
+      "profileDescription": "unaltered skill template + Runtime JSON Schema (negative control)",
+      "trial": 0,
+      "passed": false,
+      "fallbackRequired": false,
+      "attempts": [],
+      "totalLatencyMs": 0,
+      "totalEvalCount": 0,
+      "diagnosis": "template-harness-incompatible",
+      "preflightIssue": "skill template requires fields omitted by the Runtime response schema"
+    },
+    {
+      "model": "qwen3.5:9b",
+      "modelBytes": 6594474711,
+      "profile": "skill-compatible-schema",
+      "profileDescription": "skill template adapted only to the Runtime response shape + exact JSON Schema",
+      "trial": 1,
+      "passed": false,
+      "fallbackRequired": true,
+      "attempts": [
+        {
+          "runId": "qwen35-screen-20260807",
+          "mode": "daily-content",
+          "model": "qwen3.5:9b",
+          "profile": "skill-compatible-schema",
+          "trial": 1,
+          "attempt": 1,
+          "temperature": 0.3,
+          "latencyMs": 10808,
+          "promptChars": 3602,
+          "promptEvalCount": 1261,
+          "evalCount": 1174,
+          "errors": [
+            "copy quality: lot 1 description has unsafe ending; lot 2 description has unsafe ending; lot 2 setHint exceeds 25 chars; lot 3 description has unsafe ending; lot 4 description has unsafe ending; lot 4 setHint exceeds 25 chars; lot 5 description has unsafe ending; lot 5 setHint exceeds 25 chars; lot 6 description has unsafe ending; lot 6 setHint exceeds 25 chars; lot 7 description has unsafe ending; lot 7 setHint exceeds 25 chars; lot 8 description has unsafe ending; lot 8 description does not match category BOK; lot 8 setHint exceeds 25 chars"
+          ],
+          "skillValidator": {
+            "passed": true,
+            "result": "{\"valid\":true,\"errors\":[]}"
+          },
+          "artifact": "qwen35-screen-20260807-daily-content-qwen3.5-9b-skill-compatible-schema-t1-a1.json",
+          "diagnosis": "narrative-quality"
+        },
+        {
+          "runId": "qwen35-screen-20260807",
+          "mode": "daily-content",
+          "model": "qwen3.5:9b",
+          "profile": "skill-compatible-schema",
+          "trial": 1,
+          "attempt": 2,
+          "temperature": 0.1,
+          "latencyMs": 10328,
+          "promptChars": 4164,
+          "promptEvalCount": 1410,
+          "evalCount": 1111,
+          "errors": [
+            "copy quality: lot 1 description has unsafe ending; lot 1 description does not match category JEW; lot 2 description has unsafe ending; lot 3 description has unsafe ending; lot 4 description has unsafe ending; lot 5 description has unsafe ending; lot 5 description does not match category MET; lot 6 description has unsafe ending; lot 7 description has unsafe ending; lot 8 description has unsafe ending; lot 8 description does not match category BOK"
+          ],
+          "skillValidator": {
+            "passed": true,
+            "result": "{\"valid\":true,\"errors\":[]}"
+          },
+          "artifact": "qwen35-screen-20260807-daily-content-qwen3.5-9b-skill-compatible-schema-t1-a2.json",
+          "diagnosis": "narrative-quality"
+        }
+      ],
+      "totalLatencyMs": 21136,
+      "totalEvalCount": 2285,
+      "diagnosis": "narrative-quality"
+    },
+    {
+      "model": "qwen3.5:9b",
+      "modelBytes": 6594474711,
+      "profile": "runtime-schema",
+      "profileDescription": "Runtime quality template + exact JSON Schema",
+      "trial": 1,
+      "passed": false,
+      "fallbackRequired": true,
+      "attempts": [
+        {
+          "runId": "qwen35-screen-20260807",
+          "mode": "daily-content",
+          "model": "qwen3.5:9b",
+          "profile": "runtime-schema",
+          "trial": 1,
+          "attempt": 1,
+          "temperature": 0.3,
+          "latencyMs": 10885,
+          "promptChars": 4406,
+          "promptEvalCount": 1510,
+          "evalCount": 1172,
+          "errors": [
+            "copy quality: lot 1 description has unsafe ending; lot 2 setHint exceeds 25 chars; lot 3 description does not match category CLK; lot 3 setHint exceeds 25 chars; lot 4 description does not match category CLK; lot 4 setHint exceeds 25 chars; lot 6 banned phrase 세련된; lot 6 setHint exceeds 25 chars; lot 7 description does not match category CLK; lot 7 setHint exceeds 25 chars; lot 8 setHint exceeds 25 chars"
+          ],
+          "skillValidator": {
+            "passed": true,
+            "result": "{\"valid\":true,\"errors\":[]}"
+          },
+          "artifact": "qwen35-screen-20260807-daily-content-qwen3.5-9b-runtime-schema-t1-a1.json",
+          "diagnosis": "narrative-quality"
+        },
+        {
+          "runId": "qwen35-screen-20260807",
+          "mode": "daily-content",
+          "model": "qwen3.5:9b",
+          "profile": "runtime-schema",
+          "trial": 1,
+          "attempt": 2,
+          "temperature": 0.1,
+          "latencyMs": 9902,
+          "promptChars": 4828,
+          "promptEvalCount": 1631,
+          "evalCount": 1049,
+          "errors": [
+            "copy quality: lot 2 description does not match category CLK; lot 3 description has unsafe ending; lot 5 description has unsafe ending; lot 6 description has unsafe ending; lot 7 description has unsafe ending; lot 8 description has unsafe ending"
+          ],
+          "skillValidator": {
+            "passed": true,
+            "result": "{\"valid\":true,\"errors\":[]}"
+          },
+          "artifact": "qwen35-screen-20260807-daily-content-qwen3.5-9b-runtime-schema-t1-a2.json",
+          "diagnosis": "narrative-quality"
+        }
+      ],
+      "totalLatencyMs": 20787,
+      "totalEvalCount": 2221,
+      "diagnosis": "narrative-quality"
+    },
+    {
+      "model": "qwen3.5:9b",
+      "modelBytes": 6594474711,
+      "profile": "runtime-json",
+      "profileDescription": "Runtime quality template + JSON-only mode",
+      "trial": 1,
+      "passed": false,
+      "fallbackRequired": true,
+      "attempts": [
+        {
+          "runId": "qwen35-screen-20260807",
+          "mode": "daily-content",
+          "model": "qwen3.5:9b",
+          "profile": "runtime-json",
+          "trial": 1,
+          "attempt": 1,
+          "temperature": 0.3,
+          "latencyMs": 17779,
+          "promptChars": 4406,
+          "promptEvalCount": 1510,
+          "evalCount": 1815,
+          "errors": [
+            "daily output shape mismatch"
+          ],
+          "skillValidator": {
+            "passed": false,
+            "result": "{\"valid\":false,\"errors\":[\"lots\",\"lotIds\"]}"
+          },
+          "artifact": "qwen35-screen-20260807-daily-content-qwen3.5-9b-runtime-json-t1-a1.json",
+          "diagnosis": "contract-compliance"
+        },
+        {
+          "runId": "qwen35-screen-20260807",
+          "mode": "daily-content",
+          "model": "qwen3.5:9b",
+          "profile": "runtime-json",
+          "trial": 1,
+          "attempt": 2,
+          "temperature": 0.1,
+          "latencyMs": 15446,
+          "promptChars": 4448,
+          "promptEvalCount": 1520,
+          "evalCount": 1592,
+          "errors": [
+            "daily output shape mismatch"
+          ],
+          "skillValidator": {
+            "passed": false,
+            "result": "{\"valid\":false,\"errors\":[\"lots\",\"lotIds\"]}"
+          },
+          "artifact": "qwen35-screen-20260807-daily-content-qwen3.5-9b-runtime-json-t1-a2.json",
+          "diagnosis": "contract-compliance"
+        }
+      ],
+      "totalLatencyMs": 33225,
+      "totalEvalCount": 3407,
+      "diagnosis": "contract-compliance"
+    }
+  ]
+}

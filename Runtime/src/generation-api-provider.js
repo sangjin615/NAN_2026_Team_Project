@@ -1,0 +1,79 @@
+export class GenerationApiProvider {
+  constructor(config) { this.config = config; this.cancelled = false; this.active = new Set(); }
+
+  // 로딩 화면의 취소 수단이 이걸 부른다. 블루프린트는 최악 120초까지 기다리므로
+  // 중단할 방법이 없으면 플레이어가 그동안 아무것도 못 한다. 중단하면 요청이
+  // 즉시 실패하고, GenerationBuffer 가 로컬 대체 문구로 게임을 계속 진행한다.
+  cancel() {
+    this.cancelled = true;
+    for (const controller of this.active) controller.abort();
+    this.active.clear();
+  }
+
+  // 새 런을 시작할 때 되돌린다. 지난 런에서 취소했다고 다음 런까지 막히면 안 된다.
+  reset() { this.cancelled = false; }
+  timeoutFor(mode) {
+    if (mode === 'run-blueprint') return this.config.blueprintTimeoutMs ?? this.config.timeoutMs ?? 8000;
+    if (mode === 'daily-content') return this.config.dayTimeoutMs ?? this.config.timeoutMs ?? 8000;
+    return this.config.timeoutMs ?? 8000;
+  }
+  async request(body, timeoutMs = this.config.timeoutMs || 8000) {
+    if (!this.config?.enabled || !this.config.endpoint) throw new Error('generation API is disabled');
+    if (this.cancelled) throw new Error('generation cancelled');
+    let lastError;
+    for (let attempt = 0; attempt <= (this.config.retries || 0); attempt += 1) {
+      if (this.cancelled) throw new Error('generation cancelled');
+      const controller = new AbortController(); const timer = setTimeout(() => controller.abort(), timeoutMs);
+      this.active.add(controller);
+      try {
+        const response = await fetch(this.config.endpoint, { method: 'POST', headers: { 'content-type': 'application/json', ...(this.config.requestHeaders || {}) }, body: JSON.stringify(body), signal: controller.signal });
+        if (!response.ok) throw new Error(`generation API ${response.status}`);
+        return await response.json();
+      } catch (error) { lastError = this.cancelled ? new Error('generation cancelled') : error; } finally { clearTimeout(timer); this.active.delete(controller); }
+    }
+    throw lastError;
+  }
+
+  async generateBlueprint({ runSeed, sets, schedule, market }) {
+    const categories = Object.keys(market);
+    const lotById = new Map((schedule?.days || []).flatMap(({ lots }) => lots).map((lot) => [lot.lotId, lot]));
+    const marketSignals = Array.from({ length: 12 }, (_, index) => {
+      const leadingCategory = categories.reduce((best, category) => Math.abs(market[category][index] - 1) > Math.abs(market[best][index] - 1) ? category : best, categories[0]);
+      const value = market[leadingCategory][index];
+      return { day: index + 1, leadingCategory, direction: value > 1.04 ? '상승' : value < 0.96 ? '하락' : '보합' };
+    });
+    const request = {
+      schemaVersion: this.config.schemaVersion || '1.0', mode: 'run-blueprint', runSeed,
+      sets: sets.map(({ setId, themeKey, lotIds = [] }) => ({
+        setId,
+        themeKey,
+        members: lotIds.map((lotId) => lotById.get(lotId)).filter(Boolean).map(({ lotId, baseName, category }) => ({ lotId, baseName, category })),
+      })),
+      marketSignals,
+    };
+    const payload = await this.request(request, this.timeoutFor(request.mode));
+    if (payload.schemaVersion !== request.schemaVersion || payload.runSeed !== runSeed || !Array.isArray(payload.marketArc) || payload.marketArc.length !== 12) throw new Error('blueprint response contract mismatch');
+    if (JSON.stringify(payload.sets?.map(({ setId }) => setId)) !== JSON.stringify(request.sets.map(({ setId }) => setId))) throw new Error('blueprint set IDs mismatch');
+    if (payload.sets.some((set) => !set.incidentTitle || !set.incidentSummary || !set.newspaperLead)) throw new Error('blueprint incident copy is incomplete');
+    return payload;
+  }
+
+  async generateDay({ day, lots, sets, blueprint }) {
+    const relevantSetIds = new Set(lots.map(({ setId }) => setId));
+    const request = {
+      schemaVersion: this.config.schemaVersion || '1.0', mode: 'daily-content',
+      runSeed: blueprint?.runSeed || lots[0]?.lotId.split('-d')[0] || 'unknown', day,
+      context: {
+        premise: blueprint?.premise || '',
+        market: blueprint?.marketArc?.[day - 1] || null,
+        sets: (blueprint?.sets || sets).filter(({ setId }) => relevantSetIds.has(setId)),
+      },
+      lots: lots.map(({ lotId, baseName, category, grade, setId }) => ({ lotId, baseName, category, grade, setId })),
+    };
+    const payload = await this.request(request, this.timeoutFor(request.mode));
+    if (payload.schemaVersion !== request.schemaVersion || payload.day !== day || !Array.isArray(payload.lots) || payload.lots.length !== lots.length) throw new Error('generation response contract mismatch');
+    if (JSON.stringify(payload.lots.map(({ lotId }) => lotId)) !== JSON.stringify(request.lots.map(({ lotId }) => lotId))) throw new Error('generation LOT IDs mismatch');
+    if (payload.lots.some((lot) => !lot.displayName || !lot.description)) throw new Error('generation response contains invalid LOT data');
+    return payload.lots.map((lot) => ({ ...lot, provenance: 'generation-api', generatedForDay: day }));
+  }
+}

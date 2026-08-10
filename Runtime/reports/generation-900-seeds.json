@@ -1,0 +1,24 @@
+{
+  "measuredAt": "2026-08-03T14:56:47.517Z",
+  "seeds": 900,
+  "totalLots": 86400,
+  "invalidSchedules": 0,
+  "gradeDistribution": {
+    "COMMON": {
+      "count": 21433,
+      "rate": 0.2481
+    },
+    "RARE": {
+      "count": 32551,
+      "rate": 0.3767
+    },
+    "EPIC": {
+      "count": 21744,
+      "rate": 0.2517
+    },
+    "LEGENDARY": {
+      "count": 10672,
+      "rate": 0.1235
+    }
+  }
+}

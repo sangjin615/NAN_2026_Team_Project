@@ -1,0 +1,378 @@
+{
+  "id": "scene-office",
+  "type": "scene",
+  "title": "의뢰소",
+  "groupId": "g-city",
+  "x": 760,
+  "y": 560,
+  "description": "이번 경매의 규칙을 바꾸는 의뢰와 출품 품질 감정을 두 탭으로 제공한다.",
+  "requirements": [
+    "의뢰 5종 중 3종 랜덤 제시",
+    "동시 수주 인위적 상한 없음",
+    "약식·정밀 감정",
+    "감정 가격·정밀도 사전 공개"
+  ],
+  "referencePath": "V5 §9.1, §10, §13, §17.5",
+  "image": "assets/reference/scene-mockups/office.png",
+  "annotations": [
+    {
+      "id": "scene-office-topbar",
+      "type": "area",
+      "xPercent": 50,
+      "yPercent": 5,
+      "coordinateSpace": "image",
+      "title": "[공통] 여정 상태 표시",
+      "requirement": "현재 일차·자금·상회 단계·보관칸을 표시한다. 대출 활성 시 만기 잔여 일수·상환 총액·담보 처분가 합계를 함께 표시한다.",
+      "acceptanceCriteria": [
+        "일차는 현재 값과 12일을 함께 표시한다.",
+        "플레이어 자금은 예산이라고 부르지 않는다.",
+        "대출이 없으면 대출 관련 값은 숨긴다."
+      ],
+      "refType": "data",
+      "actionRef": "",
+      "dataRefs": [
+        "run.day",
+        "run.totalDays",
+        "player.cash",
+        "shop.stage",
+        "player.inventory",
+        "player.storageCapacity",
+        "loan.dueDay",
+        "loan.repay",
+        "loan.collateralDisposalValue"
+      ],
+      "navTargetSceneId": "",
+      "modalName": "",
+      "commonKey": "global-topbar",
+      "failureSlot": false,
+      "sourceBasis": "V5 §0.5.2, §5, §12",
+      "implementationStatus": "implemented",
+      "widthPercent": 92,
+      "heightPercent": 8
+    },
+    {
+      "id": "office-tabs",
+      "type": "area",
+      "xPercent": 50,
+      "yPercent": 15,
+      "coordinateSpace": "image",
+      "title": "의뢰·감정 탭",
+      "requirement": "의뢰 목록과 감정 상품 목록을 전환한다.",
+      "acceptanceCriteria": [
+        "탭 전환만으로 상태가 변하지 않는다."
+      ],
+      "refType": "action",
+      "actionRef": "act-switch-office-tab",
+      "dataRefs": [],
+      "navTargetSceneId": "",
+      "modalName": "",
+      "commonKey": "scene-tabs",
+      "failureSlot": false,
+      "sourceBasis": "V5 §9.1, §10",
+      "implementationStatus": "implemented",
+      "widthPercent": 45,
+      "heightPercent": 8,
+      "soundCue": "sfx-ui-tab"
+    },
+    {
+      "id": "office-quests",
+      "type": "area",
+      "xPercent": 30,
+      "yPercent": 48,
+      "coordinateSpace": "image",
+      "title": "의뢰 목록",
+      "requirement": "지정·다중·차익·절제·견제 의뢰와 수주 비용·보상을 표시한다.",
+      "acceptanceCriteria": [
+        "매일 5종 중 3종을 제시한다.",
+        "의뢰는 납품이 아니라 경매 규칙 변형으로 설명한다."
+      ],
+      "refType": "data",
+      "actionRef": "",
+      "dataRefs": [
+        "quests.available",
+        "daily.acceptedQuests"
+      ],
+      "navTargetSceneId": "",
+      "modalName": "",
+      "commonKey": "",
+      "failureSlot": false,
+      "sourceBasis": "V5 §10",
+      "implementationStatus": "implemented",
+      "widthPercent": 42,
+      "heightPercent": 56
+    },
+    {
+      "id": "office-accept",
+      "type": "pin",
+      "xPercent": 30,
+      "yPercent": 80,
+      "coordinateSpace": "image",
+      "title": "의뢰 수주",
+      "requirement": "선택한 의뢰를 수주한다.",
+      "acceptanceCriteria": [
+        "수주비를 차감한다.",
+        "비용 부족 시 상태를 바꾸지 않는다."
+      ],
+      "refType": "action",
+      "actionRef": "act-accept-quest",
+      "dataRefs": [
+        "player.cash",
+        "quests.available"
+      ],
+      "navTargetSceneId": "",
+      "modalName": "",
+      "commonKey": "",
+      "failureSlot": false,
+      "sourceBasis": "V5 §10, §17.5",
+      "implementationStatus": "implemented",
+      "soundCue": "sfx-quest-accept"
+    },
+    {
+      "id": "office-appraisals",
+      "type": "area",
+      "xPercent": 72,
+      "yPercent": 48,
+      "coordinateSpace": "image",
+      "title": "감정 상품 목록",
+      "requirement": "오늘 감정 가능한 출품과 약식·정밀 가격·정밀도를 표시한다.",
+      "acceptanceCriteria": [
+        "품질과 실가치는 감정 전 비공개다.",
+        "정밀도와 가격은 구매 전에 표시한다."
+      ],
+      "refType": "data",
+      "actionRef": "",
+      "dataRefs": [
+        "daily.lots",
+        "daily.appraisals",
+        "player.cash"
+      ],
+      "navTargetSceneId": "",
+      "modalName": "",
+      "commonKey": "",
+      "failureSlot": false,
+      "sourceBasis": "V5 §9.1",
+      "implementationStatus": "implemented",
+      "widthPercent": 42,
+      "heightPercent": 56
+    },
+    {
+      "id": "office-appraise",
+      "type": "pin",
+      "xPercent": 72,
+      "yPercent": 80,
+      "coordinateSpace": "image",
+      "title": "감정 구매",
+      "requirement": "선택 출품의 품질 범위를 구매한다.",
+      "acceptanceCriteria": [
+        "중심값이 실가치를 직접 누설하지 않는다.",
+        "비용 부족 시 상태를 바꾸지 않는다."
+      ],
+      "refType": "action",
+      "actionRef": "act-appraise-lot",
+      "dataRefs": [
+        "auction.currentLot",
+        "player.cash",
+        "run.day",
+        "shop.stage"
+      ],
+      "navTargetSceneId": "",
+      "modalName": "",
+      "commonKey": "",
+      "failureSlot": false,
+      "sourceBasis": "V5 §9.1",
+      "implementationStatus": "implemented",
+      "soundCue": "sfx-appraise-start"
+    },
+    {
+      "id": "office-back",
+      "type": "pin",
+      "xPercent": 8,
+      "yPercent": 9,
+      "coordinateSpace": "image",
+      "title": "도시로",
+      "requirement": "구매 결과를 유지하고 도시로 돌아간다.",
+      "acceptanceCriteria": [
+        "의뢰·감정 상태를 유지한다."
+      ],
+      "refType": "action",
+      "actionRef": "act-return-city",
+      "dataRefs": [],
+      "navTargetSceneId": "scene-city",
+      "modalName": "",
+      "commonKey": "return-city",
+      "failureSlot": false,
+      "sourceBasis": "V5 §5.3",
+      "implementationStatus": "implemented",
+      "soundCue": "sfx-ui-back"
+    }
+  ],
+  "actionRefs": [
+    "act-switch-office-tab",
+    "act-accept-quest",
+    "act-appraise-lot",
+    "act-return-city",
+    "act-save-game",
+    "act-open-settings"
+  ],
+  "implementationStatus": "implemented",
+  "referenceImage": "assets/reference/scene-mockups/office.png",
+  "runtimeBackground": "assets/reference/scene-mockups/office.png",
+  "imageRole": "reference-mockup",
+  "assetStatus": "mockup-available-pure-background-missing",
+  "uiRequirements": [
+    {
+      "id": "office-topbar",
+      "name": "일차·자금·상회 단계",
+      "kind": "global-status",
+      "priority": "A",
+      "implementationStatus": "implemented",
+      "dataRefs": [],
+      "actionRefs": [],
+      "notes": ""
+    },
+    {
+      "id": "office-tabs",
+      "name": "의뢰/감정 탭",
+      "kind": "tabs",
+      "priority": "A",
+      "implementationStatus": "implemented",
+      "dataRefs": [],
+      "actionRefs": [],
+      "notes": ""
+    },
+    {
+      "id": "office-quest-list",
+      "name": "오늘의 의뢰 제시 목록",
+      "kind": "list",
+      "priority": "A",
+      "implementationStatus": "implemented",
+      "dataRefs": [
+        "quests.available",
+        "daily.acceptedQuests"
+      ],
+      "actionRefs": [],
+      "notes": ""
+    },
+    {
+      "id": "office-quest-detail",
+      "name": "의뢰 조건·수주비·보상·현재 진행",
+      "kind": "detail-panel",
+      "priority": "A",
+      "implementationStatus": "partial",
+      "dataRefs": [],
+      "actionRefs": [],
+      "notes": ""
+    },
+    {
+      "id": "office-accept",
+      "name": "의뢰 수주 버튼",
+      "kind": "button",
+      "priority": "A",
+      "implementationStatus": "implemented",
+      "dataRefs": [],
+      "actionRefs": [
+        "act-accept-quest"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "office-appraisal-list",
+      "name": "감정 대상 목록",
+      "kind": "list",
+      "priority": "A",
+      "implementationStatus": "implemented",
+      "dataRefs": [
+        "daily.lots",
+        "daily.appraisals"
+      ],
+      "actionRefs": [],
+      "notes": ""
+    },
+    {
+      "id": "office-appraisal-detail",
+      "name": "약식/정밀 가격·정밀도·대상 정보",
+      "kind": "detail-panel",
+      "priority": "A",
+      "implementationStatus": "implemented",
+      "dataRefs": [],
+      "actionRefs": [],
+      "notes": ""
+    },
+    {
+      "id": "office-appraise",
+      "name": "감정 구매 버튼",
+      "kind": "button",
+      "priority": "A",
+      "implementationStatus": "implemented",
+      "dataRefs": [],
+      "actionRefs": [
+        "act-appraise-lot"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "office-back",
+      "name": "도시 복귀 버튼",
+      "kind": "button",
+      "priority": "A",
+      "implementationStatus": "implemented",
+      "dataRefs": [],
+      "actionRefs": [],
+      "notes": ""
+    }
+  ],
+  "popupRefs": [
+    "popup-appraisal-result",
+    "toast-global",
+    "modal-settings",
+    "popup-global-failure"
+  ],
+  "mockupCorrections": [
+    "전용 목업과 순수 배경이 제공되지 않았다.",
+    "감정소가 아니라 V5 용어인 의뢰소를 사용한다.",
+    "의뢰는 납품 목록이 아니라 이번 경매의 규칙 변형으로 설명한다."
+  ],
+  "backgroundPolicy": {
+    "source": "reference-temporary",
+    "path": "assets/reference/scene-mockups/office.png",
+    "fit": "contain",
+    "temporaryRuntimeUse": true,
+    "onMissingAsset": "show-error-placeholder",
+    "contentRect": {
+      "x": 0.0,
+      "y": 79.77,
+      "width": 1536.0,
+      "height": 864.459,
+      "xPercent": 0.0,
+      "yPercent": 7.790072,
+      "widthPercent": 100.0,
+      "heightPercent": 84.419856
+    },
+    "sourceImageSize": {
+      "width": 1672,
+      "height": 941
+    },
+    "sceneTransform": {
+      "scale": 1.0,
+      "offsetXPercent": 0.0,
+      "offsetYPercent": 0.0,
+      "anchor": "center",
+      "appliesTo": "background-and-scene-ui",
+      "editable": true
+    }
+  },
+  "runtimeBackgroundSource": "reference-temporary",
+  "temporaryRuntimeUse": true,
+  "layoutCanvas": {
+    "width": 1536,
+    "height": 1024
+  },
+  "failureFeedbackRef": "popup-global-failure",
+  "failureFeedbackPolicy": "global-popup",
+  "sound": {
+    "bgm": "bgm-02-city",
+    "layers": null,
+    "layersOnSuccess": null,
+    "restart": false
+  }
+}

@@ -67,12 +67,12 @@ function disposalValue(item, index) {
   return round10(item.basePrice * item.quality * demandOf(item, index) * pen);
 }
 
-function makeBots(day, R) {
-  const nem = round100(B.nemesisInitial * Math.pow(B.nemesisGrowth, day));
+function makeBots(day, R, stage = 1) {
+  const nem = B.botCapital[stage];
   const bots = [{ id: 'bennett', nemesis: true, target: FAMILIES[Math.floor(R() * 6)], cash: nem }];
   for (let i = 0; i < B.drifterCount; i += 1)
     bots.push({ id: 'd' + i, nemesis: false, target: FAMILIES[Math.floor(R() * 6)],
-      cash: round100(nem * B.drifterRatio * (0.85 + R() * 0.3)) });
+      cash: nem });
   return bots;
 }
 // 봇도 품질을 모른다. V5 v1.1->v1.5 가 "일반 봇이 숨은 실제 품질을 직접 읽지 않도록" 고쳤다.
@@ -176,11 +176,17 @@ function runCampaign(seed, opts) {
     if (loan && day >= loan.dueDay) {
       if (cash >= loan.repay) { cash -= loan.repay; loanInterest += loan.repay - loan.principal;
         const c = inv.find((x) => x.locked); if (c) c.locked = false; loan = null; }
-      else { const c = inv.find((x) => x.locked); if (c) inv = inv.filter((x) => x !== c);
+      else { const c = inv.find((x) => x.locked); const collateralCredit = c ? c.basePrice : 0;
+        if (c) inv = inv.filter((x) => x !== c);
+        cash -= Math.max(0, loan.repay - collateralCredit);
         guildLocked = true; loanSeized += 1; loan = null; }
     }
-    const lots = pool.slice((day - 1) * B.lotsPerDay, day * B.lotsPerDay);
-    const bots = makeBots(day, R);
+    // 그날의 상회 단계로 명목 기준가를 한 번 확정한다. 보유 중 승급해도 다시 오르지 않는다.
+    const priceMul = B.priceMultiplier[stage] || 1;
+    const lots = pool.slice((day - 1) * B.lotsPerDay, day * B.lotsPerDay).map((l) => ({
+      ...l, catalogBasePrice: l.basePrice, basePrice: round100(l.basePrice * priceMul),
+    }));
+    const bots = makeBots(day, R, stage);
 
     // 의뢰 수주
     const taken = [];
@@ -237,12 +243,13 @@ function runCampaign(seed, opts) {
     }
 
     // 대출. 현금이 오늘 살 수 있는 수준 아래로 떨어지면 재고를 담보로 잡는다.
-    if (cfg.useLoan && !loan && !guildLocked && stage >= B.loanMinStage) {
+    if (cfg.useLoan && !loan && !guildLocked && stage >= B.loanMinStage && day + B.loanTermDays <= B.days) {
       const coll = inv.filter((x) => !x.locked && x.acquiredDay < day);
       const need = cfg.loanTrigger || 0;
       if (coll.length && cash < need) {
         const c = coll.reduce((a, b) => (disposalValue(b, index) > disposalValue(a, index) ? b : a));
-        const p = round10(disposalValue(c, index) * B.loanLtv);
+        // 공개 기준가를 사용한다. 숨은 품질·실가치를 대출 견적으로 역산할 수 없게 한다.
+        const p = round10(c.basePrice * B.loanLtv);
         c.locked = true;
         loan = { principal: p, repay: round10(p * B.loanRepay), dueDay: day + B.loanTermDays };
         cash += p; loanTaken += 1;
@@ -301,6 +308,8 @@ function runCampaign(seed, opts) {
       const r = runLot(l, bots, ceiling, cash, stage, index, R, cfg);
       if (r.winner !== 'player') {
         if (r.winner) {
+          const winnerBot = bots.find((b) => b.id === r.winner);
+          if (winnerBot) winnerBot.cash = Math.max(0, winnerBot.cash - r.price);
           botSpend[r.winner] = (botSpend[r.winner] || 0) + r.price;
           if (r.playerBid) pushed[r.winner] = (pushed[r.winner] || 0) + (r.price - r.startBid);
         }
@@ -371,7 +380,8 @@ function runCampaign(seed, opts) {
     }
     // 6.28 실제 규칙: 현금 0 + 팔 수 있는 보유품 0 + 담보 대출 불가, 셋이 다 성립해야 파산이다.
     const sellable = inv.filter((x) => !x.locked);
-    const canLoan = stage >= B.loanMinStage && !guildLocked && !loan && sellable.some((x) => x.acquiredDay < day + 1);
+    const canLoan = stage >= B.loanMinStage && !guildLocked && !loan && day + B.loanTermDays <= B.days
+      && sellable.some((x) => x.acquiredDay < day + 1);
     if (cash <= 0 && sellable.length === 0 && !canLoan) return { final: 0, ruined: true, day, stage, setIncome, questIncome, upgradeSpend, setsDone, questsDone, bought, branchSpend, branches: br, loanTaken, loanSeized, loanInterest, guildLocked, qTry, qOk };
     const req = day >= 9 ? 4 : day >= 6 ? 3 : day >= 3 ? 2 : 1;
     if (stage < req) return { final: 0, ruined: false, deadlineFail: day + 1, day, stage, setIncome, questIncome, upgradeSpend, setsDone, questsDone, bought, branchSpend, branches: br, loanTaken, loanSeized, loanInterest, guildLocked, qTry, qOk };
