@@ -739,7 +739,7 @@ function renderCatalog() {
 }
 
 function activeCatalogQuests() {
-  const quests = [...(state.activeQuests || []), ...(state.questOffers || []).filter((quest) => quest.accepted)];
+  const quests = [...(state.questOffers || []).filter((quest) => quest.accepted), ...(state.activeQuests || [])];
   return [...new Map(quests.filter((quest) => !quest.completed).map((quest) => [quest.offerId || quest.id, quest])).values()];
 }
 
@@ -777,7 +777,7 @@ function renderAuction() {
   auctionFeed.innerHTML = state.auctionSession.feed.map((line) => `<p>${escapeHtml(line)}</p>`).join('');
   auctionFeed.scrollTop = auctionFeed.scrollHeight;
   const participants = [
-    { name: '당신', budget: state.cash, leader: state.auctionSession.leader === 'player', player: true },
+    { id: 'player', name: '당신', budget: state.cash, leader: state.auctionSession.leader === 'player', player: true },
     ...state.auctionSession.bots.map((bot) => ({ id: bot.id, name: bot.name, budget: estimateBotDailyAssets({ state, balance })[bot.id]?.remaining || 0, leader: state.auctionSession.leader === bot.id })),
   ];
   const competitorPortraits = {
@@ -820,12 +820,25 @@ function finishLot(action, multiplier = 1, directPrice = null) {
 function renderSettlement() {
   clearActionTimer(); audio.playBgm('settlement');
   if (state.settledDay !== state.day) {
-    const quests = settleQuests(state); const loan = settleLoan(state); state.settledDay = state.day; state.lastSettlement = { quests, loan };
+    const loanSnapshot = state.loan ? {
+      lotId: state.loan.lotId,
+      principal: state.loan.principal,
+      collateralName: state.inventory.find((item) => item.lotId === state.loan.lotId)?.name
+        || scheduledLot(state.loan.lotId)?.content?.displayName
+        || scheduledLot(state.loan.lotId)?.baseName
+        || state.loan.lotId,
+    } : null;
+    const quests = settleQuests(state); const loan = settleLoan(state); state.settledDay = state.day; state.lastSettlement = { quests, loan, loanSnapshot };
     if (missedDeadline(state)) state.failure = `${state.day}일차 승급 기한 실패 · 상회 ${state.shopStage}단계`;
   }
   adapter.showScene('settlement'); adapter.setText('day', state.day);
-  const loanLabels = { none: '변동 없음', repaid: '상환 완료', seized: '담보 처분' };
-  const loanResult = loanLabels[state.lastSettlement.loan] || state.lastSettlement.loan;
+  const settlementLoan = state.loan || state.lastSettlement?.loanSnapshot;
+  const collateralItem = settlementLoan ? state.inventory.find((item) => item.lotId === settlementLoan.lotId) : null;
+  const collateralLot = settlementLoan ? scheduledLot(settlementLoan.lotId) : null;
+  const collateralName = settlementLoan
+    ? (collateralItem?.name || settlementLoan.collateralName || collateralLot?.content?.displayName || collateralLot?.baseName || settlementLoan.lotId)
+    : '없음';
+  const borrowedAmount = settlementLoan ? money(settlementLoan.principal) : '0 G';
   const dayHistory = state.history.filter((entry) => entry.day === state.day);
   const wins = dayHistory.filter((entry) => entry.won);
   const spent = wins.reduce((sum, entry) => sum + entry.price, 0);
@@ -834,7 +847,7 @@ function renderSettlement() {
   const buyerNames = { player: '당신', nemesis: '갈레오', 'drifter-a': '모이라', 'drifter-b': '이네스' };
   document.querySelector('#settlement-summary').innerHTML = `
     <section class="settlement-lots"><h3>경매 결과 (경매품 8개)</h3>${dayHistory.map((entry, index) => { const lot = dayLots.find((candidate) => candidate.lotId === entry.lotId); const lotName = lot?.content?.displayName || lot?.baseName || `경매품 ${index + 1}`; const buyerName = buyerNames[entry.winner] || '경쟁자'; return `<article><div><b title="${escapeHtml(lotName)}">${escapeHtml(lotName)}</b><span class="${entry.won ? 'won' : 'lost'}">${entry.won ? '내 낙찰' : '경쟁자 낙찰'}</span></div><p><em>구매자 · ${buyerName}</em><strong>${money(entry.price)}</strong></p></article>`; }).join('')}</section>
-    <section class="settlement-center"><h3>오늘의 정산</h3><div class="settlement-owned"><b>획득 물품</b><strong>${wins.length}개</strong><span>현재 보관 ${ownedItems().length} / ${state.storage}</span></div><div class="settlement-money settlement-finance"><h4>자금 현황</h4><p><img src="./assets/ui/action-icons/total-spent.png" alt=""><span>총 지출 금액</span><strong>${money(spent)}</strong></p><p><img src="./assets/ui/action-icons/current-assets.png" alt=""><span>현재 자산</span><strong>${money(state.cash)}</strong></p></div><div class="settlement-money settlement-progress"><h4>운영 현황</h4><p><span>완료 의뢰</span><strong>${state.lastSettlement.quests}건</strong></p><p><span>대출 상태</span><strong>${loanResult}</strong></p></div></section>
+    <section class="settlement-center"><h3>오늘의 정산</h3><div class="settlement-owned"><b>획득 물품</b><strong>${wins.length}개</strong><span>현재 보관 ${ownedItems().length} / ${state.storage}</span></div><div class="settlement-money settlement-finance"><h4>자금 현황</h4><p><img src="./assets/ui/action-icons/total-spent.png" alt=""><span>총 지출 금액</span><strong>${money(spent)}</strong></p><p><img src="./assets/ui/action-icons/current-assets.png" alt=""><span>현재 자산</span><strong>${money(state.cash)}</strong></p></div><div class="settlement-money settlement-progress"><h4>운영 현황</h4><p><span>완료 의뢰</span><strong>${state.lastSettlement.quests}건</strong></p><p><span>담보 물품</span><strong title="${escapeHtml(collateralName)}">${escapeHtml(collateralName)}</strong></p><p><span>대출 금액</span><strong>${borrowedAmount}</strong></p></div></section>
     <section class="settlement-market"><h3>계열별 시세 요약</h3>${categories.map((category) => { const value = state.marketPath[category]?.[state.day - 1] ?? 1; const percent = value * 100; const trendIcon = value >= 1 ? 'market-rise.png' : 'market-fall.png'; return `<p><img src="./assets/ui/action-icons/${trendIcon}" alt=""><b>${categoryLabel(category)}</b><span class="market-line" style="--market:${Math.max(15, Math.min(95, percent - 40))}%"></span><strong>${Math.round(percent)}%</strong></p>`; }).join('')}</section>`;
   const nextDayLabel = state.failure ? '실패 결과 확인' : state.day === RUN_DAYS ? `${RELIC_AUCTION_DAY}일차 도시로` : `${state.day + 1}일차로`;
   document.querySelector('#next-day').innerHTML = `<img src="./assets/ui/action-icons/next-day.png" alt=""><span>${nextDayLabel}</span>`;
@@ -986,13 +999,17 @@ function renderResult() {
   document.querySelector('[data-scene="result"]').classList.toggle('is-failure', Boolean(state.failure));
   const unsold = ownedItems().reduce((sum, item) => sum + item.basePrice, 0);
   const relics = ownedRelicIds(); localStorage.setItem('unknown-auction:relics', JSON.stringify(relics));
-  document.querySelector('#result-title').textContent = state.failure ? '여정 실패' : `${JOURNEY_DAYS}일 여정 완료`;
+  document.querySelector('#result-title').textContent = state.failure ? '런 결과' : `${JOURNEY_DAYS}일 여정 완료`;
   const wonCount = state.history.filter((entry) => entry.won).length;
   const acquiredRelics = (state.relicChoices || []).map((id) => balance.relics.list.find((entry) => entry.id === id)?.name || id);
   const resultVisual = state.failure
     ? '<img class="result-status-icon" src="./assets/ui/action-icons/restart.png" alt="">'
     : '<img class="result-scene-art" src="./assets/ui/ending/ending-success-scene.png" alt="성장한 상회와 항구를 바라보는 상회 주인">';
-  document.querySelector('#run-summary').innerHTML = `<section class="result-ending"><small class="result-kicker">JOURNEY RESULT · ${state.day}일</small>${resultVisual}<h3>${state.failure ? '여정 실패' : `상회 ${state.shopStage}단계 달성`}</h3>${state.failure ? `<p class="failure">${state.failure}</p>` : '<p>신중한 거래와 꾸준한 성장으로 여정을 마쳤습니다.</p>'}<strong>${state.failure ? '마감 조건을 다시 확인하세요.' : '완주 성공'}</strong></section><section class="result-stats"><h3>여정 요약</h3><p><span>완주 일수</span><b>${state.day}일</b></p><p><span>최종 상회 단계</span><b>${state.shopStage}단계</b></p><p><span>최종 자산</span><b>${money(state.cash + unsold)}</b></p><p><span>낙찰 / 완료 의뢰</span><b>${wonCount}건 / ${state.completedQuestCount}건</b></p><p><span>획득 유물</span><b>${acquiredRelics.join(', ') || '없음'}</b></p></section>`;
+  if (state.failure) {
+    document.querySelector('#run-summary').innerHTML = `<section class="result-ending"><small class="result-kicker">결과</small><h3>파산</h3>${resultVisual}<div class="result-final-state"><b>최종 상태</b><p>여정에 실패했습니다.</p></div></section><section class="result-failure-reason"><h3>실패 원인</h3><p class="failure">${state.failure}</p><strong>마감 조건을 다시 확인하세요.</strong></section><section class="result-stats"><h3>여정 요약</h3><p><span>완주 일수</span><b>${state.day}일</b></p><p><span>최종 상회 단계</span><b>${state.shopStage}단계</b></p><p><span>최종 자산</span><b>${money(state.cash + unsold)}</b></p><p><span>낙찰 / 완료 의뢰</span><b>${wonCount}건 / ${state.completedQuestCount}건</b></p><p><span>획득 유물</span><b>${acquiredRelics.join(', ') || '없음'}</b></p></section>`;
+  } else {
+    document.querySelector('#run-summary').innerHTML = `<section class="result-ending"><small class="result-kicker">JOURNEY RESULT · ${state.day}일</small>${resultVisual}<h3>상회 ${state.shopStage}단계 달성</h3><p>신중한 거래와 꾸준한 성장으로 여정을 마쳤습니다.</p><strong>완주 성공</strong></section><section class="result-stats"><h3>여정 요약</h3><p><span>완주 일수</span><b>${state.day}일</b></p><p><span>최종 상회 단계</span><b>${state.shopStage}단계</b></p><p><span>최종 자산</span><b>${money(state.cash + unsold)}</b></p><p><span>낙찰 / 완료 의뢰</span><b>${wonCount}건 / ${state.completedQuestCount}건</b></p><p><span>획득 유물</span><b>${acquiredRelics.join(', ') || '없음'}</b></p></section>`;
+  }
   if (state.failure) save();
   else store.clear(state.saveSlot);
 }

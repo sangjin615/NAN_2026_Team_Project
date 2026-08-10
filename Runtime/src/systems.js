@@ -212,7 +212,9 @@ export function acceptQuest(state, questId, balance) {
   if (!quest || state.day > RUN_DAYS || balance.quests[quest.id]?.enabled === false || state.cash < quest.fee) return false;
   state.cash -= quest.fee; quest.accepted = true;
   const span = (state.metaRelics || []).includes('leather-ledger') ? (balance.relicEffects?.['leather-ledger']?.questDeadlineDays ?? 3) : 2;
-  state.activeQuests.push({ ...quest, acceptedDay: state.day, deadlineDay: Math.min(RELIC_AUCTION_DAY, state.day + span) });
+  quest.acceptedDay = state.day;
+  quest.deadlineDay = Math.min(RELIC_AUCTION_DAY, state.day + span);
+  state.activeQuests.push({ ...quest });
   return true;
 }
 
