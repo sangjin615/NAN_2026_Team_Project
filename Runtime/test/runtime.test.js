@@ -25,9 +25,11 @@ test('relic ownership includes saved and newly acquired relics without duplicate
   );
 });
 
-test('auction bids add three seconds and the clock shows tenths', () => {
-  assert.equal(extendAuctionDeadline(15000), 18000);
-  assert.equal(extendAuctionDeadline(18000), 21000);
+test('auction bids add three seconds without exceeding fifteen seconds remaining', () => {
+  const now = 100000;
+  assert.equal(extendAuctionDeadline(now + 10000, now), now + 13000);
+  assert.equal(extendAuctionDeadline(now + 14000, now), now + 15000);
+  assert.equal(extendAuctionDeadline(now + 15000, now), now + 15000);
   assert.equal(formatAuctionTime(14949), '14.9초');
   assert.equal(formatAuctionTime(0), '0.0초');
 });
@@ -75,6 +77,13 @@ test('auction participant portraits include the player and all relic rivals', as
   for (const portrait of ['player-merchant.png', 'royal-agent.png', 'northern-merchant.png', 'foreign-collector.png']) {
     assert.match(appSource, new RegExp(portrait.replace('.', '\\.')));
   }
+});
+
+test('normal auction gives the player an id so the protagonist portrait resolves', async () => {
+  const appSource = await readFile(new URL('../src/app.js', import.meta.url), 'utf8');
+  assert.match(appSource, /\{ id: 'player', name: '당신', budget: state\.cash,/);
+  assert.match(appSource, /player: '\.\/assets\/ui\/auction\/portraits\/player-merchant\.png'/);
+  assert.match(appSource, /src="\$\{competitorPortraits\[participant\.id\]\}"/);
 });
 
 test('relic auction renders a three-lot guide with effects and auction states', async () => {
@@ -157,8 +166,8 @@ test('guild artwork keeps its native ratio inside the 16:9 canvas', async () => 
 test('guild loan controls are vertically balanced inside the painted panels', async () => {
   const css = await readFile(new URL('../runtime-fixes.css', import.meta.url), 'utf8');
   assert.match(css, /\[data-scene="guild"\] #guild-detail\s*\{\s*padding: 62px 24px 12px;/);
-  assert.match(css, /\[data-scene="guild"\] \.actions\s*\{\s*top: 60\.5%; height: 14\.5%; align-items: center;/);
-  assert.match(css, /\[data-scene="guild"\] #guild-message\s*\{\s*left: 8\.7%; top: 75\.8%; width: 53\.4%; height: 8\.8%;\s*max-width: none;/);
+  assert.match(css, /\[data-scene="guild"\] \.actions\s*\{\s*top: 60\.5%; height: 14\.5%; align-items: end;/);
+  assert.match(css, /\[data-scene="guild"\] #guild-message\s*\{\s*left: calc\(8\.7% \+ 5px\); top: 75\.8%; width: calc\(53\.4% - 10px\); height: 8\.8%;\s*max-width: none;/);
 });
 
 test('the 16:9 canvas can grow beyond 1600 by 900', async () => {
@@ -225,7 +234,7 @@ test('catalog quest list stays inside the painted parchment area', async () => {
   const css = await readFile(new URL('../runtime-fixes.css', import.meta.url), 'utf8');
   assert.match(css, /#catalog-quest-dialog\s*\{[^\}]*aspect-ratio: 730 \/ 565;[^\}]*overflow: hidden;/);
   assert.match(css, /#catalog-quest-dialog\[open\]\s*\{[^\}]*display: block;/);
-  assert.match(css, /#catalog-quest-list\s*\{[^\}]*position: absolute; left: 9\.5%; right: 9\.5%; top: 21%; bottom: 11%;[^\}]*overflow-y: auto;/);
+  assert.match(css, /#catalog-quest-list\s*\{[^\}]*position: absolute; left: 9\.5%; right: calc\(9\.5% \+ 4px\); top: 21%; bottom: 11%;[^\}]*overflow-y: auto;/);
 });
 
 test('accepted quest label sits centered below the quest office heading', async () => {
@@ -384,6 +393,16 @@ test('core state can finish all 12 days without a VSL implementation', () => {
   }
   assert.equal(state.phase, 'settlement');
   assert.equal(state.history.length, 96);
+});
+
+test('accepted quest keeps its concrete deadline on the offer and active copy', () => {
+  const schedule = createRunSchedule({ catalog, balance, seed: 'quest-popup-deadline' });
+  const state = createInitialState({ schedule, sets: createSetGraph(schedule, 'quest-popup-deadline'), balance, startCash: 100000 });
+  state.day = 2;
+  const quest = state.questOffers[0];
+  assert.equal(acceptQuest(state, quest.offerId, balance), true);
+  assert.equal(quest.deadlineDay, 4);
+  assert.equal(state.activeQuests[0].deadlineDay, 4);
 });
 
 test('auction inventory connects to sale, quest and loan systems', () => {
@@ -623,6 +642,14 @@ test('disabled bargain quests are not generated or carried into a new day', () =
   state.day = 2;
   refreshDailyQuestOffers(state, balance, []);
   assert.equal(state.questOffers.some((quest) => quest.id === 'bargain'), false);
+});
+
+test('settlement shows collateral and borrowed amount on two loan detail rows', async () => {
+  const app = await readFile(new URL('../src/app.js', import.meta.url), 'utf8');
+  assert.match(app, /<span>담보 물품<\/span><strong title=/);
+  assert.match(app, /<span>대출 금액<\/span><strong>\${borrowedAmount}<\/strong>/);
+  assert.match(app, /loanSnapshot/);
+  assert.doesNotMatch(app, /활성 대출 · \${state\.loan\.dueDay}일차 만기/);
 });
 
 test('loan uses public base price and charges 105% for early repayment', () => {

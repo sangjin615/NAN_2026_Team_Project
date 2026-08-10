@@ -646,7 +646,7 @@ button.secondary:disabled { background-image: url("./assets/ui/skin-v1/button-se
 
 /* Exchange: let the painted dark headers and light paper fields be the frame. */
 [data-scene="exchange"] .inventory-list {
-  left: 1.2%; top: 45.9%; width: 64.3%; height: auto; bottom: 7.1%;
+  left: 1.2%; top: calc(45.9% - 10px); width: 64.3%; height: auto; bottom: calc(7.1% + 10px);
   box-sizing: border-box; padding: 16px 18px;
   grid-template-columns: 1fr; grid-template-rows: repeat(6,minmax(0,1fr)); gap: 5px;
   border: 0; border-image: none; background: transparent; box-shadow: none;
@@ -1100,7 +1100,7 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
   background: transparent !important; background-image: none !important; color: #dfbc76; font-size: 31px; line-height: 1;
 }
 #catalog-quest-list {
-  position: absolute; left: 9.5%; right: 9.5%; top: 21%; bottom: 11%;
+  position: absolute; left: 9.5%; right: calc(9.5% + 4px); top: 21%; bottom: 11%;
   display: grid; align-content: start; gap: 9px; overflow-y: auto; overflow-x: hidden; padding: 2px 6px 2px 2px;
 }
 #catalog-quest-list > article { display: grid; grid-template-columns: 70px minmax(0,1fr); gap: 14px; align-items: center; min-height: 96px; box-sizing: border-box; padding: 12px 14px; border: 1px solid #ac8b61; background: #ead8bca8; }
@@ -3208,10 +3208,10 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
 }
 
 [data-scene="guild"] .actions {
-  top: 60.5%; height: 14.5%; align-items: center; padding: 40px 22px 8px;
+  top: 60.5%; height: 14.5%; align-items: end; padding: 40px 22px 8px;
 }
 [data-scene="guild"] #guild-message {
-  left: 8.7%; top: 75.8%; width: 53.4%; height: 8.8%;
+  left: calc(8.7% + 5px); top: 75.8%; width: calc(53.4% - 10px); height: 8.8%;
   max-width: none; padding: 10px 22px;
 }
 
@@ -3351,6 +3351,13 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
 }
 [data-scene="settlement"] .settlement-progress h4 {
   transform: translateY(clamp(20px, 1.7vw, 27px));
+}
+[data-scene="settlement"] .settlement-progress p:first-of-type {
+  margin-top: clamp(20px, 1.7vw, 27px);
+}
+[data-scene="settlement"] .settlement-progress p {
+  padding-top: 2%;
+  padding-bottom: 2%;
 }
 
 /* Replace the temporary City HUD glyphs with the normalized production icons. */
@@ -3549,4 +3556,274 @@ button.secondary:not(.save-slot):disabled { border-image-source: url("./assets/u
   background: url("./assets/ui/quest-icons/designated.png") left center / contain no-repeat;
   color: #f2e6d0; font-size: .88em; font-weight: 600; white-space: nowrap;
   filter: drop-shadow(0 2px 2px #0008);
+}
+
+/* Bankruptcy ending only: ornate header + left result/reason stack + right journey summary. */
+[data-scene="result"].is-failure > h2 {
+  display: grid !important;
+  place-items: center;
+  left: 27.2%;
+  top: 5.1%;
+  width: 45.6%;
+  height: 15.5%;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0 8% 0.7%;
+  background: url("./assets/ui/ending/result-title-frame.png") center / 100% 100% no-repeat;
+  color: #2a1b10;
+  font-size: clamp(27px, 2.65vw, 43px);
+  font-weight: 900;
+  letter-spacing: .05em;
+  text-shadow: 0 1px 0 #f6e7c9, 0 2px 2px #7c5a35aa;
+  filter: drop-shadow(0 10px 12px #0008);
+  z-index: 4;
+}
+
+[data-scene="result"].is-failure #run-summary {
+  left: 12.2%;
+  top: 20.5%;
+  width: 75.6%;
+  height: 58.8%;
+  display: grid;
+  grid-template-columns: 30.8% 68.2%;
+  grid-template-rows: 63.5% 35.5%;
+  grid-template-areas:
+    "ending stats"
+    "reason stats";
+  column-gap: 1%;
+  row-gap: 1%;
+  box-sizing: border-box;
+  padding: 0;
+  background: transparent;
+  overflow: visible;
+  z-index: 3;
+}
+
+[data-scene="result"].is-failure #run-summary > section {
+  position: relative;
+  box-sizing: border-box;
+  min-width: 0;
+  min-height: 0;
+  height: auto;
+  margin: 0;
+  border: 18px solid transparent;
+  border-image: url("./assets/ui/skin-v1/panel-parchment.png") 28 fill / 18px / 0 stretch;
+  background: #e4ceb0;
+  color: #2b1e13;
+  filter: drop-shadow(0 7px 8px #0006);
+  overflow: hidden;
+}
+
+[data-scene="result"].is-failure .result-ending {
+  grid-area: ending;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2.4%;
+  padding: 6% 8% 5%;
+  text-align: center;
+}
+
+[data-scene="result"].is-failure .result-ending .result-kicker {
+  position: relative;
+  width: 76%;
+  margin: 0 0 1.5%;
+  color: #6d5333;
+  font-size: clamp(13px, 1.18vw, 19px);
+  font-weight: 900;
+  letter-spacing: .04em;
+  text-align: center;
+}
+[data-scene="result"].is-failure .result-ending .result-kicker::before,
+[data-scene="result"].is-failure .result-ending .result-kicker::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 26%;
+  height: 1px;
+  background: #8f7351aa;
+}
+[data-scene="result"].is-failure .result-ending .result-kicker::before { left: 0; }
+[data-scene="result"].is-failure .result-ending .result-kicker::after { right: 0; }
+
+[data-scene="result"].is-failure .result-ending h3 {
+  width: auto;
+  margin: 0;
+  color: #8b1f13;
+  font-size: clamp(38px, 4.3vw, 70px);
+  line-height: .98;
+  font-weight: 950;
+  letter-spacing: .05em;
+  text-shadow: 0 1px 0 #f0d8b9;
+}
+
+[data-scene="result"].is-failure .result-status-icon {
+  width: clamp(48px, 5.2vw, 82px);
+  height: clamp(48px, 5.2vw, 82px);
+  margin: 2% auto 1%;
+  border: 3px solid #7b571e;
+  border-radius: 50%;
+  background: #b88a2c;
+  box-shadow: inset 0 0 0 2px #e3c269, 0 4px 6px #4d321f66;
+  object-fit: cover;
+}
+
+[data-scene="result"].is-failure .result-final-state {
+  width: 78%;
+  margin-top: 1.5%;
+  padding-top: 4%;
+  border-top: 1px solid #a98d6d;
+  text-align: center;
+}
+[data-scene="result"].is-failure .result-final-state b {
+  display: block;
+  margin-bottom: 3%;
+  color: #3c2a1a;
+  font-size: clamp(12px, 1.1vw, 18px);
+}
+[data-scene="result"].is-failure .result-final-state p {
+  margin: 0;
+  color: #2b1e13;
+  font-size: clamp(12px, 1.06vw, 17px);
+  font-weight: 700;
+}
+
+[data-scene="result"].is-failure .result-failure-reason {
+  grid-area: reason;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 5% 7%;
+  text-align: center;
+}
+[data-scene="result"].is-failure .result-failure-reason h3 {
+  position: relative;
+  width: 78%;
+  margin: 0 0 4%;
+  color: #8b1f13;
+  font-size: clamp(13px, 1.18vw, 19px);
+  text-align: center;
+}
+[data-scene="result"].is-failure .result-failure-reason h3::before,
+[data-scene="result"].is-failure .result-failure-reason h3::after {
+  content: "✦";
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #9d7144;
+  font-size: .72em;
+}
+[data-scene="result"].is-failure .result-failure-reason h3::before { left: 2%; }
+[data-scene="result"].is-failure .result-failure-reason h3::after { right: 2%; }
+[data-scene="result"].is-failure .result-failure-reason .failure {
+  width: 100%;
+  margin: 0 0 4%;
+  color: #6f2519;
+  font-size: clamp(10px, .92vw, 15px);
+  font-weight: 800;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+[data-scene="result"].is-failure .result-failure-reason strong {
+  color: #8b1f13;
+  font-size: clamp(13px, 1.1vw, 18px);
+  line-height: 1.25;
+}
+
+[data-scene="result"].is-failure .result-stats {
+  grid-area: stats;
+  display: grid;
+  grid-template-rows: 19% repeat(5, minmax(0, 1fr));
+  align-content: stretch;
+  padding: 5.5% 6.5% 5%;
+  text-align: left;
+}
+[data-scene="result"].is-failure .result-stats h3 {
+  position: relative;
+  align-self: center;
+  width: 100%;
+  margin: 0;
+  padding: 0 0 4%;
+  color: #3b291b;
+  font-size: clamp(20px, 1.9vw, 31px);
+  text-align: center;
+  border-bottom: 1px solid #ad9272;
+}
+[data-scene="result"].is-failure .result-stats h3::before,
+[data-scene="result"].is-failure .result-stats h3::after {
+  content: "✦";
+  position: absolute;
+  top: 28%;
+  color: #997346;
+  font-size: .62em;
+}
+[data-scene="result"].is-failure .result-stats h3::before { left: 34%; }
+[data-scene="result"].is-failure .result-stats h3::after { right: 34%; }
+[data-scene="result"].is-failure .result-stats p {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8%;
+  min-width: 0;
+  min-height: 0;
+  margin: 0;
+  padding: 0 1.5%;
+  border-bottom: 1px solid #b8a184;
+  color: #352719;
+  font-size: clamp(11px, 1.02vw, 17px);
+}
+[data-scene="result"].is-failure .result-stats p:last-child { border-bottom: 0; }
+[data-scene="result"].is-failure .result-stats p span {
+  flex: 0 1 45%;
+  min-width: 0;
+  font-weight: 700;
+}
+[data-scene="result"].is-failure .result-stats p b {
+  flex: 1 1 55%;
+  min-width: 0;
+  color: #8b1f13;
+  font-size: 1.06em;
+  text-align: right;
+  overflow-wrap: anywhere;
+}
+
+[data-scene="result"].is-failure #return-title {
+  left: 39.5%;
+  bottom: 3.2%;
+  width: 21%;
+  height: 7.2%;
+  z-index: 5;
+}
+
+/* 2026-08-10: bankruptcy result button — true viewport center. */
+[data-scene="result"].is-failure #return-title {
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+}
+
+/* 2026-08-10: auction item title/category — nudge both labels 2px upward. */
+[data-scene="auction"] > header h2,
+[data-scene="auction"] > header .auction-category {
+  position: relative;
+  top: -2px;
+}
+
+
+/* Settlement loan details: show collateral and borrowed principal as two readable rows. */
+[data-scene="settlement"] .settlement-progress p:first-of-type {
+  margin-top: clamp(24px, 1.9vw, 30px);
+}
+[data-scene="settlement"] .settlement-progress p {
+  padding-top: 1.15%;
+  padding-bottom: 1.15%;
+  min-height: 0;
+}
+[data-scene="settlement"] .settlement-progress p strong {
+  max-width: 62%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: right;
 }

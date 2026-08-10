@@ -22,9 +22,13 @@
     <button id="return-title">타이틀로</button>
   </section>
   <section class="scene result is-failure" data-scene="result" data-audit="result-failure" hidden>
-    <p class="eyebrow">RUN RESULT</p><h2>여정 실패</h2>
-    <div id="run-summary"><p class="failure">기한까지 상회를 확장하지 못했습니다.</p><p>현금 4,300 G · 미판매 자산 2,100 G</p><p>낙찰 5건 · 완료 의뢰 1건 · 상회 1단계</p></div>
-    <button id="return-title">타이틀로</button>
+    <p class="eyebrow">RUN RESULT</p><h2>런 결과</h2>
+    <div id="run-summary">
+      <section class="result-ending"><small class="result-kicker">결과</small><h3>파산</h3><img class="result-status-icon" src="./assets/ui/action-icons/restart.png" alt=""><div class="result-final-state"><b>최종 상태</b><p>여정에 실패했습니다.</p></div></section>
+      <section class="result-failure-reason"><h3>실패 원인</h3><p class="failure">3일차 승급 기한 실패 · 상회 1단계</p><strong>마감 조건을 다시 확인하세요.</strong></section>
+      <section class="result-stats"><h3>여정 요약</h3><p><span>완주 일수</span><b>3일</b></p><p><span>최종 상회 단계</span><b>1단계</b></p><p><span>최종 자산</span><b>20,000 G</b></p><p><span>낙찰 / 완료 의뢰</span><b>0건 / 0건</b></p><p><span>획득 유물</span><b>없음</b></p></section>
+    </div>
+    <button id="return-title">타이틀로 돌아가기</button>
   </section>
 </main>
 <script>
